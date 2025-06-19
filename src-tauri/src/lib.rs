@@ -1,6 +1,6 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::{Path};
 use std::env;
 use tauri::{AppHandle, Emitter};
 use tokio::time::{sleep, Duration};
@@ -23,46 +23,54 @@ async fn search_file(filename: String, app: AppHandle) -> Result<Vec<String>, St
         found_count: 0,
     });
     
-    // Получаем домашний каталог пользователя
-    if let Ok(home_dir) = env::var("USERPROFILE") {
-        let _ = app.emit("search_progress", SearchProgress {
-            current: 10,
-            total: 100,
-            message: format!("Searching in home directory: {}", home_dir),
-            found_count: found_paths.len(),
-        });
-        
-        search_in_directory(&Path::new(&home_dir), &filename, &mut found_paths, 0, &app, &mut total_searched).await;
-    }
+    // Предопределенные пути для поиска
+    let predefined_paths = get_predefined_search_paths();
+    let total_paths = predefined_paths.len();
     
-    // Также ищем на всех дисках, но игнорируем системные папки
-    let drives = get_available_drives();
-    let drive_count = drives.len();
-    
-    for (index, drive) in drives.iter().enumerate() {
-        let progress = 10 + ((index + 1) * 80 / drive_count.max(1)) as u32;
+    // Ищем в предопределенных путях
+    for (index, search_path) in predefined_paths.iter().enumerate() {
+        let progress = ((index + 1) * 80 / total_paths.max(1)) as u32;
         let _ = app.emit("search_progress", SearchProgress {
             current: progress,
             total: 100,
-            message: format!("Searching drive: {}", drive),
+            message: format!("Searching in: {}", search_path),
             found_count: found_paths.len(),
         });
         
-        search_in_directory(&Path::new(drive), &filename, &mut found_paths, 0, &app, &mut total_searched).await;
+        if Path::new(search_path).exists() {
+            search_in_directory(&Path::new(search_path), &filename, &mut found_paths, 0, &app, &mut total_searched).await;
+        }
         
         // Небольшая задержка чтобы не спамить события
         sleep(Duration::from_millis(10)).await;
     }
     
-    // Завершаем поиск
+    // Если нашли что-то, возвращаем результат
+    if !found_paths.is_empty() {
+        let _ = app.emit("search_progress", SearchProgress {
+            current: 100,
+            total: 100,
+            message: format!("Search completed! Found {} files", found_paths.len()),
+            found_count: found_paths.len(),
+        });
+        return Ok(found_paths);
+    }
+    
+    // Если не нашли, предлагаем пользователю выбрать файл
     let _ = app.emit("search_progress", SearchProgress {
-        current: 100,
+        current: 90,
         total: 100,
-        message: format!("Search completed! Found {} files", found_paths.len()),
-        found_count: found_paths.len(),
+        message: "File not found in predefined paths. Please select file manually...".to_string(),
+        found_count: 0,
     });
     
-    Ok(found_paths)
+    // Отправляем событие что нужно открыть диалог выбора файла
+    let _ = app.emit("open_file_dialog", OpenFileDialogRequest {
+        filename: filename.clone(),
+        message: "File not found in predefined paths. Please select the file manually.".to_string(),
+    });
+    
+    Ok(found_paths) // Возвращаем пустой список, фронтенд должен обработать событие диалога
 }
 
 #[derive(Clone, serde::Serialize)]
@@ -73,15 +81,33 @@ struct SearchProgress {
     found_count: usize,
 }
 
-fn get_available_drives() -> Vec<String> {
-    let mut drives = Vec::new();
-    for letter in 'A'..='Z' {
-        let drive = format!("{}:\\", letter);
-        if Path::new(&drive).exists() {
-            drives.push(drive);
-        }
+#[derive(Clone, serde::Serialize)]
+struct OpenFileDialogRequest {
+    filename: String,
+    message: String,
+}
+
+fn get_predefined_search_paths() -> Vec<String> {
+    let mut paths = Vec::new();
+        
+    // Общие места где может лежать Diablo 2
+    paths.push("C:\\Program Files (x86)\\Diablo II Resurrected".to_string());
+    paths.push("C:\\Program Files\\Diablo II Resurrected".to_string());
+    paths.push("C:\\Games\\Diablo II Resurrected".to_string());
+    paths.push("D:\\Games\\Diablo II Resurrected".to_string());
+    paths.push("E:\\Games\\Diablo II Resurrected".to_string());
+    
+    paths
+}
+
+#[tauri::command]
+fn set_selected_file(file_path: String) -> Result<String, String> {
+    // Эта команда будет вызвана с фронтенда когда пользователь выберет файл
+    if Path::new(&file_path).exists() {
+        Ok(file_path)
+    } else {
+        Err("Selected file does not exist".to_string())
     }
-    drives
 }
 
 async fn search_in_directory(
@@ -165,7 +191,7 @@ fn is_system_directory(dir_name: &str) -> bool {
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![greet, search_file])
+        .invoke_handler(tauri::generate_handler![greet, search_file, set_selected_file])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

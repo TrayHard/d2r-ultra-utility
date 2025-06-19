@@ -12,13 +12,13 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ progress, message, foundCount
 
   return (
     <div className="w-full max-w-2xl mx-auto mb-6">
-      <div className="bg-white rounded-lg shadow-lg p-6 border">
+      <div className="bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-gray-700">Searching files...</span>
-          <span className="text-sm text-gray-600">{progress}%</span>
+          <span className="text-sm font-medium text-gray-200">Searching files...</span>
+          <span className="text-sm text-gray-300">{progress}%</span>
         </div>
         
-        <div className="w-full bg-gray-200 rounded-full h-3 mb-3 overflow-hidden">
+        <div className="w-full bg-gray-700 rounded-full h-3 mb-3 overflow-hidden">
           <div 
             className="bg-gradient-to-r from-blue-500 to-blue-600 h-3 rounded-full transition-all duration-300 ease-out relative"
             style={{ width: `${progress}%` }}
@@ -27,12 +27,12 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ progress, message, foundCount
           </div>
         </div>
         
-        <div className="text-sm text-gray-600 mb-1">
+        <div className="text-sm text-gray-300 mb-1">
           {message}
         </div>
         
         {foundCount > 0 && (
-          <div className="text-sm font-semibold text-green-600">
+          <div className="text-sm font-semibold text-green-400">
             Found {foundCount} file{foundCount !== 1 ? 's' : ''}
           </div>
         )}
