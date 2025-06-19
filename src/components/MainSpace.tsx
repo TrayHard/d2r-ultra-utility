@@ -1,23 +1,24 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import MainSpaceBody, { TabType } from './MainSpaceBody';
 
 interface MainSpaceProps {
-  language: 'en' | 'ru';
   isDarkTheme: boolean;
 }
 
-const MainSpace: React.FC<MainSpaceProps> = ({ language, isDarkTheme }) => {
+const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<TabType>('common');
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
   const tabsRef = useRef<(HTMLButtonElement | null)[]>([]);
 
   const tabs = [
-    { id: 'common' as TabType, label: language === 'en' ? 'Common' : 'Общее' },
-    { id: 'items' as TabType, label: language === 'en' ? 'Items' : 'Предметы' },
-    { id: 'runes' as TabType, label: language === 'en' ? 'Runes' : 'Руны' },
-    { id: 'gems' as TabType, label: language === 'en' ? 'Gems' : 'Камни' },
-    { id: 'skills' as TabType, label: language === 'en' ? 'Skills' : 'Скиллы' },
-    { id: 'other' as TabType, label: language === 'en' ? 'Other' : 'Прочее' },
+    { id: 'common' as TabType, label: t('tabs.common') },
+    { id: 'items' as TabType, label: t('tabs.items') },
+    { id: 'runes' as TabType, label: t('tabs.runes') },
+    { id: 'gems' as TabType, label: t('tabs.gems') },
+    { id: 'skills' as TabType, label: t('tabs.skills') },
+    { id: 'other' as TabType, label: t('tabs.other') },
   ];
 
   // Update indicator position when active tab changes
@@ -76,7 +77,7 @@ const MainSpace: React.FC<MainSpaceProps> = ({ language, isDarkTheme }) => {
         <div className={`h-full ${
           isDarkTheme ? 'bg-gray-800' : 'bg-white'
         }`}>
-          <MainSpaceBody activeTab={activeTab} language={language} isDarkTheme={isDarkTheme} />
+          <MainSpaceBody activeTab={activeTab} isDarkTheme={isDarkTheme} />
         </div>
       </div>
     </div>

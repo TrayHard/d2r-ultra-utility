@@ -1,25 +1,25 @@
 import React, { useState } from 'react';
 import Toolbar from './Toolbar';
 import MainSpace from './MainSpace';
+import { useLanguage } from '../hooks/useLanguage';
 
 interface WorkSpaceProps {
   onChangeClick: () => void;
 }
 
 const WorkSpace: React.FC<WorkSpaceProps> = ({ onChangeClick }) => {
-  const [language, setLanguage] = useState<'en' | 'ru'>('en');
+  const { toggleLanguage } = useLanguage();
   const [isDarkTheme, setIsDarkTheme] = useState<boolean>(true);
 
   return (
     <div className={`min-h-screen flex flex-col ${isDarkTheme ? 'bg-gray-900' : 'bg-gray-100'}`}>
       <Toolbar 
-        language={language} 
-        onLanguageChange={setLanguage}
+        onLanguageChange={toggleLanguage}
         onChangePathClick={onChangeClick}
         isDarkTheme={isDarkTheme}
         onThemeChange={setIsDarkTheme}
       />
-      <MainSpace language={language} isDarkTheme={isDarkTheme} />
+      <MainSpace isDarkTheme={isDarkTheme} />
     </div>
   );
 };

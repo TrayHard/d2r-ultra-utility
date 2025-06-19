@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import ProgressBar from "./components/ProgressBar";
-import SelectedPath from "./components/SelectedPath";
+
 import PathSelector from "./components/PathSelector";
 import WorkSpace from "./components/WorkSpace";
 import "./App.css";

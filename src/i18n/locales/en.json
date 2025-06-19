@@ -1,0 +1,21 @@
+{
+  "tabs": {
+    "common": "Common",
+    "items": "Items", 
+    "runes": "Runes",
+    "gems": "Gems",
+    "skills": "Skills",
+    "other": "Other"
+  },
+  "descriptions": {
+    "common": "Common utilities and tools",
+    "items": "Item management and analysis",
+    "runes": "Rune management and combinations", 
+    "gems": "Gem management and upgrades",
+    "skills": "Skill tree and build planning",
+    "other": "Additional tools and utilities"
+  },
+  "buttons": {
+    "changePath": "Change Path"
+  }
+} 
