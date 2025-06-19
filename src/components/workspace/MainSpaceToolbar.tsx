@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import LanguageSwitch from './LanguageSwitch.tsx';
+import LanguageSwitch from './toolbar/LanguageSwitch.tsx';
 
 interface ToolbarProps {
   onLanguageChange: () => void;
@@ -9,7 +9,7 @@ interface ToolbarProps {
   onThemeChange: (isDark: boolean) => void;
 }
 
-const Toolbar: React.FC<ToolbarProps> = ({ onLanguageChange, onChangePathClick, isDarkTheme, onThemeChange }) => {
+const MainSpaceToolbar: React.FC<ToolbarProps> = ({ onLanguageChange, onChangePathClick, isDarkTheme, onThemeChange }) => {
   const { t } = useTranslation();
 
   return (
@@ -53,4 +53,4 @@ const Toolbar: React.FC<ToolbarProps> = ({ onLanguageChange, onChangePathClick, 
   );
 };
 
-export default Toolbar;
+export default MainSpaceToolbar;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Toolbar from './workspace/toolbar/Toolbar.tsx';
+import MainSpaceToolbar from './workspace/MainSpaceToolbar.tsx';
 import MainSpace from './workspace/MainSpace.tsx';
 import { useLanguage } from '../hooks/useLanguage';
 
@@ -13,7 +13,7 @@ const WorkSpace: React.FC<WorkSpaceProps> = ({ onChangeClick }) => {
 
   return (
     <div className={`min-h-screen flex flex-col ${isDarkTheme ? 'bg-gray-900' : 'bg-gray-100'}`}>
-      <Toolbar
+      <MainSpaceToolbar
         onLanguageChange={toggleLanguage}
         onChangePathClick={onChangeClick}
         isDarkTheme={isDarkTheme}
