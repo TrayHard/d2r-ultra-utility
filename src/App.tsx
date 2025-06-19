@@ -16,18 +16,38 @@ interface SearchProgress {
 // Утилиты для работы с настройками
 const SETTINGS_KEY = 'd2r-path-settings';
 
-const loadSavedPath = (): string | null => {
+interface SavedSettings {
+  d2rPath?: string;
+  homeDirectory?: string;
+  savedAt: string;
+}
+
+const loadSavedSettings = (): SavedSettings | null => {
   try {
     const saved = localStorage.getItem(SETTINGS_KEY);
-    return saved ? JSON.parse(saved).d2rPath : null;
+    return saved ? JSON.parse(saved) : null;
   } catch {
     return null;
   }
 };
 
-const savePath = (path: string) => {
+const loadSavedPath = (): string | null => {
+  const settings = loadSavedSettings();
+  return settings?.d2rPath ?? null;
+};
+
+const loadSavedHomeDirectory = (): string | null => {
+  const settings = loadSavedSettings();
+  return settings?.homeDirectory ?? null;
+};
+
+const savePath = (filePath: string) => {
+  // Извлекаем папку из полного пути к файлу
+  const homeDirectory = filePath.substring(0, filePath.lastIndexOf('\\'));
+  
   localStorage.setItem(SETTINGS_KEY, JSON.stringify({ 
-    d2rPath: path, 
+    d2rPath: filePath,
+    homeDirectory: homeDirectory,
     savedAt: new Date().toISOString() 
   }));
 };
@@ -41,6 +61,7 @@ type AppState = 'loading' | 'saved-path' | 'searching' | 'path-selection' | 'man
 function App() {
   const [appState, setAppState] = useState<AppState>('loading');
   const [savedPath, setSavedPath] = useState<string | null>(null);
+  const [homeDirectory, setHomeDirectory] = useState<string | null>(null);
   const [foundPaths, setFoundPaths] = useState<string[]>([]);
   const [manualResults, setManualResults] = useState<string[]>([]);
   const [manualFileName, setManualFileName] = useState("");
@@ -55,11 +76,14 @@ function App() {
         // Проверяем сохраненные настройки при загрузке
   useEffect(() => {
     const checkSavedPath = async () => {
-      const saved = loadSavedPath();
-      if (saved) {
+      const savedFilePath = loadSavedPath();
+      const savedHomeDir = loadSavedHomeDirectory();
+      
+      if (savedFilePath && savedHomeDir) {
         // Для Tauri приложения просто проверяем что путь есть в настройках
         // Полную проверку существования файла делать не будем, чтобы не усложнять
-        setSavedPath(saved);
+        setSavedPath(savedFilePath);
+        setHomeDirectory(savedHomeDir);
         setAppState('saved-path');
         return;
       }
@@ -120,12 +144,16 @@ function App() {
   const handlePathSelect = (path: string) => {
     savePath(path);
     setSavedPath(path);
+    // Извлекаем папку из полного пути к файлу
+    const homeDir = path.substring(0, path.lastIndexOf('\\'));
+    setHomeDirectory(homeDir);
     setAppState('saved-path');
   };
 
   const handleChangePath = () => {
     clearSavedPath();
     setSavedPath(null);
+    setHomeDirectory(null);
     setFoundPaths([]);
     setManualResults([]);
     setManualFileName("");
@@ -186,9 +214,10 @@ function App() {
       )}
 
       {/* Показываем сохраненный путь */}
-      {appState === 'saved-path' && savedPath && (
+      {appState === 'saved-path' && savedPath && homeDirectory && (
         <SelectedPath 
           path={savedPath}
+          homeDirectory={homeDirectory}
           onChangeClick={handleChangePath}
         />
       )}
