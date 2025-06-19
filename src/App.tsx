@@ -119,7 +119,7 @@ function App() {
     });
 
     try {
-      const result = await invoke<string[]>("search_file", { filename: "2D2R.exe" });
+      const result = await invoke<string[]>("search_file", { filename: "D2R.exe" });
       setFoundPaths(result ?? []);
 
       if (result && result.length > 0) {
