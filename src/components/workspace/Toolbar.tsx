@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import LanguageSwitch from './LanguageSwitch';
+import LanguageSwitch from './LanguageSwitch.tsx';
 
 interface ToolbarProps {
   onLanguageChange: () => void;
@@ -27,7 +27,7 @@ const Toolbar: React.FC<ToolbarProps> = ({ onLanguageChange, onChangePathClick, 
             {t('buttons.changePath')}
           </button>
         </div>
-        
+
         <div className="flex items-center space-x-4">
           {/* Theme Toggle */}
           <button
@@ -41,7 +41,7 @@ const Toolbar: React.FC<ToolbarProps> = ({ onLanguageChange, onChangePathClick, 
           >
             {isDarkTheme ? '🌞' : '🌙'}
           </button>
-          
+
           {/* Language Toggle */}
           <LanguageSwitch
             onLanguageChange={onLanguageChange}
@@ -53,4 +53,4 @@ const Toolbar: React.FC<ToolbarProps> = ({ onLanguageChange, onChangePathClick, 
   );
 };
 
-export default Toolbar; 
+export default Toolbar;

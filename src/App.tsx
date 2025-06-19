@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
-import ProgressBar from "./components/ProgressBar";
+import ProgressBar from "./components/ui/ProgressBar.tsx";
 
-import PathSelector from "./components/PathSelector";
+import PathSelector from "./components/workspace/toolbar/PathSelector.tsx";
 import WorkSpace from "./components/WorkSpace";
 import "./App.css";
 
@@ -45,11 +45,11 @@ const loadSavedHomeDirectory = (): string | null => {
 const savePath = (filePath: string) => {
   // Извлекаем папку из полного пути к файлу
   const homeDirectory = filePath.substring(0, filePath.lastIndexOf('\\'));
-  
-  localStorage.setItem(SETTINGS_KEY, JSON.stringify({ 
+
+  localStorage.setItem(SETTINGS_KEY, JSON.stringify({
     d2rPath: filePath,
     homeDirectory: homeDirectory,
-    savedAt: new Date().toISOString() 
+    savedAt: new Date().toISOString()
   }));
 };
 
@@ -79,7 +79,7 @@ function App() {
     const checkSavedPath = async () => {
       const savedFilePath = loadSavedPath();
       const savedHomeDir = loadSavedHomeDirectory();
-      
+
       if (savedFilePath && savedHomeDir) {
         // Для Tauri приложения просто проверяем что путь есть в настройках
         // Полную проверку существования файла делать не будем, чтобы не усложнять
@@ -88,7 +88,7 @@ function App() {
         setAppState('saved-path');
         return;
       }
-      
+
       // Нет сохраненного пути, запускаем автопоиск
       startAutoSearch();
     };
@@ -120,7 +120,7 @@ function App() {
     try {
       const result = await invoke<string[]>("search_file", { filename: "D2R.exe" });
       setFoundPaths(result ?? []);
-      
+
       if (result && result.length > 0) {
         if (result.length === 1) {
           // Нашли один путь, сохраняем автоматически
@@ -208,10 +208,10 @@ function App() {
 
   return (
     <main className="min-h-screen flex flex-col justify-center items-center text-center p-8 bg-gradient-to-br from-gray-900 to-black">
-      
+
       {/* Прогрессбар показываем когда идет поиск */}
       {(isSearching || appState === 'loading') && (
-        <ProgressBar 
+        <ProgressBar
           progress={searchProgress.current}
           message={searchProgress.message}
           foundCount={searchProgress.found_count}
@@ -223,7 +223,7 @@ function App() {
 
       {/* Показываем выбор из найденных путей */}
       {appState === 'path-selection' && foundPaths.length > 0 && (
-        <PathSelector 
+        <PathSelector
           paths={foundPaths}
           onPathSelect={handlePathSelect}
           onCancel={handlePathSelectionCancel}
@@ -238,7 +238,7 @@ function App() {
               D2R.exe not found automatically. Please search for it manually:
             </p>
           </div>
-          
+
           <form
             className="flex gap-4 mb-8"
             onSubmit={(e) => {
@@ -258,7 +258,7 @@ function App() {
               disabled={isSearching}
               accept="*"
             />
-            <button 
+            <button
               type="submit"
               disabled={isSearching || !manualFileName.trim()}
               className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium disabled:bg-gray-600 disabled:cursor-not-allowed"
@@ -266,7 +266,7 @@ function App() {
               {isSearching ? "Searching..." : "Search"}
             </button>
             {isSearching && (
-              <button 
+              <button
                 type="button"
                 onClick={handleCancel}
                 className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 font-medium"
@@ -277,7 +277,7 @@ function App() {
           </form>
 
           <div className="flex gap-4 justify-center mb-8">
-            <button 
+            <button
               onClick={startAutoSearch}
               disabled={isSearching}
               className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 font-medium disabled:bg-gray-600"

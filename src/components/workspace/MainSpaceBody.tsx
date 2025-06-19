@@ -1,10 +1,10 @@
 import React from 'react';
-import CommonTab from './CommonTab';
-import ItemsTab from './ItemsTab';
-import RunesTab from './RunesTab';
-import GemsTab from './GemsTab';
-import SkillsTab from './SkillsTab';
-import OtherTab from './OtherTab';
+import CommonTab from '../Tabs/CommonTab.tsx';
+import ItemsTab from '../Tabs/ItemsTab.tsx';
+import RunesTab from '../Tabs/RunesTab.tsx';
+import GemsTab from '../Tabs/GemsTab.tsx';
+import SkillsTab from '../Tabs/SkillsTab.tsx';
+import OtherTab from '../Tabs/OtherTab.tsx';
 
 export type TabType = 'common' | 'items' | 'runes' | 'gems' | 'skills' | 'other';
 
@@ -40,4 +40,4 @@ const MainSpaceBody: React.FC<MainSpaceBodyProps> = ({ activeTab, isDarkTheme })
   );
 };
 
-export default MainSpaceBody; 
+export default MainSpaceBody;

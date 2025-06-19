@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import MainSpaceBody, { TabType } from './MainSpaceBody';
+import MainSpaceBody, { TabType } from './MainSpaceBody.tsx';
 
 interface MainSpaceProps {
   isDarkTheme: boolean;
@@ -25,7 +25,7 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
   useEffect(() => {
     const activeIndex = tabs.findIndex(tab => tab.id === activeTab);
     const activeTabElement = tabsRef.current[activeIndex];
-    
+
     if (activeTabElement) {
       const { offsetLeft, offsetWidth } = activeTabElement;
       setIndicatorStyle({ left: offsetLeft, width: offsetWidth });
@@ -53,9 +53,9 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
               {tab.label}
             </button>
           ))}
-          
+
           {/* Animated Tab Indicator */}
-          <div 
+          <div
             className={`absolute bottom-0 h-0.5 transition-all duration-300 ease-out ${
               isDarkTheme ? 'bg-green-400' : 'bg-green-600'
             }`}
@@ -64,7 +64,7 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
               width: `${indicatorStyle.width}px`
             }}
           />
-          
+
           {/* Base Line */}
           <div className={`absolute bottom-0 left-0 right-0 h-px ${
             isDarkTheme ? 'bg-gray-700' : 'bg-gray-200'
@@ -84,4 +84,4 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
   );
 };
 
-export default MainSpace; 
+export default MainSpace;

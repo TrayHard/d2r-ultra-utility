@@ -1,7 +1,7 @@
 import React from 'react';
-import { useLanguage } from '../hooks/useLanguage';
-import { Language } from '../types/language';
-import Dropdown from './Dropdown';
+import { useLanguage } from '../../../hooks/useLanguage.ts';
+import { Language } from '../../../types/language.ts';
+import Dropdown from '../../ui/Dropdown.tsx';
 
 interface LanguageSwitchProps {
   onLanguageChange: () => void;
@@ -39,4 +39,4 @@ const LanguageSwitch: React.FC<LanguageSwitchProps> = ({
   );
 };
 
-export default LanguageSwitch; 
+export default LanguageSwitch;
