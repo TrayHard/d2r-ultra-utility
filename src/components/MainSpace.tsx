@@ -33,7 +33,7 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
   }, [activeTab, tabs]);
 
   return (
-    <div className={`flex-1 flex flex-col ${isDarkTheme ? 'bg-gray-900' : 'bg-gray-50'}`}>
+    <div className={`flex-1 grid grid-rows-[44px_1fr] ${isDarkTheme ? 'bg-gray-900' : 'bg-gray-50'}`}>
       {/* Flat Tab Navigation */}
       <div className={`${isDarkTheme ? 'bg-gray-800' : 'bg-white'}`}>
         <div className="flex relative">
