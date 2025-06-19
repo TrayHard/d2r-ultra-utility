@@ -4,6 +4,7 @@ import { listen } from "@tauri-apps/api/event";
 import ProgressBar from "./components/ProgressBar";
 import SelectedPath from "./components/SelectedPath";
 import PathSelector from "./components/PathSelector";
+import WorkSpace from "./components/WorkSpace";
 import "./App.css";
 
 interface SearchProgress {
@@ -200,6 +201,11 @@ function App() {
     });
   };
 
+  // Если показываем WorkSpace, не добавляем дополнительные стили
+  if (appState === 'saved-path' && savedPath && homeDirectory) {
+    return <WorkSpace onChangeClick={handleChangePath} />;
+  }
+
   return (
     <main className="min-h-screen flex flex-col justify-center items-center text-center p-8 bg-gradient-to-br from-gray-900 to-black">
       
@@ -213,14 +219,7 @@ function App() {
         />
       )}
 
-      {/* Показываем сохраненный путь */}
-      {appState === 'saved-path' && savedPath && homeDirectory && (
-        <SelectedPath 
-          path={savedPath}
-          homeDirectory={homeDirectory}
-          onChangeClick={handleChangePath}
-        />
-      )}
+
 
       {/* Показываем выбор из найденных путей */}
       {appState === 'path-selection' && foundPaths.length > 0 && (
