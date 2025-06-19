@@ -4,6 +4,7 @@ use std::path::{Path};
 use std::env;
 use tauri::{AppHandle, Emitter};
 use tokio::time::{sleep, Duration};
+use rfd::FileDialog;
 
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -110,6 +111,26 @@ fn set_selected_file(file_path: String) -> Result<String, String> {
     }
 }
 
+#[tauri::command]
+async fn open_file_dialog() -> Result<String, String> {
+    let file = FileDialog::new()
+        .add_filter("Executable files", &["exe"])
+        .add_filter("All files", &["*"])
+        .set_title("Select file")
+        .pick_file();
+        
+    match file {
+        Some(path) => {
+            if let Some(path_str) = path.to_str() {
+                Ok(path_str.to_string())
+            } else {
+                Err("Invalid file path".to_string())
+            }
+        }
+        None => Err("No file selected".to_string())
+    }
+}
+
 async fn search_in_directory(
     dir: &Path, 
     filename: &str, 
@@ -191,7 +212,7 @@ fn is_system_directory(dir_name: &str) -> bool {
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![greet, search_file, set_selected_file])
+        .invoke_handler(tauri::generate_handler![greet, search_file, set_selected_file, open_file_dialog])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

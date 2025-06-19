@@ -66,6 +66,7 @@ function App() {
   const [foundPaths, setFoundPaths] = useState<string[]>([]);
   const [manualResults, setManualResults] = useState<string[]>([]);
   const [manualFileName, setManualFileName] = useState("");
+  const [manualFilePath, setManualFilePath] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [searchProgress, setSearchProgress] = useState<SearchProgress>({
     current: 0,
@@ -118,7 +119,7 @@ function App() {
     });
 
     try {
-      const result = await invoke<string[]>("search_file", { filename: "D2R.exe" });
+      const result = await invoke<string[]>("search_file", { filename: "2D2R.exe" });
       setFoundPaths(result ?? []);
 
       if (result && result.length > 0) {
@@ -158,6 +159,7 @@ function App() {
     setFoundPaths([]);
     setManualResults([]);
     setManualFileName("");
+    setManualFilePath("");
     startAutoSearch();
   };
 
@@ -165,30 +167,33 @@ function App() {
     setAppState('manual-input');
   };
 
+  const handleOpenFileDialog = async () => {
+    try {
+      const filePath = await invoke<string>("open_file_dialog");
+      if (filePath?.trim()) {
+        setManualFilePath(filePath.trim());
+        // Извлекаем имя файла из пути
+        const fileName = filePath.split(/[/\\]/).pop() ?? "";
+        setManualFileName(fileName);
+      }
+    } catch (error) {
+      console.error("Error opening file dialog:", error);
+      // Пользователь просто отменил выбор файла - это нормально
+      if (error !== "No file selected") {
+        alert("Ошибка при выборе файла!");
+      }
+    }
+  };
+
   const handleManualSearch = async () => {
     if (!manualFileName.trim()) {
-      alert("Введи имя файла!");
+      alert("Выбери файл блять!");
       return;
     }
 
-    setIsSearching(true);
-    setManualResults([]);
-    setSearchProgress({
-      current: 0,
-      total: 100,
-      message: "Searching...",
-      found_count: 0,
-    });
-
-    try {
-      const result = await invoke<string[]>("search_file", { filename: manualFileName });
-      setManualResults(result ?? []);
-    } catch (error) {
-      console.error("Manual search failed:", error);
-      setManualResults([]);
-    } finally {
-      setIsSearching(false);
-    }
+    // Используем полный путь если есть, иначе имя файла
+    const fileToAdd = manualFilePath.trim() || manualFileName;
+    setManualResults([fileToAdd]);
   };
 
   const handleCancel = () => {
@@ -239,42 +244,40 @@ function App() {
             </p>
           </div>
 
-          <form
-            className="flex gap-4 mb-8"
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleManualSearch();
-            }}
-          >
-            <input
-              type="file"
-              onChange={(e) => {
-                const file = e.currentTarget.files?.[0];
-                if (file) {
-                  setManualFileName(file.name);
-                }
-              }}
-              className="px-4 py-2 border border-gray-600 bg-gray-800 text-gray-100 rounded-lg shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:bg-gray-700 disabled:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700"
-              disabled={isSearching}
-              accept="*"
-            />
-            <button
-              type="submit"
-              disabled={isSearching || !manualFileName.trim()}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium disabled:bg-gray-600 disabled:cursor-not-allowed"
-            >
-              {isSearching ? "Searching..." : "Search"}
-            </button>
-            {isSearching && (
+          <div className="flex flex-col gap-4 mb-8">
+            <div className="flex gap-4">
               <button
                 type="button"
-                onClick={handleCancel}
-                className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 font-medium"
+                onClick={handleOpenFileDialog}
+                disabled={isSearching}
+                className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200 font-medium disabled:bg-gray-600"
               >
-                Cancel
+                Select File
               </button>
+              <button
+                type="button"
+                onClick={handleManualSearch}
+                disabled={!manualFileName.trim()}
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium disabled:bg-gray-600 disabled:cursor-not-allowed"
+              >
+                Use This File
+              </button>
+              {isSearching && (
+                <button
+                  type="button"
+                  onClick={handleCancel}
+                  className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 font-medium"
+                >
+                  Cancel
+                </button>
+              )}
+            </div>
+            {manualFileName && (
+              <div className="text-gray-300">
+                Selected file: <span className="font-mono text-blue-400">{manualFilePath || manualFileName}</span>
+              </div>
             )}
-          </form>
+          </div>
 
           <div className="flex gap-4 justify-center mb-8">
             <button
