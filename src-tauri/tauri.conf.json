@@ -14,7 +14,13 @@
       {
         "title": "Diablo II Utility",
         "width": 800,
-        "height": 600
+        "height": 600,
+        "decorations": false,
+        "resizable": true,
+        "minimizable": true,
+        "maximizable": true,
+        "closable": true,
+        "center": true
       }
     ],
     "security": {

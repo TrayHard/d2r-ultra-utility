@@ -77,7 +77,7 @@ const Dropdown: React.FC<DropdownProps> = ({
     <div className={`relative ${className}`} ref={dropdownRef}>
       <button
         onClick={handleToggle}
-        className={`w-full ${sizeClasses.button} text-left rounded-lg border transition-all duration-200 flex items-center justify-between ${
+        className={`w-full ${sizeClasses.button} text-left border transition-all duration-200 flex items-center justify-between ${
           isDarkTheme
             ? 'bg-gray-700 border-gray-600 text-gray-200 hover:bg-gray-600'
             : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
@@ -97,7 +97,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       </button>
 
       {isOpen && (
-        <div className={`absolute z-50 w-full mt-1 rounded-lg border shadow-lg ${
+        <div className={`absolute z-50 w-full mt-1 border shadow-lg ${
           isDarkTheme
             ? 'bg-gray-700 border-gray-600'
             : 'bg-white border-gray-300'
@@ -110,7 +110,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                 className={`w-full ${sizeClasses.option} text-left hover:bg-opacity-80 transition-colors duration-150 ${
                   option.value === selectedValue
                     ? isDarkTheme
-                      ? 'bg-blue-600 text-white'
+                      ? 'bg-gray-500 text-white'
                       : 'bg-blue-500 text-white'
                     : isDarkTheme
                       ? 'text-gray-200 hover:bg-gray-600'
