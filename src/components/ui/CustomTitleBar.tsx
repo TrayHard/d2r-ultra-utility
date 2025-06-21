@@ -46,10 +46,11 @@ const CustomTitleBar: React.FC<CustomTitleBarProps> = ({ title = 'Diablo II Util
       >
         <div className="flex items-center gap-3">
           {/* Diablo themed icon */}
-          <div className="relative">
-            <div className="w-5 h-5 bg-gradient-to-br from-orange-400 to-red-600 rounded-full border-2 border-orange-300 shadow-lg"></div>
-            <div className="absolute top-1 left-1 w-1 h-1 bg-yellow-200 rounded-full animate-pulse"></div>
-          </div>
+          <img
+            src="/src/assets/logo_128.png"
+            alt="Diablo 2 Logo"
+            className="h-5 w-auto drop-shadow-md"
+          />
           <span className="text-sm font-bold text-orange-100 tracking-wide drop-shadow-md">
             {title}
           </span>
