@@ -2,13 +2,7 @@ import React from 'react';
 import { ERune, runeMinLvl } from '../../../constants/runes';
 import { useTranslation } from 'react-i18next';
 import Dropdown from '../../ui/Dropdown';
-
-interface RuneSettings {
-  highlightRune: boolean;
-  showRuneNumber: boolean;
-  boxSize: string;
-  runeColor: string;
-}
+import { RuneSettings } from '../../../hooks/useSettings';
 
 interface RuneCardProps {
   rune: ERune;
@@ -33,36 +27,36 @@ const RuneCard: React.FC<RuneCardProps> = ({
   const { t } = useTranslation();
 
   // Control states - используем переданные настройки или дефолтные
-  const [highlightRune, setHighlightRune] = React.useState(settings?.highlightRune ?? false);
-  const [showRuneNumber, setShowRuneNumber] = React.useState(settings?.showRuneNumber ?? false);
-  const [boxSize, setBoxSize] = React.useState(settings?.boxSize ?? 'Normal');
-  const [runeColor, setRuneColor] = React.useState(settings?.runeColor ?? 'white1');
+  const [isHighlighted, setIsHighlighted] = React.useState(settings?.isHighlighted ?? false);
+  const [showNumber, setShowNumber] = React.useState(settings?.showNumber ?? false);
+  const [boxSize, setBoxSize] = React.useState(settings?.boxSize ?? 0);
+  const [color, setColor] = React.useState(settings?.color ?? 'white1');
 
   // Синхронизируем с переданными настройками
   React.useEffect(() => {
     if (settings) {
-      setHighlightRune(settings.highlightRune);
-      setShowRuneNumber(settings.showRuneNumber);
+      setIsHighlighted(settings.isHighlighted);
+      setShowNumber(settings.showNumber);
       setBoxSize(settings.boxSize);
-      setRuneColor(settings.runeColor);
+      setColor(settings.color);
     }
   }, [settings]);
 
   // Language customization states
   const [runeNames, setRuneNames] = React.useState({
-    enUS: '',
-    ruRU: '',
-    zhTW: '',
-    deDE: '',
-    esES: '',
-    frFR: '',
-    itIT: '',
-    koKR: '',
-    plPL: '',
-    esMX: '',
-    jaJP: '',
-    ptBR: '',
-    zhCN: ''
+    enUS: settings?.locales?.enUS ?? '',
+    ruRU: settings?.locales?.ruRU ?? '',
+    zhTW: settings?.locales?.zhTW ?? '',
+    deDE: settings?.locales?.deDE ?? '',
+    esES: settings?.locales?.esES ?? '',
+    frFR: settings?.locales?.frFR ?? '',
+    itIT: settings?.locales?.itIT ?? '',
+    koKR: settings?.locales?.koKR ?? '',
+    plPL: settings?.locales?.plPL ?? '',
+    esMX: settings?.locales?.esMX ?? '',
+    jaJP: settings?.locales?.jaJP ?? '',
+    ptBR: settings?.locales?.ptBR ?? '',
+    zhCN: settings?.locales?.zhCN ?? ''
   });
 
   // Language codes for iteration
@@ -73,19 +67,24 @@ const RuneCard: React.FC<RuneCardProps> = ({
 
   // Handle language name change
   const handleLanguageNameChange = (langCode: string, value: string) => {
-    setRuneNames(prev => ({
-      ...prev,
+    const newRuneNames = {
+      ...runeNames,
       [langCode]: value
-    }));
+    }
+    setRuneNames(newRuneNames);
+    
+    // Обновляем настройки сразу при изменении языковых полей
+    handleSettingChange({ locales: newRuneNames });
   };
 
   // Handle settings change
   const handleSettingChange = (newSettings: Partial<RuneSettings>) => {
-    const updatedSettings = {
-      highlightRune,
-      showRuneNumber,
+    const updatedSettings: RuneSettings = {
+      isHighlighted,
+      showNumber,
       boxSize,
-      runeColor,
+      color,
+      locales: runeNames,
       ...newSettings
     };
     
@@ -96,30 +95,31 @@ const RuneCard: React.FC<RuneCardProps> = ({
 
   // Handle individual control changes
   const handleHighlightChange = (checked: boolean) => {
-    setHighlightRune(checked);
-    handleSettingChange({ highlightRune: checked });
+    setIsHighlighted(checked);
+    handleSettingChange({ isHighlighted: checked });
   };
 
   const handleShowNumberChange = (checked: boolean) => {
-    setShowRuneNumber(checked);
-    handleSettingChange({ showRuneNumber: checked });
+    setShowNumber(checked);
+    handleSettingChange({ showNumber: checked });
   };
 
   const handleBoxSizeChange = (size: string) => {
-    setBoxSize(size);
-    handleSettingChange({ boxSize: size });
+    const sizeNumber = parseInt(size);
+    setBoxSize(sizeNumber);
+    handleSettingChange({ boxSize: sizeNumber });
   };
 
-  const handleColorChange = (color: string) => {
-    setRuneColor(color);
-    handleSettingChange({ runeColor: color });
+  const handleColorChange = (newColor: string) => {
+    setColor(newColor);
+    handleSettingChange({ color: newColor });
   };
 
   // Options for dropdowns
   const sizeOptions = [
-    { value: 'Normal', label: t('runeControls.sizes.Normal') },
-    { value: 'Medium', label: t('runeControls.sizes.Medium') },
-    { value: 'Large', label: t('runeControls.sizes.Large') }
+    { value: '0', label: t('runeControls.sizes.Normal') },
+    { value: '1', label: t('runeControls.sizes.Medium') },
+    { value: '2', label: t('runeControls.sizes.Large') }
   ];
 
   const colorOptions = [
@@ -266,7 +266,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
             `}>
               <input
                 type="checkbox"
-                checked={highlightRune}
+                checked={isHighlighted}
                 onChange={(e) => handleHighlightChange(e.target.checked)}
                 className={`
                   w-5 h-5 rounded transition-all duration-200
@@ -291,7 +291,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
             `}>
               <input
                 type="checkbox"
-                checked={showRuneNumber}
+                checked={showNumber}
                 onChange={(e) => handleShowNumberChange(e.target.checked)}
                 className={`
                   w-5 h-5 rounded transition-all duration-200
@@ -319,7 +319,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
               </label>
               <Dropdown
                 options={sizeOptions}
-                selectedValue={boxSize}
+                selectedValue={boxSize.toString()}
                 onSelect={handleBoxSizeChange}
                 isDarkTheme={isDarkTheme}
                 size="md"
@@ -333,7 +333,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
               </label>
               <Dropdown
                 options={colorOptions}
-                selectedValue={runeColor}
+                selectedValue={color}
                 onSelect={handleColorChange}
                 isDarkTheme={isDarkTheme}
                 size="md"
@@ -395,4 +395,4 @@ const getRarityColor = (rune: ERune): string => {
   return 'bg-orange-500'; // Unique/High
 };
 
-export default RuneCard; 
+export default RuneCard;

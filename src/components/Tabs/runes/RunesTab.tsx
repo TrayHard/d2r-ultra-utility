@@ -10,6 +10,7 @@ import {
   mdiCheckboxBlankOutline,
 } from "@mdi/js";
 import Dropdown from "../../ui/Dropdown";
+import { useSettings, RuneSettings } from "../../../hooks/useSettings";
 
 interface RunesTabProps {
   isDarkTheme: boolean;
@@ -18,11 +19,12 @@ interface RunesTabProps {
 type SortType = "name" | "level";
 type SortOrder = "asc" | "desc";
 
-interface RuneSettings {
-  highlightRune: boolean;
-  showRuneNumber: boolean;
-  boxSize: string;
-  runeColor: string;
+// Интерфейс для массового редактирования (упрощенная версия RuneSettings)
+interface MassEditSettings {
+  isHighlighted: boolean;
+  showNumber: boolean;
+  boxSize: number;
+  color: string;
 }
 
 const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
@@ -31,16 +33,21 @@ const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
   const [sortType, setSortType] = useState<SortType>("name");
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
   const [selectedRunes, setSelectedRunes] = useState<Set<ERune>>(new Set());
-  const [runeSettings, setRuneSettings] = useState<
-    Partial<Record<ERune, RuneSettings>>
-  >({});
+
+  // Используем глобальный стейт настроек
+  const { 
+    getRuneSettings, 
+    updateRuneSettings, 
+    updateMultipleRuneSettings, 
+    resetMultipleRuneSettings 
+  } = useSettings();
 
   // Mass edit states
-  const [massEditSettings, setMassEditSettings] = useState<RuneSettings>({
-    highlightRune: false,
-    showRuneNumber: false,
-    boxSize: "Normal",
-    runeColor: "white1",
+  const [massEditSettings, setMassEditSettings] = useState<MassEditSettings>({
+    isHighlighted: false,
+    showNumber: false,
+    boxSize: 0, // 0 - Normal
+    color: "white1",
   });
 
   const filteredAndSortedRunes = useMemo(() => {
@@ -90,41 +97,30 @@ const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
   };
 
   const handleRuneSettingsChange = (rune: ERune, settings: RuneSettings) => {
-    setRuneSettings((prev) => ({
-      ...prev,
-      [rune]: settings,
-    }));
+    updateRuneSettings(rune, settings);
   };
 
   const applyMassEdit = () => {
-    const newSettings = { ...runeSettings };
-    selectedRunes.forEach((rune) => {
-      newSettings[rune] = { ...massEditSettings };
+    const selectedRunesArray = Array.from(selectedRunes);
+    updateMultipleRuneSettings(selectedRunesArray, {
+      isHighlighted: massEditSettings.isHighlighted,
+      showNumber: massEditSettings.showNumber,
+      boxSize: massEditSettings.boxSize,
+      color: massEditSettings.color
     });
-    setRuneSettings(newSettings);
   };
 
   const resetSelectedRunes = () => {
-    const newSettings = { ...runeSettings };
-    const defaultSettings: RuneSettings = {
-      highlightRune: false,
-      showRuneNumber: false,
-      boxSize: "Normal",
-      runeColor: "white1"
-    };
-    
-    selectedRunes.forEach((rune) => {
-      newSettings[rune] = { ...defaultSettings };
-    });
-    setRuneSettings(newSettings);
+    const selectedRunesArray = Array.from(selectedRunes);
+    resetMultipleRuneSettings(selectedRunesArray);
     // НЕ снимаем выделение - оставляем руны выделенными чтобы видеть что сбросили
   };
 
   // Options for mass edit dropdowns
   const sizeOptions = [
-    { value: "Normal", label: t("runeControls.sizes.Normal") ?? "Normal" },
-    { value: "Medium", label: t("runeControls.sizes.Medium") ?? "Medium" },
-    { value: "Large", label: t("runeControls.sizes.Large") ?? "Large" },
+    { value: "0", label: t("runeControls.sizes.Normal") ?? "Normal" },
+    { value: "1", label: t("runeControls.sizes.Medium") ?? "Medium" },
+    { value: "2", label: t("runeControls.sizes.Large") ?? "Large" },
   ];
 
   const colorOptions = [
@@ -476,11 +472,11 @@ const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
                   >
                     <input
                       type="checkbox"
-                      checked={massEditSettings.highlightRune}
+                      checked={massEditSettings.isHighlighted}
                       onChange={(e) =>
                         setMassEditSettings((prev) => ({
                           ...prev,
-                          highlightRune: e.target.checked,
+                          isHighlighted: e.target.checked,
                         }))
                       }
                       className={`
@@ -514,11 +510,11 @@ const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
                   >
                     <input
                       type="checkbox"
-                      checked={massEditSettings.showRuneNumber}
+                      checked={massEditSettings.showNumber}
                       onChange={(e) =>
                         setMassEditSettings((prev) => ({
                           ...prev,
-                          showRuneNumber: e.target.checked,
+                          showNumber: e.target.checked,
                         }))
                       }
                       className={`
@@ -550,11 +546,11 @@ const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
                     </label>
                     <Dropdown
                       options={sizeOptions}
-                      selectedValue={massEditSettings.boxSize}
+                      selectedValue={massEditSettings.boxSize.toString()}
                       onSelect={(value) =>
                         setMassEditSettings((prev) => ({
                           ...prev,
-                          boxSize: value,
+                          boxSize: parseInt(value),
                         }))
                       }
                       isDarkTheme={isDarkTheme}
@@ -574,11 +570,11 @@ const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
                     </label>
                     <Dropdown
                       options={colorOptions}
-                      selectedValue={massEditSettings.runeColor}
+                      selectedValue={massEditSettings.color}
                       onSelect={(value) =>
                         setMassEditSettings((prev) => ({
                           ...prev,
-                          runeColor: value,
+                          color: value,
                         }))
                       }
                       isDarkTheme={isDarkTheme}
@@ -599,7 +595,7 @@ const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
                   onSelectionChange={(isSelected) =>
                     handleRuneSelection(rune, isSelected)
                   }
-                  settings={runeSettings[rune]}
+                  settings={getRuneSettings(rune)}
                   onSettingsChange={(settings) =>
                     handleRuneSettingsChange(rune, settings)
                   }
