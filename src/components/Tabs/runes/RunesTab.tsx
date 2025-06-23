@@ -1,147 +1,611 @@
-import React, { useState, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { ERune, runes, runeMinLvl } from '../../../constants/runes';
-import RuneCard from './RuneCard';
-import Icon from '@mdi/react';
-import { mdiOrderAlphabeticalAscending, mdiOrderAlphabeticalDescending } from '@mdi/js';
+import React, { useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { ERune, runes, runeMinLvl } from "../../../constants/runes";
+import RuneCard from "./RuneCard";
+import Icon from "@mdi/react";
+import {
+  mdiOrderAlphabeticalAscending,
+  mdiOrderAlphabeticalDescending,
+  mdiCheckAll,
+  mdiCheckboxBlankOutline,
+} from "@mdi/js";
+import Dropdown from "../../ui/Dropdown";
 
 interface RunesTabProps {
   isDarkTheme: boolean;
 }
 
-type SortType = 'name' | 'level';
-type SortOrder = 'asc' | 'desc';
+type SortType = "name" | "level";
+type SortOrder = "asc" | "desc";
+
+interface RuneSettings {
+  highlightRune: boolean;
+  showRuneNumber: boolean;
+  boxSize: string;
+  runeColor: string;
+}
 
 const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
   const { t } = useTranslation();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortType, setSortType] = useState<SortType>('name');
-  const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortType, setSortType] = useState<SortType>("name");
+  const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
+  const [selectedRunes, setSelectedRunes] = useState<Set<ERune>>(new Set());
+  const [runeSettings, setRuneSettings] = useState<
+    Partial<Record<ERune, RuneSettings>>
+  >({});
+
+  // Mass edit states
+  const [massEditSettings, setMassEditSettings] = useState<RuneSettings>({
+    highlightRune: false,
+    showRuneNumber: false,
+    boxSize: "Normal",
+    runeColor: "white1",
+  });
 
   const filteredAndSortedRunes = useMemo(() => {
-    let filtered = runes.filter(rune => 
+    let filtered = runes.filter((rune) =>
       rune.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     return filtered.sort((a, b) => {
-      if (sortType === 'name') {
+      if (sortType === "name") {
         const comparison = a.localeCompare(b);
-        return sortOrder === 'asc' ? comparison : -comparison;
+        return sortOrder === "asc" ? comparison : -comparison;
       } else {
         const levelA = runeMinLvl[a];
         const levelB = runeMinLvl[b];
         const comparison = levelA - levelB;
-        return sortOrder === 'asc' ? comparison : -comparison;
+        return sortOrder === "asc" ? comparison : -comparison;
       }
     });
   }, [searchQuery, sortType, sortOrder]);
 
   const handleSort = (type: SortType) => {
     if (sortType === type) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
     } else {
       setSortType(type);
-      setSortOrder('asc');
+      setSortOrder("asc");
     }
   };
+
+  const handleRuneSelection = (rune: ERune, isSelected: boolean) => {
+    const newSelected = new Set(selectedRunes);
+    if (isSelected) {
+      newSelected.add(rune);
+    } else {
+      newSelected.delete(rune);
+    }
+    setSelectedRunes(newSelected);
+  };
+
+  const handleSelectAll = () => {
+    const allFiltered = new Set(filteredAndSortedRunes);
+    setSelectedRunes(allFiltered);
+  };
+
+  const handleDeselectAll = () => {
+    setSelectedRunes(new Set());
+  };
+
+  const handleRuneSettingsChange = (rune: ERune, settings: RuneSettings) => {
+    setRuneSettings((prev) => ({
+      ...prev,
+      [rune]: settings,
+    }));
+  };
+
+  const applyMassEdit = () => {
+    const newSettings = { ...runeSettings };
+    selectedRunes.forEach((rune) => {
+      newSettings[rune] = { ...massEditSettings };
+    });
+    setRuneSettings(newSettings);
+  };
+
+  const resetSelectedRunes = () => {
+    const newSettings = { ...runeSettings };
+    const defaultSettings: RuneSettings = {
+      highlightRune: false,
+      showRuneNumber: false,
+      boxSize: "Normal",
+      runeColor: "white1"
+    };
+    
+    selectedRunes.forEach((rune) => {
+      newSettings[rune] = { ...defaultSettings };
+    });
+    setRuneSettings(newSettings);
+    // НЕ снимаем выделение - оставляем руны выделенными чтобы видеть что сбросили
+  };
+
+  // Options for mass edit dropdowns
+  const sizeOptions = [
+    { value: "Normal", label: t("runeControls.sizes.Normal") ?? "Normal" },
+    { value: "Medium", label: t("runeControls.sizes.Medium") ?? "Medium" },
+    { value: "Large", label: t("runeControls.sizes.Large") ?? "Large" },
+  ];
+
+  const colorOptions = [
+    { value: "white1", label: t("runeControls.colors.white1") ?? "White 1" },
+    { value: "white2", label: t("runeControls.colors.white2") ?? "White 2" },
+    { value: "gray1", label: t("runeControls.colors.gray1") ?? "Gray 1" },
+    { value: "gray2", label: t("runeControls.colors.gray2") ?? "Gray 2" },
+    { value: "gray3", label: t("runeControls.colors.gray3") ?? "Gray 3" },
+    { value: "black1", label: t("runeControls.colors.black1") ?? "Black 1" },
+    { value: "black2", label: t("runeControls.colors.black2") ?? "Black 2" },
+    {
+      value: "lightred",
+      label: t("runeControls.colors.lightred") ?? "Light Red",
+    },
+    { value: "red1", label: t("runeControls.colors.red1") ?? "Red 1" },
+    { value: "red2", label: t("runeControls.colors.red2") ?? "Red 2" },
+    { value: "darkred", label: t("runeControls.colors.darkred") ?? "Dark Red" },
+    { value: "orange1", label: t("runeControls.colors.orange1") ?? "Orange 1" },
+    { value: "orange2", label: t("runeControls.colors.orange2") ?? "Orange 2" },
+    { value: "orange3", label: t("runeControls.colors.orange3") ?? "Orange 3" },
+    { value: "orange4", label: t("runeControls.colors.orange4") ?? "Orange 4" },
+    {
+      value: "lightgold1",
+      label: t("runeControls.colors.lightgold1") ?? "Light Gold 1",
+    },
+    {
+      value: "lightgold2",
+      label: t("runeControls.colors.lightgold2") ?? "Light Gold 2",
+    },
+    { value: "gold1", label: t("runeControls.colors.gold1") ?? "Gold 1" },
+    { value: "gold2", label: t("runeControls.colors.gold2") ?? "Gold 2" },
+    { value: "yellow1", label: t("runeControls.colors.yellow1") ?? "Yellow 1" },
+    { value: "yellow2", label: t("runeControls.colors.yellow2") ?? "Yellow 2" },
+    { value: "green1", label: t("runeControls.colors.green1") ?? "Green 1" },
+    { value: "green2", label: t("runeControls.colors.green2") ?? "Green 2" },
+    { value: "green3", label: t("runeControls.colors.green3") ?? "Green 3" },
+    { value: "green4", label: t("runeControls.colors.green4") ?? "Green 4" },
+    {
+      value: "darkgreen1",
+      label: t("runeControls.colors.darkgreen1") ?? "Dark Green 1",
+    },
+    {
+      value: "darkgreen2",
+      label: t("runeControls.colors.darkgreen2") ?? "Dark Green 2",
+    },
+    {
+      value: "turquoise",
+      label: t("runeControls.colors.turquoise") ?? "Turquoise",
+    },
+    { value: "skyblue", label: t("runeControls.colors.skyblue") ?? "Sky Blue" },
+    {
+      value: "lightblue1",
+      label: t("runeControls.colors.lightblue1") ?? "Light Blue 1",
+    },
+    {
+      value: "lightblue2",
+      label: t("runeControls.colors.lightblue2") ?? "Light Blue 2",
+    },
+    { value: "blue1", label: t("runeControls.colors.blue1") ?? "Blue 1" },
+    { value: "blue2", label: t("runeControls.colors.blue2") ?? "Blue 2" },
+    {
+      value: "lightpink",
+      label: t("runeControls.colors.lightpink") ?? "Light Pink",
+    },
+    { value: "pink", label: t("runeControls.colors.pink") ?? "Pink" },
+    { value: "purple", label: t("runeControls.colors.purple") ?? "Purple" },
+  ];
 
   return (
     <div className="h-full flex flex-col">
       {/* Control Block */}
-      <div className={`
+      <div
+        className={`
         p-6 border-b
-        ${isDarkTheme ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}
-      `}>
-        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-          {/* Search Bar */}
-          <div className="relative flex-1 max-w-md">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
+        ${
+          isDarkTheme
+            ? "bg-gray-800 border-gray-700"
+            : "bg-gray-50 border-gray-200"
+        }
+      `}
+      >
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
+            {/* Search Bar */}
+            <div className="relative flex-1 max-w-md">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg
+                  className="w-5 h-5 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </div>
+              <input
+                type="text"
+                placeholder={t("search.placeholder") ?? "Search runes..."}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className={`
+                  w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent
+                  ${
+                    isDarkTheme
+                      ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                      : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
+                  }
+                `}
+              />
             </div>
-            <input
-              type="text"
-              placeholder={t('search.placeholder') ?? 'Search runes...'}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className={`
-                w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent
-                ${isDarkTheme 
-                  ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                  : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                }
-              `}
-            />
+
+            {/* Sort Buttons */}
+            <div className="flex gap-2">
+              <button
+                onClick={() => handleSort("name")}
+                className={`
+                  flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors
+                  ${
+                    sortType === "name"
+                      ? isDarkTheme
+                        ? "bg-yellow-600 border-yellow-500 text-black"
+                        : "bg-yellow-500 border-yellow-400 text-white"
+                      : isDarkTheme
+                      ? "bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600"
+                      : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
+                  }
+                `}
+              >
+                <Icon
+                  path={
+                    sortOrder === "asc"
+                      ? mdiOrderAlphabeticalAscending
+                      : mdiOrderAlphabeticalDescending
+                  }
+                  size={0.8}
+                />
+                Name
+                {sortType === "name" && (
+                  <svg
+                    className={`w-4 h-4 ${
+                      sortOrder === "desc" ? "rotate-180" : ""
+                    }`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M5 15l7-7 7 7"
+                    />
+                  </svg>
+                )}
+              </button>
+
+              <button
+                onClick={() => handleSort("level")}
+                className={`
+                  flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors
+                  ${
+                    sortType === "level"
+                      ? isDarkTheme
+                        ? "bg-yellow-600 border-yellow-500 text-black"
+                        : "bg-yellow-500 border-yellow-400 text-white"
+                      : isDarkTheme
+                      ? "bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600"
+                      : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
+                  }
+                `}
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
+                </svg>
+                Level
+                {sortType === "level" && (
+                  <svg
+                    className={`w-4 h-4 ${
+                      sortOrder === "desc" ? "rotate-180" : ""
+                    }`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M5 15l7-7 7 7"
+                    />
+                  </svg>
+                )}
+              </button>
+            </div>
           </div>
 
-          {/* Sort Buttons */}
-          <div className="flex gap-2">
-            <button
-              onClick={() => handleSort('name')}
-              className={`
-                flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors
-                ${sortType === 'name'
-                  ? (isDarkTheme ? 'bg-yellow-600 border-yellow-500 text-black' : 'bg-yellow-500 border-yellow-400 text-white')
-                  : (isDarkTheme ? 'bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50')
-                }
-              `}
-            >
-              <Icon path={sortOrder === 'asc' ? mdiOrderAlphabeticalAscending : mdiOrderAlphabeticalDescending} size={0.8} />
-              Name
-              {sortType === 'name' && (
-                <svg className={`w-4 h-4 ${sortOrder === 'desc' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7" />
-                </svg>
-              )}
-            </button>
+          {/* Selection Controls */}
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleSelectAll}
+                className={`
+                  flex items-center gap-2 px-3 py-2 rounded-lg border transition-colors
+                  ${
+                    isDarkTheme
+                      ? "bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600"
+                      : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
+                  }
+                `}
+              >
+                <Icon path={mdiCheckAll} size={0.8} />
+                {t("massEdit.selectAll")}
+              </button>
+              <button
+                onClick={handleDeselectAll}
+                className={`
+                  flex items-center gap-2 px-3 py-2 rounded-lg border transition-colors
+                  ${
+                    isDarkTheme
+                      ? "bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600"
+                      : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
+                  }
+                `}
+                disabled={selectedRunes.size === 0}
+              >
+                <Icon path={mdiCheckboxBlankOutline} size={0.8} />
+                {t("massEdit.deselectAll")}
+              </button>
+            </div>
 
-            <button
-              onClick={() => handleSort('level')}
-              className={`
-                flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors
-                ${sortType === 'level'
-                  ? (isDarkTheme ? 'bg-yellow-600 border-yellow-500 text-black' : 'bg-yellow-500 border-yellow-400 text-white')
-                  : (isDarkTheme ? 'bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50')
-                }
-              `}
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-              Level
-              {sortType === 'level' && (
-                <svg className={`w-4 h-4 ${sortOrder === 'desc' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 15l7-7 7 7" />
-                </svg>
-              )}
-            </button>
+            {selectedRunes.size > 0 && (
+              <span
+                className={`text-sm font-medium ${
+                  isDarkTheme ? "text-gray-300" : "text-gray-700"
+                }`}
+              >
+                {selectedRunes.size} {t("massEdit.selected")}
+              </span>
+            )}
           </div>
         </div>
       </div>
 
       {/* Runes List */}
-      <div className="flex-1 p-6 overflow-y-auto">
+      <div className="flex-1 p-6 overflow-y-auto max-h-[calc(100vh-200px)]">
         {filteredAndSortedRunes.length === 0 ? (
           <div className="text-center py-12">
             <div className="w-16 h-16 bg-gray-400 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              <svg
+                className="w-8 h-8 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
               </svg>
             </div>
-            <p className={`text-lg ${isDarkTheme ? 'text-gray-400' : 'text-gray-600'}`}>
-              {t('search.noResults') ?? 'No runes found'}
+            <p
+              className={`text-lg ${
+                isDarkTheme ? "text-gray-400" : "text-gray-600"
+              }`}
+            >
+              {t("search.noResults") ?? "No runes found"}
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
-            {filteredAndSortedRunes.map((rune) => (
-              <RuneCard
-                key={rune}
-                rune={rune}
-                isDarkTheme={isDarkTheme}
-              />
-            ))}
+          <div className="flex flex-col gap-4">
+            {/* Mass Edit Panel */}
+            {selectedRunes.size > 0 && (
+              <div
+                className={`
+              p-3 rounded-lg border transition-all duration-300
+              ${
+                isDarkTheme
+                  ? "bg-gray-700/50 border-gray-600"
+                  : "bg-gray-50 border-gray-300"
+              }
+            `}
+              >
+                <div className="flex items-center justify-between gap-4 mb-3">
+                  <span
+                    className={`text-sm font-medium ${
+                      isDarkTheme ? "text-gray-300" : "text-gray-700"
+                    }`}
+                  >
+                    {selectedRunes.size} {t("massEdit.selected")}
+                  </span>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={applyMassEdit}
+                      className={`
+                      px-3 py-1.5 text-sm rounded-md font-medium transition-colors
+                      ${
+                        isDarkTheme
+                          ? "bg-yellow-600 text-black hover:bg-yellow-500"
+                          : "bg-yellow-500 text-white hover:bg-yellow-600"
+                      }
+                    `}
+                    >
+                      {t("massEdit.apply")}
+                    </button>
+                    <button
+                      onClick={resetSelectedRunes}
+                      className={`
+                      px-3 py-1.5 text-sm rounded-md border font-medium transition-colors
+                      ${
+                        isDarkTheme
+                          ? "bg-gray-600 border-gray-500 text-gray-300 hover:bg-gray-500"
+                          : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
+                      }
+                    `}
+                    >
+                      {t("massEdit.reset")}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  {/* Highlight Rune Checkbox */}
+                  <label
+                    className={`
+                  flex items-center space-x-2 cursor-pointer h-8 w-32 p-2 rounded-md border transition-all
+                  ${
+                    isDarkTheme
+                      ? "bg-gray-700 border-gray-600 hover:bg-gray-600"
+                      : "bg-white border-gray-300 hover:bg-gray-50"
+                  }
+                `}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={massEditSettings.highlightRune}
+                      onChange={(e) =>
+                        setMassEditSettings((prev) => ({
+                          ...prev,
+                          highlightRune: e.target.checked,
+                        }))
+                      }
+                      className={`
+                      w-4 h-4 rounded
+                      ${
+                        isDarkTheme
+                          ? "text-yellow-400 bg-gray-700 border-gray-600"
+                          : "text-yellow-500 bg-white border-gray-300"
+                      }
+                    `}
+                    />
+                    <span
+                      className={`text-xs font-medium ${
+                        isDarkTheme ? "text-gray-200" : "text-gray-800"
+                      }`}
+                    >
+                      {t("massEdit.highlight")}
+                    </span>
+                  </label>
+
+                  {/* Show Rune Number Checkbox */}
+                  <label
+                    className={`
+                  flex items-center space-x-2 cursor-pointer h-8 w-32 p-2 rounded-md border transition-all
+                  ${
+                    isDarkTheme
+                      ? "bg-gray-700 border-gray-600 hover:bg-gray-600"
+                      : "bg-white border-gray-300 hover:bg-gray-50"
+                  }
+                `}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={massEditSettings.showRuneNumber}
+                      onChange={(e) =>
+                        setMassEditSettings((prev) => ({
+                          ...prev,
+                          showRuneNumber: e.target.checked,
+                        }))
+                      }
+                      className={`
+                      w-4 h-4 rounded
+                      ${
+                        isDarkTheme
+                          ? "text-yellow-400 bg-gray-700 border-gray-600"
+                          : "text-yellow-500 bg-white border-gray-300"
+                      }
+                    `}
+                    />
+                    <span
+                      className={`text-xs font-medium ${
+                        isDarkTheme ? "text-gray-200" : "text-gray-800"
+                      }`}
+                    >
+                      {t("massEdit.showNumbers")}
+                    </span>
+                  </label>
+
+                  {/* Box Size Dropdown */}
+                  <div className="flex flex-row gap-2 items-center">
+                    <label
+                      className={`block text-xs font-medium mb-1 ${
+                        isDarkTheme ? "text-gray-300" : "text-gray-700"
+                      }`}
+                    >
+                      {t("massEdit.boxSize")}
+                    </label>
+                    <Dropdown
+                      options={sizeOptions}
+                      selectedValue={massEditSettings.boxSize}
+                      onSelect={(value) =>
+                        setMassEditSettings((prev) => ({
+                          ...prev,
+                          boxSize: value,
+                        }))
+                      }
+                      isDarkTheme={isDarkTheme}
+                      size="sm"
+                      className="w-32 py-2"
+                    />
+                  </div>
+
+                  {/* Color Dropdown */}
+                  <div className="flex flex-row gap-2 items-center">
+                    <label
+                      className={`block text-xs font-medium mb-1 ${
+                        isDarkTheme ? "text-gray-300" : "text-gray-700"
+                      }`}
+                    >
+                      {t("massEdit.color")}
+                    </label>
+                    <Dropdown
+                      options={colorOptions}
+                      selectedValue={massEditSettings.runeColor}
+                      onSelect={(value) =>
+                        setMassEditSettings((prev) => ({
+                          ...prev,
+                          runeColor: value,
+                        }))
+                      }
+                      isDarkTheme={isDarkTheme}
+                      size="sm"
+                      className="w-32 py-2"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {filteredAndSortedRunes.map((rune) => (
+                <RuneCard
+                  key={rune}
+                  rune={rune}
+                  isDarkTheme={isDarkTheme}
+                  isSelected={selectedRunes.has(rune)}
+                  onSelectionChange={(isSelected) =>
+                    handleRuneSelection(rune, isSelected)
+                  }
+                  settings={runeSettings[rune]}
+                  onSettingsChange={(settings) =>
+                    handleRuneSettingsChange(rune, settings)
+                  }
+                />
+              ))}
+            </div>
           </div>
         )}
       </div>
@@ -149,4 +613,4 @@ const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
   );
 };
 
-export default RunesTab; 
+export default RunesTab;

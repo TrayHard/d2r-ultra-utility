@@ -74,10 +74,10 @@ const Dropdown: React.FC<DropdownProps> = ({
   const sizeClasses = getSizeClasses();
 
   return (
-    <div className={`relative ${className}`} ref={dropdownRef}>
+    <div className={`relative`} ref={dropdownRef}>
       <button
         onClick={handleToggle}
-        className={`w-full ${sizeClasses.button} text-left border transition-all duration-200 flex items-center justify-between ${
+        className={`w-full ${sizeClasses.button} text-left border transition-all duration-200 flex items-center justify-between ${className} ${
           isDarkTheme
             ? 'bg-gray-700 border-gray-600 text-gray-200 hover:bg-gray-600'
             : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'

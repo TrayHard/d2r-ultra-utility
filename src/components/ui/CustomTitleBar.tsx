@@ -38,7 +38,7 @@ const CustomTitleBar: React.FC<CustomTitleBarProps> = ({ title = 'Diablo II Util
   };
 
   return (
-    <div className="flex justify-between items-center h-9 bg-gradient-to-r from-red-950 via-red-900 to-orange-900 text-white select-none border-b-2 border-orange-600 shadow-lg">
+    <div className="flex justify-between items-center h-9 bg-gradient-to-r from-red-950 via-red-900 to-orange-900 text-white select-none border-b-2 border-orange-600 shadow-lg fixed top-0 left-0 right-0 z-50">
       {/* Draggable area */}
       <div
         data-tauri-drag-region

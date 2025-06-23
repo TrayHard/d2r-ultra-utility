@@ -3,22 +3,117 @@ import { ERune, runeMinLvl } from '../../../constants/runes';
 import { useTranslation } from 'react-i18next';
 import Dropdown from '../../ui/Dropdown';
 
+interface RuneSettings {
+  highlightRune: boolean;
+  showRuneNumber: boolean;
+  boxSize: string;
+  runeColor: string;
+}
+
 interface RuneCardProps {
   rune: ERune;
   isDarkTheme: boolean;
+  isSelected?: boolean;
+  onSelectionChange?: (isSelected: boolean) => void;
+  settings?: RuneSettings;
+  onSettingsChange?: (settings: RuneSettings) => void;
 }
 
-const RuneCard: React.FC<RuneCardProps> = ({ rune, isDarkTheme }) => {
+const RuneCard: React.FC<RuneCardProps> = ({ 
+  rune, 
+  isDarkTheme, 
+  isSelected = false, 
+  onSelectionChange,
+  settings,
+  onSettingsChange
+}) => {
   const runeName = rune.charAt(0).toUpperCase() + rune.slice(1);
   const minLevel = runeMinLvl[rune];
   const runeImagePath = `/img/runes/${rune}_rune.webp`;
   const { t } = useTranslation();
 
-  // Control states
-  const [highlightRune, setHighlightRune] = React.useState(false);
-  const [showRuneNumber, setShowRuneNumber] = React.useState(false);
-  const [boxSize, setBoxSize] = React.useState('Normal');
-  const [runeColor, setRuneColor] = React.useState('white1');
+  // Control states - используем переданные настройки или дефолтные
+  const [highlightRune, setHighlightRune] = React.useState(settings?.highlightRune ?? false);
+  const [showRuneNumber, setShowRuneNumber] = React.useState(settings?.showRuneNumber ?? false);
+  const [boxSize, setBoxSize] = React.useState(settings?.boxSize ?? 'Normal');
+  const [runeColor, setRuneColor] = React.useState(settings?.runeColor ?? 'white1');
+
+  // Синхронизируем с переданными настройками
+  React.useEffect(() => {
+    if (settings) {
+      setHighlightRune(settings.highlightRune);
+      setShowRuneNumber(settings.showRuneNumber);
+      setBoxSize(settings.boxSize);
+      setRuneColor(settings.runeColor);
+    }
+  }, [settings]);
+
+  // Language customization states
+  const [runeNames, setRuneNames] = React.useState({
+    enUS: '',
+    ruRU: '',
+    zhTW: '',
+    deDE: '',
+    esES: '',
+    frFR: '',
+    itIT: '',
+    koKR: '',
+    plPL: '',
+    esMX: '',
+    jaJP: '',
+    ptBR: '',
+    zhCN: ''
+  });
+
+  // Language codes for iteration
+  const languageCodes = [
+    'enUS', 'ruRU', 'zhTW', 'deDE', 'esES', 'frFR', 
+    'itIT', 'koKR', 'plPL', 'esMX', 'jaJP', 'ptBR', 'zhCN'
+  ];
+
+  // Handle language name change
+  const handleLanguageNameChange = (langCode: string, value: string) => {
+    setRuneNames(prev => ({
+      ...prev,
+      [langCode]: value
+    }));
+  };
+
+  // Handle settings change
+  const handleSettingChange = (newSettings: Partial<RuneSettings>) => {
+    const updatedSettings = {
+      highlightRune,
+      showRuneNumber,
+      boxSize,
+      runeColor,
+      ...newSettings
+    };
+    
+    if (onSettingsChange) {
+      onSettingsChange(updatedSettings);
+    }
+  };
+
+  // Handle individual control changes
+  const handleHighlightChange = (checked: boolean) => {
+    setHighlightRune(checked);
+    handleSettingChange({ highlightRune: checked });
+  };
+
+  const handleShowNumberChange = (checked: boolean) => {
+    setShowRuneNumber(checked);
+    handleSettingChange({ showRuneNumber: checked });
+  };
+
+  const handleBoxSizeChange = (size: string) => {
+    setBoxSize(size);
+    handleSettingChange({ boxSize: size });
+  };
+
+  const handleColorChange = (color: string) => {
+    setRuneColor(color);
+    handleSettingChange({ runeColor: color });
+  };
 
   // Options for dropdowns
   const sizeOptions = [
@@ -68,65 +163,96 @@ const RuneCard: React.FC<RuneCardProps> = ({ rune, isDarkTheme }) => {
 
   return (
     <div className={`
-      relative rounded-lg p-4 border-2 transition-all duration-300 hover:shadow-lg
-      ${isDarkTheme 
-        ? 'bg-gray-800 border-gray-700 hover:border-yellow-500' 
-        : 'bg-white border-gray-200 hover:border-yellow-400'
+      relative rounded-lg p-4 border-2 transition-all duration-300 hover:shadow-lg cursor-pointer
+      ${isSelected 
+        ? (isDarkTheme 
+          ? 'bg-yellow-900/30 border-yellow-400 shadow-yellow-400/20 shadow-lg' 
+          : 'bg-yellow-50 border-yellow-400 shadow-yellow-400/20 shadow-lg'
+        )
+        : (isDarkTheme 
+          ? 'bg-gray-800 border-gray-700 hover:border-yellow-500' 
+          : 'bg-white border-gray-200 hover:border-yellow-400'
+        )
       }
     `}>
-      {/* Rune Image */}
-      <div className="flex justify-center mb-3">
-        <div className="w-16 h-16 rounded-lg">
-          <img 
-            src={runeImagePath} 
-            alt={`${runeName} rune`}
-            className="w-full h-full object-contain filter drop-shadow-sm"
-            onError={(e) => {
-              // Fallback to text if image fails to load
-              const target = e.target as HTMLImageElement;
-              target.style.display = 'none';
-              const fallback = target.nextElementSibling as HTMLElement;
-              if (fallback) {
-                fallback.style.display = 'flex';
+      {/* Selection Checkbox */}
+      {onSelectionChange && (
+        <div className="absolute top-3 left-3 z-10">
+          <input
+            type="checkbox"
+            checked={isSelected}
+            onChange={(e) => onSelectionChange(e.target.checked)}
+            onClick={(e) => e.stopPropagation()}
+            className={`
+              w-5 h-5 rounded transition-all duration-200
+              ${isDarkTheme 
+                ? 'text-yellow-400 bg-gray-700 border-gray-600' 
+                : 'text-yellow-500 bg-white border-gray-300'
               }
-            }}
+            `}
           />
-          {/* Fallback text icon */}
-          <div className="w-full h-full hidden items-center justify-center font-bold text-lg text-black">
-            {runeName.substring(0, 2).toUpperCase()}
+        </div>
+      )}
+
+      {/* Main Card Content */}
+      <div onClick={() => onSelectionChange && onSelectionChange(!isSelected)}>
+        {/* Rune Image */}
+        <div className="flex justify-center mb-3">
+          <div className="w-16 h-16 rounded-lg">
+            <img 
+              src={runeImagePath} 
+              alt={`${runeName} rune`}
+              className="w-full h-full object-contain filter drop-shadow-sm"
+              onError={(e) => {
+                // Fallback to text if image fails to load
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+                const fallback = target.nextElementSibling as HTMLElement;
+                if (fallback) {
+                  fallback.style.display = 'flex';
+                }
+              }}
+            />
+            {/* Fallback text icon */}
+            <div className="w-full h-full hidden items-center justify-center font-bold text-lg text-black">
+              {runeName.substring(0, 2).toUpperCase()}
+            </div>
           </div>
+        </div>
+
+        {/* Rune Name */}
+        <h3 className={`
+          text-center font-bold text-lg mb-2
+          ${isDarkTheme ? 'text-white' : 'text-gray-900'}
+        `}>
+          {t(`runes.${rune}`)}
+        </h3>
+
+        {/* Level Requirement */}
+        <div className="flex justify-center mb-4">
+          <span className={`
+            px-3 py-1 rounded-full text-sm font-medium
+            ${isDarkTheme 
+              ? 'bg-gray-700 text-gray-300' 
+              : 'bg-gray-100 text-gray-700'
+            }
+          `}>
+            {minLevel === 0 ? 'Any Level' : `Level ${minLevel}+`}
+          </span>
         </div>
       </div>
 
-      {/* Rune Name */}
-      <h3 className={`
-        text-center font-bold text-lg mb-2
-        ${isDarkTheme ? 'text-white' : 'text-gray-900'}
-      `}>
-        {t(`runes.${rune}`)}
-      </h3>
-
-      {/* Level Requirement */}
-      <div className="flex justify-center mb-4">
-        <span className={`
-          px-3 py-1 rounded-full text-sm font-medium
-          ${isDarkTheme 
-            ? 'bg-gray-700 text-gray-300' 
-            : 'bg-gray-100 text-gray-700'
-          }
-        `}>
-          {minLevel === 0 ? 'Any Level' : `Level ${minLevel}+`}
-        </span>
-      </div>
-
       {/* Control Panel */}
-      <div className={`
-        mt-4 p-4 rounded-xl shadow-inner backdrop-blur-sm transition-all duration-300
-        ${isDarkTheme 
-          ? 'bg-gradient-to-br from-gray-800/90 to-gray-900/90 border border-gray-700/50 shadow-gray-900/50' 
-          : 'bg-gradient-to-br from-white/90 to-gray-50/90 border border-gray-200/50 shadow-gray-200/50'
-        }
-      `}>
+      <div 
+        className={`
+          mt-4 p-4 rounded-xl shadow-inner backdrop-blur-sm transition-all duration-300
+          ${isDarkTheme 
+            ? 'bg-gradient-to-br from-gray-800/90 to-gray-900/90 border border-gray-700/50 shadow-gray-900/50' 
+            : 'bg-gradient-to-br from-white/90 to-gray-50/90 border border-gray-200/50 shadow-gray-200/50'
+          }
+        `}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="space-y-4">
           {/* Checkboxes */}
           <div className="space-y-3">
@@ -141,7 +267,7 @@ const RuneCard: React.FC<RuneCardProps> = ({ rune, isDarkTheme }) => {
               <input
                 type="checkbox"
                 checked={highlightRune}
-                onChange={(e) => setHighlightRune(e.target.checked)}
+                onChange={(e) => handleHighlightChange(e.target.checked)}
                 className={`
                   w-5 h-5 rounded transition-all duration-200
                   ${isDarkTheme 
@@ -166,7 +292,7 @@ const RuneCard: React.FC<RuneCardProps> = ({ rune, isDarkTheme }) => {
               <input
                 type="checkbox"
                 checked={showRuneNumber}
-                onChange={(e) => setShowRuneNumber(e.target.checked)}
+                onChange={(e) => handleShowNumberChange(e.target.checked)}
                 className={`
                   w-5 h-5 rounded transition-all duration-200
                   ${isDarkTheme 
@@ -194,7 +320,7 @@ const RuneCard: React.FC<RuneCardProps> = ({ rune, isDarkTheme }) => {
               <Dropdown
                 options={sizeOptions}
                 selectedValue={boxSize}
-                onSelect={setBoxSize}
+                onSelect={handleBoxSizeChange}
                 isDarkTheme={isDarkTheme}
                 size="md"
               />
@@ -208,10 +334,42 @@ const RuneCard: React.FC<RuneCardProps> = ({ rune, isDarkTheme }) => {
               <Dropdown
                 options={colorOptions}
                 selectedValue={runeColor}
-                onSelect={setRuneColor}
+                onSelect={handleColorChange}
                 isDarkTheme={isDarkTheme}
                 size="md"
               />
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className={`border-t ${isDarkTheme ? 'border-gray-700' : 'border-gray-200'}`}></div>
+
+          {/* Language Names Section */}
+          <div>
+            <h4 className={`text-sm font-semibold mb-3 ${isDarkTheme ? 'text-gray-300' : 'text-gray-700'}`}>
+              {t('runeControls.languageCustomization')}
+            </h4>
+            <div className="space-y-3 max-h-60 overflow-y-auto">
+              {languageCodes.map((langCode) => (
+                <div key={langCode} className="space-y-1">
+                  <label className={`text-xs font-medium ${isDarkTheme ? 'text-gray-400' : 'text-gray-600'}`}>
+                    {t(`runeControls.languageLabels.${langCode}`)} ({langCode})
+                  </label>
+                  <input
+                    type="text"
+                    value={runeNames[langCode as keyof typeof runeNames]}
+                    onChange={(e) => handleLanguageNameChange(langCode, e.target.value)}
+                    placeholder={t(`runeControls.placeholders.${langCode}`)}
+                    className={`
+                      w-full px-3 py-2 text-sm rounded-lg border transition-all duration-200
+                      ${isDarkTheme 
+                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400' 
+                        : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500'
+                      }
+                    `}
+                  />
+                </div>
+              ))}
             </div>
           </div>
         </div>

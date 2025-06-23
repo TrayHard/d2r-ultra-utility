@@ -12,7 +12,7 @@ const WorkSpace: React.FC<WorkSpaceProps> = ({ onChangeClick }) => {
   const [isDarkTheme, setIsDarkTheme] = useState<boolean>(true);
 
   return (
-    <div className={`h-full flex flex-col ${isDarkTheme ? 'bg-gray-900' : 'bg-gray-100'}`}>
+    <div className={`h-full flex flex-col pt-9 ${isDarkTheme ? 'bg-gray-900' : 'bg-gray-100'}`}>
       <MainSpaceToolbar
         onLanguageChange={toggleLanguage}
         onChangePathClick={onChangeClick}

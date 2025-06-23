@@ -220,9 +220,9 @@ function App() {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-gradient-to-br from-gray-900 to-black">
+    <div className="h-screen flex flex-col bg-gradient-to-br from-gray-800 to-black pt-9">
       <CustomTitleBar />
-      <main className="flex-1 flex flex-col justify-center items-center text-center p-8">
+      <main className="flex-1 flex flex-col justify-center items-center text-center p-8 mt-9">
 
         {/* Прогрессбар показываем когда идет поиск */}
         {(isSearching || appState === 'loading') && (
