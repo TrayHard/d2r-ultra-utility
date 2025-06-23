@@ -147,5 +147,9 @@
     "showNumbers": "Номера рун",
     "boxSize": "Размер бокса",
     "color": "Цвет"
+  },
+  "textWorker": {
+    "readFromFiles": "Считать из файлов",
+    "apply": "Применить"
   }
 } 

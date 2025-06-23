@@ -62,7 +62,7 @@ const getDefaultRuneSettings = (): RuneSettings => ({
 // Создаем дефолтные настройки для всех рун
 const createDefaultSettings = (): AppSettings => {
   const runeSettings: Record<ERune, RuneSettings> = {} as Record<ERune, RuneSettings>;
-  
+
   // Инициализируем настройки для всех рун
   Object.values(ERune).forEach((rune) => {
     runeSettings[rune] = getDefaultRuneSettings();
@@ -105,7 +105,7 @@ export const useSettings = () => {
           ...newSettings
         };
       });
-      
+
       return {
         ...prev,
         runes: updatedRunes
@@ -131,7 +131,7 @@ export const useSettings = () => {
       runes.forEach(rune => {
         updatedRunes[rune] = getDefaultRuneSettings();
       });
-      
+
       return {
         ...prev,
         runes: updatedRunes
@@ -151,16 +151,16 @@ export const useSettings = () => {
     // Getter'ы
     getRuneSettings,
     getAllSettings,
-    
+
     // Setter'ы для рун
     updateRuneSettings,
     updateMultipleRuneSettings,
     resetRuneSettings,
     resetMultipleRuneSettings,
-    
+
     // Общие
     resetAllSettings,
-    
+
     // Прямой доступ к настройкам (если нужен)
     settings
   };

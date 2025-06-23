@@ -8,9 +8,13 @@ import {
   mdiOrderAlphabeticalDescending,
   mdiCheckAll,
   mdiCheckboxBlankOutline,
+  mdiFileDocumentMultiple,
+  mdiCheck,
 } from "@mdi/js";
 import Dropdown from "../../ui/Dropdown";
+import Button from "../../ui/Button";
 import { useSettings, RuneSettings } from "../../../hooks/useSettings";
+import { useTextWorker } from "../../../hooks/useTextWorker";
 
 interface RunesTabProps {
   isDarkTheme: boolean;
@@ -41,6 +45,9 @@ const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
     updateMultipleRuneSettings, 
     resetMultipleRuneSettings 
   } = useSettings();
+
+  // Используем хук для работы с текстом
+  const { isLoading, error, readFromFiles, applyChanges } = useTextWorker();
 
   // Mass edit states
   const [massEditSettings, setMassEditSettings] = useState<MassEditSettings>({
@@ -329,7 +336,42 @@ const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
                   </svg>
                 )}
               </button>
+
+              {/* Text Worker Buttons */}
+              <Button
+                variant="info"
+                onClick={readFromFiles}
+                isLoading={isLoading}
+                isDarkTheme={isDarkTheme}
+                icon={mdiFileDocumentMultiple}
+              >
+                {t("textWorker.readFromFiles") ?? "Read from files"}
+              </Button>
+
+              <Button
+                variant="success"
+                onClick={applyChanges}
+                disabled={isLoading}
+                isDarkTheme={isDarkTheme}
+                icon={mdiCheck}
+              >
+                {t("textWorker.apply") ?? "Apply"}
+              </Button>
             </div>
+
+            {/* Error Display */}
+            {error && (
+              <div className={`
+                px-4 py-2 rounded-lg border
+                ${
+                  isDarkTheme
+                    ? "bg-red-900/50 border-red-700 text-red-300"
+                    : "bg-red-50 border-red-300 text-red-700"
+                }
+              `}>
+                <span className="text-sm">{error}</span>
+              </div>
+            )}
           </div>
 
           {/* Selection Controls */}

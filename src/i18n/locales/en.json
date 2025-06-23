@@ -147,5 +147,9 @@
     "showNumbers": "Show Numbers",
     "boxSize": "Box Size",
     "color": "Color"
+  },
+  "textWorker": {
+    "readFromFiles": "Read from files",
+    "apply": "Apply"
   }
 } 
