@@ -13,6 +13,7 @@ import {
 } from "@mdi/js";
 import Dropdown from "../../ui/Dropdown";
 import Button from "../../ui/Button";
+import { useGlobalMessage } from "../../ui/MessageProvider";
 import { useSettings, RuneSettings } from "../../../hooks/useSettings";
 import { useTextWorker } from "../../../hooks/useTextWorker";
 
@@ -46,8 +47,15 @@ const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
     resetMultipleRuneSettings 
   } = useSettings();
 
+  // Используем глобальный хук для уведомлений
+  const { sendMessage } = useGlobalMessage();
+
   // Используем хук для работы с текстом
-  const { isLoading, error, readFromFiles, applyChanges } = useTextWorker(updateRuneSettings);
+  const { isLoading, error, readFromFiles, applyChanges } = useTextWorker(
+    updateRuneSettings,
+    (message, type, title) => sendMessage(message, { type, title }),
+    t
+  );
 
   // Mass edit states
   const [massEditSettings, setMassEditSettings] = useState<MassEditSettings>({

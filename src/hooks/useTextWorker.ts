@@ -37,7 +37,11 @@ const loadSavedSettings = () => {
   }
 };
 
-export const useTextWorker = (updateRuneSettings?: (rune: ERune, settings: Partial<RuneSettings>) => void) => {
+export const useTextWorker = (
+  updateRuneSettings?: (rune: ERune, settings: Partial<RuneSettings>) => void,
+  sendMessage?: (message: string, type?: 'success' | 'error' | 'warning' | 'info', title?: string) => void,
+  t?: (key: string, options?: any) => string
+) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -49,7 +53,8 @@ export const useTextWorker = (updateRuneSettings?: (rune: ERune, settings: Parti
       // Получаем домашнюю директорию из настроек
       const settings = loadSavedSettings();
       if (!settings?.homeDirectory) {
-        throw new Error('Путь к игре не найден в настройках');
+        const errorMsg = t?.('messages.error.pathNotFound') ?? 'Путь к игре не найден в настройках';
+        throw new Error(errorMsg);
       }
 
       // Строим полный путь к файлу используя простое соединение строк
@@ -68,6 +73,8 @@ export const useTextWorker = (updateRuneSettings?: (rune: ERune, settings: Parti
       console.log('Loaded locale data:', localeData);
       console.log(`Найдено ${localeData.length} элементов локализации`);
       const parsedData = itemRunesSchema.parse(localeData);
+      
+      let processedRunes = 0;
       parsedData.forEach(item => {
         const rune = idToRuneMapper[item.id];
         if (rune && updateRuneSettings) {
@@ -89,17 +96,32 @@ export const useTextWorker = (updateRuneSettings?: (rune: ERune, settings: Parti
               zhCN: item.zhCN
             }
           });
+          processedRunes++;
         }
       });
+      
       console.log('Locale data with runes:', localeData);
-      // Пока просто сохраняем в локальную переменную как просил
-      // В дальнейшем будем обрабатывать эти данные
+      
+      // Отправляем сообщение об успехе
+      const successTitle = t?.('messages.success.filesLoaded') ?? 'Файлы загружены';
+      const successMessage = t?.('messages.success.localesLoadedText', { 
+        count: localeData.length, 
+        processedRunes 
+      }) ?? `Успешно загружено ${localeData.length} элементов локализации, обработано ${processedRunes} рун`;
+      
+      sendMessage?.(successMessage, 'success', successTitle);
       
       return localeData;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Неизвестная ошибка при чтении файлов';
+      const defaultErrorMsg = t?.('messages.error.unknownError') ?? 'Неизвестная ошибка при чтении файлов';
+      const errorMessage = err instanceof Error ? err.message : defaultErrorMsg;
       setError(errorMessage);
       console.error('Error reading locales:', err);
+      
+      // Отправляем сообщение об ошибке
+      const errorTitle = t?.('messages.error.fileLoadError') ?? 'Ошибка загрузки файлов';
+      sendMessage?.(errorMessage, 'error', errorTitle);
+      
       throw err;
     } finally {
       setIsLoading(false);

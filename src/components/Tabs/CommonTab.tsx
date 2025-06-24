@@ -1,5 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import Button from '../ui/Button';
+import { useGlobalMessage } from '../ui/MessageProvider';
 
 interface CommonTabProps {
   isDarkTheme: boolean;
@@ -7,6 +9,7 @@ interface CommonTabProps {
 
 const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
   const { t } = useTranslation();
+  const { sendSuccess, sendError, sendWarning, sendInfo } = useGlobalMessage();
 
   return (
     <div className="p-8 text-center h-full flex flex-col justify-center">
@@ -19,11 +22,47 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
         }`}>
           {t('tabs.common')}
         </h2>
-        <p className={`leading-relaxed ${
+        <p className={`leading-relaxed mb-6 ${
           isDarkTheme ? 'text-gray-300' : 'text-gray-600'
         }`}>
           {t('descriptions.common')}
         </p>
+        
+        {/* Демо кнопки для тестирования глобальных уведомлений */}
+        <div className="flex flex-wrap gap-3 justify-center">
+          <Button
+            variant="success"
+            size="sm"
+            onClick={() => sendSuccess('Это успешное уведомление!', 'Успех')}
+            isDarkTheme={isDarkTheme}
+          >
+            Success
+          </Button>
+          <Button
+            variant="danger"
+            size="sm"
+            onClick={() => sendError('Произошла ошибка!', 'Ошибка')}
+            isDarkTheme={isDarkTheme}
+          >
+            Error
+          </Button>
+          <Button
+            variant="info"
+            size="sm"
+            onClick={() => sendWarning('Внимание! Важное предупреждение', 'Предупреждение')}
+            isDarkTheme={isDarkTheme}
+          >
+            Warning
+          </Button>
+          <Button
+            variant="info"
+            size="sm"
+            onClick={() => sendInfo('Полезная информация для тебя', 'Информация')}
+            isDarkTheme={isDarkTheme}
+          >
+            Info
+          </Button>
+        </div>
       </div>
     </div>
   );

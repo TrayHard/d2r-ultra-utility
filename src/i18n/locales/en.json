@@ -151,5 +151,16 @@
   "textWorker": {
     "readFromFiles": "Read from files",
     "apply": "Apply"
+  },
+  "messages": {
+    "success": {
+      "filesLoaded": "Files loaded",
+      "localesLoadedText": "Successfully loaded {{count}} localization elements, processed {{processedRunes}} runes"
+    },
+    "error": {
+      "fileLoadError": "File loading error",
+      "pathNotFound": "Game path not found in settings",
+      "unknownError": "Unknown error while reading files"
+    }
   }
 } 

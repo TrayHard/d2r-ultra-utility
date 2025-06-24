@@ -151,5 +151,16 @@
   "textWorker": {
     "readFromFiles": "Считать из файлов",
     "apply": "Применить"
+  },
+  "messages": {
+    "success": {
+      "filesLoaded": "Файлы загружены",
+      "localesLoadedText": "Успешно загружено {{count}} элементов локализации, обработано {{processedRunes}} рун"
+    },
+    "error": {
+      "fileLoadError": "Ошибка загрузки файлов",
+      "pathNotFound": "Путь к игре не найден в настройках",
+      "unknownError": "Неизвестная ошибка при чтении файлов"
+    }
   }
 } 
