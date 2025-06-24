@@ -44,7 +44,8 @@ const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
     getRuneSettings, 
     updateRuneSettings, 
     updateMultipleRuneSettings, 
-    resetMultipleRuneSettings 
+    resetMultipleRuneSettings,
+    settings
   } = useSettings();
 
   // Используем глобальный хук для уведомлений
@@ -54,7 +55,8 @@ const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
   const { isLoading, error, readFromFiles, applyChanges } = useTextWorker(
     updateRuneSettings,
     (message, type, title) => sendMessage(message, { type, title }),
-    t
+    t,
+    () => settings.runes
   );
 
   // Mass edit states

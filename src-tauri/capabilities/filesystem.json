@@ -33,10 +33,55 @@
             ]
         },
         {
+            "identifier": "fs:allow-app-write",
+            "allow": [
+                {
+                    "path": "$APPDATA"
+                },
+                {
+                    "path": "$APPDATA/**/*"
+                },
+                {
+                    "path": "$HOME/**/*"
+                },
+                {
+                    "path": "C:/**/*"
+                },
+                {
+                    "path": "D:/**/*"
+                },
+                {
+                    "path": "E:/**/*"
+                },
+                {
+                    "path": "F:/**/*"
+                }
+            ]
+        },
+        
+        {
             "identifier": "fs:allow-rename",
             "allow": [
                 {
+                    "path": "$APPDATA"
+                },
+                {
+                    "path": "$APPDATA/**/*"
+                },
+                {
                     "path": "$HOME/**/*"
+                },
+                {
+                    "path": "C:/**/*"
+                },
+                {
+                    "path": "D:/**/*"
+                },
+                {
+                    "path": "E:/**/*"
+                },
+                {
+                    "path": "F:/**/*"
                 }
             ]
         }
