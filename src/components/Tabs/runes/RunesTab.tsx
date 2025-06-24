@@ -385,7 +385,7 @@ const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
           </div>
 
           {/* Selection Controls */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <button
                 onClick={handleSelectAll}
@@ -418,14 +418,120 @@ const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
               </button>
             </div>
 
+            {/* Mass Edit Controls - все в одну строчку справа */}
             {selectedRunes.size > 0 && (
-              <span
-                className={`text-sm font-medium ${
-                  isDarkTheme ? "text-gray-300" : "text-gray-700"
-                }`}
-              >
-                {selectedRunes.size} {t("massEdit.selected")}
-              </span>
+              <div className="flex items-center gap-2">
+                <span
+                  className={`text-xs font-medium ${
+                    isDarkTheme ? "text-gray-300" : "text-gray-700"
+                  }`}
+                >
+                  {selectedRunes.size} {t("massEdit.selected")}
+                </span>
+                
+                {/* Highlight Checkbox */}
+                <label className="flex items-center gap-1 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={massEditSettings.isHighlighted}
+                    onChange={(e) =>
+                      setMassEditSettings((prev) => ({
+                        ...prev,
+                        isHighlighted: e.target.checked,
+                      }))
+                    }
+                    className={`w-3 h-3 rounded ${
+                      isDarkTheme
+                        ? "text-yellow-400 bg-gray-700 border-gray-600"
+                        : "text-yellow-500 bg-white border-gray-300"
+                    }`}
+                  />
+                  <span className={`text-xs ${isDarkTheme ? "text-gray-200" : "text-gray-800"}`}>
+                    {t("massEdit.highlight")}
+                  </span>
+                </label>
+
+                {/* Show Number Checkbox */}
+                <label className="flex items-center gap-1 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={massEditSettings.showNumber}
+                    onChange={(e) =>
+                      setMassEditSettings((prev) => ({
+                        ...prev,
+                        showNumber: e.target.checked,
+                      }))
+                    }
+                    className={`w-3 h-3 rounded ${
+                      isDarkTheme
+                        ? "text-yellow-400 bg-gray-700 border-gray-600"
+                        : "text-yellow-500 bg-white border-gray-300"
+                    }`}
+                  />
+                  <span className={`text-xs ${isDarkTheme ? "text-gray-200" : "text-gray-800"}`}>
+                    {t("massEdit.showNumbers")}
+                  </span>
+                </label>
+
+                {/* Size Dropdown */}
+                <Dropdown
+                  options={sizeOptions}
+                  selectedValue={massEditSettings.boxSize.toString()}
+                  onSelect={(value) =>
+                    setMassEditSettings((prev) => ({
+                      ...prev,
+                      boxSize: parseInt(value),
+                    }))
+                  }
+                  isDarkTheme={isDarkTheme}
+                  size="sm"
+                  className="w-20"
+                />
+
+                {/* Color Dropdown */}
+                <Dropdown
+                  options={colorOptions}
+                  selectedValue={massEditSettings.color}
+                  onSelect={(value) =>
+                    setMassEditSettings((prev) => ({
+                      ...prev,
+                      color: value,
+                    }))
+                  }
+                  isDarkTheme={isDarkTheme}
+                  size="sm"
+                  className="w-24"
+                />
+
+                {/* Action Buttons */}
+                <button
+                  onClick={applyMassEdit}
+                  className={`
+                    px-2 py-1 text-xs rounded font-medium transition-colors
+                    ${
+                      isDarkTheme
+                        ? "bg-yellow-600 text-black hover:bg-yellow-500"
+                        : "bg-yellow-500 text-white hover:bg-yellow-600"
+                    }
+                  `}
+                >
+                  {t("massEdit.apply")}
+                </button>
+                
+                <button
+                  onClick={resetSelectedRunes}
+                  className={`
+                    px-2 py-1 text-xs rounded border font-medium transition-colors
+                    ${
+                      isDarkTheme
+                        ? "bg-gray-600 border-gray-500 text-gray-300 hover:bg-gray-500"
+                        : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
+                    }
+                  `}
+                >
+                  {t("massEdit.reset")}
+                </button>
+              </div>
             )}
           </div>
         </div>
@@ -460,183 +566,7 @@ const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
           </div>
         ) : (
           <div className="flex flex-col gap-4">
-            {/* Mass Edit Panel */}
-            {selectedRunes.size > 0 && (
-              <div
-                className={`
-              p-3 rounded-lg border transition-all duration-300
-              ${
-                isDarkTheme
-                  ? "bg-gray-700/50 border-gray-600"
-                  : "bg-gray-50 border-gray-300"
-              }
-            `}
-              >
-                <div className="flex items-center justify-between gap-4 mb-3">
-                  <span
-                    className={`text-sm font-medium ${
-                      isDarkTheme ? "text-gray-300" : "text-gray-700"
-                    }`}
-                  >
-                    {selectedRunes.size} {t("massEdit.selected")}
-                  </span>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={applyMassEdit}
-                      className={`
-                      px-3 py-1.5 text-sm rounded-md font-medium transition-colors
-                      ${
-                        isDarkTheme
-                          ? "bg-yellow-600 text-black hover:bg-yellow-500"
-                          : "bg-yellow-500 text-white hover:bg-yellow-600"
-                      }
-                    `}
-                    >
-                      {t("massEdit.apply")}
-                    </button>
-                    <button
-                      onClick={resetSelectedRunes}
-                      className={`
-                      px-3 py-1.5 text-sm rounded-md border font-medium transition-colors
-                      ${
-                        isDarkTheme
-                          ? "bg-gray-600 border-gray-500 text-gray-300 hover:bg-gray-500"
-                          : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
-                      }
-                    `}
-                    >
-                      {t("massEdit.reset")}
-                    </button>
-                  </div>
-                </div>
 
-                <div className="flex gap-3">
-                  {/* Highlight Rune Checkbox */}
-                  <label
-                    className={`
-                  flex items-center space-x-2 cursor-pointer h-8 w-32 p-2 rounded-md border transition-all
-                  ${
-                    isDarkTheme
-                      ? "bg-gray-700 border-gray-600 hover:bg-gray-600"
-                      : "bg-white border-gray-300 hover:bg-gray-50"
-                  }
-                `}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={massEditSettings.isHighlighted}
-                      onChange={(e) =>
-                        setMassEditSettings((prev) => ({
-                          ...prev,
-                          isHighlighted: e.target.checked,
-                        }))
-                      }
-                      className={`
-                      w-4 h-4 rounded
-                      ${
-                        isDarkTheme
-                          ? "text-yellow-400 bg-gray-700 border-gray-600"
-                          : "text-yellow-500 bg-white border-gray-300"
-                      }
-                    `}
-                    />
-                    <span
-                      className={`text-xs font-medium ${
-                        isDarkTheme ? "text-gray-200" : "text-gray-800"
-                      }`}
-                    >
-                      {t("massEdit.highlight")}
-                    </span>
-                  </label>
-
-                  {/* Show Rune Number Checkbox */}
-                  <label
-                    className={`
-                  flex items-center space-x-2 cursor-pointer h-8 w-32 p-2 rounded-md border transition-all
-                  ${
-                    isDarkTheme
-                      ? "bg-gray-700 border-gray-600 hover:bg-gray-600"
-                      : "bg-white border-gray-300 hover:bg-gray-50"
-                  }
-                `}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={massEditSettings.showNumber}
-                      onChange={(e) =>
-                        setMassEditSettings((prev) => ({
-                          ...prev,
-                          showNumber: e.target.checked,
-                        }))
-                      }
-                      className={`
-                      w-4 h-4 rounded
-                      ${
-                        isDarkTheme
-                          ? "text-yellow-400 bg-gray-700 border-gray-600"
-                          : "text-yellow-500 bg-white border-gray-300"
-                      }
-                    `}
-                    />
-                    <span
-                      className={`text-xs font-medium ${
-                        isDarkTheme ? "text-gray-200" : "text-gray-800"
-                      }`}
-                    >
-                      {t("massEdit.showNumbers")}
-                    </span>
-                  </label>
-
-                  {/* Box Size Dropdown */}
-                  <div className="flex flex-row gap-2 items-center">
-                    <label
-                      className={`block text-xs font-medium mb-1 ${
-                        isDarkTheme ? "text-gray-300" : "text-gray-700"
-                      }`}
-                    >
-                      {t("massEdit.boxSize")}
-                    </label>
-                    <Dropdown
-                      options={sizeOptions}
-                      selectedValue={massEditSettings.boxSize.toString()}
-                      onSelect={(value) =>
-                        setMassEditSettings((prev) => ({
-                          ...prev,
-                          boxSize: parseInt(value),
-                        }))
-                      }
-                      isDarkTheme={isDarkTheme}
-                      size="sm"
-                      className="w-32 py-2"
-                    />
-                  </div>
-
-                  {/* Color Dropdown */}
-                  <div className="flex flex-row gap-2 items-center">
-                    <label
-                      className={`block text-xs font-medium mb-1 ${
-                        isDarkTheme ? "text-gray-300" : "text-gray-700"
-                      }`}
-                    >
-                      {t("massEdit.color")}
-                    </label>
-                    <Dropdown
-                      options={colorOptions}
-                      selectedValue={massEditSettings.color}
-                      onSelect={(value) =>
-                        setMassEditSettings((prev) => ({
-                          ...prev,
-                          color: value,
-                        }))
-                      }
-                      isDarkTheme={isDarkTheme}
-                      size="sm"
-                      className="w-32 py-2"
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredAndSortedRunes.map((rune) => (
                 <RuneCard

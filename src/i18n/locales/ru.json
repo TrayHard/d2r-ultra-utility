@@ -155,7 +155,7 @@
   },
   "textWorker": {
     "readFromFiles": "Считать из файлов",
-    "apply": "Применить"
+    "apply": "Применить к файлам"
   },
   "messages": {
     "success": {
