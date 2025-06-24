@@ -14,7 +14,7 @@ import {
 import Dropdown from "../../ui/Dropdown";
 import Button from "../../ui/Button";
 import { useGlobalMessage } from "../../ui/MessageProvider";
-import { useSettings, RuneSettings } from "../../../hooks/useSettings";
+import { useSettings, RuneSettings } from "../../../contexts/SettingsContext";
 import { useTextWorker } from "../../../hooks/useTextWorker";
 
 interface RunesTabProps {

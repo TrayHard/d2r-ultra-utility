@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext, createContext } from 'react';
 import { ERune } from '../constants/runes';
 
 // Типы для локализации
@@ -34,6 +34,25 @@ interface AppSettings {
   // items: Record<string, ItemSettings>;
   // skills: Record<string, SkillSettings>;
   // gems: Record<string, GemSettings>;
+}
+
+// Интерфейс для контекста
+interface SettingsContextType {
+  // Getter'ы
+  getRuneSettings: (rune: ERune) => RuneSettings;
+  getAllSettings: () => AppSettings;
+
+  // Setter'ы для рун
+  updateRuneSettings: (rune: ERune, newSettings: Partial<RuneSettings>) => void;
+  updateMultipleRuneSettings: (runes: ERune[], newSettings: Partial<RuneSettings>) => void;
+  resetRuneSettings: (rune: ERune) => void;
+  resetMultipleRuneSettings: (runes: ERune[]) => void;
+
+  // Общие
+  resetAllSettings: () => void;
+
+  // Прямой доступ к настройкам (если нужен)
+  settings: AppSettings;
 }
 
 // Дефолтные настройки для руны
@@ -73,7 +92,15 @@ const createDefaultSettings = (): AppSettings => {
   };
 };
 
-export const useSettings = () => {
+// Создаем контекст
+const SettingsContext = createContext<SettingsContextType | null>(null);
+
+// Провайдер настроек
+interface SettingsProviderProps {
+  children: React.ReactNode;
+}
+
+export const SettingsProvider: React.FC<SettingsProviderProps> = ({ children }) => {
   const [settings, setSettings] = useState<AppSettings>(createDefaultSettings);
 
   // Получить настройки руны
@@ -147,23 +174,31 @@ export const useSettings = () => {
     setSettings(createDefaultSettings());
   }, []);
 
-  return {
-    // Getter'ы
+  const contextValue: SettingsContextType = {
     getRuneSettings,
     getAllSettings,
-
-    // Setter'ы для рун
     updateRuneSettings,
     updateMultipleRuneSettings,
     resetRuneSettings,
     resetMultipleRuneSettings,
-
-    // Общие
     resetAllSettings,
-
-    // Прямой доступ к настройкам (если нужен)
     settings
   };
+
+  return (
+    <SettingsContext.Provider value={contextValue}>
+      {children}
+    </SettingsContext.Provider>
+  );
+};
+
+// Хук для использования настроек
+export const useSettings = (): SettingsContextType => {
+  const context = useContext(SettingsContext);
+  if (!context) {
+    throw new Error('useSettings must be used within a SettingsProvider');
+  }
+  return context;
 };
 
 export type { RuneSettings, Locales, AppSettings }; 

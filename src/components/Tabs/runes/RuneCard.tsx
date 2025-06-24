@@ -2,7 +2,7 @@ import React from 'react';
 import { ERune, runeMinLvl } from '../../../constants/runes';
 import { useTranslation } from 'react-i18next';
 import Dropdown from '../../ui/Dropdown';
-import { RuneSettings } from '../../../hooks/useSettings';
+import { RuneSettings } from '../../../contexts/SettingsContext';
 
 interface RuneCardProps {
   rune: ERune;
@@ -26,56 +26,26 @@ const RuneCard: React.FC<RuneCardProps> = ({
   const runeImagePath = `/img/runes/${rune}_rune.webp`;
   const { t } = useTranslation();
 
-  // Control states - используем переданные настройки или дефолтные
-  const [isHighlighted, setIsHighlighted] = React.useState(settings?.isHighlighted ?? false);
-  const [showNumber, setShowNumber] = React.useState(settings?.showNumber ?? false);
-  const [boxSize, setBoxSize] = React.useState(settings?.boxSize ?? 0);
-  const [color, setColor] = React.useState(settings?.color ?? 'white1');
-
-  // Синхронизируем с переданными настройками
-  React.useEffect(() => {
-    if (settings) {
-      setIsHighlighted(settings.isHighlighted);
-      setShowNumber(settings.showNumber);
-      setBoxSize(settings.boxSize);
-      setColor(settings.color);
-      // Обновляем локали тоже
-      if (settings.locales) {
-        setRuneNames({
-          enUS: settings.locales.enUS ?? '',
-          ruRU: settings.locales.ruRU ?? '',
-          zhTW: settings.locales.zhTW ?? '',
-          deDE: settings.locales.deDE ?? '',
-          esES: settings.locales.esES ?? '',
-          frFR: settings.locales.frFR ?? '',
-          itIT: settings.locales.itIT ?? '',
-          koKR: settings.locales.koKR ?? '',
-          plPL: settings.locales.plPL ?? '',
-          esMX: settings.locales.esMX ?? '',
-          jaJP: settings.locales.jaJP ?? '',
-          ptBR: settings.locales.ptBR ?? '',
-          zhCN: settings.locales.zhCN ?? ''
-        });
-      }
-    }
-  }, [settings]);
-
-  // Language customization states
-  const [runeNames, setRuneNames] = React.useState({
-    enUS: settings?.locales?.enUS ?? '',
-    ruRU: settings?.locales?.ruRU ?? '',
-    zhTW: settings?.locales?.zhTW ?? '',
-    deDE: settings?.locales?.deDE ?? '',
-    esES: settings?.locales?.esES ?? '',
-    frFR: settings?.locales?.frFR ?? '',
-    itIT: settings?.locales?.itIT ?? '',
-    koKR: settings?.locales?.koKR ?? '',
-    plPL: settings?.locales?.plPL ?? '',
-    esMX: settings?.locales?.esMX ?? '',
-    jaJP: settings?.locales?.jaJP ?? '',
-    ptBR: settings?.locales?.ptBR ?? '',
-    zhCN: settings?.locales?.zhCN ?? ''
-  });
+  // Используем только переданные настройки или дефолтные значения
+  const isHighlighted = settings?.isHighlighted ?? false;
+  const showNumber = settings?.showNumber ?? false;
+  const boxSize = settings?.boxSize ?? 0;
+  const color = settings?.color ?? 'white1';
+  const runeNames = settings?.locales ?? {
+    enUS: '',
+    ruRU: '',
+    zhTW: '',
+    deDE: '',
+    esES: '',
+    frFR: '',
+    itIT: '',
+    koKR: '',
+    plPL: '',
+    esMX: '',
+    jaJP: '',
+    ptBR: '',
+    zhCN: ''
+  };
 
   // Language codes for iteration
   const languageCodes = [
@@ -88,8 +58,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
     const newRuneNames = {
       ...runeNames,
       [langCode]: value
-    }
-    setRuneNames(newRuneNames);
+    };
     
     // Обновляем настройки сразу при изменении языковых полей
     handleSettingChange({ locales: newRuneNames });
@@ -97,6 +66,8 @@ const RuneCard: React.FC<RuneCardProps> = ({
 
   // Handle settings change
   const handleSettingChange = (newSettings: Partial<RuneSettings>) => {
+    if (!onSettingsChange) return;
+    
     const updatedSettings: RuneSettings = {
       isHighlighted,
       showNumber,
@@ -106,30 +77,24 @@ const RuneCard: React.FC<RuneCardProps> = ({
       ...newSettings
     };
     
-    if (onSettingsChange) {
-      onSettingsChange(updatedSettings);
-    }
+    onSettingsChange(updatedSettings);
   };
 
   // Handle individual control changes
   const handleHighlightChange = (checked: boolean) => {
-    setIsHighlighted(checked);
     handleSettingChange({ isHighlighted: checked });
   };
 
   const handleShowNumberChange = (checked: boolean) => {
-    setShowNumber(checked);
     handleSettingChange({ showNumber: checked });
   };
 
   const handleBoxSizeChange = (size: string) => {
     const sizeNumber = parseInt(size);
-    setBoxSize(sizeNumber);
     handleSettingChange({ boxSize: sizeNumber });
   };
 
   const handleColorChange = (newColor: string) => {
-    setColor(newColor);
     handleSettingChange({ color: newColor });
   };
 
