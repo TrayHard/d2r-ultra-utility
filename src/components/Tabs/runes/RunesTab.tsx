@@ -47,7 +47,7 @@ const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
   } = useSettings();
 
   // Используем хук для работы с текстом
-  const { isLoading, error, readFromFiles, applyChanges } = useTextWorker();
+  const { isLoading, error, readFromFiles, applyChanges } = useTextWorker(updateRuneSettings);
 
   // Mass edit states
   const [massEditSettings, setMassEditSettings] = useState<MassEditSettings>({

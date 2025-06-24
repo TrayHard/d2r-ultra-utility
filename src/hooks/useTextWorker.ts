@@ -1,5 +1,8 @@
 import { useState, useCallback } from 'react';
 import { readTextFile } from '@tauri-apps/plugin-fs';
+import { idToRuneMapper, ERune } from '../constants/runes';
+import { itemRunesSchema } from '../types/common';
+import { RuneSettings } from './useSettings';
 
 // Тип данных из item-runes.json
 interface LocaleItem {
@@ -34,7 +37,7 @@ const loadSavedSettings = () => {
   }
 };
 
-export const useTextWorker = () => {
+export const useTextWorker = (updateRuneSettings?: (rune: ERune, settings: Partial<RuneSettings>) => void) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -64,7 +67,31 @@ export const useTextWorker = () => {
       
       console.log('Loaded locale data:', localeData);
       console.log(`Найдено ${localeData.length} элементов локализации`);
-      
+      const parsedData = itemRunesSchema.parse(localeData);
+      parsedData.forEach(item => {
+        const rune = idToRuneMapper[item.id];
+        if (rune && updateRuneSettings) {
+          // Обновляем локали для найденной руны
+          updateRuneSettings(rune, {
+            locales: {
+              enUS: item.enUS,
+              ruRU: item.ruRU,
+              zhTW: item.zhTW,
+              deDE: item.deDE,
+              esES: item.esES,
+              frFR: item.frFR,
+              itIT: item.itIT,
+              koKR: item.koKR,
+              plPL: item.plPL,
+              esMX: item.esMX,
+              jaJP: item.jaJP,
+              ptBR: item.ptBR,
+              zhCN: item.zhCN
+            }
+          });
+        }
+      });
+      console.log('Locale data with runes:', localeData);
       // Пока просто сохраняем в локальную переменную как просил
       // В дальнейшем будем обрабатывать эти данные
       

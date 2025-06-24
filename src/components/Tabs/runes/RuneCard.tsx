@@ -39,6 +39,24 @@ const RuneCard: React.FC<RuneCardProps> = ({
       setShowNumber(settings.showNumber);
       setBoxSize(settings.boxSize);
       setColor(settings.color);
+      // Обновляем локали тоже
+      if (settings.locales) {
+        setRuneNames({
+          enUS: settings.locales.enUS ?? '',
+          ruRU: settings.locales.ruRU ?? '',
+          zhTW: settings.locales.zhTW ?? '',
+          deDE: settings.locales.deDE ?? '',
+          esES: settings.locales.esES ?? '',
+          frFR: settings.locales.frFR ?? '',
+          itIT: settings.locales.itIT ?? '',
+          koKR: settings.locales.koKR ?? '',
+          plPL: settings.locales.plPL ?? '',
+          esMX: settings.locales.esMX ?? '',
+          jaJP: settings.locales.jaJP ?? '',
+          ptBR: settings.locales.ptBR ?? '',
+          zhCN: settings.locales.zhCN ?? ''
+        });
+      }
     }
   }, [settings]);
 
@@ -355,13 +373,13 @@ const RuneCard: React.FC<RuneCardProps> = ({
                   <label className={`text-xs font-medium ${isDarkTheme ? 'text-gray-400' : 'text-gray-600'}`}>
                     {t(`runeControls.languageLabels.${langCode}`)} ({langCode})
                   </label>
-                  <input
-                    type="text"
+                  <textarea
                     value={runeNames[langCode as keyof typeof runeNames]}
                     onChange={(e) => handleLanguageNameChange(langCode, e.target.value)}
                     placeholder={t(`runeControls.placeholders.${langCode}`)}
+                    rows={3}
                     className={`
-                      w-full px-3 py-2 text-sm rounded-lg border transition-all duration-200
+                      w-full px-3 py-2 text-sm rounded-lg border transition-all duration-200 resize-vertical
                       ${isDarkTheme 
                         ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400' 
                         : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500'
