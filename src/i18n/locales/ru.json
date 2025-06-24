@@ -22,9 +22,13 @@
     "placeholder": "Поиск рун...",
     "noResults": "Руны не найдены"
   },
+  "sorting": {
+    "name": "Название",
+    "level": "Уровень"
+  },
   "runeControls": {
     "highlightRune": "Подсветка руны",
-    "showRuneNumber": "Указание номера руны",
+    "showRuneNumber": "Указание номера",
     "boxSize": "Размер бокса",
     "color": "Цвет",
     "languageCustomization": "Настройка языков",

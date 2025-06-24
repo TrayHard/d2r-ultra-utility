@@ -22,6 +22,10 @@
     "placeholder": "Search runes...",
     "noResults": "No runes found"
   },
+  "sorting": {
+    "name": "Name",
+    "level": "Level"
+  },
   "runeControls": {
     "highlightRune": "Highlight Rune",
     "showRuneNumber": "Show Rune Number",

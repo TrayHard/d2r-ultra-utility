@@ -279,7 +279,7 @@ const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
                   }
                   size={0.8}
                 />
-                Name
+                {t("sorting.name")}
                 {sortType === "name" && (
                   <svg
                     className={`w-4 h-4 ${
@@ -327,7 +327,7 @@ const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
                     d="M13 10V3L4 14h7v7l9-11h-7z"
                   />
                 </svg>
-                Level
+                {t("sorting.level")}
                 {sortType === "level" && (
                   <svg
                     className={`w-4 h-4 ${
