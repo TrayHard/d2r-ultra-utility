@@ -24,6 +24,7 @@ interface RuneSettings {
   showNumber: boolean;
   boxSize: number; // 0 - normal, 1 - medium, 2 - large
   color: string;
+  isManual: boolean;
   locales: Locales;
 }
 
@@ -61,6 +62,7 @@ const getDefaultRuneSettings = (): RuneSettings => ({
   showNumber: false,
   boxSize: 0, // Normal
   color: 'white1',
+  isManual: false,
   locales: {
     enUS: '',
     ruRU: '',

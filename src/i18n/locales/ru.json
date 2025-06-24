@@ -28,6 +28,7 @@
     "boxSize": "Размер бокса",
     "color": "Цвет",
     "languageCustomization": "Настройка языков",
+    "manualMode": "Ручной режим",
     "languageLabels": {
       "enUS": "Английский",
       "ruRU": "Русский",

@@ -2,6 +2,7 @@ import React from 'react';
 import { ERune, runeMinLvl } from '../../../constants/runes';
 import { useTranslation } from 'react-i18next';
 import Dropdown from '../../ui/Dropdown';
+import Switcher from '../../ui/Switcher';
 import { RuneSettings } from '../../../contexts/SettingsContext';
 
 interface RuneCardProps {
@@ -31,6 +32,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
   const showNumber = settings?.showNumber ?? false;
   const boxSize = settings?.boxSize ?? 0;
   const color = settings?.color ?? 'white1';
+  const isManual = settings?.isManual ?? false;
   const runeNames = settings?.locales ?? {
     enUS: '',
     ruRU: '',
@@ -73,6 +75,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
       showNumber,
       boxSize,
       color,
+      isManual,
       locales: runeNames,
       ...newSettings
     };
@@ -96,6 +99,10 @@ const RuneCard: React.FC<RuneCardProps> = ({
 
   const handleColorChange = (newColor: string) => {
     handleSettingChange({ color: newColor });
+  };
+
+  const handleManualChange = (checked: boolean) => {
+    handleSettingChange({ isManual: checked });
   };
 
   // Options for dropdowns
@@ -146,7 +153,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
 
   return (
     <div className={`
-      relative rounded-lg p-4 border-2 transition-all duration-300 hover:shadow-lg cursor-pointer
+      relative rounded-lg p-4 border-2 transition-all duration-300 hover:shadow-lg cursor-pointer grid grid-rows-[140px_1fr]
       ${isSelected 
         ? (isDarkTheme 
           ? 'bg-yellow-900/30 border-yellow-400 shadow-yellow-400/20 shadow-lg' 
@@ -238,10 +245,10 @@ const RuneCard: React.FC<RuneCardProps> = ({
       >
         <div className="space-y-4">
           {/* Checkboxes */}
-          <div className="space-y-3">
-            {/* Highlight Rune Checkbox */}
+          <div className="flex flex-wrap gap-2">
+            {/* Highlight Rune Checkbox - показываем всегда */}
             <label className={`
-              flex items-center space-x-3 cursor-pointer p-2 rounded-lg transition-all duration-200
+              flex items-center space-x-2 cursor-pointer p-2 rounded-lg transition-all duration-200 flex-1 min-w-0
               ${isDarkTheme 
                 ? 'hover:bg-gray-700/50' 
                 : 'hover:bg-gray-100/50'
@@ -252,130 +259,154 @@ const RuneCard: React.FC<RuneCardProps> = ({
                 checked={isHighlighted}
                 onChange={(e) => handleHighlightChange(e.target.checked)}
                 className={`
-                  w-5 h-5 rounded transition-all duration-200
+                  w-5 h-5 rounded transition-all duration-200 flex-shrink-0
                   ${isDarkTheme 
                     ? 'text-yellow-400 bg-gray-700 border-gray-600' 
                     : 'text-yellow-500 bg-white border-gray-300'
                   }
                 `}
               />
-              <span className={`text-sm font-medium transition-colors ${isDarkTheme ? 'text-gray-200' : 'text-gray-800'}`}>
+              <span className={`text-sm font-medium transition-colors truncate ${isDarkTheme ? 'text-gray-200' : 'text-gray-800'}`}>
                 {t('runeControls.highlightRune')}
               </span>
             </label>
 
-            {/* Show Rune Number Checkbox */}
-            <label className={`
-              flex items-center space-x-3 cursor-pointer p-2 rounded-lg transition-all duration-200
-              ${isDarkTheme 
-                ? 'hover:bg-gray-700/50' 
-                : 'hover:bg-gray-100/50'
-              }
-            `}>
-              <input
-                type="checkbox"
-                checked={showNumber}
-                onChange={(e) => handleShowNumberChange(e.target.checked)}
-                className={`
-                  w-5 h-5 rounded transition-all duration-200
-                  ${isDarkTheme 
-                    ? 'text-yellow-400 bg-gray-700 border-gray-600' 
-                    : 'text-yellow-500 bg-white border-gray-300'
-                  }
-                `}
-              />
-              <span className={`text-sm font-medium transition-colors ${isDarkTheme ? 'text-gray-200' : 'text-gray-800'}`}>
-                {t('runeControls.showRuneNumber')}
-              </span>
-            </label>
+            {/* Show Rune Number Checkbox - показываем только в обычном режиме */}
+            {!isManual && (
+              <label className={`
+                flex items-center space-x-2 cursor-pointer p-2 rounded-lg transition-all duration-200 flex-1 min-w-0
+                ${isDarkTheme 
+                  ? 'hover:bg-gray-700/50' 
+                  : 'hover:bg-gray-100/50'
+                }
+              `}>
+                <input
+                  type="checkbox"
+                  checked={showNumber}
+                  onChange={(e) => handleShowNumberChange(e.target.checked)}
+                  className={`
+                    w-5 h-5 rounded transition-all duration-200 flex-shrink-0
+                    ${isDarkTheme 
+                      ? 'text-yellow-400 bg-gray-700 border-gray-600' 
+                      : 'text-yellow-500 bg-white border-gray-300'
+                    }
+                  `}
+                />
+                <span className={`text-sm font-medium transition-colors truncate ${isDarkTheme ? 'text-gray-200' : 'text-gray-800'}`}>
+                  {t('runeControls.showRuneNumber')}
+                </span>
+              </label>
+            )}
           </div>
 
-          {/* Divider */}
-          <div className={`border-t ${isDarkTheme ? 'border-gray-700' : 'border-gray-200'}`}></div>
+          {/* Divider - показываем только если есть дропдауны */}
+          {!isManual && (
+            <div className={`border-t ${isDarkTheme ? 'border-gray-700' : 'border-gray-200'}`}></div>
+          )}
 
-          {/* Dropdowns */}
-          <div className="space-y-4">
-            {/* Box Size Dropdown */}
-            <div>
-              <label className={`block text-sm font-semibold mb-2 ${isDarkTheme ? 'text-gray-300' : 'text-gray-700'}`}>
-                {t('runeControls.boxSize')}
-              </label>
-              <Dropdown
-                options={sizeOptions}
-                selectedValue={boxSize.toString()}
-                onSelect={handleBoxSizeChange}
-                isDarkTheme={isDarkTheme}
-                size="md"
-              />
-            </div>
+          {/* Dropdowns - показываем только в обычном режиме */}
+          {!isManual && (
+            <div className="flex flex-wrap gap-4">
+              {/* Box Size Dropdown */}
+              <div className="flex-1 min-w-0">
+                <label className={`block text-sm font-semibold mb-2 ${isDarkTheme ? 'text-gray-300' : 'text-gray-700'}`}>
+                  {t('runeControls.boxSize')}
+                </label>
+                <Dropdown
+                  options={sizeOptions}
+                  selectedValue={boxSize.toString()}
+                  onSelect={handleBoxSizeChange}
+                  isDarkTheme={isDarkTheme}
+                  size="md"
+                />
+              </div>
 
-            {/* Color Dropdown */}
-            <div>
-              <label className={`block text-sm font-semibold mb-2 ${isDarkTheme ? 'text-gray-300' : 'text-gray-700'}`}>
-                {t('runeControls.color')}
-              </label>
-              <Dropdown
-                options={colorOptions}
-                selectedValue={color}
-                onSelect={handleColorChange}
-                isDarkTheme={isDarkTheme}
-                size="md"
-              />
+              {/* Color Dropdown */}
+              <div className="flex-1 min-w-0">
+                <label className={`block text-sm font-semibold mb-2 ${isDarkTheme ? 'text-gray-300' : 'text-gray-700'}`}>
+                  {t('runeControls.color')}
+                </label>
+                <Dropdown
+                  options={colorOptions}
+                  selectedValue={color}
+                  onSelect={handleColorChange}
+                  isDarkTheme={isDarkTheme}
+                  size="md"
+                />
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Divider */}
           <div className={`border-t ${isDarkTheme ? 'border-gray-700' : 'border-gray-200'}`}></div>
 
           {/* Language Names Section */}
           <div>
-            <h4 className={`text-sm font-semibold mb-3 ${isDarkTheme ? 'text-gray-300' : 'text-gray-700'}`}>
-              {t('runeControls.languageCustomization')}
-            </h4>
-            <div className="space-y-3 max-h-60 overflow-y-auto">
+            <div className="flex items-center justify-between mb-3">
+              <h4 className={`text-sm font-semibold ${isDarkTheme ? 'text-gray-300' : 'text-gray-700'}`}>
+                {t('runeControls.languageCustomization')}
+              </h4>
+              <Switcher
+                checked={isManual}
+                onChange={handleManualChange}
+                label={t('runeControls.manualMode')}
+                isDarkTheme={isDarkTheme}
+                size="sm"
+              />
+            </div>
+            <div className={`space-y-3 overflow-x-hidden overflow-y-auto ${isManual ? 'max-h-[338px]' : 'max-h-60'}`}>
               {languageCodes.map((langCode) => (
-                <div key={langCode} className="space-y-1">
-                  <label className={`text-xs font-medium ${isDarkTheme ? 'text-gray-400' : 'text-gray-600'}`}>
-                    {t(`runeControls.languageLabels.${langCode}`)} ({langCode})
-                  </label>
-                  <textarea
-                    value={runeNames[langCode as keyof typeof runeNames]}
-                    onChange={(e) => handleLanguageNameChange(langCode, e.target.value)}
-                    placeholder={t(`runeControls.placeholders.${langCode}`)}
-                    rows={3}
-                    className={`
-                      w-full px-3 py-2 text-sm rounded-lg border transition-all duration-200 resize-vertical
-                      ${isDarkTheme 
-                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400' 
-                        : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500'
-                      }
-                    `}
-                  />
+                <div key={langCode}>
+                  {isManual ? (
+                    // В ручном режиме - подпись сверху + textarea
+                    <div className="space-y-1 mx-2">
+                      <label className={`text-xs font-medium ${isDarkTheme ? 'text-gray-400' : 'text-gray-600'}`}>
+                        {t(`runeControls.languageLabels.${langCode}`)} ({langCode})
+                      </label>
+                      <textarea
+                        value={runeNames[langCode as keyof typeof runeNames]}
+                        onChange={(e) => handleLanguageNameChange(langCode, e.target.value)}
+                        placeholder={t(`runeControls.placeholders.${langCode}`)}
+                        rows={3}
+                        className={`
+                          w-full px-3 py-2 text-sm rounded-lg border transition-all duration-200 resize-vertical
+                          ${isDarkTheme 
+                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400' 
+                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500'
+                          }
+                        `}
+                      />
+                    </div>
+                  ) : (
+                    // В обычном режиме - только input с подписью сбоку
+                    <div className="flex items-center space-x-3">
+                      <label className={`text-xs font-medium flex-shrink-0 w-8 ${isDarkTheme ? 'text-gray-400' : 'text-gray-600'}`}>
+                        {langCode}:
+                      </label>
+                      <input
+                        type="text"
+                        value={runeNames[langCode as keyof typeof runeNames]}
+                        onChange={(e) => handleLanguageNameChange(langCode, e.target.value)}
+                        placeholder={t(`runeControls.placeholders.${langCode}`)}
+                        style={{ marginRight: '8px' }}
+                        className={`
+                          flex-1 px-3 py-2 text-sm rounded-lg border transition-all duration-200
+                          ${isDarkTheme 
+                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400' 
+                            : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500'
+                          }
+                        `}
+                      />
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
           </div>
         </div>
       </div>
-
-      {/* Rarity Indicator */}
-      <div className="absolute top-2 right-2">
-        <div className={`
-          w-3 h-3 rounded-full
-          ${getRarityColor(rune)}
-        `} />
-      </div>
     </div>
   );
-};
-
-const getRarityColor = (rune: ERune): string => {
-  const runeIndex = Object.values(ERune).indexOf(rune);
-  
-  if (runeIndex < 10) return 'bg-gray-400'; // Common
-  if (runeIndex < 20) return 'bg-blue-400'; // Magic
-  if (runeIndex < 28) return 'bg-yellow-400'; // Rare
-  return 'bg-orange-500'; // Unique/High
 };
 
 export default RuneCard;

@@ -28,6 +28,7 @@
     "boxSize": "Box Size",
     "color": "Color",
     "languageCustomization": "Language Customization",
+    "manualMode": "Manual Mode",
     "languageLabels": {
       "enUS": "English",
       "ruRU": "Russian",
