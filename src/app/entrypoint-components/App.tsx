@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
-import ProgressBar from "./components/ui/ProgressBar.tsx";
-import CustomTitleBar from "./components/ui/CustomTitleBar.tsx";
+import ProgressBar from "../../shared/components/ProgressBar.tsx";
+import CustomTitleBar from "../../widgets/CustomTitleBar.tsx";
 
-import PathSelector from "./components/workspace/toolbar/PathSelector.tsx";
-import WorkSpace from "./components/WorkSpace";
+import PathSelector from "../../widgets/Toolbar/PathSelector.tsx";
+import WorkSpace from "./WorkSpace.tsx";
 import "./App.css";
 
 interface SearchProgress {
@@ -188,7 +188,7 @@ function App() {
 
   const handleManualSearch = async () => {
     if (!manualFileName.trim()) {
-      alert("Выбери файл блять!");
+      alert("Выбери файл!");
       return;
     }
 

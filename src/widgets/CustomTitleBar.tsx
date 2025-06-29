@@ -47,7 +47,7 @@ const CustomTitleBar: React.FC<CustomTitleBarProps> = ({ title = 'Diablo II Util
         <div className="flex items-center gap-3">
           {/* Diablo themed icon */}
           <img
-            src="/src/assets/logo_128.png"
+            src="/src/shared/assets/logo_128.png"
             alt="Diablo 2 Logo"
             className="h-5 w-auto drop-shadow-md"
           />
@@ -64,10 +64,10 @@ const CustomTitleBar: React.FC<CustomTitleBarProps> = ({ title = 'Diablo II Util
           className="flex items-center justify-center w-9 h-9 hover:bg-red-800 transition-all duration-200 group bg-red-900/20"
           title="Minimize"
         >
-          <svg 
-            width="18" 
-            height="18" 
-            viewBox="0 0 24 24" 
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
             className="group-hover:scale-110 transition-transform duration-200 min-w-5 min-h-5"
           >
             <path d={mdiMinus} fill="#fbbf24" />
@@ -78,10 +78,10 @@ const CustomTitleBar: React.FC<CustomTitleBarProps> = ({ title = 'Diablo II Util
           className="flex items-center justify-center w-9 h-9 hover:bg-red-800 transition-all duration-200 group bg-red-900/20 min-w-5 min-h-5"
           title="Maximize"
         >
-          <svg 
-            width="16" 
-            height="16" 
-            viewBox="0 0 24 24" 
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
             className="group-hover:scale-110 transition-transform duration-200 min-w-4 min-h-4"
           >
             <path d={mdiSquareOutline} fill="#fbbf24" />
@@ -92,10 +92,10 @@ const CustomTitleBar: React.FC<CustomTitleBarProps> = ({ title = 'Diablo II Util
           className="flex items-center justify-center w-9 h-9 hover:bg-red-600 hover:shadow-lg transition-all duration-200 group bg-red-900/20"
           title="Close"
         >
-          <svg 
-            width="18" 
-            height="18" 
-            viewBox="0 0 24 24" 
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
             className="group-hover:scale-110 transition-transform duration-200 min-w-5 min-h-5"
           >
             <path d={mdiClose} fill="#fbbf24" />
@@ -106,4 +106,4 @@ const CustomTitleBar: React.FC<CustomTitleBarProps> = ({ title = 'Diablo II Util
   );
 };
 
-export default CustomTitleBar; 
+export default CustomTitleBar;

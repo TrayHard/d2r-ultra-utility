@@ -1,6 +1,6 @@
 import React, { createContext, useContext, ReactNode } from 'react';
-import { useMessage, MessageData } from './useMessage';
-import MessageContainer from './MessageContainer';
+import { useMessage, MessageData } from './useMessage.ts';
+import MessageContainer from './MessageContainer.tsx';
 
 interface MessageContextValue {
   messages: MessageData[];
@@ -31,7 +31,7 @@ export const MessageProvider: React.FC<MessageProviderProps> = ({
   return (
     <MessageContext.Provider value={messageHook}>
       {children}
-      
+
       {/* Глобальный контейнер для сообщений */}
       <MessageContainer
         messages={messageHook.messages}
@@ -50,4 +50,4 @@ export const useGlobalMessage = (): MessageContextValue => {
     throw new Error('useGlobalMessage must be used within a MessageProvider');
   }
   return context;
-}; 
+};

@@ -1,10 +1,10 @@
 import React from 'react';
-import CommonTab from '../Tabs/CommonTab.tsx';
-import ItemsTab from '../Tabs/ItemsTab.tsx';
-import RunesTab from '../Tabs/runes/RunesTab.tsx';
-import GemsTab from '../Tabs/GemsTab.tsx';
-import SkillsTab from '../Tabs/SkillsTab.tsx';
-import OtherTab from '../Tabs/OtherTab.tsx';
+import CommonTab from '../../../pages/common/CommonTab.tsx';
+import ItemsTab from '../../../pages/items/ItemsTab.tsx';
+import RunesTab from '../../../pages/runes/RunesTab.tsx';
+import GemsTab from '../../../pages/gems/GemsTab.tsx';
+import SkillsTab from '../../../pages/skills/SkillsTab.tsx';
+import OtherTab from '../../../pages/other/OtherTab.tsx';
 
 export type TabType = 'common' | 'items' | 'runes' | 'gems' | 'skills' | 'other';
 

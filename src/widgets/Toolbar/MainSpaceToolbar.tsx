@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import LanguageSwitch from './toolbar/LanguageSwitch.tsx';
+import LanguageSwitch from './LanguageSwitch.tsx';
 
 interface ToolbarProps {
   onLanguageChange: () => void;

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import MainSpaceToolbar from './workspace/MainSpaceToolbar.tsx';
+import MainSpaceToolbar from '../../widgets/Toolbar/MainSpaceToolbar.tsx';
 import MainSpace from './workspace/MainSpace.tsx';
-import { MessageProvider } from './ui/MessageProvider';
-import { useLanguage } from '../hooks/useLanguage';
-import { SettingsProvider } from '../contexts/SettingsContext';
+import { MessageProvider } from '../../shared/components/Message/MessageProvider.tsx';
+import { useLanguage } from '../../shared/hooks/useLanguage.ts';
+import { SettingsProvider } from '../providers/SettingsContext.tsx';
 
 interface WorkSpaceProps {
   onChangeClick: () => void;

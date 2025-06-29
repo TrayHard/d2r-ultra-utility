@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Icon from '@mdi/react';
-import { 
-  mdiCheckCircle, 
-  mdiAlert, 
-  mdiAlertCircle, 
-  mdiInformation, 
-  mdiClose 
+import {
+  mdiCheckCircle,
+  mdiAlert,
+  mdiAlertCircle,
+  mdiInformation,
+  mdiClose
 } from '@mdi/js';
-import { MessageData, MessageType } from './useMessage';
+import { MessageData, MessageType } from './useMessage.ts';
 
 interface MessageProps {
   message: MessageData;
@@ -74,7 +74,7 @@ const Message: React.FC<MessageProps> = ({
 
   const getIconColor = (type: MessageType) => {
     if (message.color) return message.color;
-    
+
     switch (type) {
       case 'success': return isDarkTheme ? '#10b981' : '#059669';
       case 'error': return isDarkTheme ? '#ef4444' : '#dc2626';
@@ -172,4 +172,4 @@ const Message: React.FC<MessageProps> = ({
   );
 };
 
-export default Message; 
+export default Message;

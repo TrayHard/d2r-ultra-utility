@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import Button from '../ui/Button';
-import { useGlobalMessage } from '../ui/MessageProvider';
+import Button from '../../shared/components/Button.tsx';
+import { useGlobalMessage } from '../../shared/components/Message/MessageProvider.tsx';
 
 interface CommonTabProps {
   isDarkTheme: boolean;
@@ -27,7 +27,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
         }`}>
           {t('descriptions.common')}
         </p>
-        
+
         {/* Демо кнопки для тестирования глобальных уведомлений */}
         <div className="flex flex-wrap gap-3 justify-center">
           <Button
@@ -68,4 +68,4 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
   );
 };
 
-export default CommonTab; 
+export default CommonTab;

@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { ERune, runes, runeMinLvl } from "../../../constants/runes";
-import RuneCard from "./RuneCard";
+import { ERune, runes, runeMinLvl } from "./constants/runes.ts";
+import RuneCard from "./RuneCard.tsx";
 import Icon from "@mdi/react";
 import {
   mdiOrderAlphabeticalAscending,
@@ -11,11 +11,11 @@ import {
   mdiFileDocumentMultiple,
   mdiCheck,
 } from "@mdi/js";
-import Dropdown from "../../ui/Dropdown";
-import Button from "../../ui/Button";
-import { useGlobalMessage } from "../../ui/MessageProvider";
-import { useSettings, RuneSettings } from "../../../contexts/SettingsContext";
-import { useTextWorker } from "../../../hooks/useTextWorker";
+import Dropdown from "../../shared/components/Dropdown.tsx";
+import Button from "../../shared/components/Button.tsx";
+import { useGlobalMessage } from "../../shared/components/Message/MessageProvider.tsx";
+import { useSettings, RuneSettings } from "../../app/providers/SettingsContext.tsx";
+import { useTextWorker } from "../../shared/hooks/useTextWorker.ts";
 
 interface RunesTabProps {
   isDarkTheme: boolean;
@@ -40,10 +40,10 @@ const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
   const [selectedRunes, setSelectedRunes] = useState<Set<ERune>>(new Set());
 
   // Используем глобальный стейт настроек
-  const { 
-    getRuneSettings, 
-    updateRuneSettings, 
-    updateMultipleRuneSettings, 
+  const {
+    getRuneSettings,
+    updateRuneSettings,
+    updateMultipleRuneSettings,
     resetMultipleRuneSettings,
     settings
   } = useSettings();
@@ -428,7 +428,7 @@ const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
                 >
                   {selectedRunes.size} {t("massEdit.selected")}
                 </span>
-                
+
                 {/* Highlight Checkbox */}
                 <label className="flex items-center gap-1 cursor-pointer">
                   <input
@@ -517,7 +517,7 @@ const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
                 >
                   {t("massEdit.apply")}
                 </button>
-                
+
                 <button
                   onClick={resetSelectedRunes}
                   className={`

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import MainSpaceBody, { TabType } from './MainSpaceBody.tsx';
-import Tabs, { TabItem } from '../ui/Tabs.tsx';
+import Tabs, { TabItem } from '../../../shared/components/Tabs.tsx';
 
 interface MainSpaceProps {
   isDarkTheme: boolean;

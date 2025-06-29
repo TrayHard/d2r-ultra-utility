@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useContext, createContext } from 'react';
-import { ERune } from '../constants/runes';
+import { ERune } from '../../pages/runes/constants/runes.ts';
 
 // Типы для локализации
 interface Locales {
@@ -203,4 +203,4 @@ export const useSettings = (): SettingsContextType => {
   return context;
 };
 
-export type { RuneSettings, Locales, AppSettings }; 
+export type { RuneSettings, Locales, AppSettings };
