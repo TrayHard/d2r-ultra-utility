@@ -14,7 +14,10 @@ import {
 import Dropdown from "../../shared/components/Dropdown.tsx";
 import Button from "../../shared/components/Button.tsx";
 import { useGlobalMessage } from "../../shared/components/Message/MessageProvider.tsx";
-import { useSettings, RuneSettings } from "../../app/providers/SettingsContext.tsx";
+import {
+  useSettings,
+  RuneSettings,
+} from "../../app/providers/SettingsContext.tsx";
 import { useTextWorker } from "../../shared/hooks/useTextWorker.ts";
 
 interface RunesTabProps {
@@ -45,7 +48,7 @@ const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
     updateRuneSettings,
     updateMultipleRuneSettings,
     resetMultipleRuneSettings,
-    settings
+    settings,
   } = useSettings();
 
   // Используем глобальный хук для уведомлений
@@ -123,7 +126,7 @@ const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
       isHighlighted: massEditSettings.isHighlighted,
       showNumber: massEditSettings.showNumber,
       boxSize: massEditSettings.boxSize,
-      color: massEditSettings.color
+      color: massEditSettings.color,
     });
   };
 
@@ -355,7 +358,7 @@ const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
                 isDarkTheme={isDarkTheme}
                 icon={mdiFileDocumentMultiple}
               >
-                {t("textWorker.readFromFiles") ?? "Read from files"}
+                {t("textWorker.readFromFiles")}
               </Button>
 
               <Button
@@ -365,20 +368,22 @@ const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
                 isDarkTheme={isDarkTheme}
                 icon={mdiCheck}
               >
-                {t("textWorker.apply") ?? "Apply"}
+                {t("textWorker.apply")}
               </Button>
             </div>
 
             {/* Error Display */}
             {error && (
-              <div className={`
+              <div
+                className={`
                 px-4 py-2 rounded-lg border
                 ${
                   isDarkTheme
                     ? "bg-red-900/50 border-red-700 text-red-300"
                     : "bg-red-50 border-red-300 text-red-700"
                 }
-              `}>
+              `}
+              >
                 <span className="text-sm">{error}</span>
               </div>
             )}
@@ -446,7 +451,11 @@ const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
                         : "text-yellow-500 bg-white border-gray-300"
                     }`}
                   />
-                  <span className={`text-xs ${isDarkTheme ? "text-gray-200" : "text-gray-800"}`}>
+                  <span
+                    className={`text-xs ${
+                      isDarkTheme ? "text-gray-200" : "text-gray-800"
+                    }`}
+                  >
                     {t("massEdit.highlight")}
                   </span>
                 </label>
@@ -468,7 +477,11 @@ const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
                         : "text-yellow-500 bg-white border-gray-300"
                     }`}
                   />
-                  <span className={`text-xs ${isDarkTheme ? "text-gray-200" : "text-gray-800"}`}>
+                  <span
+                    className={`text-xs ${
+                      isDarkTheme ? "text-gray-200" : "text-gray-800"
+                    }`}
+                  >
                     {t("massEdit.showNumbers")}
                   </span>
                 </label>
@@ -566,7 +579,6 @@ const RunesTab: React.FC<RunesTabProps> = ({ isDarkTheme }) => {
           </div>
         ) : (
           <div className="flex flex-col gap-4">
-
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredAndSortedRunes.map((rune) => (
                 <RuneCard

@@ -1,7 +1,7 @@
 {
   "tabs": {
     "common": "Common",
-    "items": "Items", 
+    "items": "Items",
     "runes": "Runes",
     "gems": "Gems",
     "skills": "Skills",
@@ -10,7 +10,7 @@
   "descriptions": {
     "common": "Common utilities and tools",
     "items": "Item management and analysis",
-    "runes": "Rune management and combinations", 
+    "runes": "Rune management and combinations",
     "gems": "Gem management and upgrades",
     "skills": "Skill tree and build planning",
     "other": "Additional tools and utilities"
@@ -28,11 +28,18 @@
   },
   "runeControls": {
     "highlightRune": "Highlight Rune",
-    "showRuneNumber": "Show Rune Number",
+    "showRuneNumber": "Show Rune Num",
     "boxSize": "Box Size",
     "color": "Color",
     "languageCustomization": "Language Customization",
     "manualMode": "Manual Mode",
+    "preview": "Preview",
+    "previewTitle": "Text Preview",
+    "howItLooks": "Rune preview:",
+    "runeNumber": "Rune Number",
+    "previewLanguage": "Preview Language",
+    "customName": "Custom Name",
+    "settings": "Settings",
     "languageLabels": {
       "enUS": "English",
       "ruRU": "Russian",
@@ -50,7 +57,7 @@
     },
     "placeholders": {
       "enUS": "Name in English",
-      "ruRU": "Name in Russian",  
+      "ruRU": "Name in Russian",
       "zhTW": "Name in Chinese (Trad.)",
       "deDE": "Name in German",
       "esES": "Name in Spanish",
@@ -168,4 +175,4 @@
       "unknownError": "Unknown error while reading files"
     }
   }
-} 
+}

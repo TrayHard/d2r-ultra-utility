@@ -1,9 +1,14 @@
-import React from "react";
-import { ERune, runeMinLvl } from "./constants/runes.ts";
+import React, { useState } from "react";
+import { ERune, runeMinLvl, runeNumbers } from "./constants/runes.ts";
 import { useTranslation } from "react-i18next";
 import Dropdown from "../../shared/components/Dropdown.tsx";
 import Switcher from "../../shared/components/Switcher.tsx";
+import Modal from "../../shared/components/Modal.tsx";
 import { RuneSettings } from "../../app/providers/SettingsContext.tsx";
+import Icon from "@mdi/react";
+import { mdiEye } from "@mdi/js";
+import highlightedBg from "../../shared/assets/runes/highlighted.png";
+import unhighlightedBg from "../../shared/assets/runes/unhighlighted.png";
 
 interface RuneCardProps {
   rune: ERune;
@@ -22,6 +27,8 @@ const RuneCard: React.FC<RuneCardProps> = ({
   settings,
   onSettingsChange,
 }) => {
+  const [showPreview, setShowPreview] = useState(false);
+  const [previewLocale, setPreviewLocale] = useState("enUS");
   const runeName = rune.charAt(0).toUpperCase() + rune.slice(1);
   const minLevel = runeMinLvl[rune];
   const runeImagePath = `/img/runes/${rune}_rune.webp`;
@@ -49,6 +56,20 @@ const RuneCard: React.FC<RuneCardProps> = ({
     zhCN: "",
   };
 
+  // Формируем название руны с номером если нужно
+  const displayName = t(`runes.${rune}`);
+
+  // Получаем название руны для превью из пользовательских инпутов
+  const getPreviewRuneName = () => {
+    const customName = runeNames[previewLocale as keyof typeof runeNames];
+    return customName || t(`runes.${rune}`); // fallback на стандартное название
+  };
+
+  const modalDisplayName =
+    showNumber && !isManual
+      ? `${getPreviewRuneName()} (${runeNumbers[rune]})`
+      : getPreviewRuneName();
+
   // Language codes for iteration
   const languageCodes = [
     "enUS",
@@ -65,6 +86,12 @@ const RuneCard: React.FC<RuneCardProps> = ({
     "ptBR",
     "zhCN",
   ];
+
+  // Опции для локалей в модалке
+  const localeOptions = languageCodes.map((langCode) => ({
+    value: langCode,
+    label: t(`runeControls.languageLabels.${langCode}`) ?? langCode,
+  }));
 
   // Handle language name change
   const handleLanguageNameChange = (langCode: string, value: string) => {
@@ -162,6 +189,65 @@ const RuneCard: React.FC<RuneCardProps> = ({
     { value: "purple", label: t("runeControls.colors.purple") },
   ];
 
+  // Функция для получения стилей цвета D2R
+  const getD2RColorStyle = (colorCode: string) => {
+    const colorMap: Record<string, string> = {
+      white1: "#FFFFFF",
+      white2: "#F0F0F0",
+      gray1: "#C0C0C0",
+      gray2: "#808080",
+      gray3: "#606060",
+      black1: "#404040",
+      black2: "#000000",
+      lightred: "#FF6060",
+      red1: "#FF0000",
+      red2: "#D00000",
+      darkred: "#800000",
+      orange1: "#FF8040",
+      orange2: "#FF6000",
+      orange3: "#E04000",
+      orange4: "#C03000",
+      lightgold1: "#FFFF80",
+      lightgold2: "#FFFF40",
+      gold1: "#FFD700",
+      gold2: "#E6C200",
+      yellow1: "#FFFF00",
+      yellow2: "#E6E600",
+      green1: "#80FF80",
+      green2: "#40FF40",
+      green3: "#00FF00",
+      green4: "#00E000",
+      darkgreen1: "#00C000",
+      darkgreen2: "#008000",
+      turquoise: "#00FFFF",
+      skyblue: "#80C0FF",
+      lightblue1: "#4080FF",
+      lightblue2: "#0060FF",
+      blue1: "#0040FF",
+      blue2: "#0000FF",
+      lightpink: "#FF80FF",
+      pink: "#FF40FF",
+      purple: "#8040FF",
+    };
+    return colorMap[colorCode] ?? "#FFFFFF";
+  };
+
+  // Функция для получения размера шрифта
+  const getFontSize = (boxSize: number) => {
+    // Размер шрифта теперь всегда одинаковый
+    return "16px";
+  };
+
+  // Функция для получения ширины контейнера
+  const getContainerWidth = (boxSize: number) => {
+    const sizeMap = {
+      0: "auto", // Normal - авто ширина
+      1: "200px", // Medium - средняя ширина
+      2: "300px", // Large - большая ширина
+    };
+    return sizeMap[boxSize as keyof typeof sizeMap] ?? "auto";
+  };
+
   return (
     <div
       className={`
@@ -197,6 +283,231 @@ const RuneCard: React.FC<RuneCardProps> = ({
         </div>
       )}
 
+      {/* Preview Button */}
+      <div className="absolute top-3 right-3 z-10">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowPreview(true);
+          }}
+          className={`
+            p-2 rounded-lg transition-all duration-200 hover:scale-105
+            ${
+              isDarkTheme
+                ? "bg-gray-700/80 hover:bg-gray-600/80 text-gray-300 hover:text-white border border-gray-600"
+                : "bg-white/80 hover:bg-gray-50/80 text-gray-600 hover:text-gray-900 border border-gray-200"
+            }
+            backdrop-blur-sm shadow-sm hover:shadow-md
+          `}
+          title={t("runeControls.preview") ?? "Preview"}
+        >
+          <Icon path={mdiEye} size={0.8} />
+        </button>
+      </div>
+
+      {/* Preview Modal */}
+      <Modal
+        isOpen={showPreview}
+        onClose={() => setShowPreview(false)}
+        title={t("runeControls.howItLooks")}
+        isDarkTheme={isDarkTheme}
+        size="md"
+      >
+        <div className="text-center space-y-6">
+          <div className="space-y-4">
+            {/* Переключалка локали */}
+            <div className="flex items-center justify-center gap-3">
+              <label
+                className={`text-sm font-medium ${
+                  isDarkTheme ? "text-gray-300" : "text-gray-700"
+                }`}
+              >
+                {t("runeControls.previewLanguage")}:
+              </label>
+              <Dropdown
+                options={localeOptions}
+                selectedValue={previewLocale}
+                onSelect={setPreviewLocale}
+                isDarkTheme={isDarkTheme}
+                size="sm"
+                className="w-40"
+              />
+            </div>
+
+            {/* Настройки */}
+            <div
+              className={`space-y-4 p-4 rounded-lg border ${
+                isDarkTheme
+                  ? "bg-gray-800/50 border-gray-700"
+                  : "bg-gray-50/50 border-gray-200"
+              }`}
+            >
+              {/* Чекбоксы */}
+              <div className="flex flex-wrap gap-2">
+                {/* Highlight Checkbox */}
+                <label
+                  className={`
+                  flex items-center space-x-2 cursor-pointer p-2 rounded-lg transition-all duration-200 flex-1 min-w-0
+                  ${
+                    isDarkTheme
+                      ? "bg-gray-500/50 hover:bg-gray-400/50"
+                      : "bg-gray-100/50 hover:bg-gray-200/50"
+                  }
+                `}
+                >
+                  <input
+                    type="checkbox"
+                    checked={isHighlighted}
+                    onChange={(e) => handleHighlightChange(e.target.checked)}
+                    className={`
+                      w-4 h-4 rounded transition-all duration-200 flex-shrink-0
+                      ${
+                        isDarkTheme
+                          ? "text-yellow-400 bg-gray-700 border-gray-600"
+                          : "text-yellow-500 bg-white border-gray-300"
+                      }
+                    `}
+                  />
+                  <span
+                    className={`text-xs font-medium transition-colors truncate ${
+                      isDarkTheme ? "text-gray-200" : "text-gray-800"
+                    }`}
+                  >
+                    {t("runeControls.highlightRune")}
+                  </span>
+                </label>
+
+                {/* Show Number Checkbox */}
+                <label
+                  className={`
+                  flex items-center space-x-2 cursor-pointer p-2 rounded-lg transition-all duration-200 flex-1 min-w-0
+                  ${
+                    isDarkTheme
+                      ? "bg-gray-500/50 hover:bg-gray-400/50"
+                      : "bg-gray-100/50 hover:bg-gray-200/50"
+                  }
+                `}
+                >
+                  <input
+                    type="checkbox"
+                    checked={showNumber}
+                    onChange={(e) => handleShowNumberChange(e.target.checked)}
+                    className={`
+                      w-4 h-4 rounded transition-all duration-200 flex-shrink-0
+                      ${
+                        isDarkTheme
+                          ? "text-yellow-400 bg-gray-700 border-gray-600"
+                          : "text-yellow-500 bg-white border-gray-300"
+                      }
+                    `}
+                  />
+                  <span
+                    className={`text-xs font-medium transition-colors truncate ${
+                      isDarkTheme ? "text-gray-200" : "text-gray-800"
+                    }`}
+                  >
+                    {t("runeControls.showRuneNumber")}
+                  </span>
+                </label>
+              </div>
+
+              {/* Дропдауны */}
+              <div className="flex gap-3">
+                {/* Box Size Dropdown */}
+                <div className="flex-1">
+                  <label
+                    className={`block text-xs font-semibold mb-1 ${
+                      isDarkTheme ? "text-gray-300" : "text-gray-700"
+                    }`}
+                  >
+                    {t("runeControls.boxSize")}
+                  </label>
+                  <Dropdown
+                    options={sizeOptions}
+                    selectedValue={boxSize.toString()}
+                    onSelect={handleBoxSizeChange}
+                    isDarkTheme={isDarkTheme}
+                    size="sm"
+                  />
+                </div>
+
+                {/* Color Dropdown */}
+                <div className="flex-1">
+                  <label
+                    className={`block text-xs font-semibold mb-1 ${
+                      isDarkTheme ? "text-gray-300" : "text-gray-700"
+                    }`}
+                  >
+                    {t("runeControls.color")}
+                  </label>
+                  <Dropdown
+                    options={colorOptions}
+                    selectedValue={color}
+                    onSelect={handleColorChange}
+                    isDarkTheme={isDarkTheme}
+                    size="sm"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Превью текста */}
+            <div className="relative p-8 rounded-lg bg-gray-900 min-h-[500px] overflow-hidden">
+              {/* Фоновое изображение руны */}
+              <img
+                src={isHighlighted ? highlightedBg : unhighlightedBg}
+                alt={`Rune ${
+                  isHighlighted ? "highlighted" : "unhighlighted"
+                } background`}
+                className="absolute inset-0 w-full h-[500px] pointer-events-none"
+                style={{
+                  objectPosition: isHighlighted ? "57% 20%" : "45% 20%",
+                }}
+              />
+
+              {/* Текст с полупрозрачным фоном */}
+              <div
+                className="absolute px-1 bg-black/95 backdrop-blur-sm"
+                style={{
+                  top: "87%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  width: getContainerWidth(boxSize),
+                  textAlign: "center" as const,
+                }}
+              >
+                <span
+                  style={{
+                    color: getD2RColorStyle(color),
+                    fontSize: getFontSize(boxSize),
+                    fontFamily: "monospace",
+                    fontWeight: "bold",
+                    textShadow: "1px 1px 2px rgba(0,0,0,0.8)",
+                  }}
+                >
+                  {getPreviewRuneName()}
+                  {showNumber && !isManual && (
+                    <span
+                      style={{
+                        color: "#FF8040", // Оранжевый цвет для номера
+                        fontSize: getFontSize(boxSize),
+                        fontFamily: "monospace",
+                        fontWeight: "bold",
+                        textShadow: "1px 1px 2px rgba(0,0,0,0.8)",
+                      }}
+                    >
+                      {" ("}
+                      {runeNumbers[rune]}
+                      {")"}
+                    </span>
+                  )}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Modal>
+
       {/* Main Card Content */}
       <div onClick={() => onSelectionChange && onSelectionChange(!isSelected)}>
         {/* Rune Image */}
@@ -230,7 +541,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
           ${isDarkTheme ? "text-white" : "text-gray-900"}
         `}
         >
-          {t(`runes.${rune}`)}
+          {displayName}
         </h3>
 
         {/* Level Requirement */}
