@@ -1,5 +1,5 @@
 import React from "react";
-import { ERune, runeNumbers } from "./constants/runes.ts";
+import { ERune } from "./constants/runes.ts";
 import { useTranslation } from "react-i18next";
 import Dropdown from "../../shared/components/Dropdown.tsx";
 import Switcher from "../../shared/components/Switcher.tsx";
@@ -218,20 +218,6 @@ const RuneCard: React.FC<RuneCardProps> = ({
         numberColor: color,
       },
     });
-  };
-
-  // Функция для получения текста разделителя
-  const getDividerText = (type: string, number: number) => {
-    switch (type) {
-      case "parentheses":
-        return `(${number})`;
-      case "brackets":
-        return `[${number}]`;
-      case "pipe":
-        return `| ${number}`;
-      default:
-        return `(${number})`;
-    }
   };
 
   // Options for dropdowns
