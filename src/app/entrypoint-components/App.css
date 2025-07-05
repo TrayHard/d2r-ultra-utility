@@ -104,3 +104,98 @@ input:focus {
 #greet-input {
   margin-right: 5px;
 }
+
+/* Автоскрывающиеся стилизованные скроллбары */
+/* Webkit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+  transition: width 0.3s ease;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 2px;
+}
+
+/* По умолчанию скроллбар почти невидим */
+::-webkit-scrollbar-thumb {
+  background: rgba(203, 213, 225, 0.1);
+  border-radius: 2px;
+  transition: all 0.4s ease;
+  opacity: 0;
+  transform: scaleX(0.5);
+}
+
+/* Появляется при hover на контейнер */
+*:hover::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*:hover::-webkit-scrollbar-thumb {
+  background: rgba(203, 213, 225, 0.6);
+  opacity: 1;
+  transform: scaleX(1);
+  border-radius: 4px;
+}
+
+*:hover::-webkit-scrollbar-thumb:hover {
+  background: rgba(203, 213, 225, 0.9);
+  transform: scaleX(1.1);
+}
+
+/* Активное состояние при клике на скроллбар */
+*:hover::-webkit-scrollbar-thumb:active {
+  background: rgba(203, 213, 225, 1);
+}
+
+/* Темная тема - адаптивно по цвету фона */
+[class*="bg-gray-8"]:hover::-webkit-scrollbar-thumb,
+[class*="bg-gray-9"]:hover::-webkit-scrollbar-thumb,
+.bg-gray-800 *:hover::-webkit-scrollbar-thumb,
+.bg-gray-900 *:hover::-webkit-scrollbar-thumb {
+  background: rgba(71, 85, 105, 0.7);
+}
+
+[class*="bg-gray-8"]:hover::-webkit-scrollbar-thumb:hover,
+[class*="bg-gray-9"]:hover::-webkit-scrollbar-thumb:hover,
+.bg-gray-800 *:hover::-webkit-scrollbar-thumb:hover,
+.bg-gray-900 *:hover::-webkit-scrollbar-thumb:hover {
+  background: rgba(71, 85, 105, 0.9);
+}
+
+/* Специальные контейнеры с постоянно видимыми скроллбарами */
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: rgba(234, 179, 8, 0.2);
+  opacity: 0.6;
+  transform: scaleX(0.8);
+}
+
+.overflow-y-auto:hover::-webkit-scrollbar-thumb {
+  background: rgba(234, 179, 8, 0.7);
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+/* Firefox - автоскрытие не поддерживается, делаем тонкими */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(203, 213, 225, 0.3) transparent;
+}
+
+/* Показываем скроллбар при фокусе на элементе */
+*:focus-within::-webkit-scrollbar-thumb {
+  background: rgba(203, 213, 225, 0.5);
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+/* Плавное появление для touch устройств */
+@media (hover: none) and (pointer: coarse) {
+  ::-webkit-scrollbar-thumb {
+    background: rgba(203, 213, 225, 0.4);
+    opacity: 0.7;
+    transform: scaleX(0.9);
+  }
+}
