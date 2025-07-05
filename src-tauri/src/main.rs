@@ -2,5 +2,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    d2_utility_lib::run()
+    d2r_utility_lib::run()
 }

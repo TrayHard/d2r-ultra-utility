@@ -6,7 +6,6 @@ import Checkbox from "./Checkbox.tsx";
 import Dropdown from "./Dropdown.tsx";
 import {
   RuneSettings,
-  useSettings,
 } from "../../app/providers/SettingsContext.tsx";
 import { ERune } from "../../pages/runes/constants/runes.ts";
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { getCurrentWindow } from '@tauri-apps/api/window';
 import { mdiMinus, mdiSquareOutline, mdiClose } from '@mdi/js';
+import logoImage from '../shared/assets/logo_128.png';
 
 interface CustomTitleBarProps {
   title?: string;
@@ -47,7 +48,7 @@ const CustomTitleBar: React.FC<CustomTitleBarProps> = ({ title = 'Diablo II Util
         <div className="flex items-center gap-3">
           {/* Diablo themed icon */}
           <img
-            src="/src/shared/assets/logo_128.png"
+            src={logoImage}
             alt="Diablo 2 Logo"
             className="h-5 w-auto drop-shadow-md"
           />

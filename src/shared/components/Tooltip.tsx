@@ -15,20 +15,17 @@ const Tooltip: React.FC<TooltipProps> = ({
   position = "top",
   delay = 500,
 }) => {
-  const [isVisible, setIsVisible] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const timeoutRef = useRef<number | null>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
 
   const handleMouseEnter = () => {
-    setIsVisible(true);
     timeoutRef.current = setTimeout(() => {
       setShowTooltip(true);
     }, delay);
   };
 
   const handleMouseLeave = () => {
-    setIsVisible(false);
     setShowTooltip(false);
     if (timeoutRef.current !== null) {
       clearTimeout(timeoutRef.current);
