@@ -46,7 +46,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
   const isHighlighted = settings?.isHighlighted ?? false;
   const showNumber = settings?.numbering?.show ?? false;
   const boxSize = settings?.boxSize ?? 0;
-  const color = settings?.color ?? "white1";
+  const color = settings?.color ?? "white";
   const isManual = settings?.isManual ?? false;
   const dividerType =
     settings?.numbering?.dividerType ?? generalSettings.dividerType;
@@ -211,40 +211,24 @@ const RuneCard: React.FC<RuneCardProps> = ({
   ];
 
   const colorOptions = [
-    { value: "white1", label: t("runePage.controls.colors.white1") },
-    { value: "white2", label: t("runePage.controls.colors.white2") },
-    { value: "gray1", label: t("runePage.controls.colors.gray1") },
-    { value: "gray2", label: t("runePage.controls.colors.gray2") },
-    { value: "gray3", label: t("runePage.controls.colors.gray3") },
-    { value: "black1", label: t("runePage.controls.colors.black1") },
-    { value: "black2", label: t("runePage.controls.colors.black2") },
+    { value: "white", label: t("runePage.controls.colors.white") },
+    { value: "gray", label: t("runePage.controls.colors.gray") },
+    { value: "black", label: t("runePage.controls.colors.black") },
+    { value: "beige", label: t("runePage.controls.colors.beige") },
     { value: "lightred", label: t("runePage.controls.colors.lightred") },
-    { value: "red1", label: t("runePage.controls.colors.red1") },
-    { value: "red2", label: t("runePage.controls.colors.red2") },
-    { value: "darkred", label: t("runePage.controls.colors.darkred") },
-    { value: "orange1", label: t("runePage.controls.colors.orange1") },
-    { value: "orange2", label: t("runePage.controls.colors.orange2") },
-    { value: "orange3", label: t("runePage.controls.colors.orange3") },
-    { value: "orange4", label: t("runePage.controls.colors.orange4") },
-    { value: "lightgold1", label: t("runePage.controls.colors.lightgold1") },
-    { value: "lightgold2", label: t("runePage.controls.colors.lightgold2") },
-    { value: "gold1", label: t("runePage.controls.colors.gold1") },
-    { value: "gold2", label: t("runePage.controls.colors.gold2") },
-    { value: "yellow1", label: t("runePage.controls.colors.yellow1") },
-    { value: "yellow2", label: t("runePage.controls.colors.yellow2") },
-    { value: "green1", label: t("runePage.controls.colors.green1") },
-    { value: "green2", label: t("runePage.controls.colors.green2") },
-    { value: "green3", label: t("runePage.controls.colors.green3") },
-    { value: "green4", label: t("runePage.controls.colors.green4") },
-    { value: "darkgreen1", label: t("runePage.controls.colors.darkgreen1") },
-    { value: "darkgreen2", label: t("runePage.controls.colors.darkgreen2") },
+    { value: "red", label: t("runePage.controls.colors.red") },
+    { value: "dimred", label: t("runePage.controls.colors.dimred") },
+    { value: "orange", label: t("runePage.controls.colors.orange") },
+    { value: "lightgold", label: t("runePage.controls.colors.lightgold") },
+    { value: "yellow", label: t("runePage.controls.colors.yellow") },
+    { value: "lightyellow", label: t("runePage.controls.colors.lightyellow") },
+    { value: "green", label: t("runePage.controls.colors.green") },
+    { value: "dimgreen", label: t("runePage.controls.colors.dimgreen") },
+    { value: "darkgreen", label: t("runePage.controls.colors.darkgreen") },
+    { value: "indigo", label: t("runePage.controls.colors.indigo") },
+    { value: "lightindigo", label: t("runePage.controls.colors.lightindigo") },
     { value: "turquoise", label: t("runePage.controls.colors.turquoise") },
-    { value: "skyblue", label: t("runePage.controls.colors.skyblue") },
-    { value: "lightblue1", label: t("runePage.controls.colors.lightblue1") },
-    { value: "lightblue2", label: t("runePage.controls.colors.lightblue2") },
-    { value: "blue1", label: t("runePage.controls.colors.blue1") },
-    { value: "blue2", label: t("runePage.controls.colors.blue2") },
-    { value: "lightpink", label: t("runePage.controls.colors.lightpink") },
+    { value: "lightblue", label: t("runePage.controls.colors.lightblue") },
     { value: "pink", label: t("runePage.controls.colors.pink") },
     { value: "purple", label: t("runePage.controls.colors.purple") },
   ];
@@ -370,7 +354,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
                             style={{
                               color: getD2RColorStyle(color),
                               fontSize: getFontSize(boxSize),
-                              fontFamily: "monospace",
+                              fontFamily: "Diablo, monospace",
                               fontWeight: "bold",
                               textShadow: "1px 1px 2px rgba(0,0,0,0.8)",
                             }}
@@ -380,7 +364,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
                               <span
                                 style={{
                                   fontSize: getFontSize(boxSize),
-                                  fontFamily: "monospace",
+                                  fontFamily: "Diablo, monospace",
                                   fontWeight: "bold",
                                   textShadow: "1px 1px 2px rgba(0,0,0,0.8)",
                                 }}

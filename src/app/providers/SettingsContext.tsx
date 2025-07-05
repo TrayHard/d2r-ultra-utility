@@ -109,8 +109,8 @@ interface SettingsContextType {
 // Дефолтные общие настройки для рун
 const getDefaultGeneralRuneSettings = (): GeneralRuneSettings => ({
   dividerType: "parentheses",
-  dividerColor: "white1",
-  numberColor: "yellow1",
+  dividerColor: "white",
+  numberColor: "yellow",
 });
 
 // Миграция старых настроек рун к новому формату
@@ -126,11 +126,11 @@ const migrateRuneSettings = (oldSettings: any): RuneSettings => {
     numbering: {
       show: oldSettings.showNumber ?? false,
       dividerType: oldSettings.dividerType ?? "parentheses",
-      dividerColor: oldSettings.dividerColor ?? "white1",
-      numberColor: oldSettings.numberColor ?? "yellow1",
+      dividerColor: oldSettings.dividerColor ?? "white",
+      numberColor: oldSettings.numberColor ?? "yellow",
     },
     boxSize: oldSettings.boxSize ?? 0,
-    color: oldSettings.color ?? "white1",
+    color: oldSettings.color ?? "white",
     isManual: oldSettings.isManual ?? false,
     locales: oldSettings.locales ?? {
       enUS: "",
@@ -164,7 +164,7 @@ const getDefaultRuneSettings = (
       numberColor: defaultGeneral.numberColor,
     },
     boxSize: 0, // Normal
-    color: "white1",
+    color: "white",
     isManual: false,
     locales: {
       enUS: "",

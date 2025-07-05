@@ -159,27 +159,32 @@ export const useTextWorker = (
       }
 
       const homeDir = settings.homeDirectory.replace(/[\/\\]+$/, "");
-      const runeItemsPath = `${homeDir}\\${GAME_PATHS.RUNE_ITEMS}`;
+      const runeHighlightPath = `${homeDir}\\${GAME_PATHS.RUNE_HIGHLIGHT}`;
 
-      console.log("Reading highlight settings from:", runeItemsPath);
+      console.log("Reading highlight settings from:", runeHighlightPath);
 
       let processedRunes = 0;
 
       // Читаем настройки подсветки для каждой руны
       for (const rune of runes) {
-        const runeFilePath = `${runeItemsPath}\\${rune}_rune.json`;
+        const runeFilePath = `${runeHighlightPath}\\${rune}_rune.json`;
 
         try {
           const fileContent = await readTextFile(runeFilePath);
           const runeData = JSON.parse(fileContent);
 
           // Определяем, включена ли подсветка для этой руны
+          // Проверяем наличие эффектов подсветки в entities массиве
           const isHighlighted =
-            runeData.rArm === 1 ||
-            runeData.rWep === 1 ||
-            runeData.rHead === 1 ||
-            runeData.rTors === 1 ||
-            runeData.rShld === 1;
+            runeData.entities?.some((entity: any) =>
+              entity.components?.some(
+                (component: any) =>
+                  component.type === "VfxDefinitionComponent" &&
+                  (component.filename?.includes("horadric_light") ||
+                    component.filename?.includes("aura_fanatic") ||
+                    component.filename?.includes("valkriestart"))
+              )
+            ) ?? false;
 
           if (updateRuneSettings) {
             // Обновляем настройки подсветки для руны
@@ -377,18 +382,21 @@ export const useTextWorker = (
   // Функция для применения изменений к файлам подсветки рун
   const applyHighlightChanges = useCallback(
     async (homeDir: string, runeSettings: Record<ERune, RuneSettings>) => {
-      const runeItemsPath = `${homeDir}\\${GAME_PATHS.RUNE_ITEMS}`;
+      const runeHighlightPath = `${homeDir}\\${GAME_PATHS.RUNE_HIGHLIGHT}`;
 
-      console.log("Applying highlight changes to:", runeItemsPath);
+      console.log("Applying highlight changes to:", runeHighlightPath);
 
       // Применяем настройки подсветки для каждой руны
       for (const [rune, settings] of Object.entries(runeSettings)) {
         const runeEnum = rune as ERune;
-        const runeFilePath = `${runeItemsPath}\\${runeEnum}_rune.json`;
+        const runeFilePath = `${runeHighlightPath}\\${runeEnum}_rune.json`;
 
         try {
           // Генерируем данные для подсветки
-          const highlightData = generateRuneHighlightData(runeEnum, settings);
+          const highlightData = await generateRuneHighlightData(
+            runeEnum,
+            settings
+          );
 
           // Записываем данные в файл
           const highlightContent = JSON.stringify(highlightData, null, 2);

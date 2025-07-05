@@ -43,6 +43,7 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
   const [selectedRuneForSettings, setSelectedRuneForSettings] =
     useState<ERune | null>(null);
   const [isMassEditModalOpen, setIsMassEditModalOpen] = useState(false);
+  const [lastSelectedRune, setLastSelectedRune] = useState<ERune | null>(null);
 
   // Флаг для отслеживания первого открытия
   const isFirstLoadRef = useRef(true);
@@ -77,6 +78,11 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
     }
   }, [filteredAndSortedRunes, selectedRuneForSettings]);
 
+  // Сбрасываем последний выбранный элемент при изменении поискового запроса
+  useEffect(() => {
+    setLastSelectedRune(null);
+  }, [searchQuery]);
+
   const handleSort = (type: SortType) => {
     if (sortType === type) {
       setSortOrder(sortOrder === "asc" ? "desc" : "asc");
@@ -84,25 +90,59 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
       setSortType(type);
       setSortOrder("asc");
     }
+    setLastSelectedRune(null); // Сбрасываем последний выбранный элемент при изменении сортировки
   };
 
-  const handleRuneSelection = (rune: ERune, isSelected: boolean) => {
+  const handleRuneSelection = (
+    rune: ERune,
+    isSelected: boolean,
+    shiftKey: boolean = false
+  ) => {
     const newSelected = new Set(selectedRunes);
-    if (isSelected) {
-      newSelected.add(rune);
+
+    // Если нажат Shift и есть предыдущий выбранный элемент, выделяем диапазон
+    if (shiftKey && lastSelectedRune && lastSelectedRune !== rune) {
+      // Находим индексы в оригинальном порядке рун (независимо от сортировки)
+      const lastIndex = runes.findIndex((r) => r === lastSelectedRune);
+      const currentIndex = runes.findIndex((r) => r === rune);
+
+      if (lastIndex !== -1 && currentIndex !== -1) {
+        // Определяем диапазон для выделения
+        const start = Math.min(lastIndex, currentIndex);
+        const end = Math.max(lastIndex, currentIndex);
+
+        // Выделяем все руны в диапазоне, но только те, которые видны в текущем фильтре
+        const visibleRunes = new Set(filteredAndSortedRunes);
+        for (let i = start; i <= end; i++) {
+          const runeInRange = runes[i];
+          if (visibleRunes.has(runeInRange)) {
+            newSelected.add(runeInRange);
+          }
+        }
+      }
     } else {
-      newSelected.delete(rune);
+      // Обычное выделение одного элемента
+      if (isSelected) {
+        newSelected.add(rune);
+      } else {
+        newSelected.delete(rune);
+      }
+      // Обновляем последний выбранный элемент только при одиночном клике
+      setLastSelectedRune(rune);
     }
+
     setSelectedRunes(newSelected);
   };
 
   const handleSelectAll = () => {
     const allFiltered = new Set(filteredAndSortedRunes);
     setSelectedRunes(allFiltered);
+    setLastSelectedRune(null); // Сбрасываем последний выбранный элемент
   };
 
   const handleDeselectAll = () => {
     setSelectedRunes(new Set());
+    setLastSelectedRune(null); // Сбрасываем последний выбранный элемент
   };
 
   const handleRuneSettingsChange = (rune: ERune, settings: RuneSettings) => {
@@ -120,42 +160,26 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
   // Функция для получения стилей цвета D2R
   const getD2RColorStyle = (colorCode: string) => {
     const colorMap: Record<string, string> = {
-      white1: "#FFFFFF",
-      white2: "#F0F0F0",
-      gray1: "#C0C0C0",
-      gray2: "#808080",
-      gray3: "#606060",
-      black1: "#404040",
-      black2: "#000000",
-      lightred: "#FF6060",
-      red1: "#FF0000",
-      red2: "#D00000",
-      darkred: "#800000",
-      orange1: "#FF8040",
-      orange2: "#FF6000",
-      orange3: "#E04000",
-      orange4: "#C03000",
-      lightgold1: "#FFFF80",
-      lightgold2: "#FFFF40",
-      gold1: "#FFD700",
-      gold2: "#E6C200",
-      yellow1: "#FFFF00",
-      yellow2: "#E6E600",
-      green1: "#80FF80",
-      green2: "#40FF40",
-      green3: "#00FF00",
-      green4: "#00E000",
-      darkgreen1: "#00C000",
-      darkgreen2: "#008000",
-      turquoise: "#00FFFF",
-      skyblue: "#80C0FF",
-      lightblue1: "#4080FF",
-      lightblue2: "#0060FF",
-      blue1: "#0040FF",
-      blue2: "#0000FF",
-      lightpink: "#FF80FF",
-      pink: "#FF40FF",
-      purple: "#8040FF",
+      white: "#FFFFFF",
+      gray: "#737373",
+      black: "#000000",
+      beige: "#F0DA95",
+      lightred: "#FF5757",
+      red: "#FF0000",
+      dimred: "#D44848",
+      orange: "#FFAF00",
+      lightgold: "#D1C484",
+      yellow: "#FFFF6E",
+      lightyellow: "#FFFF7F",
+      green: "#00FF00",
+      dimgreen: "#00CD00",
+      darkgreen: "#008900",
+      indigo: "#7878FF",
+      lightindigo: "#B1B1FF",
+      turquoise: "#0AACE0",
+      lightblue: "#8BCAFF",
+      pink: "#FF89FF",
+      purple: "#B500FF",
     };
     return colorMap[colorCode] ?? "#FFFFFF";
   };
@@ -440,12 +464,20 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
                     </div>
 
                     {/* Чекбокс - отдельно от кликабельного блока */}
-                    <Checkbox
-                      checked={isSelected}
-                      onChange={(checked) => handleRuneSelection(rune, checked)}
-                      isDarkTheme={isDarkTheme}
-                      size="lg"
-                    />
+                    <div
+                      onClick={(e) => {
+                        const newChecked = !isSelected;
+                        handleRuneSelection(rune, newChecked, e.shiftKey);
+                        e.stopPropagation(); // Предотвращаем всплытие события
+                      }}
+                    >
+                      <Checkbox
+                        checked={isSelected}
+                        onChange={() => {}} // Пустая функция, так как обработка в onClick выше
+                        isDarkTheme={isDarkTheme}
+                        size="lg"
+                      />
+                    </div>
                   </div>
                 );
               })}
