@@ -227,12 +227,18 @@
   "messages": {
     "success": {
       "filesLoaded": "Файлы загружены",
-      "localesLoadedText": "Успешно загружено {{count}} элементов локализации, обработано {{processedRunes}} рун"
+      "localesLoadedText": "Успешно загружено {{count}} элементов локализации, обработано {{processedRunes}} рун",
+      "changesSaved": "Изменения сохранены",
+      "changesAppliedText": "Изменения успешно применены к файлам игры",
+      "highlightSettingsLoaded": "Настройки подсветки загружены",
+      "highlightSettingsLoadedText": "Обработано настроек подсветки для {{processedRunes}} рун"
     },
     "error": {
       "fileLoadError": "Ошибка загрузки файлов",
       "pathNotFound": "Путь к игре не найден в настройках",
-      "unknownError": "Неизвестная ошибка при чтении файлов"
+      "unknownError": "Неизвестная ошибка при чтении файлов",
+      "saveError": "Ошибка сохранения",
+      "highlightLoadError": "Ошибка загрузки настроек подсветки"
     }
   }
 }
