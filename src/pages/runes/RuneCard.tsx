@@ -8,6 +8,7 @@ import {
   RuneSettings,
   useSettings,
 } from "../../app/providers/SettingsContext.tsx";
+import { generateFinalRuneName } from "../../shared/utils/runeUtils.ts";
 
 interface RuneCardProps {
   rune: ERune;
@@ -144,7 +145,46 @@ const RuneCard: React.FC<RuneCardProps> = ({
   };
 
   const handleManualChange = (checked: boolean) => {
-    handleSettingChange({ isManual: checked });
+    // При переключении в ручной режим заполняем инпуты финальными именами
+    if (checked) {
+      const finalRuneNames: Record<string, string> = {};
+      
+      // Генерируем финальные имена для всех локалей
+      languageCodes.forEach(langCode => {
+        const currentSettings: RuneSettings = {
+          isHighlighted,
+          numbering: {
+            show: showNumber,
+            dividerType,
+            dividerColor,
+            numberColor,
+          },
+          boxSize,
+          color,
+          isManual: false, // Используем false для генерации финального имени
+          locales: runeNames,
+        };
+        
+        // Генерируем финальное имя для данной локали
+        finalRuneNames[langCode] = generateFinalRuneName(
+          rune, 
+          currentSettings, 
+          langCode as keyof RuneSettings["locales"]
+        );
+      });
+      
+      // Обновляем настройки с новыми финальными именами
+      handleSettingChange({ 
+        isManual: checked,
+        locales: {
+          ...runeNames,
+          ...finalRuneNames
+        }
+      });
+    } else {
+      // При отключении ручного режима просто переключаем флаг
+      handleSettingChange({ isManual: checked });
+    }
   };
 
   const handleDividerTypeChange = (type: string) => {
@@ -251,9 +291,32 @@ const RuneCard: React.FC<RuneCardProps> = ({
 
   // Функция для получения имени руны для предпросмотра
   const getPreviewRuneName = () => {
-    // Всегда берем данные из инпутов пользователя для выбранной локали
-    const customName = runeNames[previewLocale as keyof typeof runeNames];
-    return customName || t(`runePage.runes.${rune}`);
+    if (isManual) {
+      // В ручном режиме показываем то, что пользователь ввел в инпуты
+      const customName = runeNames[previewLocale as keyof typeof runeNames];
+      return customName || t(`runePage.runes.${rune}`);
+    } else {
+      // В обычном режиме генерируем финальное имя автоматически
+      const currentSettings: RuneSettings = {
+        isHighlighted,
+        numbering: {
+          show: showNumber,
+          dividerType,
+          dividerColor,
+          numberColor,
+        },
+        boxSize,
+        color,
+        isManual: false,
+        locales: runeNames,
+      };
+      
+      return generateFinalRuneName(
+        rune, 
+        currentSettings, 
+        previewLocale as keyof RuneSettings["locales"]
+      );
+    }
   };
 
   return (
@@ -352,68 +415,14 @@ const RuneCard: React.FC<RuneCardProps> = ({
                         >
                           <span
                             style={{
-                              color: getD2RColorStyle(color),
-                              fontSize: getFontSize(boxSize),
+                              color: isManual ? "#FFFFFF" : getD2RColorStyle(color),
+                              fontSize: isManual ? getFontSize(0) : getFontSize(boxSize),
                               fontFamily: "Diablo, monospace",
                               fontWeight: "bold",
                               textShadow: "1px 1px 2px rgba(0,0,0,0.8)",
                             }}
                           >
                             {getPreviewRuneName()}
-                            {showNumber && !isManual && (
-                              <span
-                                style={{
-                                  fontSize: getFontSize(boxSize),
-                                  fontFamily: "Diablo, monospace",
-                                  fontWeight: "bold",
-                                  textShadow: "1px 1px 2px rgba(0,0,0,0.8)",
-                                }}
-                              >
-                                {" "}
-                                <span
-                                  style={{
-                                    color:
-                                      getD2RColorStyle?.(dividerColor) ??
-                                      "#FFFFFF",
-                                  }}
-                                >
-                                  {
-                                    getDividerText(
-                                      dividerType,
-                                      runeNumbers[rune]
-                                    ).split(/(\d+)/)[0]
-                                  }
-                                </span>
-                                <span
-                                  style={{
-                                    color:
-                                      getD2RColorStyle?.(numberColor) ??
-                                      "#FFFF00",
-                                  }}
-                                >
-                                  {
-                                    getDividerText(
-                                      dividerType,
-                                      runeNumbers[rune]
-                                    ).match(/\d+/)?.[0]
-                                  }
-                                </span>
-                                <span
-                                  style={{
-                                    color:
-                                      getD2RColorStyle?.(dividerColor) ??
-                                      "#FFFFFF",
-                                  }}
-                                >
-                                  {
-                                    getDividerText(
-                                      dividerType,
-                                      runeNumbers[rune]
-                                    ).split(/(\d+)/)[2]
-                                  }
-                                </span>
-                              </span>
-                            )}
                           </span>
                         </div>
                       </div>

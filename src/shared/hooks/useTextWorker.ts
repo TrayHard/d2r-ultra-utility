@@ -336,11 +336,20 @@ export const useTextWorker = (
             const updatedLocales: Partial<LocaleItem> = {};
 
             SUPPORTED_LOCALES.forEach((locale) => {
-              const finalName = generateFinalRuneName(
-                runeEnum,
-                settings,
-                locale
-              );
+              let finalName: string;
+              
+              if (settings.isManual) {
+                // В ручном режиме используем то, что пользователь ввел в инпуты
+                finalName = settings.locales[locale] || settings.locales.enUS;
+              } else {
+                // В обычном режиме генерируем финальное имя автоматически
+                finalName = generateFinalRuneName(
+                  runeEnum,
+                  settings,
+                  locale
+                );
+              }
+              
               updatedLocales[locale] = finalName;
             });
 
@@ -357,11 +366,20 @@ export const useTextWorker = (
             };
 
             SUPPORTED_LOCALES.forEach((locale) => {
-              const finalName = generateFinalRuneName(
-                runeEnum,
-                settings,
-                locale
-              );
+              let finalName: string;
+              
+              if (settings.isManual) {
+                // В ручном режиме используем то, что пользователь ввел в инпуты
+                finalName = settings.locales[locale] || settings.locales.enUS;
+              } else {
+                // В обычном режиме генерируем финальное имя автоматически
+                finalName = generateFinalRuneName(
+                  runeEnum,
+                  settings,
+                  locale
+                );
+              }
+              
               newLocales[locale] = finalName;
             });
 
