@@ -4,12 +4,18 @@ import {
   idToRuneMapper,
   ERune,
   runes,
+  runeNumbers,
 } from "../../pages/runes/constants/runes.ts";
 import { itemRunesSchema } from "../types/common.ts";
 import { RuneSettings } from "../../app/providers/SettingsContext.tsx";
 import {
   generateFinalRuneName,
   generateRuneHighlightData,
+  removeColorCodes,
+  parseNumberingSettings,
+  parseRuneTextColor,
+  parseRuneBoxSize,
+  extractBaseRuneName,
   SUPPORTED_LOCALES,
   GAME_PATHS,
 } from "../utils/runeUtils.ts";
@@ -91,29 +97,80 @@ export const useTextWorker = (
       parsedData.forEach((item) => {
         const rune = idToRuneMapper[item.id];
         if (rune && updateRuneSettings) {
-          // Обновляем локали для найденной руны
+          // Получаем номер руны для анализа нумерации
+          const runeNumber = runeNumbers[rune];
+
+          // Анализируем настройки из первой доступной локали (приоритет enUS)
+          const textForAnalysis = item.enUS || item.ruRU || "";
+
+          // Анализируем нумерацию
+          const numberingSettings = parseNumberingSettings(
+            textForAnalysis,
+            runeNumber
+          );
+
+          // Анализируем цвет основного текста
+          const textColor = parseRuneTextColor(textForAnalysis);
+
+          // Анализируем размер блока
+          const boxSize = parseRuneBoxSize(textForAnalysis);
+
+          // Обновляем настройки руны: локали (очищенные от кодов и номеров) + все остальные настройки
           updateRuneSettings(rune, {
             locales: {
-              enUS: item.enUS,
-              ruRU: item.ruRU,
-              zhTW: item.zhTW,
-              deDE: item.deDE,
-              esES: item.esES,
-              frFR: item.frFR,
-              itIT: item.itIT,
-              koKR: item.koKR,
-              plPL: item.plPL,
-              esMX: item.esMX,
-              jaJP: item.jaJP,
-              ptBR: item.ptBR,
-              zhCN: item.zhCN,
+              enUS: extractBaseRuneName(item.enUS, runeNumber),
+              ruRU: extractBaseRuneName(item.ruRU, runeNumber),
+              zhTW: extractBaseRuneName(item.zhTW, runeNumber),
+              deDE: extractBaseRuneName(item.deDE, runeNumber),
+              esES: extractBaseRuneName(item.esES, runeNumber),
+              frFR: extractBaseRuneName(item.frFR, runeNumber),
+              itIT: extractBaseRuneName(item.itIT, runeNumber),
+              koKR: extractBaseRuneName(item.koKR, runeNumber),
+              plPL: extractBaseRuneName(item.plPL, runeNumber),
+              esMX: extractBaseRuneName(item.esMX, runeNumber),
+              jaJP: extractBaseRuneName(item.jaJP, runeNumber),
+              ptBR: extractBaseRuneName(item.ptBR, runeNumber),
+              zhCN: extractBaseRuneName(item.zhCN, runeNumber),
             },
+            numbering: numberingSettings,
+            color: textColor,
+            boxSize: boxSize,
           });
           processedRunes++;
         }
       });
 
       console.log("Locale data with runes:", localeData);
+
+      // Анализируем общие настройки нумерации (берем самые популярные)
+      if (getAllRuneSettings) {
+        const allSettings = getAllRuneSettings();
+        const dividerTypes: Record<string, number> = {};
+        const dividerColors: Record<string, number> = {};
+        const numberColors: Record<string, number> = {};
+
+        Object.values(allSettings).forEach((runeSettings) => {
+          if (runeSettings.numbering.show) {
+            dividerTypes[runeSettings.numbering.dividerType] =
+              (dividerTypes[runeSettings.numbering.dividerType] || 0) + 1;
+            dividerColors[runeSettings.numbering.dividerColor] =
+              (dividerColors[runeSettings.numbering.dividerColor] || 0) + 1;
+            numberColors[runeSettings.numbering.numberColor] =
+              (numberColors[runeSettings.numbering.numberColor] || 0) + 1;
+          }
+        });
+
+        // Определяем самые популярные настройки
+        const mostPopularDividerType =
+          Object.entries(dividerTypes).sort(([, a], [, b]) => b - a)[0]?.[0] ||
+          "parentheses";
+        const mostPopularDividerColor =
+          Object.entries(dividerColors).sort(([, a], [, b]) => b - a)[0]?.[0] ||
+          "white";
+        const mostPopularNumberColor =
+          Object.entries(numberColors).sort(([, a], [, b]) => b - a)[0]?.[0] ||
+          "yellow";
+      }
 
       // Отправляем сообщение об успехе
       const successTitle =
@@ -337,19 +394,15 @@ export const useTextWorker = (
 
             SUPPORTED_LOCALES.forEach((locale) => {
               let finalName: string;
-              
+
               if (settings.isManual) {
                 // В ручном режиме используем то, что пользователь ввел в инпуты
                 finalName = settings.locales[locale] || settings.locales.enUS;
               } else {
                 // В обычном режиме генерируем финальное имя автоматически
-                finalName = generateFinalRuneName(
-                  runeEnum,
-                  settings,
-                  locale
-                );
+                finalName = generateFinalRuneName(runeEnum, settings, locale);
               }
-              
+
               updatedLocales[locale] = finalName;
             });
 
@@ -367,19 +420,15 @@ export const useTextWorker = (
 
             SUPPORTED_LOCALES.forEach((locale) => {
               let finalName: string;
-              
+
               if (settings.isManual) {
                 // В ручном режиме используем то, что пользователь ввел в инпуты
                 finalName = settings.locales[locale] || settings.locales.enUS;
               } else {
                 // В обычном режиме генерируем финальное имя автоматически
-                finalName = generateFinalRuneName(
-                  runeEnum,
-                  settings,
-                  locale
-                );
+                finalName = generateFinalRuneName(runeEnum, settings, locale);
               }
-              
+
               newLocales[locale] = finalName;
             });
 

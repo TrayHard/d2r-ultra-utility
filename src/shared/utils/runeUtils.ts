@@ -306,6 +306,178 @@ const UNHIGHLIGHTED_RUNE_TEMPLATE = `{
 }`;
 
 /**
+ * Удаляет цветовые коды из строки для отображения в UI
+ */
+export const removeColorCodes = (text: string): string => {
+  if (!text) return text;
+
+  // Удаляем все цветовые коды формата ÿc и следующий символ
+  return text.replace(/ÿc[0-9a-zA-Z@:;MNOPQRSTAU]/g, "");
+};
+
+/**
+ * Обратный маппинг цветовых кодов - по коду получаем название цвета
+ */
+const getColorNameByCode = (colorCode: string): string => {
+  const codeToColorMap: Record<string, string> = {};
+  Object.entries(colorCodes).forEach(([name, code]) => {
+    codeToColorMap[code] = name;
+  });
+  return codeToColorMap[colorCode] || "white";
+};
+
+/**
+ * Анализирует строку локализации и определяет настройки нумерации
+ */
+export const parseNumberingSettings = (
+  text: string,
+  expectedRuneNumber: number
+): {
+  show: boolean;
+  dividerType: string;
+  dividerColor: string;
+  numberColor: string;
+} => {
+  if (!text) {
+    return {
+      show: false,
+      dividerType: "parentheses",
+      dividerColor: "white",
+      numberColor: "yellow",
+    };
+  }
+
+  const expectedNumberStr = expectedRuneNumber.toString();
+
+  // Проверяем наличие номера в строке
+  if (!text.includes(expectedNumberStr)) {
+    return {
+      show: false,
+      dividerType: "parentheses",
+      dividerColor: "white",
+      numberColor: "yellow",
+    };
+  }
+
+  // Паттерны для разных типов разделителей
+  const patterns = [
+    {
+      type: "parentheses",
+      // Ищем (число) или цвет(число) или (цветчисло)
+      regex: new RegExp(
+        `(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\((ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?${expectedNumberStr}(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\)(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?`,
+        "g"
+      ),
+    },
+    {
+      type: "brackets",
+      // Ищем [число] или цвет[число] или [цветчисло]
+      regex: new RegExp(
+        `(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\[(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?${expectedNumberStr}(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\](ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?`,
+        "g"
+      ),
+    },
+    {
+      type: "pipe",
+      // Ищем |число| или цвет|цветчисло|
+      regex: new RegExp(
+        `(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\|(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\s*${expectedNumberStr}\\s*(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\|(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?`,
+        "g"
+      ),
+    },
+  ];
+
+  // Ищем подходящий паттерн
+  for (const pattern of patterns) {
+    const match = pattern.regex.exec(text);
+    if (match) {
+      // Найден паттерн, извлекаем цвета
+      const dividerColorCode = match[1] || match[4]; // цвет перед или после разделителя
+      const numberColorCode = match[2]; // цвет непосредственно перед числом
+
+      const dividerColor = dividerColorCode
+        ? getColorNameByCode(dividerColorCode)
+        : "white";
+      const numberColor = numberColorCode
+        ? getColorNameByCode(numberColorCode)
+        : "yellow";
+
+      return {
+        show: true,
+        dividerType: pattern.type,
+        dividerColor,
+        numberColor,
+      };
+    }
+  }
+
+  // Если номер есть в строке, но паттерн не найден, возвращаем дефолтные настройки
+  return {
+    show: true,
+    dividerType: "parentheses",
+    dividerColor: "white",
+    numberColor: "yellow",
+  };
+};
+
+/**
+ * Анализирует цвет основного текста руны
+ */
+export const parseRuneTextColor = (text: string): string => {
+  if (!text) return "white";
+
+  // Ищем первый цветовой код в строке - это обычно цвет основного текста
+  const colorMatch = text.match(/ÿc([0-9a-zA-Z@:;MNOPQRSTAU])/);
+  if (colorMatch) {
+    const colorCode = `ÿc${colorMatch[1]}`;
+    return getColorNameByCode(colorCode);
+  }
+
+  return "white";
+};
+
+/**
+ * Анализирует размер блока руны по количеству пробелов
+ */
+export const parseRuneBoxSize = (text: string): number => {
+  if (!text) return 0;
+
+  // Ищем паттерны с пробелами, которые используются для размеров блоков
+  // Large box: ÿc0~        text        ÿc0~ (8 пробелов)
+  // Medium box: ÿc0~    text    ÿc0~ (4 пробела)
+
+  // Паттерн для large box (8 пробелов)
+  const largeBoxPattern = /ÿc0~\s{8}/;
+  if (largeBoxPattern.test(text)) {
+    return 2; // Large
+  }
+
+  // Паттерн для medium box (4 пробела)
+  const mediumBoxPattern = /ÿc0~\s{4}/;
+  if (mediumBoxPattern.test(text)) {
+    return 1; // Medium
+  }
+
+  // Дополнительная проверка: считаем пробелы в начале и конце (на случай других форматов)
+  const cleanText = removeColorCodes(text);
+  const leadingSpaces = (cleanText.match(/^\s+/) || [""])[0].length;
+  const trailingSpaces = (cleanText.match(/\s+$/) || [""])[0].length;
+
+  // Если есть большое количество пробелов (8+), это large box
+  if (leadingSpaces >= 8 || trailingSpaces >= 8) {
+    return 2; // Large
+  }
+
+  // Если есть средний объем пробелов (4+), это medium box
+  if (leadingSpaces >= 4 || trailingSpaces >= 4) {
+    return 1; // Medium
+  }
+
+  // Иначе normal box
+  return 0; // Normal
+};
+
+/**
  * Генерирует финальное имя руны с учетом всех настроек
  */
 export const generateFinalRuneName = (
@@ -313,8 +485,9 @@ export const generateFinalRuneName = (
   settings: RuneSettings,
   locale: keyof RuneSettings["locales"]
 ): string => {
-  // Получаем базовое имя руны для нужной локали
-  const baseName = settings.locales[locale] || settings.locales.enUS;
+  // Получаем базовое имя руны для нужной локали и очищаем от цветовых кодов
+  const rawBaseName = settings.locales[locale] || settings.locales.enUS;
+  const baseName = removeColorCodes(rawBaseName);
 
   // Применяем цвет к имени руны
   const colorCode = colorCodes[settings.color as keyof typeof colorCodes];
@@ -378,6 +551,91 @@ export const generateFinalRuneName = (
   }
 
   return finalName;
+};
+
+/**
+ * Генерирует структурированное превью руны с отдельными цветами для разных частей
+ */
+export const generateStructuredPreview = (
+  rune: ERune,
+  settings: RuneSettings,
+  locale: keyof RuneSettings["locales"]
+): {
+  baseName: string;
+  baseColor: string;
+  numbering?: {
+    openDivider: string;
+    dividerColor: string;
+    number: string;
+    numberColor: string;
+    closeDivider: string;
+  };
+  boxSize: number;
+} => {
+  // Получаем базовое имя руны для нужной локали
+  const rawBaseName = settings.locales[locale] || settings.locales.enUS;
+  const baseName = removeColorCodes(rawBaseName);
+
+  const result = {
+    baseName,
+    baseColor: settings.color,
+    boxSize: settings.boxSize ?? 0,
+  };
+
+  // Если нумерация включена, добавляем информацию о ней
+  if (settings.numbering.show) {
+    const runeNumber = runeNumbers[rune];
+
+    let openDivider = "";
+    let closeDivider = "";
+
+    switch (settings.numbering.dividerType) {
+      case "parentheses":
+        openDivider = "(";
+        closeDivider = ")";
+        break;
+      case "brackets":
+        openDivider = "[";
+        closeDivider = "]";
+        break;
+      case "pipe":
+        openDivider = "|";
+        closeDivider = "|";
+        break;
+      default:
+        openDivider = "(";
+        closeDivider = ")";
+        break;
+    }
+
+    return {
+      ...result,
+      numbering: {
+        openDivider,
+        dividerColor: settings.numbering.dividerColor,
+        number: runeNumber.toString(),
+        numberColor: settings.numbering.numberColor,
+        closeDivider,
+      },
+    };
+  }
+
+  return result;
+};
+
+/**
+ * Генерирует чистое имя руны для отображения в превью (без цветовых кодов)
+ */
+export const generatePreviewRuneName = (
+  rune: ERune,
+  settings: RuneSettings,
+  locale: keyof RuneSettings["locales"]
+): string => {
+  // Генерируем финальное имя
+  const finalName = generateFinalRuneName(rune, settings, locale);
+
+  // Удаляем все цветовые коды для превью
+  return removeColorCodes(finalName);
 };
 
 /**
@@ -461,3 +719,44 @@ export const GAME_PATHS = {
   RUNES_FILE: "item-runes.json",
   RUNE_HIGHLIGHT: "mods\\D2RMOD\\D2RMOD.mpq\\data\\hd\\items\\misc\\rune",
 } as const;
+
+/**
+ * Извлекает базовое имя руны без номеров и разделителей
+ */
+export const extractBaseRuneName = (
+  text: string,
+  expectedRuneNumber: number
+): string => {
+  if (!text) return text;
+
+  const expectedNumberStr = expectedRuneNumber.toString();
+
+  // Сначала убираем цветовые коды для работы с чистым текстом
+  let cleanText = removeColorCodes(text);
+
+  // Убираем отступы для размеров блоков
+  cleanText = cleanText.trim();
+
+  // Паттерны для удаления нумерации
+  const patternsToRemove = [
+    // Скобки: (число)
+    new RegExp(`\\s*\\(\\s*${expectedNumberStr}\\s*\\)\\s*`, "g"),
+    // Квадратные скобки: [число]
+    new RegExp(`\\s*\\[\\s*${expectedNumberStr}\\s*\\]\\s*`, "g"),
+    // Пайп: | число |
+    new RegExp(`\\s*\\|\\s*${expectedNumberStr}\\s*\\|\\s*`, "g"),
+    // Просто число в конце или начале
+    new RegExp(`\\s+${expectedNumberStr}\\s*$`, "g"),
+    new RegExp(`^\\s*${expectedNumberStr}\\s+`, "g"),
+  ];
+
+  // Применяем все паттерны
+  patternsToRemove.forEach((pattern) => {
+    cleanText = cleanText.replace(pattern, "");
+  });
+
+  // Убираем лишние пробелы
+  cleanText = cleanText.trim();
+
+  return cleanText;
+};

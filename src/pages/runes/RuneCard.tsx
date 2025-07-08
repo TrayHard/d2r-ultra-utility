@@ -8,7 +8,12 @@ import {
   RuneSettings,
   useSettings,
 } from "../../app/providers/SettingsContext.tsx";
-import { generateFinalRuneName } from "../../shared/utils/runeUtils.ts";
+import {
+  generateFinalRuneName,
+  generatePreviewRuneName,
+  generateStructuredPreview,
+  removeColorCodes,
+} from "../../shared/utils/runeUtils.ts";
 
 interface RuneCardProps {
   rune: ERune;
@@ -43,36 +48,80 @@ const RuneCard: React.FC<RuneCardProps> = ({
   // Получаем общие настройки как дефолтные значения
   const generalSettings = getGeneralRuneSettings();
 
-  // Используем только переданные настройки или дефолтные значения (из общих настроек)
-  const isHighlighted = settings?.isHighlighted ?? false;
-  const showNumber = settings?.numbering?.show ?? false;
-  const boxSize = settings?.boxSize ?? 0;
-  const color = settings?.color ?? "white";
-  const isManual = settings?.isManual ?? false;
-  const dividerType =
-    settings?.numbering?.dividerType ?? generalSettings.dividerType;
-  const dividerColor =
-    settings?.numbering?.dividerColor ?? generalSettings.dividerColor;
-  const numberColor =
-    settings?.numbering?.numberColor ?? generalSettings.numberColor;
-  const runeNames = settings?.locales ?? {
-    enUS: "",
-    ruRU: "",
-    zhTW: "",
-    deDE: "",
-    esES: "",
-    frFR: "",
-    itIT: "",
-    koKR: "",
-    plPL: "",
-    esMX: "",
-    jaJP: "",
-    ptBR: "",
-    zhCN: "",
-  };
+  // Используем useMemo для пересчета значений при изменении settings
+  const isHighlighted = React.useMemo(
+    () => settings?.isHighlighted ?? false,
+    [settings?.isHighlighted]
+  );
+  const showNumber = React.useMemo(
+    () => settings?.numbering?.show ?? false,
+    [settings?.numbering?.show]
+  );
+  const boxSize = React.useMemo(
+    () => settings?.boxSize ?? 0,
+    [settings?.boxSize]
+  );
+  const color = React.useMemo(
+    () => settings?.color ?? "white",
+    [settings?.color]
+  );
+  const isManual = React.useMemo(
+    () => settings?.isManual ?? false,
+    [settings?.isManual]
+  );
+
+  // Используем useMemo для пересчета значений цветов при изменении settings
+  const dividerType = React.useMemo(
+    () => settings?.numbering?.dividerType ?? generalSettings.dividerType,
+    [settings?.numbering?.dividerType, generalSettings.dividerType]
+  );
+  const dividerColor = React.useMemo(
+    () => settings?.numbering?.dividerColor ?? generalSettings.dividerColor,
+    [settings?.numbering?.dividerColor, generalSettings.dividerColor]
+  );
+  const numberColor = React.useMemo(
+    () => settings?.numbering?.numberColor ?? generalSettings.numberColor,
+    [settings?.numbering?.numberColor, generalSettings.numberColor]
+  );
+  const runeNames = React.useMemo(
+    () =>
+      settings?.locales ?? {
+        enUS: "",
+        ruRU: "",
+        zhTW: "",
+        deDE: "",
+        esES: "",
+        frFR: "",
+        itIT: "",
+        koKR: "",
+        plPL: "",
+        esMX: "",
+        jaJP: "",
+        ptBR: "",
+        zhCN: "",
+      },
+    [settings?.locales]
+  );
 
   // Состояние для выбранной локали предпросмотра
   const [previewLocale, setPreviewLocale] = React.useState("enUS");
+
+  // Принудительная перерисовка превью при изменении настроек нумерации
+  const [previewKey, setPreviewKey] = React.useState(0);
+
+  React.useEffect(() => {
+    setPreviewKey((prev) => prev + 1);
+  }, [
+    dividerType,
+    dividerColor,
+    numberColor,
+    showNumber,
+    color,
+    boxSize,
+    isManual,
+    runeNames,
+    previewLocale,
+  ]);
 
   // Language codes for iteration
   const languageCodes = [
@@ -145,12 +194,12 @@ const RuneCard: React.FC<RuneCardProps> = ({
   };
 
   const handleManualChange = (checked: boolean) => {
-    // При переключении в ручной режим заполняем инпуты финальными именами
+    // При переключении в ручной режим заполняем инпуты чистыми именами без цветовых кодов
     if (checked) {
-      const finalRuneNames: Record<string, string> = {};
-      
-      // Генерируем финальные имена для всех локалей
-      languageCodes.forEach(langCode => {
+      const cleanRuneNames: Record<string, string> = {};
+
+      // Генерируем чистые финальные имена для всех локалей
+      languageCodes.forEach((langCode) => {
         const currentSettings: RuneSettings = {
           isHighlighted,
           numbering: {
@@ -164,22 +213,22 @@ const RuneCard: React.FC<RuneCardProps> = ({
           isManual: false, // Используем false для генерации финального имени
           locales: runeNames,
         };
-        
-        // Генерируем финальное имя для данной локали
-        finalRuneNames[langCode] = generateFinalRuneName(
-          rune, 
-          currentSettings, 
+
+        // Генерируем чистое имя для данной локали (без цветовых кодов)
+        cleanRuneNames[langCode] = generatePreviewRuneName(
+          rune,
+          currentSettings,
           langCode as keyof RuneSettings["locales"]
         );
       });
-      
-      // Обновляем настройки с новыми финальными именами
-      handleSettingChange({ 
+
+      // Обновляем настройки с новыми чистыми именами
+      handleSettingChange({
         isManual: checked,
         locales: {
           ...runeNames,
-          ...finalRuneNames
-        }
+          ...cleanRuneNames,
+        },
       });
     } else {
       // При отключении ручного режима просто переключаем флаг
@@ -275,14 +324,19 @@ const RuneCard: React.FC<RuneCardProps> = ({
     { value: "zhCN", label: "ZH-CN" },
   ];
 
-  // Функция для получения имени руны для предпросмотра
-  const getPreviewRuneName = () => {
+  // Функция для получения структурированного превью руны
+  const getPreviewData = React.useCallback(() => {
     if (isManual) {
       // В ручном режиме показываем то, что пользователь ввел в инпуты
       const customName = runeNames[previewLocale as keyof typeof runeNames];
-      return customName || t(`runePage.runes.${rune}`);
+      const cleanName = removeColorCodes(customName || "");
+      return {
+        baseName: cleanName || t(`runePage.runes.${rune}`),
+        baseColor: "white", // В ручном режиме всегда белый
+        boxSize: 0,
+      };
     } else {
-      // В обычном режиме генерируем финальное имя автоматически
+      // В обычном режиме генерируем структурированное превью
       const currentSettings: RuneSettings = {
         isHighlighted,
         numbering: {
@@ -296,14 +350,27 @@ const RuneCard: React.FC<RuneCardProps> = ({
         isManual: false,
         locales: runeNames,
       };
-      
-      return generateFinalRuneName(
-        rune, 
-        currentSettings, 
+
+      return generateStructuredPreview(
+        rune,
+        currentSettings,
         previewLocale as keyof RuneSettings["locales"]
       );
     }
-  };
+  }, [
+    isManual,
+    runeNames,
+    previewLocale,
+    t,
+    rune,
+    isHighlighted,
+    showNumber,
+    dividerType,
+    dividerColor,
+    numberColor,
+    boxSize,
+    color,
+  ]);
 
   return (
     <div className="p-4">
@@ -390,7 +457,8 @@ const RuneCard: React.FC<RuneCardProps> = ({
 
                         {/* Текст с полупрозрачным фоном */}
                         <div
-                          className="absolute px-1 bg-black/95 backdrop-blur-sm"
+                          key={previewKey}
+                          className="absolute px-1 bg-black/50 backdrop-blur-sm"
                           style={{
                             top: "87%",
                             left: "50%",
@@ -399,17 +467,77 @@ const RuneCard: React.FC<RuneCardProps> = ({
                             textAlign: "center" as const,
                           }}
                         >
-                          <span
-                            style={{
-                              color: isManual ? "#FFFFFF" : getD2RColorStyle(color),
-                              fontSize: isManual ? getFontSize(0) : getFontSize(boxSize),
+                          {(() => {
+                            const previewData = getPreviewData();
+                            const baseStyle = {
+                              fontSize: isManual
+                                ? getFontSize(0)
+                                : getFontSize(previewData.boxSize),
                               fontFamily: "Diablo, monospace",
                               fontWeight: "bold",
                               textShadow: "1px 1px 2px rgba(0,0,0,0.8)",
-                            }}
-                          >
-                            {getPreviewRuneName()}
-                          </span>
+                            };
+
+                            return (
+                              <span style={baseStyle}>
+                                {/* Основное имя руны */}
+                                <span
+                                  style={{
+                                    color: isManual
+                                      ? "#FFFFFF"
+                                      : getD2RColorStyle?.(
+                                          previewData.baseColor
+                                        ) || "#FFFFFF",
+                                  }}
+                                >
+                                  {previewData.baseName}
+                                </span>
+
+                                {/* Нумерация (если включена и не в ручном режиме) */}
+                                {!isManual && previewData.numbering && (
+                                  <>
+                                    {previewData.numbering.openDivider === "|"
+                                      ? " "
+                                      : " "}
+                                    <span
+                                      style={{
+                                        color:
+                                          getD2RColorStyle?.(
+                                            previewData.numbering.dividerColor
+                                          ) || "#FFFFFF",
+                                      }}
+                                    >
+                                      {previewData.numbering.openDivider}
+                                    </span>
+                                    {previewData.numbering.openDivider ===
+                                      "|" && " "}
+                                    <span
+                                      style={{
+                                        color:
+                                          getD2RColorStyle?.(
+                                            previewData.numbering.numberColor
+                                          ) || "#FFFFFF",
+                                      }}
+                                    >
+                                      {previewData.numbering.number}
+                                    </span>
+                                    {previewData.numbering.closeDivider ===
+                                      "|" && " "}
+                                    <span
+                                      style={{
+                                        color:
+                                          getD2RColorStyle?.(
+                                            previewData.numbering.dividerColor
+                                          ) || "#FFFFFF",
+                                      }}
+                                    >
+                                      {previewData.numbering.closeDivider}
+                                    </span>
+                                  </>
+                                )}
+                              </span>
+                            );
+                          })()}
                         </div>
                       </div>
                     </div>
