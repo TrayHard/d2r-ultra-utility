@@ -83,6 +83,14 @@ const RuneCard: React.FC<RuneCardProps> = ({
     () => settings?.numbering?.numberColor ?? generalSettings.numberColor,
     [settings?.numbering?.numberColor, generalSettings.numberColor]
   );
+  const boxLimiters = React.useMemo(
+    () => settings?.boxLimiters ?? generalSettings.boxLimiters,
+    [settings?.boxLimiters, generalSettings.boxLimiters]
+  );
+  const boxLimitersColor = React.useMemo(
+    () => settings?.boxLimitersColor ?? generalSettings.boxLimitersColor,
+    [settings?.boxLimitersColor, generalSettings.boxLimitersColor]
+  );
   const runeNames = React.useMemo(
     () =>
       settings?.locales ?? {
@@ -118,6 +126,8 @@ const RuneCard: React.FC<RuneCardProps> = ({
     showNumber,
     color,
     boxSize,
+    boxLimiters,
+    boxLimitersColor,
     isManual,
     runeNames,
     previewLocale,
@@ -164,6 +174,8 @@ const RuneCard: React.FC<RuneCardProps> = ({
         numberColor,
       },
       boxSize,
+      boxLimiters,
+      boxLimitersColor,
       color,
       isManual,
       locales: runeNames,
@@ -209,6 +221,8 @@ const RuneCard: React.FC<RuneCardProps> = ({
             numberColor,
           },
           boxSize,
+          boxLimiters,
+          boxLimitersColor,
           color,
           isManual: false, // Используем false для генерации финального имени
           locales: runeNames,
@@ -269,6 +283,18 @@ const RuneCard: React.FC<RuneCardProps> = ({
     });
   };
 
+  const handleBoxLimitersChange = (limiters: string) => {
+    handleSettingChange({
+      boxLimiters: limiters,
+    });
+  };
+
+  const handleBoxLimitersColorChange = (color: string) => {
+    handleSettingChange({
+      boxLimitersColor: color,
+    });
+  };
+
   // Options for dropdowns
   const sizeOptions = [
     { value: "0", label: t("runePage.controls.sizes.Normal") },
@@ -308,6 +334,14 @@ const RuneCard: React.FC<RuneCardProps> = ({
     { value: "purple", label: t("runePage.controls.colors.purple") },
   ];
 
+  const boxLimitersOptions = [
+    { value: "~", label: "~" },
+    { value: "-", label: "-" },
+    { value: "_", label: "_" },
+    { value: "|", label: "|" },
+    { value: ".", label: "." },
+  ];
+
   const localeOptions = [
     { value: "enUS", label: "EN" },
     { value: "ruRU", label: "RU" },
@@ -334,6 +368,8 @@ const RuneCard: React.FC<RuneCardProps> = ({
         baseName: cleanName || t(`runePage.runes.${rune}`),
         baseColor: "white", // В ручном режиме всегда белый
         boxSize: 0,
+        boxLimiters: "~",
+        boxLimitersColor: "white",
       };
     } else {
       // В обычном режиме генерируем структурированное превью
@@ -346,6 +382,8 @@ const RuneCard: React.FC<RuneCardProps> = ({
           numberColor,
         },
         boxSize,
+        boxLimiters,
+        boxLimitersColor,
         color,
         isManual: false,
         locales: runeNames,
@@ -369,6 +407,8 @@ const RuneCard: React.FC<RuneCardProps> = ({
     dividerColor,
     numberColor,
     boxSize,
+    boxLimiters,
+    boxLimitersColor,
     color,
   ]);
 
@@ -479,63 +519,110 @@ const RuneCard: React.FC<RuneCardProps> = ({
                             };
 
                             return (
-                              <span style={baseStyle}>
-                                {/* Основное имя руны */}
-                                <span
-                                  style={{
-                                    color: isManual
-                                      ? "#FFFFFF"
-                                      : getD2RColorStyle?.(
-                                          previewData.baseColor
+                              <div
+                                style={{
+                                  position: "relative",
+                                  width: "100%",
+                                  height: "100%",
+                                }}
+                              >
+                                {/* Левый ограничитель на левом краю контейнера */}
+                                {!isManual && previewData.boxSize > 0 && (
+                                  <span
+                                    style={{
+                                      ...baseStyle,
+                                      color:
+                                        getD2RColorStyle?.(
+                                          previewData.boxLimitersColor
                                         ) || "#FFFFFF",
-                                  }}
-                                >
-                                  {previewData.baseName}
+                                      position: "absolute",
+                                      left: "0",
+                                      top: "50%",
+                                      transform: "translateY(-50%)",
+                                    }}
+                                  >
+                                    {previewData.boxLimiters}
+                                  </span>
+                                )}
+
+                                {/* Основной контент по центру */}
+                                <span style={baseStyle}>
+                                  {/* Основное имя руны */}
+                                  <span
+                                    style={{
+                                      color: isManual
+                                        ? "#FFFFFF"
+                                        : getD2RColorStyle?.(
+                                            previewData.baseColor
+                                          ) || "#FFFFFF",
+                                    }}
+                                  >
+                                    {previewData.baseName}
+                                  </span>
+
+                                  {/* Нумерация (если включена и не в ручном режиме) */}
+                                  {!isManual && previewData.numbering && (
+                                    <>
+                                      {previewData.numbering.openDivider === "|"
+                                        ? " "
+                                        : " "}
+                                      <span
+                                        style={{
+                                          color:
+                                            getD2RColorStyle?.(
+                                              previewData.numbering.dividerColor
+                                            ) || "#FFFFFF",
+                                        }}
+                                      >
+                                        {previewData.numbering.openDivider}
+                                      </span>
+                                      {previewData.numbering.openDivider ===
+                                        "|" && " "}
+                                      <span
+                                        style={{
+                                          color:
+                                            getD2RColorStyle?.(
+                                              previewData.numbering.numberColor
+                                            ) || "#FFFFFF",
+                                        }}
+                                      >
+                                        {previewData.numbering.number}
+                                      </span>
+                                      {previewData.numbering.closeDivider ===
+                                        "|" && " "}
+                                      <span
+                                        style={{
+                                          color:
+                                            getD2RColorStyle?.(
+                                              previewData.numbering.dividerColor
+                                            ) || "#FFFFFF",
+                                        }}
+                                      >
+                                        {previewData.numbering.closeDivider}
+                                      </span>
+                                    </>
+                                  )}
                                 </span>
 
-                                {/* Нумерация (если включена и не в ручном режиме) */}
-                                {!isManual && previewData.numbering && (
-                                  <>
-                                    {previewData.numbering.openDivider === "|"
-                                      ? " "
-                                      : " "}
-                                    <span
-                                      style={{
-                                        color:
-                                          getD2RColorStyle?.(
-                                            previewData.numbering.dividerColor
-                                          ) || "#FFFFFF",
-                                      }}
-                                    >
-                                      {previewData.numbering.openDivider}
-                                    </span>
-                                    {previewData.numbering.openDivider ===
-                                      "|" && " "}
-                                    <span
-                                      style={{
-                                        color:
-                                          getD2RColorStyle?.(
-                                            previewData.numbering.numberColor
-                                          ) || "#FFFFFF",
-                                      }}
-                                    >
-                                      {previewData.numbering.number}
-                                    </span>
-                                    {previewData.numbering.closeDivider ===
-                                      "|" && " "}
-                                    <span
-                                      style={{
-                                        color:
-                                          getD2RColorStyle?.(
-                                            previewData.numbering.dividerColor
-                                          ) || "#FFFFFF",
-                                      }}
-                                    >
-                                      {previewData.numbering.closeDivider}
-                                    </span>
-                                  </>
+                                {/* Правый ограничитель на правом краю контейнера */}
+                                {!isManual && previewData.boxSize > 0 && (
+                                  <span
+                                    style={{
+                                      ...baseStyle,
+                                      color:
+                                        getD2RColorStyle?.(
+                                          previewData.boxLimitersColor
+                                        ) || "#FFFFFF",
+                                      position: "absolute",
+                                      right: "0",
+                                      top: "50%",
+                                      transform: "translateY(-50%)",
+                                    }}
+                                  >
+                                    {previewData.boxLimiters}
+                                  </span>
                                 )}
-                              </span>
+                              </div>
                             );
                           })()}
                         </div>
@@ -601,6 +688,44 @@ const RuneCard: React.FC<RuneCardProps> = ({
                         isDarkTheme={isDarkTheme}
                         size="md"
                         disabled={isManual}
+                      />
+                    </div>
+
+                    {/* Box Limiters Dropdown */}
+                    <div>
+                      <label
+                        className={`block text-sm font-semibold mb-2 ${
+                          isDarkTheme ? "text-gray-300" : "text-gray-700"
+                        } ${isManual || boxSize === 0 ? "opacity-50" : ""}`}
+                      >
+                        Box limiters
+                      </label>
+                      <Dropdown
+                        options={boxLimitersOptions}
+                        selectedValue={boxLimiters}
+                        onSelect={handleBoxLimitersChange}
+                        isDarkTheme={isDarkTheme}
+                        size="md"
+                        disabled={isManual || boxSize === 0}
+                      />
+                    </div>
+
+                    {/* Box Limiters Color Dropdown */}
+                    <div>
+                      <label
+                        className={`block text-sm font-semibold mb-2 ${
+                          isDarkTheme ? "text-gray-300" : "text-gray-700"
+                        } ${isManual || boxSize === 0 ? "opacity-50" : ""}`}
+                      >
+                        Box limiters color
+                      </label>
+                      <Dropdown
+                        options={colorOptions}
+                        selectedValue={boxLimitersColor}
+                        onSelect={handleBoxLimitersColorChange}
+                        isDarkTheme={isDarkTheme}
+                        size="md"
+                        disabled={isManual || boxSize === 0}
                       />
                     </div>
                   </div>

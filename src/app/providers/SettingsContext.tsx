@@ -34,6 +34,8 @@ export interface RuneSettings {
     numberColor: string;
   };
   boxSize: number; // 0 - normal, 1 - medium, 2 - large
+  boxLimiters: string; // Тип ограничителей: "~", "-", "_", "|", "."
+  boxLimitersColor: string; // Цвет ограничителей
   color: string;
   isManual: boolean;
   locales: Locales;
@@ -44,6 +46,8 @@ interface GeneralRuneSettings {
   dividerType: string;
   dividerColor: string;
   numberColor: string;
+  boxLimiters: string;
+  boxLimitersColor: string;
 }
 
 // Общий интерфейс для всех настроек
@@ -111,6 +115,8 @@ const getDefaultGeneralRuneSettings = (): GeneralRuneSettings => ({
   dividerType: "parentheses",
   dividerColor: "white",
   numberColor: "yellow",
+  boxLimiters: "~",
+  boxLimitersColor: "white",
 });
 
 // Миграция старых настроек рун к новому формату
@@ -130,6 +136,8 @@ const migrateRuneSettings = (oldSettings: any): RuneSettings => {
       numberColor: oldSettings.numberColor ?? "yellow",
     },
     boxSize: oldSettings.boxSize ?? 0,
+    boxLimiters: oldSettings.boxLimiters ?? "~",
+    boxLimitersColor: oldSettings.boxLimitersColor ?? "white",
     color: oldSettings.color ?? "white",
     isManual: oldSettings.isManual ?? false,
     locales: oldSettings.locales ?? {
@@ -164,6 +172,8 @@ const getDefaultRuneSettings = (
       numberColor: defaultGeneral.numberColor,
     },
     boxSize: 0, // Normal
+    boxLimiters: defaultGeneral.boxLimiters,
+    boxLimitersColor: defaultGeneral.boxLimitersColor,
     color: "white",
     isManual: false,
     locales: {

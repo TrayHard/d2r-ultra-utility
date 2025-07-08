@@ -15,6 +15,8 @@ import {
   parseNumberingSettings,
   parseRuneTextColor,
   parseRuneBoxSize,
+  parseBoxLimiters,
+  parseBoxLimitersColor,
   extractBaseRuneName,
   SUPPORTED_LOCALES,
   GAME_PATHS,
@@ -103,6 +105,8 @@ export const useTextWorker = (
           // Анализируем настройки из первой доступной локали (приоритет enUS)
           const textForAnalysis = item.enUS || item.ruRU || "";
 
+          console.log(`Analyzing rune ${rune} with text: "${textForAnalysis}"`);
+
           // Анализируем нумерацию
           const numberingSettings = parseNumberingSettings(
             textForAnalysis,
@@ -114,6 +118,21 @@ export const useTextWorker = (
 
           // Анализируем размер блока
           const boxSize = parseRuneBoxSize(textForAnalysis);
+
+          // Анализируем тип ограничителей
+          const boxLimiters = parseBoxLimiters(textForAnalysis);
+
+          // Анализируем цвет ограничителей
+          const boxLimitersColor = parseBoxLimitersColor(textForAnalysis);
+
+          console.log(`Rune ${rune} analysis result:`, {
+            numbering: numberingSettings,
+            color: textColor,
+            boxSize: boxSize,
+            boxLimiters: boxLimiters,
+            boxLimitersColor: boxLimitersColor,
+            baseName: extractBaseRuneName(textForAnalysis, runeNumber),
+          });
 
           // Обновляем настройки руны: локали (очищенные от кодов и номеров) + все остальные настройки
           updateRuneSettings(rune, {
@@ -135,6 +154,8 @@ export const useTextWorker = (
             numbering: numberingSettings,
             color: textColor,
             boxSize: boxSize,
+            boxLimiters: boxLimiters,
+            boxLimitersColor: boxLimitersColor,
           });
           processedRunes++;
         }

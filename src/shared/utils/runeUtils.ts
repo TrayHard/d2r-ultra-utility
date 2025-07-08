@@ -347,10 +347,19 @@ export const parseNumberingSettings = (
     };
   }
 
+  let workingText = text;
   const expectedNumberStr = expectedRuneNumber.toString();
 
-  // Проверяем наличие номера в строке
-  if (!text.includes(expectedNumberStr)) {
+  // Убираем ограничители (любые из поддерживаемых типов) если есть, чтобы работать с внутренним содержимым
+  const delimiterPattern =
+    /^ÿc[0-9a-zA-Z@:;MNOPQRSTAU]([~\-_|.])\s*(.*?)\s*ÿc[0-9a-zA-Z@:;MNOPQRSTAU]\1$/;
+  const delimiterMatch = workingText.match(delimiterPattern);
+  if (delimiterMatch) {
+    workingText = delimiterMatch[2]; // Берем содержимое между ограничителями
+  }
+
+  // Проверяем наличие номера в рабочем тексте
+  if (!workingText.includes(expectedNumberStr)) {
     return {
       show: false,
       dividerType: "parentheses",
@@ -387,9 +396,9 @@ export const parseNumberingSettings = (
     },
   ];
 
-  // Ищем подходящий паттерн
+  // Ищем подходящий паттерн в рабочем тексте
   for (const pattern of patterns) {
-    const match = pattern.regex.exec(text);
+    const match = pattern.regex.exec(workingText);
     if (match) {
       // Найден паттерн, извлекаем цвета
       const dividerColorCode = match[1] || match[4]; // цвет перед или после разделителя
@@ -426,8 +435,17 @@ export const parseNumberingSettings = (
 export const parseRuneTextColor = (text: string): string => {
   if (!text) return "white";
 
-  // Ищем первый цветовой код в строке - это обычно цвет основного текста
-  const colorMatch = text.match(/ÿc([0-9a-zA-Z@:;MNOPQRSTAU])/);
+  // Сначала убираем ограничители (любые из поддерживаемых типов) если есть
+  let cleanText = text;
+  const delimiterPattern =
+    /^ÿc[0-9a-zA-Z@:;MNOPQRSTAU][~\-_|.]\s*(.*?)\s*ÿc[0-9a-zA-Z@:;MNOPQRSTAU][~\-_|.]$/;
+  const delimiterMatch = cleanText.match(delimiterPattern);
+  if (delimiterMatch) {
+    cleanText = delimiterMatch[1]; // Берем содержимое между ограничителями
+  }
+
+  // Теперь ищем первый цветовой код в очищенном тексте
+  const colorMatch = cleanText.match(/ÿc([0-9a-zA-Z@:;MNOPQRSTAU])/);
   if (colorMatch) {
     const colorCode = `ÿc${colorMatch[1]}`;
     return getColorNameByCode(colorCode);
@@ -437,23 +455,43 @@ export const parseRuneTextColor = (text: string): string => {
 };
 
 /**
- * Анализирует размер блока руны по количеству пробелов
+ * Анализирует размер блока руны по количеству пробелов и ограничителям с тильдами
  */
 export const parseRuneBoxSize = (text: string): number => {
   if (!text) return 0;
 
-  // Ищем паттерны с пробелами, которые используются для размеров блоков
-  // Large box: ÿc0~        text        ÿc0~ (8 пробелов)
-  // Medium box: ÿc0~    text    ÿc0~ (4 пробела)
+  // Ищем ограничители (любые из поддерживаемых типов) и считаем пробелы между ними
+  const delimiterPattern =
+    /^ÿc[0-9a-zA-Z@:;MNOPQRSTAU]([~\-_|.])(\s*)(.*?)(\s*)ÿc[0-9a-zA-Z@:;MNOPQRSTAU]\1$/;
+  const delimiterMatch = text.match(delimiterPattern);
 
+  if (delimiterMatch) {
+    const leadingSpaces = delimiterMatch[2].length;
+    const trailingSpaces = delimiterMatch[4].length;
+
+    // Если есть большое количество пробелов (8+), это large box
+    if (leadingSpaces >= 8 || trailingSpaces >= 8) {
+      return 2; // Large
+    }
+
+    // Если есть средний объем пробелов (4+), это medium box
+    if (leadingSpaces >= 4 || trailingSpaces >= 4) {
+      return 1; // Medium
+    }
+
+    // Если ограничители есть, но пробелов мало/нет - все равно считаем что box size применен
+    return 0; // Normal (но с ограничителями)
+  }
+
+  // Если ограничителей нет, проверяем старые паттерны
   // Паттерн для large box (8 пробелов)
-  const largeBoxPattern = /ÿc0~\s{8}/;
+  const largeBoxPattern = /ÿc[0-9a-zA-Z@:;MNOPQRSTAU]~\s{8}/;
   if (largeBoxPattern.test(text)) {
     return 2; // Large
   }
 
   // Паттерн для medium box (4 пробела)
-  const mediumBoxPattern = /ÿc0~\s{4}/;
+  const mediumBoxPattern = /ÿc[0-9a-zA-Z@:;MNOPQRSTAU]~\s{4}/;
   if (mediumBoxPattern.test(text)) {
     return 1; // Medium
   }
@@ -475,6 +513,43 @@ export const parseRuneBoxSize = (text: string): number => {
 
   // Иначе normal box
   return 0; // Normal
+};
+
+/**
+ * Анализирует тип ограничителей блока руны
+ */
+export const parseBoxLimiters = (text: string): string => {
+  if (!text) return "~";
+
+  // Ищем ограничители в тексте
+  const delimiterPattern =
+    /^ÿc[0-9a-zA-Z@:;MNOPQRSTAU]([~\-_|.])\s*.*?\s*ÿc[0-9a-zA-Z@:;MNOPQRSTAU]\1$/;
+  const match = text.match(delimiterPattern);
+
+  if (match) {
+    return match[1]; // Возвращаем найденный тип ограничителя
+  }
+
+  return "~"; // По умолчанию тильда
+};
+
+/**
+ * Анализирует цвет ограничителей блока руны
+ */
+export const parseBoxLimitersColor = (text: string): string => {
+  if (!text) return "white";
+
+  // Ищем цветовой код перед ограничителем в начале строки
+  const delimiterPattern =
+    /^ÿc([0-9a-zA-Z@:;MNOPQRSTAU])[~\-_|.]\s*.*?\s*ÿc[0-9a-zA-Z@:;MNOPQRSTAU][~\-_|.]$/;
+  const match = text.match(delimiterPattern);
+
+  if (match) {
+    const colorCode = `ÿc${match[1]}`;
+    return getColorNameByCode(colorCode);
+  }
+
+  return "white"; // По умолчанию белый
 };
 
 /**
@@ -538,16 +613,19 @@ export const generateFinalRuneName = (
 
   // Применяем box size (добавляем отступы)
   const boxSize = settings.boxSize ?? 0;
+  const boxLimiters = settings.boxLimiters ?? "~";
+  const boxLimitersColorCode =
+    colorCodes[settings.boxLimitersColor as keyof typeof colorCodes] ?? "ÿc0";
 
   if (boxSize === 0) {
     // Normal - без изменений
     return finalName;
   } else if (boxSize === 1) {
     // Medium - добавляем отступы из 4 пробелов
-    return `ÿc0~    ${finalName}    ÿc0~`;
+    return `${boxLimitersColorCode}${boxLimiters}    ${finalName}    ${boxLimitersColorCode}${boxLimiters}`;
   } else if (boxSize === 2) {
     // Large - добавляем отступы из 8 пробелов
-    return `ÿc0~        ${finalName}        ÿc0~`;
+    return `${boxLimitersColorCode}${boxLimiters}        ${finalName}        ${boxLimitersColorCode}${boxLimiters}`;
   }
 
   return finalName;
@@ -571,6 +649,8 @@ export const generateStructuredPreview = (
     closeDivider: string;
   };
   boxSize: number;
+  boxLimiters: string;
+  boxLimitersColor: string;
 } => {
   // Получаем базовое имя руны для нужной локали
   const rawBaseName = settings.locales[locale] || settings.locales.enUS;
@@ -580,6 +660,8 @@ export const generateStructuredPreview = (
     baseName,
     baseColor: settings.color,
     boxSize: settings.boxSize ?? 0,
+    boxLimiters: settings.boxLimiters ?? "~",
+    boxLimitersColor: settings.boxLimitersColor ?? "white",
   };
 
   // Если нумерация включена, добавляем информацию о ней
@@ -729,34 +811,43 @@ export const extractBaseRuneName = (
 ): string => {
   if (!text) return text;
 
+  let workingText = text;
   const expectedNumberStr = expectedRuneNumber.toString();
 
-  // Сначала убираем цветовые коды для работы с чистым текстом
-  let cleanText = removeColorCodes(text);
+  // Сначала убираем ограничители (любые из поддерживаемых типов) если есть
+  const delimiterPattern =
+    /^ÿc[0-9a-zA-Z@:;MNOPQRSTAU]([~\-_|.])\s*(.*?)\s*ÿc[0-9a-zA-Z@:;MNOPQRSTAU]\1$/;
+  const delimiterMatch = workingText.match(delimiterPattern);
+  if (delimiterMatch) {
+    workingText = delimiterMatch[2]; // Берем содержимое между ограничителями
+  }
 
-  // Убираем отступы для размеров блоков
-  cleanText = cleanText.trim();
-
-  // Паттерны для удаления нумерации
+  // Паттерны для удаления нумерации (с учетом цветовых кодов)
   const patternsToRemove = [
-    // Скобки: (число)
-    new RegExp(`\\s*\\(\\s*${expectedNumberStr}\\s*\\)\\s*`, "g"),
-    // Квадратные скобки: [число]
-    new RegExp(`\\s*\\[\\s*${expectedNumberStr}\\s*\\]\\s*`, "g"),
-    // Пайп: | число |
-    new RegExp(`\\s*\\|\\s*${expectedNumberStr}\\s*\\|\\s*`, "g"),
-    // Просто число в конце или начале
-    new RegExp(`\\s+${expectedNumberStr}\\s*$`, "g"),
-    new RegExp(`^\\s*${expectedNumberStr}\\s+`, "g"),
+    // Скобки: (число) с возможными цветовыми кодами
+    new RegExp(
+      `\\s*(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\(\\s*(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?${expectedNumberStr}(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\s*\\)(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\s*`,
+      "g"
+    ),
+    // Квадратные скобки: [число] с возможными цветовыми кодами
+    new RegExp(
+      `\\s*(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\[\\s*(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?${expectedNumberStr}(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\s*\\](ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\s*`,
+      "g"
+    ),
+    // Пайп: | число | с возможными цветовыми кодами
+    new RegExp(
+      `\\s*(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\|\\s*(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?${expectedNumberStr}\\s*(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\|\\s*(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\s*`,
+      "g"
+    ),
   ];
 
   // Применяем все паттерны
   patternsToRemove.forEach((pattern) => {
-    cleanText = cleanText.replace(pattern, "");
+    workingText = workingText.replace(pattern, " ");
   });
 
-  // Убираем лишние пробелы
-  cleanText = cleanText.trim();
+  // Убираем цветовые коды и лишние пробелы
+  const cleanText = removeColorCodes(workingText).trim();
 
   return cleanText;
 };

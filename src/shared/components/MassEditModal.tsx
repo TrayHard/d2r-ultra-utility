@@ -2,11 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import Modal from "./Modal.tsx";
 import Button from "./Button.tsx";
-import Checkbox from "./Checkbox.tsx";
 import Dropdown from "./Dropdown.tsx";
-import {
-  RuneSettings,
-} from "../../app/providers/SettingsContext.tsx";
+import TriStateSwitch, { TriState } from "./TriStateSwitch.tsx";
+import { RuneSettings } from "../../app/providers/SettingsContext.tsx";
 import { ERune } from "../../pages/runes/constants/runes.ts";
 
 interface MassEditModalProps {
@@ -26,86 +24,42 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
 }) => {
   const { t } = useTranslation();
 
-  // Состояние для настроек
-  const [settings, setSettings] = useState<Partial<RuneSettings>>({});
+  // Состояние для настроек с TriState
+  const [isHighlighted, setIsHighlighted] = useState<TriState>(null);
+  const [boxSize, setBoxSize] = useState<string>("");
+  const [color, setColor] = useState<string>("");
+  const [boxLimiters, setBoxLimiters] = useState<string>("");
+  const [boxLimitersColor, setBoxLimitersColor] = useState<string>("");
+  const [showRuneNumber, setShowRuneNumber] = useState<TriState>(null);
+  const [dividerType, setDividerType] = useState<string>("");
+  const [dividerColor, setDividerColor] = useState<string>("");
+  const [numberColor, setNumberColor] = useState<string>("");
 
   // Сбрасываем настройки при открытии модалки
   useEffect(() => {
     if (isOpen) {
-      setSettings({});
+      setIsHighlighted(null);
+      setBoxSize("");
+      setColor("");
+      setBoxLimiters("");
+      setBoxLimitersColor("");
+      setShowRuneNumber(null);
+      setDividerType("");
+      setDividerColor("");
+      setNumberColor("");
     }
   }, [isOpen]);
 
-  // Обработчики изменения настроек
-  const handleSettingChange = (
-    key:
-      | keyof RuneSettings
-      | "showNumber"
-      | "dividerType"
-      | "dividerColor"
-      | "numberColor",
-    value: any
-  ) => {
-    setSettings((prev) => {
-      if (key === "showNumber") {
-        return {
-          ...prev,
-          numbering: {
-            show: value,
-            dividerType: prev.numbering?.dividerType ?? "parentheses",
-            dividerColor: prev.numbering?.dividerColor ?? "white",
-            numberColor: prev.numbering?.numberColor ?? "yellow",
-          },
-        };
-      }
-      if (key === "dividerType") {
-        return {
-          ...prev,
-          numbering: {
-            show: prev.numbering?.show ?? false,
-            dividerType: value,
-            dividerColor: prev.numbering?.dividerColor ?? "white",
-            numberColor: prev.numbering?.numberColor ?? "yellow",
-          },
-        };
-      }
-      if (key === "dividerColor") {
-        return {
-          ...prev,
-          numbering: {
-            show: prev.numbering?.show ?? false,
-            dividerType: prev.numbering?.dividerType ?? "parentheses",
-            dividerColor: value,
-            numberColor: prev.numbering?.numberColor ?? "yellow",
-          },
-        };
-      }
-      if (key === "numberColor") {
-        return {
-          ...prev,
-          numbering: {
-            show: prev.numbering?.show ?? false,
-            dividerType: prev.numbering?.dividerType ?? "parentheses",
-            dividerColor: prev.numbering?.dividerColor ?? "white",
-            numberColor: value,
-          },
-        };
-      }
-      return {
-        ...prev,
-        [key]: value,
-      };
-    });
-  };
-
   // Опции для дропдаунов
   const sizeOptions = [
+    { value: "", label: t("runePage.massEdit.noChange") },
     { value: "0", label: t("runePage.controls.sizes.Normal") },
     { value: "1", label: t("runePage.controls.sizes.Medium") },
     { value: "2", label: t("runePage.controls.sizes.Large") },
   ];
 
   const colorOptions = [
+    { value: "", label: t("runePage.massEdit.noChange") },
     { value: "white", label: t("runePage.controls.colors.white") },
     { value: "gray", label: t("runePage.controls.colors.gray") },
     { value: "black", label: t("runePage.controls.colors.black") },
@@ -129,6 +83,7 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
   ];
 
   const dividerOptions = [
+    { value: "", label: t("runePage.massEdit.noChange") },
     {
       value: "parentheses",
       label: t("runePage.controls.dividerTypes.parentheses"),
@@ -137,18 +92,82 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
     { value: "pipe", label: t("runePage.controls.dividerTypes.pipe") },
   ];
 
+  const boxLimitersOptions = [
+    { value: "", label: t("runePage.massEdit.noChange") },
+    { value: "~", label: "~" },
+    { value: "-", label: "-" },
+    { value: "_", label: "_" },
+    { value: "|", label: "|" },
+    { value: ".", label: "." },
+  ];
+
   const handleApply = () => {
-    // Фильтруем только поля, которые были изменены
-    const filteredSettings = Object.fromEntries(
-      Object.entries(settings).filter(
-        ([_, value]) => value !== undefined && value !== ""
-      )
-    );
+    const filteredSettings: Partial<RuneSettings> = {};
+
+    // Применяем только те настройки, которые не null и не ""
+    if (isHighlighted !== null) {
+      filteredSettings.isHighlighted = isHighlighted;
+    }
+
+    if (boxSize !== "") {
+      filteredSettings.boxSize = parseInt(boxSize);
+    }
+
+    if (color !== "") {
+      filteredSettings.color = color;
+    }
+
+    if (boxLimiters !== "") {
+      filteredSettings.boxLimiters = boxLimiters;
+    }
+
+    if (boxLimitersColor !== "") {
+      filteredSettings.boxLimitersColor = boxLimitersColor;
+    }
+
+    // Настройки нумерации применяем только те поля, которые изменились
+    if (
+      showRuneNumber !== null ||
+      dividerType !== "" ||
+      dividerColor !== "" ||
+      numberColor !== ""
+    ) {
+      const numberingChanges: any = {};
+
+      if (showRuneNumber !== null) {
+        numberingChanges.show = showRuneNumber;
+      }
+
+      if (dividerType !== "") {
+        numberingChanges.dividerType = dividerType;
+      }
+
+      if (dividerColor !== "") {
+        numberingChanges.dividerColor = dividerColor;
+      }
+
+      if (numberColor !== "") {
+        numberingChanges.numberColor = numberColor;
+      }
+
+      filteredSettings.numbering = numberingChanges;
+    }
+
     onApply(filteredSettings);
     onClose();
   };
 
-  const isShowNumberEnabled = settings.numbering?.show ?? false;
+  // Проверяем, есть ли изменения для применения
+  const hasChanges =
+    isHighlighted !== null ||
+    boxSize !== "" ||
+    color !== "" ||
+    boxLimiters !== "" ||
+    boxLimitersColor !== "" ||
+    showRuneNumber !== null ||
+    dividerType !== "" ||
+    dividerColor !== "" ||
+    numberColor !== "";
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} isDarkTheme={isDarkTheme}>
@@ -183,21 +202,27 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
               {t("runePage.massEdit.basicSettings")}
             </h3>
 
-            {/* Highlight Rune Checkbox */}
+            {/* Highlight Rune */}
             <div
               className={`p-3 rounded-lg ${
                 isDarkTheme ? "bg-gray-800" : "bg-gray-50"
               }`}
             >
-              <Checkbox
-                checked={settings.isHighlighted ?? false}
-                onChange={(checked) =>
-                  handleSettingChange("isHighlighted", checked)
-                }
-                isDarkTheme={isDarkTheme}
-                size="lg"
-                label={t("runePage.controls.highlightRune")}
-              />
+              <div className="flex items-center justify-between">
+                <span
+                  className={`text-sm font-medium ${
+                    isDarkTheme ? "text-gray-300" : "text-gray-700"
+                  }`}
+                >
+                  {t("runePage.controls.highlightRune")}
+                </span>
+                <TriStateSwitch
+                  value={isHighlighted}
+                  onChange={setIsHighlighted}
+                  isDarkTheme={isDarkTheme}
+                  size="md"
+                />
+              </div>
             </div>
 
             {/* Box Size Dropdown */}
@@ -211,10 +236,8 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
               </label>
               <Dropdown
                 options={sizeOptions}
-                selectedValue={settings.boxSize?.toString() ?? ""}
-                onSelect={(value) =>
-                  handleSettingChange("boxSize", parseInt(value))
-                }
+                selectedValue={boxSize}
+                onSelect={setBoxSize}
                 isDarkTheme={isDarkTheme}
                 size="md"
                 placeholder={t("runePage.massEdit.noChange")}
@@ -232,8 +255,46 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
               </label>
               <Dropdown
                 options={colorOptions}
-                selectedValue={settings.color ?? ""}
-                onSelect={(value) => handleSettingChange("color", value)}
+                selectedValue={color}
+                onSelect={setColor}
+                isDarkTheme={isDarkTheme}
+                size="md"
+                placeholder={t("runePage.massEdit.noChange")}
+              />
+            </div>
+
+            {/* Box Limiters Dropdown */}
+            <div>
+              <label
+                className={`block text-sm font-medium mb-2 ${
+                  isDarkTheme ? "text-gray-300" : "text-gray-700"
+                }`}
+              >
+                Box limiters
+              </label>
+              <Dropdown
+                options={boxLimitersOptions}
+                selectedValue={boxLimiters}
+                onSelect={setBoxLimiters}
+                isDarkTheme={isDarkTheme}
+                size="md"
+                placeholder={t("runePage.massEdit.noChange")}
+              />
+            </div>
+
+            {/* Box Limiters Color Dropdown */}
+            <div>
+              <label
+                className={`block text-sm font-medium mb-2 ${
+                  isDarkTheme ? "text-gray-300" : "text-gray-700"
+                }`}
+              >
+                Box limiters color
+              </label>
+              <Dropdown
+                options={colorOptions}
+                selectedValue={boxLimitersColor}
+                onSelect={setBoxLimitersColor}
                 isDarkTheme={isDarkTheme}
                 size="md"
                 placeholder={t("runePage.massEdit.noChange")}
@@ -251,21 +312,27 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
               {t("runePage.massEdit.numberingSettings")}
             </h3>
 
-            {/* Show Rune Number Checkbox */}
+            {/* Show Rune Number */}
             <div
               className={`p-3 rounded-lg ${
                 isDarkTheme ? "bg-gray-800" : "bg-gray-50"
               }`}
             >
-              <Checkbox
-                checked={isShowNumberEnabled}
-                onChange={(checked) =>
-                  handleSettingChange("showNumber", checked)
-                }
-                isDarkTheme={isDarkTheme}
-                size="lg"
-                label={t("runePage.controls.showRuneNumber")}
-              />
+              <div className="flex items-center justify-between">
+                <span
+                  className={`text-sm font-medium ${
+                    isDarkTheme ? "text-gray-300" : "text-gray-700"
+                  }`}
+                >
+                  {t("runePage.controls.showRuneNumber")}
+                </span>
+                <TriStateSwitch
+                  value={showRuneNumber}
+                  onChange={setShowRuneNumber}
+                  isDarkTheme={isDarkTheme}
+                  size="md"
+                />
+              </div>
             </div>
 
             {/* Divider Type Dropdown */}
@@ -273,17 +340,16 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
               <label
                 className={`block text-sm font-medium mb-2 ${
                   isDarkTheme ? "text-gray-300" : "text-gray-700"
-                } ${!isShowNumberEnabled ? "opacity-50" : ""}`}
+                }`}
               >
                 {t("runePage.controls.divider")}
               </label>
               <Dropdown
                 options={dividerOptions}
-                selectedValue={settings.numbering?.dividerType ?? ""}
-                onSelect={(value) => handleSettingChange("dividerType", value)}
+                selectedValue={dividerType}
+                onSelect={setDividerType}
                 isDarkTheme={isDarkTheme}
                 size="md"
-                disabled={!isShowNumberEnabled}
                 placeholder={t("runePage.massEdit.noChange")}
               />
             </div>
@@ -293,17 +359,16 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
               <label
                 className={`block text-sm font-medium mb-2 ${
                   isDarkTheme ? "text-gray-300" : "text-gray-700"
-                } ${!isShowNumberEnabled ? "opacity-50" : ""}`}
+                }`}
               >
                 {t("runePage.controls.dividerColor")}
               </label>
               <Dropdown
                 options={colorOptions}
-                selectedValue={settings.numbering?.dividerColor ?? ""}
-                onSelect={(value) => handleSettingChange("dividerColor", value)}
+                selectedValue={dividerColor}
+                onSelect={setDividerColor}
                 isDarkTheme={isDarkTheme}
                 size="md"
-                disabled={!isShowNumberEnabled}
                 placeholder={t("runePage.massEdit.noChange")}
               />
             </div>
@@ -313,17 +378,16 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
               <label
                 className={`block text-sm font-medium mb-2 ${
                   isDarkTheme ? "text-gray-300" : "text-gray-700"
-                } ${!isShowNumberEnabled ? "opacity-50" : ""}`}
+                }`}
               >
                 {t("runePage.controls.numberColor")}
               </label>
               <Dropdown
                 options={colorOptions}
-                selectedValue={settings.numbering?.numberColor ?? ""}
-                onSelect={(value) => handleSettingChange("numberColor", value)}
+                selectedValue={numberColor}
+                onSelect={setNumberColor}
                 isDarkTheme={isDarkTheme}
                 size="md"
-                disabled={!isShowNumberEnabled}
                 placeholder={t("runePage.massEdit.noChange")}
               />
             </div>
@@ -343,6 +407,7 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
             variant="primary"
             onClick={handleApply}
             isDarkTheme={isDarkTheme}
+            disabled={!hasChanges}
           >
             {t("runePage.massEdit.applyToRunes", { count: selectedRunes.size })}
           </Button>
