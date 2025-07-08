@@ -6,6 +6,7 @@ import React, {
   useEffect,
 } from "react";
 import { ERune } from "../../pages/runes/constants/runes.ts";
+import { localeCodes } from "../../shared/constants.ts";
 
 // Типы для локализации
 interface Locales {
@@ -54,6 +55,7 @@ interface GeneralRuneSettings {
 interface AppSettings {
   runes: Record<ERune, RuneSettings>;
   generalRunes: GeneralRuneSettings;
+  selectedLocales: string[]; // Глобальная настройка для выбранных локалей
   // В будущем добавим:
   // items: Record<string, ItemSettings>;
   // skills: Record<string, SkillSettings>;
@@ -75,6 +77,7 @@ interface SettingsContextType {
   getRuneSettings: (rune: ERune) => RuneSettings;
   getGeneralRuneSettings: () => GeneralRuneSettings;
   getAllSettings: () => AppSettings;
+  getSelectedLocales: () => string[];
 
   // Setter'ы для рун
   updateRuneSettings: (rune: ERune, newSettings: Partial<RuneSettings>) => void;
@@ -91,6 +94,10 @@ interface SettingsContextType {
   ) => void;
   resetGeneralRuneSettings: () => void;
   applyGeneralRuneSettingsToAll: () => void;
+
+  // Setter'ы для глобальных настроек
+  updateSelectedLocales: (locales: string[]) => void;
+  resetSelectedLocales: () => void;
 
   // Общие
   resetAllSettings: () => void;
@@ -209,6 +216,7 @@ const createDefaultSettings = (): AppSettings => {
   return {
     runes: runeSettings,
     generalRunes: getDefaultGeneralRuneSettings(),
+    selectedLocales: [...localeCodes], // По умолчанию все локали выбраны
   };
 };
 
@@ -246,6 +254,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
                 migrateRuneSettings(value),
               ])
             ),
+            selectedLocales: profile.settings.selectedLocales ?? [
+              ...localeCodes,
+            ],
           },
         }));
         setProfiles(migratedProfiles);
@@ -414,6 +425,28 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   // Получить все настройки
   const getAllSettings = useCallback(() => settings, [settings]);
 
+  // Получить выбранные локали
+  const getSelectedLocales = useCallback(
+    () => settings.selectedLocales,
+    [settings.selectedLocales]
+  );
+
+  // Обновить выбранные локали
+  const updateSelectedLocales = useCallback((locales: string[]) => {
+    setSettings((prev) => ({
+      ...prev,
+      selectedLocales: locales,
+    }));
+  }, []);
+
+  // Сбросить выбранные локали
+  const resetSelectedLocales = useCallback(() => {
+    setSettings((prev) => ({
+      ...prev,
+      selectedLocales: [...localeCodes],
+    }));
+  }, []);
+
   // Полный сброс всех настроек
   const resetAllSettings = useCallback(() => {
     setSettings(createDefaultSettings());
@@ -547,6 +580,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
               migrateRuneSettings(value),
             ])
           ),
+          selectedLocales: profileData.settings.selectedLocales ?? [
+            ...localeCodes,
+          ],
         };
 
         const newProfile: Profile = {
@@ -572,6 +608,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     getRuneSettings,
     getGeneralRuneSettings,
     getAllSettings,
+    getSelectedLocales,
     updateRuneSettings,
     updateMultipleRuneSettings,
     resetRuneSettings,
@@ -579,6 +616,8 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     updateGeneralRuneSettings,
     resetGeneralRuneSettings,
     applyGeneralRuneSettingsToAll,
+    updateSelectedLocales,
+    resetSelectedLocales,
     resetAllSettings,
     settings,
     profiles,

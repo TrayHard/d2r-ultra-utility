@@ -20,3 +20,21 @@ export const colorCodes = {
   pink: "ÿcO",
   purple: "ÿc;",
 };
+
+export const localeOptions = [
+  { value: "enUS", label: "EN" },
+  { value: "ruRU", label: "RU" },
+  { value: "zhTW", label: "ZH-TW" },
+  { value: "deDE", label: "DE" },
+  { value: "esES", label: "ES" },
+  { value: "frFR", label: "FR" },
+  { value: "itIT", label: "IT" },
+  { value: "koKR", label: "KO" },
+  { value: "plPL", label: "PL" },
+  { value: "esMX", label: "ES-MX" },
+  { value: "jaJP", label: "JA" },
+  { value: "ptBR", label: "PT-BR" },
+  { value: "zhCN", label: "ZH-CN" },
+];
+
+export const localeCodes = localeOptions.map((option) => option.value);

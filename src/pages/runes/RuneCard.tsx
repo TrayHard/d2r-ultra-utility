@@ -20,6 +20,7 @@ import {
   parseBoxLimitersColor,
   extractBaseRuneName,
 } from "../../shared/utils/runeUtils.ts";
+import { localeOptions as allLocaleOptions } from "../../shared/constants.ts";
 
 interface RuneCardProps {
   rune: ERune;
@@ -49,7 +50,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
   getContainerWidth,
 }) => {
   const { t } = useTranslation();
-  const { getGeneralRuneSettings } = useSettings();
+  const { getGeneralRuneSettings, getSelectedLocales } = useSettings();
 
   // Получаем общие настройки как дефолтные значения
   const generalSettings = getGeneralRuneSettings();
@@ -123,6 +124,18 @@ const RuneCard: React.FC<RuneCardProps> = ({
   // Принудительная перерисовка превью при изменении настроек нумерации
   const [previewKey, setPreviewKey] = React.useState(0);
 
+  // Language codes for iteration - только выбранные локали
+  const languageCodes = React.useMemo(() => {
+    return getSelectedLocales();
+  }, [getSelectedLocales]);
+
+  // Автоматически переключаем preview локаль на доступную, если текущая недоступна
+  React.useEffect(() => {
+    if (!languageCodes.includes(previewLocale)) {
+      setPreviewLocale(languageCodes[0] || "enUS");
+    }
+  }, [languageCodes, previewLocale]);
+
   React.useEffect(() => {
     setPreviewKey((prev) => prev + 1);
   }, [
@@ -138,23 +151,6 @@ const RuneCard: React.FC<RuneCardProps> = ({
     runeNames,
     previewLocale,
   ]);
-
-  // Language codes for iteration
-  const languageCodes = [
-    "enUS",
-    "ruRU",
-    "zhTW",
-    "deDE",
-    "esES",
-    "frFR",
-    "itIT",
-    "koKR",
-    "plPL",
-    "esMX",
-    "jaJP",
-    "ptBR",
-    "zhCN",
-  ];
 
   // Handle language name change
   const handleLanguageNameChange = (langCode: string, value: string) => {
@@ -381,21 +377,13 @@ const RuneCard: React.FC<RuneCardProps> = ({
     { value: ".", label: "." },
   ];
 
-  const localeOptions = [
-    { value: "enUS", label: "EN" },
-    { value: "ruRU", label: "RU" },
-    { value: "zhTW", label: "ZH-TW" },
-    { value: "deDE", label: "DE" },
-    { value: "esES", label: "ES" },
-    { value: "frFR", label: "FR" },
-    { value: "itIT", label: "IT" },
-    { value: "koKR", label: "KO" },
-    { value: "plPL", label: "PL" },
-    { value: "esMX", label: "ES-MX" },
-    { value: "jaJP", label: "JA" },
-    { value: "ptBR", label: "PT-BR" },
-    { value: "zhCN", label: "ZH-CN" },
-  ];
+  // Фильтруем опции локалей на основе глобальной настройки
+  const localeOptions = React.useMemo(() => {
+    const selectedLocales = getSelectedLocales();
+    return allLocaleOptions.filter((option: { value: string; label: string }) =>
+      selectedLocales.includes(option.value)
+    );
+  }, [getSelectedLocales]);
 
   // Функция для получения структурированного превью руны
   const getPreviewData = React.useCallback(() => {

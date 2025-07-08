@@ -15,6 +15,12 @@
     "skills": "Skill tree and build planning",
     "other": "Additional tools and utilities"
   },
+  "common": {
+    "languageSettings": "Language Settings",
+    "languageSettingsDescription": "Select which languages you are interested in for customization.",
+    "required": "required",
+    "noLanguagesSelected": "No languages selected"
+  },
   "buttons": {
     "changePath": "Change Path"
   },

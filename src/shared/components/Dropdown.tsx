@@ -7,32 +7,44 @@ interface DropdownOption {
 
 interface DropdownProps {
   options: DropdownOption[];
-  selectedValue: string;
-  onSelect: (value: string) => void;
+  selectedValue?: string;
+  selectedValues?: string[];
+  onSelect?: (value: string) => void;
+  onMultiSelect?: (values: string[]) => void;
   isDarkTheme?: boolean;
   className?: string;
   placeholder?: string;
   size?: "sm" | "md" | "lg";
   disabled?: boolean;
+  multiple?: boolean;
+  mandatoryValues?: string[]; // Значения, которые нельзя отжать
 }
 
 const Dropdown: React.FC<DropdownProps> = ({
   options,
   selectedValue,
+  selectedValues,
   onSelect,
+  onMultiSelect,
   isDarkTheme = false,
   className = "",
   placeholder = "Select an option",
   size = "md",
   disabled = false,
+  multiple = false,
+  mandatoryValues = [],
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [openUpward, setOpenUpward] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const selectedOption = options.find(
-    (option) => option.value === selectedValue
-  );
+  const selectedOption = multiple
+    ? null
+    : options.find((option) => option.value === selectedValue);
+
+  const selectedOptionsMulti = multiple
+    ? options.filter((option) => selectedValues?.includes(option.value))
+    : [];
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -71,8 +83,29 @@ const Dropdown: React.FC<DropdownProps> = ({
   };
 
   const handleSelect = (value: string) => {
-    onSelect(value);
-    setIsOpen(false);
+    if (multiple) {
+      if (!selectedValues) return;
+
+      const isSelected = selectedValues.includes(value);
+      const isMandatory = mandatoryValues.includes(value);
+
+      // Если элемент обязательный и уже выбран, не позволяем его отжать
+      if (isMandatory && isSelected) {
+        return;
+      }
+
+      let newValues: string[];
+      if (isSelected) {
+        newValues = selectedValues.filter((v) => v !== value);
+      } else {
+        newValues = [...selectedValues, value];
+      }
+
+      onMultiSelect?.(newValues);
+    } else {
+      onSelect?.(value);
+      setIsOpen(false);
+    }
   };
 
   const getSizeClasses = () => {
@@ -97,6 +130,19 @@ const Dropdown: React.FC<DropdownProps> = ({
 
   const sizeClasses = getSizeClasses();
 
+  const getDisplayText = () => {
+    if (multiple) {
+      if (!selectedValues || selectedValues.length === 0) {
+        return placeholder;
+      }
+      if (selectedValues.length === 1) {
+        return selectedOptionsMulti[0]?.label ?? "";
+      }
+      return `${selectedValues.length} selected`;
+    }
+    return selectedOption?.label ?? placeholder;
+  };
+
   return (
     <div className={`relative`} ref={dropdownRef}>
       <button
@@ -116,7 +162,7 @@ const Dropdown: React.FC<DropdownProps> = ({
             : "bg-white border-gray-300 text-gray-700"
         }`}
       >
-        <span>{selectedOption?.label ?? placeholder}</span>
+        <span>{getDisplayText()}</span>
         <svg
           className={`w-4 h-4 transition-transform duration-200 ${
             isOpen ? "rotate-180" : ""
@@ -149,25 +195,50 @@ const Dropdown: React.FC<DropdownProps> = ({
           }}
         >
           <div className="py-1">
-            {options.map((option) => (
-              <button
-                key={option.value}
-                onClick={() => handleSelect(option.value)}
-                className={`w-full ${
-                  sizeClasses.option
-                } text-left hover:bg-opacity-80 transition-colors duration-150 ${
-                  option.value === selectedValue
-                    ? isDarkTheme
-                      ? "bg-gray-500 text-white"
-                      : "bg-blue-500 text-white"
-                    : isDarkTheme
-                    ? "text-gray-200 hover:bg-gray-600"
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                {option.label}
-              </button>
-            ))}
+            {options.map((option) => {
+              const isSelected = multiple
+                ? selectedValues?.includes(option.value)
+                : option.value === selectedValue;
+              const isMandatory = mandatoryValues.includes(option.value);
+
+              return (
+                <button
+                  key={option.value}
+                  onClick={() => handleSelect(option.value)}
+                  disabled={multiple && isMandatory && isSelected}
+                  className={`w-full ${
+                    sizeClasses.option
+                  } text-left hover:bg-opacity-80 transition-colors duration-150 flex items-center justify-between ${
+                    isSelected
+                      ? isDarkTheme
+                        ? "bg-gray-500 text-white"
+                        : "bg-blue-500 text-white"
+                      : isDarkTheme
+                      ? "text-gray-200 hover:bg-gray-600"
+                      : "text-gray-700 hover:bg-gray-100"
+                  } ${
+                    multiple && isMandatory && isSelected
+                      ? "opacity-75 cursor-not-allowed"
+                      : ""
+                  }`}
+                >
+                  <span className="flex items-center gap-2">
+                    {multiple && (
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        readOnly
+                        className="pointer-events-none"
+                      />
+                    )}
+                    {option.label}
+                  </span>
+                  {multiple && isMandatory && (
+                    <span className="text-xs opacity-75">(required)</span>
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
       )}

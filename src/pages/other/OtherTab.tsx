@@ -1,5 +1,5 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
+import React from "react";
+import { useTranslation } from "react-i18next";
 
 interface OtherTabProps {
   isDarkTheme: boolean;
@@ -14,19 +14,23 @@ const OtherTab: React.FC<OtherTabProps> = ({ isDarkTheme }) => {
         <div className="w-16 h-16 bg-gray-500 rounded-full flex items-center justify-center mx-auto mb-4">
           <span className="text-white text-2xl font-bold">📦</span>
         </div>
-        <h2 className={`text-2xl font-medium mb-4 ${
-          isDarkTheme ? 'text-white' : 'text-gray-900'
-        }`}>
-          {t('tabs.other')}
+        <h2
+          className={`text-2xl font-medium mb-4 ${
+            isDarkTheme ? "text-white" : "text-gray-900"
+          }`}
+        >
+          {t("tabs.other")}
         </h2>
-        <p className={`leading-relaxed ${
-          isDarkTheme ? 'text-gray-300' : 'text-gray-600'
-        }`}>
-          {t('descriptions.other')}
+        <p
+          className={`leading-relaxed ${
+            isDarkTheme ? "text-gray-300" : "text-gray-600"
+          }`}
+        >
+          {t("descriptions.other")}
         </p>
       </div>
     </div>
   );
 };
 
-export default OtherTab; 
+export default OtherTab;

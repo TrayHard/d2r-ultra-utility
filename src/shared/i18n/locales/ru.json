@@ -15,6 +15,12 @@
     "skills": "Дерево навыков и планирование билдов",
     "other": "Дополнительные инструменты и утилиты"
   },
+  "common": {
+    "languageSettings": "Настройки языков",
+    "languageSettingsDescription": "Выберите, какие локали вам интересны для настройки.",
+    "required": "обязательно",
+    "noLanguagesSelected": "Языки не выбраны"
+  },
   "buttons": {
     "changePath": "Изменить путь"
   },
