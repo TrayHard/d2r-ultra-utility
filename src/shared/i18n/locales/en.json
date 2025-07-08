@@ -34,7 +34,8 @@
     },
     "settings": {
       "preview": "Preview",
-      "selectRune": "Select a rune to edit its settings"
+      "selectRune": "Select a rune to edit its settings",
+      "previewUnavailable": "Preview is not available in manual mode"
     },
     "controls": {
       "highlightRune": "Highlight Rune",

@@ -560,6 +560,11 @@ export const generateFinalRuneName = (
   settings: RuneSettings,
   locale: keyof RuneSettings["locales"]
 ): string => {
+  // В ручном режиме возвращаем локаль как есть
+  if (settings.isManual) {
+    return settings.locales[locale] || settings.locales.enUS;
+  }
+
   // Получаем базовое имя руны для нужной локали и очищаем от цветовых кодов
   const rawBaseName = settings.locales[locale] || settings.locales.enUS;
   const baseName = removeColorCodes(rawBaseName);

@@ -1,5 +1,5 @@
 import React from "react";
-import { ERune } from "./constants/runes.ts";
+import { ERune, runeNumbers } from "./constants/runes.ts";
 import { useTranslation } from "react-i18next";
 import Dropdown from "../../shared/components/Dropdown.tsx";
 import Switcher from "../../shared/components/Switcher.tsx";
@@ -13,6 +13,12 @@ import {
   generatePreviewRuneName,
   generateStructuredPreview,
   removeColorCodes,
+  parseNumberingSettings,
+  parseRuneTextColor,
+  parseRuneBoxSize,
+  parseBoxLimiters,
+  parseBoxLimitersColor,
+  extractBaseRuneName,
 } from "../../shared/utils/runeUtils.ts";
 
 interface RuneCardProps {
@@ -206,11 +212,10 @@ const RuneCard: React.FC<RuneCardProps> = ({
   };
 
   const handleManualChange = (checked: boolean) => {
-    // При переключении в ручной режим заполняем инпуты чистыми именами без цветовых кодов
     if (checked) {
-      const cleanRuneNames: Record<string, string> = {};
+      // При переходе В ручной режим заполняем инпуты финальными именами с учетом всех настроек
+      const finalRuneNames = { ...runeNames };
 
-      // Генерируем чистые финальные имена для всех локалей
       languageCodes.forEach((langCode) => {
         const currentSettings: RuneSettings = {
           isHighlighted,
@@ -224,29 +229,63 @@ const RuneCard: React.FC<RuneCardProps> = ({
           boxLimiters,
           boxLimitersColor,
           color,
-          isManual: false, // Используем false для генерации финального имени
+          isManual: false,
           locales: runeNames,
         };
 
-        // Генерируем чистое имя для данной локали (без цветовых кодов)
-        cleanRuneNames[langCode] = generatePreviewRuneName(
-          rune,
-          currentSettings,
-          langCode as keyof RuneSettings["locales"]
-        );
+        // Генерируем финальное имя с учетом всех настроек (с цветовыми кодами и ограничителями)
+        finalRuneNames[langCode as keyof typeof finalRuneNames] =
+          generateFinalRuneName(
+            rune,
+            currentSettings,
+            langCode as keyof RuneSettings["locales"]
+          );
       });
 
-      // Обновляем настройки с новыми чистыми именами
       handleSettingChange({
         isManual: checked,
-        locales: {
-          ...runeNames,
-          ...cleanRuneNames,
-        },
+        locales: finalRuneNames,
       });
     } else {
-      // При отключении ручного режима просто переключаем флаг
-      handleSettingChange({ isManual: checked });
+      // При выходе ИЗ ручного режима анализируем содержимое инпутов и заполняем настройки
+      const runeNumber = runeNumbers[rune];
+
+      // Анализируем первую доступную локаль для извлечения настроек
+      const textForAnalysis = runeNames.enUS || runeNames.ruRU || "";
+
+      if (textForAnalysis) {
+        // Анализируем настройки аналогично чтению из файлов
+        const numberingSettings = parseNumberingSettings(
+          textForAnalysis,
+          runeNumber
+        );
+        const textColor = parseRuneTextColor(textForAnalysis);
+        const boxSizeFromText = parseRuneBoxSize(textForAnalysis);
+        const boxLimitersFromText = parseBoxLimiters(textForAnalysis);
+        const boxLimitersColorFromText = parseBoxLimitersColor(textForAnalysis);
+
+        // Извлекаем чистые базовые имена для всех локалей
+        const cleanRuneNames = { ...runeNames };
+        languageCodes.forEach((langCode) => {
+          const localeText = runeNames[langCode as keyof typeof runeNames];
+          cleanRuneNames[langCode as keyof typeof cleanRuneNames] =
+            extractBaseRuneName(localeText, runeNumber);
+        });
+
+        // Обновляем все настройки на основе анализа
+        handleSettingChange({
+          isManual: checked,
+          numbering: numberingSettings,
+          color: textColor,
+          boxSize: boxSizeFromText,
+          boxLimiters: boxLimitersFromText,
+          boxLimitersColor: boxLimitersColorFromText,
+          locales: cleanRuneNames,
+        });
+      } else {
+        // Если текста нет, просто выключаем ручной режим
+        handleSettingChange({ isManual: checked });
+      }
     }
   };
 
@@ -360,46 +399,46 @@ const RuneCard: React.FC<RuneCardProps> = ({
 
   // Функция для получения структурированного превью руны
   const getPreviewData = React.useCallback(() => {
-    if (isManual) {
-      // В ручном режиме показываем то, что пользователь ввел в инпуты
-      const customName = runeNames[previewLocale as keyof typeof runeNames];
-      const cleanName = removeColorCodes(customName || "");
-      return {
-        baseName: cleanName || t(`runePage.runes.${rune}`),
-        baseColor: "white", // В ручном режиме всегда белый
-        boxSize: 0,
-        boxLimiters: "~",
-        boxLimitersColor: "white",
-      };
-    } else {
-      // В обычном режиме генерируем структурированное превью
-      const currentSettings: RuneSettings = {
-        isHighlighted,
-        numbering: {
-          show: showNumber,
-          dividerType,
-          dividerColor,
-          numberColor,
-        },
-        boxSize,
-        boxLimiters,
-        boxLimitersColor,
-        color,
-        isManual: false,
-        locales: runeNames,
-      };
+    // Определяем локали для превью
+    let previewLocales = runeNames;
 
-      return generateStructuredPreview(
-        rune,
-        currentSettings,
-        previewLocale as keyof RuneSettings["locales"]
-      );
+    if (isManual) {
+      // В ручном режиме извлекаем чистые базовые имена из финальных имен
+      const runeNumber = runeNumbers[rune];
+      previewLocales = { ...runeNames };
+
+      languageCodes.forEach((langCode) => {
+        const finalName = runeNames[langCode as keyof typeof runeNames];
+        previewLocales[langCode as keyof typeof previewLocales] =
+          extractBaseRuneName(finalName, runeNumber);
+      });
     }
+
+    // Всегда генерируем структурированное превью на основе настроек
+    const currentSettings: RuneSettings = {
+      isHighlighted,
+      numbering: {
+        show: showNumber,
+        dividerType,
+        dividerColor,
+        numberColor,
+      },
+      boxSize,
+      boxLimiters,
+      boxLimitersColor,
+      color,
+      isManual: false, // Для превью всегда используем false
+      locales: previewLocales,
+    };
+
+    return generateStructuredPreview(
+      rune,
+      currentSettings,
+      previewLocale as keyof RuneSettings["locales"]
+    );
   }, [
-    isManual,
     runeNames,
     previewLocale,
-    t,
     rune,
     isHighlighted,
     showNumber,
@@ -410,6 +449,8 @@ const RuneCard: React.FC<RuneCardProps> = ({
     boxLimiters,
     boxLimitersColor,
     color,
+    isManual,
+    languageCodes,
   ]);
 
   return (
@@ -509,10 +550,9 @@ const RuneCard: React.FC<RuneCardProps> = ({
                         >
                           {(() => {
                             const previewData = getPreviewData();
+
                             const baseStyle = {
-                              fontSize: isManual
-                                ? getFontSize(0)
-                                : getFontSize(previewData.boxSize),
+                              fontSize: getFontSize(previewData.boxSize),
                               fontFamily: "Diablo, monospace",
                               fontWeight: "bold",
                               textShadow: "1px 1px 2px rgba(0,0,0,0.8)",
@@ -527,7 +567,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
                                 }}
                               >
                                 {/* Левый ограничитель на левом краю контейнера */}
-                                {!isManual && previewData.boxSize > 0 && (
+                                {previewData.boxSize > 0 && (
                                   <span
                                     style={{
                                       ...baseStyle,
@@ -550,18 +590,17 @@ const RuneCard: React.FC<RuneCardProps> = ({
                                   {/* Основное имя руны */}
                                   <span
                                     style={{
-                                      color: isManual
-                                        ? "#FFFFFF"
-                                        : getD2RColorStyle?.(
-                                            previewData.baseColor
-                                          ) || "#FFFFFF",
+                                      color:
+                                        getD2RColorStyle?.(
+                                          previewData.baseColor
+                                        ) || "#FFFFFF",
                                     }}
                                   >
                                     {previewData.baseName}
                                   </span>
 
-                                  {/* Нумерация (если включена и не в ручном режиме) */}
-                                  {!isManual && previewData.numbering && (
+                                  {/* Нумерация (если включена) */}
+                                  {previewData.numbering && (
                                     <>
                                       {previewData.numbering.openDivider === "|"
                                         ? " "
@@ -605,7 +644,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
                                 </span>
 
                                 {/* Правый ограничитель на правом краю контейнера */}
-                                {!isManual && previewData.boxSize > 0 && (
+                                {previewData.boxSize > 0 && (
                                   <span
                                     style={{
                                       ...baseStyle,
@@ -626,6 +665,15 @@ const RuneCard: React.FC<RuneCardProps> = ({
                             );
                           })()}
                         </div>
+
+                        {/* Блюр поверх превью в ручном режиме */}
+                        {isManual && (
+                          <div className="absolute inset-0 rounded-lg bg-black/30 backdrop-blur-sm flex items-center justify-center">
+                            <div className="text-white text-xl font-bold text-center px-4">
+                              {t("runePage.settings.previewUnavailable")}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}
