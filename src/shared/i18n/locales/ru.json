@@ -1,10 +1,10 @@
 {
   "tabs": {
-    "common": "Общее",
+    "common": "Общие",
     "items": "Предметы",
     "runes": "Руны",
     "gems": "Камни",
-    "skills": "Скиллы",
+    "skills": "Навыки",
     "other": "Прочее"
   },
   "descriptions": {
@@ -15,14 +15,32 @@
     "skills": "Дерево навыков и планирование билдов",
     "other": "Дополнительные инструменты и утилиты"
   },
+  "otherPage": {
+    "arrows": "Стрелы",
+    "bolts": "Болты",
+    "staminaPotions": "Зелья выносливости",
+    "antidotes": "Противоядия",
+    "enableCustomization": "Включить настройку",
+    "localeSettings": "Настройки локалей"
+  },
   "common": {
+    "themeSettings": "Настройки темы",
+    "themeSettingsDescription": "Выберите предпочитаемую тему для приложения.",
+    "darkTheme": "Темная тема",
+    "lightTheme": "Светлая тема",
+    "appLanguageSettings": "Язык приложения",
+    "appLanguageSettingsDescription": "Выберите язык для интерфейса приложения.",
+    "appLanguageLabels": {
+      "enUS": "English",
+      "ruRU": "Русский"
+    },
     "languageSettings": "Настройки языков",
-    "languageSettingsDescription": "Выберите, какие локали вам интересны для настройки.",
-    "required": "обязательно",
-    "noLanguagesSelected": "Языки не выбраны"
+    "languageSettingsDescription": "Выберите, какие языки должны быть доступны для обработки текста. Английский язык всегда обязателен как базовый.",
+    "required": "обязательный",
+    "noLanguagesSelected": "Дополнительные языки не выбраны"
   },
   "buttons": {
-    "changePath": "Изменить путь"
+    "changePath": "Сменить путь"
   },
   "search": {
     "placeholder": "Поиск рун...",

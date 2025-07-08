@@ -15,11 +15,29 @@
     "skills": "Skill tree and build planning",
     "other": "Additional tools and utilities"
   },
+  "otherPage": {
+    "arrows": "Arrows",
+    "bolts": "Bolts",
+    "staminaPotions": "Stamina Potions",
+    "antidotes": "Antidotes",
+    "enableCustomization": "Enable customization",
+    "localeSettings": "Locale Settings"
+  },
   "common": {
+    "themeSettings": "Theme Settings",
+    "themeSettingsDescription": "Choose your preferred theme for the application.",
+    "darkTheme": "Dark Theme",
+    "lightTheme": "Light Theme",
+    "appLanguageSettings": "Application Language",
+    "appLanguageSettingsDescription": "Select the language for the application interface.",
+    "appLanguageLabels": {
+      "enUS": "English",
+      "ruRU": "Русский"
+    },
     "languageSettings": "Language Settings",
-    "languageSettingsDescription": "Select which languages you are interested in for customization.",
+    "languageSettingsDescription": "Select which languages should be available for text processing. English is always required as the base language.",
     "required": "required",
-    "noLanguagesSelected": "No languages selected"
+    "noLanguagesSelected": "No additional languages selected"
   },
   "buttons": {
     "changePath": "Change Path"

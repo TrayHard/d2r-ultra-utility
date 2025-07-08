@@ -1,7 +1,6 @@
-import React from 'react';
-import { useLanguage } from '../../shared/hooks/useLanguage.ts';
-import { Language } from '../../shared/types/language.ts';
-import Dropdown from '../../shared/components/Dropdown.tsx';
+import React from "react";
+import { useSettings } from "../../app/providers/SettingsContext.tsx";
+import Dropdown from "../../shared/components/Dropdown.tsx";
 
 interface LanguageSwitchProps {
   onLanguageChange: () => void;
@@ -12,24 +11,26 @@ interface LanguageSwitchProps {
 const LanguageSwitch: React.FC<LanguageSwitchProps> = ({
   onLanguageChange,
   isDarkTheme = false,
-  className = ''
+  className = "",
 }) => {
-  const { language, setLanguage } = useLanguage();
+  const { getAppLanguage, updateAppLanguage } = useSettings();
+
+  const currentLanguage = getAppLanguage();
 
   const languageOptions = [
-    { value: 'en', label: 'English' },
-    { value: 'ru', label: 'Русский' }
+    { value: "enUS", label: "English" },
+    { value: "ruRU", label: "Русский" },
   ];
 
   const handleLanguageChange = (value: string) => {
-    setLanguage(value as Language);
+    updateAppLanguage(value);
     onLanguageChange(); // вызываем коллбек для уведомления родителя
   };
 
   return (
     <Dropdown
       options={languageOptions}
-      selectedValue={language}
+      selectedValue={currentLanguage}
       onSelect={handleLanguageChange}
       isDarkTheme={isDarkTheme}
       className={`min-w-24 ${className}`}

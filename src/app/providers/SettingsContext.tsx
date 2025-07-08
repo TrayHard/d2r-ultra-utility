@@ -6,7 +6,7 @@ import React, {
   useEffect,
 } from "react";
 import { ERune } from "../../pages/runes/constants/runes.ts";
-import { localeCodes } from "../../shared/constants.ts";
+import i18n from "../../shared/i18n";
 
 // Типы для локализации
 interface Locales {
@@ -23,6 +23,15 @@ interface Locales {
   jaJP: string;
   ptBR: string;
   zhCN: string;
+}
+
+// Настройки приложения (глобальные)
+interface AppConfig {
+  selectedLocales: string[]; // Выбранные локали для работы
+  appLanguage: string; // Язык интерфейса приложения
+  gamePath: string; // Путь к игре
+  theme: "light" | "dark"; // Тема приложения
+  // В будущем добавим другие глобальные настройки
 }
 
 // Настройки для рун
@@ -51,11 +60,10 @@ interface GeneralRuneSettings {
   boxLimitersColor: string;
 }
 
-// Общий интерфейс для всех настроек
+// Настройки профиля (только специфичные для профиля данные)
 interface AppSettings {
   runes: Record<ERune, RuneSettings>;
   generalRunes: GeneralRuneSettings;
-  selectedLocales: string[]; // Глобальная настройка для выбранных локалей
   // В будущем добавим:
   // items: Record<string, ItemSettings>;
   // skills: Record<string, SkillSettings>;
@@ -73,11 +81,27 @@ interface Profile {
 
 // Интерфейс для контекста
 interface SettingsContextType {
-  // Getter'ы
+  // Getter'ы для настроек приложения
+  getAppConfig: () => AppConfig;
+  getSelectedLocales: () => string[];
+  getAppLanguage: () => string;
+  getGamePath: () => string;
+  getTheme: () => "light" | "dark";
+  getIsDarkTheme: () => boolean;
+
+  // Setter'ы для настроек приложения
+  updateAppConfig: (config: Partial<AppConfig>) => void;
+  updateSelectedLocales: (locales: string[]) => void;
+  updateAppLanguage: (language: string) => void;
+  updateGamePath: (path: string) => void;
+  updateTheme: (theme: "light" | "dark") => void;
+  toggleTheme: () => void;
+  resetAppConfig: () => void;
+
+  // Getter'ы для настроек профиля
   getRuneSettings: (rune: ERune) => RuneSettings;
   getGeneralRuneSettings: () => GeneralRuneSettings;
   getAllSettings: () => AppSettings;
-  getSelectedLocales: () => string[];
 
   // Setter'ы для рун
   updateRuneSettings: (rune: ERune, newSettings: Partial<RuneSettings>) => void;
@@ -95,15 +119,12 @@ interface SettingsContextType {
   resetGeneralRuneSettings: () => void;
   applyGeneralRuneSettingsToAll: () => void;
 
-  // Setter'ы для глобальных настроек
-  updateSelectedLocales: (locales: string[]) => void;
-  resetSelectedLocales: () => void;
-
-  // Общие
+  // Общие для профиля
   resetAllSettings: () => void;
 
   // Прямой доступ к настройкам (если нужен)
   settings: AppSettings;
+  appConfig: AppConfig;
 
   // Профили
   profiles: Profile[];
@@ -115,7 +136,18 @@ interface SettingsContextType {
   deleteProfile: (profileId: string) => void;
   exportProfile: (profileId: string) => void;
   importProfile: (profileData: any) => void;
+
+  // Deprecated (для обратной совместимости)
+  resetSelectedLocales: () => void;
 }
+
+// Дефолтные настройки приложения
+const getDefaultAppConfig = (): AppConfig => ({
+  selectedLocales: ["enUS"], // По умолчанию выбран только английский язык
+  appLanguage: "enUS", // По умолчанию язык интерфейса - английский
+  gamePath: "", // По умолчанию путь к игре не задан
+  theme: "dark", // По умолчанию темная тема
+});
 
 // Дефолтные общие настройки для рун
 const getDefaultGeneralRuneSettings = (): GeneralRuneSettings => ({
@@ -216,7 +248,6 @@ const createDefaultSettings = (): AppSettings => {
   return {
     runes: runeSettings,
     generalRunes: getDefaultGeneralRuneSettings(),
-    selectedLocales: [...localeCodes], // По умолчанию все локали выбраны
   };
 };
 
@@ -232,14 +263,97 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   children,
 }) => {
   const [settings, setSettings] = useState<AppSettings>(createDefaultSettings);
+  const [appConfig, _setAppConfig] = useState<AppConfig>(() => {
+    return getDefaultAppConfig();
+  });
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Загрузка профилей из localStorage при инициализации
+  // Wrapper для setAppConfig с автоматическим сохранением
+  const setAppConfig = useCallback(
+    (
+      newConfigOrUpdater: AppConfig | ((prev: AppConfig) => AppConfig),
+      skipSave = false
+    ) => {
+      if (typeof newConfigOrUpdater === "function") {
+        _setAppConfig((prev) => {
+          const newConfig = newConfigOrUpdater(prev);
+          if (!skipSave && !isLoading) {
+            localStorage.setItem("d2r-app-config", JSON.stringify(newConfig));
+          }
+          return newConfig;
+        });
+      } else {
+        if (!skipSave && !isLoading) {
+          localStorage.setItem(
+            "d2r-app-config",
+            JSON.stringify(newConfigOrUpdater)
+          );
+        }
+        _setAppConfig(newConfigOrUpdater);
+      }
+    },
+    [isLoading]
+  );
+
+  // Загрузка настроек из localStorage при инициализации
   useEffect(() => {
+    const savedAppConfig = localStorage.getItem("d2r-app-config");
+    const savedSettings = localStorage.getItem("d2r-settings");
     const savedProfiles = localStorage.getItem("d2r-profiles");
     const savedActiveProfileId = localStorage.getItem("d2r-active-profile");
 
+    // Миграция: удаляем старый ключ языка если он есть
+    const oldLanguageKey = localStorage.getItem("language");
+    if (oldLanguageKey) {
+      localStorage.removeItem("language");
+    }
+
+    // Загружаем настройки приложения
+    if (savedAppConfig) {
+      try {
+        const parsedAppConfig = JSON.parse(savedAppConfig);
+        const newAppConfig = {
+          ...getDefaultAppConfig(),
+          ...parsedAppConfig,
+        };
+        setAppConfig(newAppConfig, true); // skipSave = true
+
+        // Инициализируем язык в i18n
+        const i18nLang = newAppConfig.appLanguage === "ruRU" ? "ru" : "en";
+        i18n.changeLanguage(i18nLang);
+      } catch (error) {
+        console.error("Error loading app config from localStorage:", error);
+      }
+    } else {
+      // Если нет сохраненных настроек, используем дефолтный язык
+      const defaultConfig = getDefaultAppConfig();
+      const i18nLang = defaultConfig.appLanguage === "ruRU" ? "ru" : "en";
+      i18n.changeLanguage(i18nLang);
+    }
+
+    // Загружаем настройки профиля (если нет активного профиля)
+    if (savedSettings) {
+      try {
+        const parsedSettings = JSON.parse(savedSettings);
+        // Мигрируем настройки рун
+        const migratedSettings = {
+          ...parsedSettings,
+          runes: Object.fromEntries(
+            Object.entries(parsedSettings.runes).map(([key, value]) => [
+              key,
+              migrateRuneSettings(value),
+            ])
+          ),
+        };
+        setSettings(migratedSettings);
+      } catch (error) {
+        console.error("Error loading settings from localStorage:", error);
+      }
+    }
+
+    // Загружаем профили
     if (savedProfiles) {
       try {
         const parsedProfiles = JSON.parse(savedProfiles);
@@ -254,13 +368,11 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
                 migrateRuneSettings(value),
               ])
             ),
-            selectedLocales: profile.settings.selectedLocales ?? [
-              ...localeCodes,
-            ],
           },
         }));
         setProfiles(migratedProfiles);
 
+        // Если есть активный профиль, загружаем его настройки
         if (
           savedActiveProfileId &&
           migratedProfiles.find((p: Profile) => p.id === savedActiveProfileId)
@@ -277,7 +389,20 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         console.error("Error loading profiles from localStorage:", error);
       }
     }
-  }, []);
+
+    // Завершаем загрузку
+    setIsLoading(false);
+  }, [setAppConfig]);
+
+  // Убираем старый useEffect для сохранения, так как теперь сохраняем в setAppConfig
+
+  // Автоматическое сохранение настроек профиля в localStorage при изменении
+  useEffect(() => {
+    // Сохраняем настройки только если нет активного профиля и не загружаемся
+    if (!activeProfileId && !isLoading) {
+      localStorage.setItem("d2r-settings", JSON.stringify(settings));
+    }
+  }, [settings, activeProfileId, isLoading]);
 
   // Сохранение профилей в localStorage
   const saveProfilesToLocalStorage = useCallback(
@@ -298,6 +423,106 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     },
     []
   );
+
+  // Методы для работы с настройками приложения
+  const getAppConfig = useCallback(() => appConfig, [appConfig]);
+
+  const getSelectedLocales = useCallback(
+    () => appConfig.selectedLocales,
+    [appConfig.selectedLocales]
+  );
+
+  const getAppLanguage = useCallback(
+    () => appConfig.appLanguage,
+    [appConfig.appLanguage]
+  );
+
+  const getGamePath = useCallback(
+    () => appConfig.gamePath,
+    [appConfig.gamePath]
+  );
+
+  const getTheme = useCallback(() => appConfig.theme, [appConfig.theme]);
+  const getIsDarkTheme = useCallback(
+    () => appConfig.theme === "dark",
+    [appConfig.theme]
+  );
+
+  const updateAppConfig = useCallback(
+    (config: Partial<AppConfig>) => {
+      setAppConfig((prev) => ({
+        ...prev,
+        ...config,
+      }));
+    },
+    [setAppConfig]
+  );
+
+  const updateSelectedLocales = useCallback(
+    (locales: string[]) => {
+      setAppConfig((prev) => {
+        const newConfig = {
+          ...prev,
+          selectedLocales: locales,
+        };
+        return newConfig;
+      });
+    },
+    [setAppConfig]
+  );
+
+  const updateAppLanguage = useCallback(
+    (language: string) => {
+      setAppConfig((prev) => ({
+        ...prev,
+        appLanguage: language,
+      }));
+
+      // Переключаем язык в i18n
+      const i18nLang = language === "ruRU" ? "ru" : "en";
+      i18n.changeLanguage(i18nLang);
+    },
+    [setAppConfig]
+  );
+
+  const updateGamePath = useCallback(
+    (path: string) => {
+      setAppConfig((prev) => ({
+        ...prev,
+        gamePath: path,
+      }));
+    },
+    [setAppConfig]
+  );
+
+  const updateTheme = useCallback(
+    (theme: "light" | "dark") => {
+      setAppConfig((prev) => ({
+        ...prev,
+        theme: theme,
+      }));
+    },
+    [setAppConfig]
+  );
+
+  const toggleTheme = useCallback(() => {
+    setAppConfig((prev) => ({
+      ...prev,
+      theme: prev.theme === "light" ? "dark" : "light",
+    }));
+  }, [setAppConfig]);
+
+  const resetAppConfig = useCallback(() => {
+    setAppConfig(getDefaultAppConfig());
+  }, [setAppConfig]);
+
+  // Deprecated методы для обратной совместимости
+  const resetSelectedLocales = useCallback(() => {
+    setAppConfig((prev) => ({
+      ...prev,
+      selectedLocales: ["enUS"],
+    }));
+  }, [setAppConfig]);
 
   // Получить настройки руны
   const getRuneSettings = useCallback(
@@ -425,28 +650,6 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   // Получить все настройки
   const getAllSettings = useCallback(() => settings, [settings]);
 
-  // Получить выбранные локали
-  const getSelectedLocales = useCallback(
-    () => settings.selectedLocales,
-    [settings.selectedLocales]
-  );
-
-  // Обновить выбранные локали
-  const updateSelectedLocales = useCallback((locales: string[]) => {
-    setSettings((prev) => ({
-      ...prev,
-      selectedLocales: locales,
-    }));
-  }, []);
-
-  // Сбросить выбранные локали
-  const resetSelectedLocales = useCallback(() => {
-    setSettings((prev) => ({
-      ...prev,
-      selectedLocales: [...localeCodes],
-    }));
-  }, []);
-
   // Полный сброс всех настроек
   const resetAllSettings = useCallback(() => {
     setSettings(createDefaultSettings());
@@ -468,6 +671,8 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       saveProfilesToLocalStorage(updatedProfiles);
       setActiveProfileId(newProfile.id);
       saveActiveProfileToLocalStorage(newProfile.id);
+      // Удаляем автономные настройки профиля при создании профиля
+      localStorage.removeItem("d2r-settings");
     },
     [profiles, saveProfilesToLocalStorage, saveActiveProfileToLocalStorage]
   );
@@ -499,6 +704,8 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         setSettings(profile.settings);
         setActiveProfileId(profileId);
         saveActiveProfileToLocalStorage(profileId);
+        // Удаляем автономные настройки профиля при загрузке профиля
+        localStorage.removeItem("d2r-settings");
       }
     },
     [profiles, saveActiveProfileToLocalStorage]
@@ -531,7 +738,29 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       if (profileId === activeProfileId) {
         setActiveProfileId(null);
         saveActiveProfileToLocalStorage(null);
-        setSettings(createDefaultSettings());
+
+        // Пытаемся восстановить автономные настройки из localStorage
+        const savedSettings = localStorage.getItem("d2r-settings");
+        if (savedSettings) {
+          try {
+            const parsedSettings = JSON.parse(savedSettings);
+            const migratedSettings = {
+              ...parsedSettings,
+              runes: Object.fromEntries(
+                Object.entries(parsedSettings.runes).map(([key, value]) => [
+                  key,
+                  migrateRuneSettings(value),
+                ])
+              ),
+            };
+            setSettings(migratedSettings);
+          } catch (error) {
+            console.error("Error restoring settings from localStorage:", error);
+            setSettings(createDefaultSettings());
+          }
+        } else {
+          setSettings(createDefaultSettings());
+        }
       }
     },
     [
@@ -580,9 +809,6 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
               migrateRuneSettings(value),
             ])
           ),
-          selectedLocales: profileData.settings.selectedLocales ?? [
-            ...localeCodes,
-          ],
         };
 
         const newProfile: Profile = {
@@ -605,10 +831,25 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   );
 
   const contextValue: SettingsContextType = {
+    // Методы для настроек приложения
+    getAppConfig,
+    getSelectedLocales,
+    getAppLanguage,
+    getGamePath,
+    getTheme,
+    getIsDarkTheme,
+    updateAppConfig,
+    updateSelectedLocales,
+    updateAppLanguage,
+    updateGamePath,
+    updateTheme,
+    toggleTheme,
+    resetAppConfig,
+
+    // Методы для настроек профиля
     getRuneSettings,
     getGeneralRuneSettings,
     getAllSettings,
-    getSelectedLocales,
     updateRuneSettings,
     updateMultipleRuneSettings,
     resetRuneSettings,
@@ -616,10 +857,13 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     updateGeneralRuneSettings,
     resetGeneralRuneSettings,
     applyGeneralRuneSettingsToAll,
-    updateSelectedLocales,
-    resetSelectedLocales,
     resetAllSettings,
+
+    // Данные
     settings,
+    appConfig,
+
+    // Профили
     profiles,
     activeProfileId,
     createProfile,
@@ -629,6 +873,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     deleteProfile,
     exportProfile,
     importProfile,
+
+    // Deprecated
+    resetSelectedLocales,
   };
 
   return (
@@ -647,4 +894,4 @@ export const useSettings = (): SettingsContextType => {
   return context;
 };
 
-export type { Locales, AppSettings, GeneralRuneSettings, Profile };
+export type { Locales, AppConfig, AppSettings, GeneralRuneSettings, Profile };
