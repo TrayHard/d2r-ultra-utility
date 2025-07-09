@@ -22,10 +22,33 @@
     "staminaPotions": "Stamina Potions",
     "antidotes": "Antidotes",
     "thawingPotions": "Thawing Potions",
+    "healthPotions": "Health Potions",
+    "manaPotions": "Mana Potions",
+    "rejuvenationPotions": "Rejuvenation Potions",
     "enableCustomization": "Enable customization",
-    "localeSettings": "Locale Settings"
+    "localeSettings": "Locale Settings",
+    "healthPotionsLevels": {
+      "level1": "Minor Health Potion",
+      "level2": "Light Health Potion",
+      "level3": "Health Potion",
+      "level4": "Greater Health Potion",
+      "level5": "Super Health Potion"
+    },
+    "manaPotionsLevels": {
+      "level1": "Minor Mana Potion",
+      "level2": "Light Mana Potion",
+      "level3": "Mana Potion",
+      "level4": "Greater Mana Potion",
+      "level5": "Super Mana Potion"
+    },
+    "rejuvenationPotionsLevels": {
+      "level1": "Rejuvenation Potion",
+      "level2": "Full Rejuvenation Potion"
+    }
   },
   "common": {
+    "loading": "Loading...",
+    "applying": "Applying...",
     "themeSettings": "Theme Settings",
     "themeSettingsDescription": "Choose your preferred theme for the application.",
     "darkTheme": "Dark Theme",
@@ -249,14 +272,20 @@
       "localesLoadedText": "Successfully loaded {{count}} localization elements, processed {{processedRunes}} runes",
       "changesSaved": "Changes saved",
       "changesAppliedText": "Changes successfully applied to game files",
+      "changesApplied": "Changes applied successfully",
+      "changesAppliedDescription": "Your settings have been saved to game files",
       "highlightSettingsLoaded": "Highlight settings loaded",
-      "highlightSettingsLoadedText": "Processed highlight settings for {{processedRunes}} runes"
+      "highlightSettingsLoadedText": "Processed highlight settings for {{processedRunes}} runes",
+      "commonItemsLoaded": "Common items loaded",
+      "commonItemsLoadedDescription": "Common items settings have been loaded from game files"
     },
     "error": {
       "fileLoadError": "File loading error",
       "pathNotFound": "Game path not found in settings",
       "unknownError": "Unknown error while reading files",
       "saveError": "Save error",
+      "applyError": "Apply error",
+      "settingsNotFound": "Settings not found",
       "highlightLoadError": "Highlight settings loading error"
     }
   }

@@ -1,22 +1,21 @@
-import React from 'react';
-import { getCurrentWindow } from '@tauri-apps/api/window';
-import { mdiMinus, mdiSquareOutline, mdiClose } from '@mdi/js';
-import logoImage from '../shared/assets/logo_128.png';
+import React from "react";
+import { getCurrentWindow } from "@tauri-apps/api/window";
+import { mdiMinus, mdiSquareOutline, mdiClose } from "@mdi/js";
+import logoImage from "../shared/assets/logo_128.png";
 
 interface CustomTitleBarProps {
   title?: string;
 }
 
-const CustomTitleBar: React.FC<CustomTitleBarProps> = ({ title = 'Diablo II Utility' }) => {
-  // Debug: проверяем что пути иконок загрузились
-  console.log('MDI paths loaded:', { mdiMinus, mdiSquareOutline, mdiClose });
-
+const CustomTitleBar: React.FC<CustomTitleBarProps> = ({
+  title = "Diablo II Utility",
+}) => {
   const handleMinimize = async () => {
     try {
       const window = getCurrentWindow();
       await window.minimize();
     } catch (error) {
-      console.error('Failed to minimize window:', error);
+      console.error("Failed to minimize window:", error);
     }
   };
 
@@ -25,7 +24,7 @@ const CustomTitleBar: React.FC<CustomTitleBarProps> = ({ title = 'Diablo II Util
       const window = getCurrentWindow();
       await window.toggleMaximize();
     } catch (error) {
-      console.error('Failed to maximize window:', error);
+      console.error("Failed to maximize window:", error);
     }
   };
 
@@ -34,7 +33,7 @@ const CustomTitleBar: React.FC<CustomTitleBarProps> = ({ title = 'Diablo II Util
       const window = getCurrentWindow();
       await window.close();
     } catch (error) {
-      console.error('Failed to close window:', error);
+      console.error("Failed to close window:", error);
     }
   };
 

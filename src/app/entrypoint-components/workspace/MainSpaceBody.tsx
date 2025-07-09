@@ -10,16 +10,26 @@ export type TabType = "common" | "items" | "runes" | "gems" | "skills";
 interface MainSpaceBodyProps {
   activeTab: TabType;
   isDarkTheme: boolean;
+  onReadFromFiles?: () => void;
+  onApplyChanges?: () => void;
 }
 
 const MainSpaceBody: React.FC<MainSpaceBodyProps> = ({
   activeTab,
   isDarkTheme,
+  onReadFromFiles,
+  onApplyChanges,
 }) => {
   const renderContent = () => {
     switch (activeTab) {
       case "common":
-        return <CommonTab isDarkTheme={isDarkTheme} />;
+        return (
+          <CommonTab
+            isDarkTheme={isDarkTheme}
+            onReadFromFiles={onReadFromFiles}
+            onApplyChanges={onApplyChanges}
+          />
+        );
       case "items":
         return <ItemsTab isDarkTheme={isDarkTheme} />;
       case "runes":

@@ -22,10 +22,33 @@
     "staminaPotions": "Зелья выносливости",
     "antidotes": "Противоядия",
     "thawingPotions": "Зелья оттаивания",
+    "healthPotions": "Зелья здоровья",
+    "manaPotions": "Зелья маны",
+    "rejuvenationPotions": "Зелья восстановления",
     "enableCustomization": "Включить настройку",
-    "localeSettings": "Настройки локалей"
+    "localeSettings": "Настройки локалей",
+    "healthPotionsLevels": {
+      "level1": "Малое зелье лечения",
+      "level2": "Лёгкое зелье лечения",
+      "level3": "Зелье лечения",
+      "level4": "Большое зелье лечения",
+      "level5": "Суперзелье лечения"
+    },
+    "manaPotionsLevels": {
+      "level1": "Малое зелье маны",
+      "level2": "Лёгкое зелье маны",
+      "level3": "Зелье маны",
+      "level4": "Большое зелье маны",
+      "level5": "Суперзелье маны"
+    },
+    "rejuvenationPotionsLevels": {
+      "level1": "Зелье восстановления",
+      "level2": "Полное зелье восстановления"
+    }
   },
   "common": {
+    "loading": "Загрузка...",
+    "applying": "Применение...",
     "themeSettings": "Настройки темы",
     "themeSettingsDescription": "Выберите предпочитаемую тему для приложения.",
     "darkTheme": "Темная тема",
@@ -249,14 +272,20 @@
       "localesLoadedText": "Успешно загружено {{count}} элементов локализации, обработано {{processedRunes}} рун",
       "changesSaved": "Изменения сохранены",
       "changesAppliedText": "Изменения успешно применены к файлам игры",
+      "changesApplied": "Изменения применены успешно",
+      "changesAppliedDescription": "Ваши настройки сохранены в файлы игры",
       "highlightSettingsLoaded": "Настройки подсветки загружены",
-      "highlightSettingsLoadedText": "Обработано настроек подсветки для {{processedRunes}} рун"
+      "highlightSettingsLoadedText": "Обработано настроек подсветки для {{processedRunes}} рун",
+      "commonItemsLoaded": "Обычные предметы загружены",
+      "commonItemsLoadedDescription": "Настройки обычных предметов загружены из файлов игры"
     },
     "error": {
       "fileLoadError": "Ошибка загрузки файлов",
       "pathNotFound": "Путь к игре не найден в настройках",
       "unknownError": "Неизвестная ошибка при чтении файлов",
       "saveError": "Ошибка сохранения",
+      "applyError": "Ошибка применения",
+      "settingsNotFound": "Настройки не найдены",
       "highlightLoadError": "Ошибка загрузки настроек подсветки"
     }
   }

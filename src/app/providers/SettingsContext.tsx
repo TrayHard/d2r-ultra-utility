@@ -66,19 +66,27 @@ export interface CommonItemSettings {
   locales: Locales;
 }
 
+// Настройки для зелий с уровнями
+export interface PotionLevelSettings {
+  enabled: boolean;
+  locales: Locales;
+}
+
+export interface PotionGroupSettings {
+  enabled: boolean;
+  levels: PotionLevelSettings[];
+  activeTab: number;
+}
+
 export interface CommonSettings {
   arrows: CommonItemSettings;
   bolts: CommonItemSettings;
   staminaPotions: CommonItemSettings;
   antidotes: CommonItemSettings;
   thawingPotions: CommonItemSettings;
-  collapseStates: {
-    arrows: boolean;
-    bolts: boolean;
-    staminaPotions: boolean;
-    antidotes: boolean;
-    thawingPotions: boolean;
-  };
+  healthPotions: PotionGroupSettings;
+  manaPotions: PotionGroupSettings;
+  rejuvenationPotions: PotionGroupSettings;
 }
 
 // Настройки профиля (только специфичные для профиля данные)
@@ -144,16 +152,28 @@ interface SettingsContextType {
   // Setter'ы для CommonTab
   getCommonSettings: () => CommonSettings;
   getCommonItemSettings: (
-    item: keyof Omit<CommonSettings, "collapseStates">
+    item: "arrows" | "bolts" | "staminaPotions" | "antidotes" | "thawingPotions"
   ) => CommonItemSettings;
-  getCommonCollapseStates: () => CommonSettings["collapseStates"];
+  getPotionGroupSettings: (
+    item: "healthPotions" | "manaPotions" | "rejuvenationPotions"
+  ) => PotionGroupSettings;
   updateCommonItemSettings: (
-    item: keyof Omit<CommonSettings, "collapseStates">,
+    item:
+      | "arrows"
+      | "bolts"
+      | "staminaPotions"
+      | "antidotes"
+      | "thawingPotions",
     newSettings: Partial<CommonItemSettings>
   ) => void;
-  updateCommonCollapseState: (
-    item: keyof CommonSettings["collapseStates"],
-    isOpen: boolean
+  updatePotionGroupSettings: (
+    item: "healthPotions" | "manaPotions" | "rejuvenationPotions",
+    newSettings: Partial<PotionGroupSettings>
+  ) => void;
+  updatePotionLevelSettings: (
+    item: "healthPotions" | "manaPotions" | "rejuvenationPotions",
+    level: number,
+    newSettings: Partial<PotionLevelSettings>
   ) => void;
   resetCommonSettings: () => void;
 
@@ -196,7 +216,36 @@ const getDefaultGeneralRuneSettings = (): GeneralRuneSettings => ({
   boxLimitersColor: "white",
 });
 
-// Дефолтные настройки для элемента CommonTab
+const cleanSettings = (oldCommon: any): CommonSettings => {
+  const cleaned: any = {
+    ...getDefaultCommonSettings(),
+  };
+
+  // Копируем все поля кроме collapseStates
+  Object.keys(oldCommon).forEach((key) => {
+    if (key !== "collapseStates") {
+      cleaned[key] = oldCommon[key];
+    }
+  });
+
+  // Удаляем activeTab из групп зелий
+  ["healthPotions", "manaPotions", "rejuvenationPotions"].forEach(
+    (potionType) => {
+      if (cleaned[potionType]) {
+        cleaned[potionType] = {
+          ...getDefaultPotionGroupSettings(
+            potionType === "rejuvenationPotions" ? 2 : 5
+          ),
+          ...cleaned[potionType],
+        };
+      }
+    }
+  );
+
+  return cleaned;
+};
+
+// Дефолтные настройки для CommonTab
 const getDefaultCommonItemSettings = (): CommonItemSettings => ({
   enabled: false,
   locales: {
@@ -216,6 +265,37 @@ const getDefaultCommonItemSettings = (): CommonItemSettings => ({
   },
 });
 
+// Дефолтные настройки для уровня зелья
+const getDefaultPotionLevelSettings = (): PotionLevelSettings => ({
+  enabled: false,
+  locales: {
+    enUS: "",
+    ruRU: "",
+    zhTW: "",
+    deDE: "",
+    esES: "",
+    frFR: "",
+    itIT: "",
+    koKR: "",
+    plPL: "",
+    esMX: "",
+    jaJP: "",
+    ptBR: "",
+    zhCN: "",
+  },
+});
+
+// Дефолтные настройки для группы зелий
+const getDefaultPotionGroupSettings = (
+  levelCount: number
+): PotionGroupSettings => ({
+  enabled: false,
+  levels: Array.from({ length: levelCount }, () =>
+    getDefaultPotionLevelSettings()
+  ),
+  activeTab: 0,
+});
+
 // Дефолтные настройки для CommonTab
 const getDefaultCommonSettings = (): CommonSettings => ({
   arrows: getDefaultCommonItemSettings(),
@@ -223,13 +303,9 @@ const getDefaultCommonSettings = (): CommonSettings => ({
   staminaPotions: getDefaultCommonItemSettings(),
   antidotes: getDefaultCommonItemSettings(),
   thawingPotions: getDefaultCommonItemSettings(),
-  collapseStates: {
-    arrows: false,
-    bolts: false,
-    staminaPotions: false,
-    antidotes: false,
-    thawingPotions: false,
-  },
+  healthPotions: getDefaultPotionGroupSettings(5), // 5 уровней для хп
+  manaPotions: getDefaultPotionGroupSettings(5), // 5 уровней для маны
+  rejuvenationPotions: getDefaultPotionGroupSettings(2), // 2 уровня для реджувок
 });
 
 // Миграция старых настроек рун к новому формату
@@ -329,6 +405,24 @@ const createDefaultSettings = (): AppSettings => {
 // Создаем контекст
 const SettingsContext = createContext<SettingsContextType | null>(null);
 
+// Функция для подготовки данных к экспорту - удаляет UI состояния
+const prepareForExport = (profile: Profile): Profile => {
+  const exportProfile = JSON.parse(JSON.stringify(profile)); // Deep clone
+
+  // Удаляем activeTab из всех групп зелий
+  ["healthPotions", "manaPotions", "rejuvenationPotions"].forEach(
+    (potionType) => {
+      if (exportProfile.settings.common[potionType]) {
+        delete exportProfile.settings.common[potionType].activeTab;
+      }
+    }
+  );
+
+  return exportProfile;
+};
+
+// Функция для удаления collapseStates из старых настроек при загрузке
+
 // Провайдер настроек
 interface SettingsProviderProps {
   children: React.ReactNode;
@@ -422,14 +516,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
             ])
           ),
           common: parsedSettings.common
-            ? {
-                ...getDefaultCommonSettings(),
-                ...parsedSettings.common,
-                collapseStates: {
-                  ...getDefaultCommonSettings().collapseStates,
-                  ...(parsedSettings.common.collapseStates || {}),
-                },
-              }
+            ? cleanSettings(parsedSettings.common)
             : getDefaultCommonSettings(),
         };
         setSettings(migratedSettings);
@@ -454,14 +541,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
               ])
             ),
             common: profile.settings.common
-              ? {
-                  ...getDefaultCommonSettings(),
-                  ...profile.settings.common,
-                  collapseStates: {
-                    ...getDefaultCommonSettings().collapseStates,
-                    ...(profile.settings.common.collapseStates || {}),
-                  },
-                }
+              ? cleanSettings(profile.settings.common)
               : getDefaultCommonSettings(),
           },
         }));
@@ -851,10 +931,6 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
                 ? {
                     ...getDefaultCommonSettings(),
                     ...parsedSettings.common,
-                    collapseStates: {
-                      ...getDefaultCommonSettings().collapseStates,
-                      ...(parsedSettings.common.collapseStates || {}),
-                    },
                   }
                 : getDefaultCommonSettings(),
             };
@@ -881,7 +957,8 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     (profileId: string) => {
       const profile = profiles.find((p) => p.id === profileId);
       if (profile) {
-        const dataStr = JSON.stringify(profile, null, 2);
+        const cleanProfile = prepareForExport(profile);
+        const dataStr = JSON.stringify(cleanProfile, null, 2);
         const dataUri =
           "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
 
@@ -915,14 +992,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
             ])
           ),
           common: profileData.settings.common
-            ? {
-                ...getDefaultCommonSettings(),
-                ...profileData.settings.common,
-                collapseStates: {
-                  ...getDefaultCommonSettings().collapseStates,
-                  ...(profileData.settings.common.collapseStates || {}),
-                },
-              }
+            ? cleanSettings(profileData.settings.common)
             : getDefaultCommonSettings(),
         };
 
@@ -952,20 +1022,34 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   );
 
   const getCommonItemSettings = useCallback(
-    (item: keyof Omit<CommonSettings, "collapseStates">) => {
+    (
+      item:
+        | "arrows"
+        | "bolts"
+        | "staminaPotions"
+        | "antidotes"
+        | "thawingPotions"
+    ) => {
       return settings.common[item];
     },
     [settings.common]
   );
 
-  const getCommonCollapseStates = useCallback(
-    () => settings.common.collapseStates,
-    [settings.common.collapseStates]
+  const getPotionGroupSettings = useCallback(
+    (item: "healthPotions" | "manaPotions" | "rejuvenationPotions") => {
+      return settings.common[item];
+    },
+    [settings.common]
   );
 
   const updateCommonItemSettings = useCallback(
     (
-      item: keyof Omit<CommonSettings, "collapseStates">,
+      item:
+        | "arrows"
+        | "bolts"
+        | "staminaPotions"
+        | "antidotes"
+        | "thawingPotions",
       newSettings: Partial<CommonItemSettings>
     ) => {
       setSettings((prevSettings) => ({
@@ -982,15 +1066,40 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     []
   );
 
-  const updateCommonCollapseState = useCallback(
-    (item: keyof CommonSettings["collapseStates"], isOpen: boolean) => {
+  const updatePotionGroupSettings = useCallback(
+    (
+      item: "healthPotions" | "manaPotions" | "rejuvenationPotions",
+      newSettings: Partial<PotionGroupSettings>
+    ) => {
       setSettings((prevSettings) => ({
         ...prevSettings,
         common: {
           ...prevSettings.common,
-          collapseStates: {
-            ...prevSettings.common.collapseStates,
-            [item]: isOpen,
+          [item]: {
+            ...prevSettings.common[item],
+            ...newSettings,
+          },
+        },
+      }));
+    },
+    []
+  );
+
+  const updatePotionLevelSettings = useCallback(
+    (
+      item: "healthPotions" | "manaPotions" | "rejuvenationPotions",
+      level: number,
+      newSettings: Partial<PotionLevelSettings>
+    ) => {
+      setSettings((prevSettings) => ({
+        ...prevSettings,
+        common: {
+          ...prevSettings.common,
+          [item]: {
+            ...prevSettings.common[item],
+            levels: prevSettings.common[item].levels.map((lvl, index) =>
+              index === level ? { ...lvl, ...newSettings } : lvl
+            ),
           },
         },
       }));
@@ -1037,9 +1146,10 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     // Методы для CommonTab
     getCommonSettings,
     getCommonItemSettings,
-    getCommonCollapseStates,
+    getPotionGroupSettings,
     updateCommonItemSettings,
-    updateCommonCollapseState,
+    updatePotionGroupSettings,
+    updatePotionLevelSettings,
     resetCommonSettings,
 
     // Данные

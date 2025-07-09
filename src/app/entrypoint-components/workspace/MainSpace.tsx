@@ -8,6 +8,7 @@ import Button from "../../../shared/components/Button.tsx";
 import { useSettings } from "../../providers/SettingsContext.tsx";
 import { useGlobalMessage } from "../../../shared/components/Message/MessageProvider.tsx";
 import { useTextWorker } from "../../../shared/hooks/useTextWorker.ts";
+import { useCommonItemsWorker } from "../../../shared/hooks/useCommonItemsWorker.ts";
 
 interface MainSpaceProps {
   isDarkTheme: boolean;
@@ -18,9 +19,13 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
   const [activeTab, setActiveTab] = useState<TabType>("common");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-  // Хуки для работы с рунами (только когда активен таб рун)
+  // Хуки для работы с настройками
   const {
     updateRuneSettings,
+    updateCommonItemSettings,
+    updatePotionGroupSettings,
+    updatePotionLevelSettings,
+    getCommonSettings,
     settings,
     profiles,
     activeProfileId,
@@ -35,12 +40,59 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
 
   const { sendMessage } = useGlobalMessage();
 
-  const { isLoading, error, readFromFiles, applyChanges } = useTextWorker(
+  // Хук для рун
+  const {
+    isLoading: isRunesLoading,
+    error: runesError,
+    readFromFiles: readRunesFromFiles,
+    applyChanges: applyRunesChanges,
+  } = useTextWorker(
     updateRuneSettings,
     (message, type, title) => sendMessage(message, { type, title }),
     t,
     () => settings.runes
   );
+
+  // Хук для обычных предметов
+  const {
+    isLoading: isCommonItemsLoading,
+    error: commonItemsError,
+    readFromFiles: readCommonItemsFromFiles,
+    applyCommonItemsChanges,
+  } = useCommonItemsWorker(
+    updateCommonItemSettings,
+    updatePotionGroupSettings,
+    updatePotionLevelSettings,
+    (message, type, title) => sendMessage(message, { type, title }),
+    t,
+    getCommonSettings
+  );
+
+  // Определяем, какой хук использовать в зависимости от активного таба
+  const isLoading =
+    activeTab === "runes"
+      ? isRunesLoading
+      : activeTab === "common"
+      ? isCommonItemsLoading
+      : false;
+  const error =
+    activeTab === "runes"
+      ? runesError
+      : activeTab === "common"
+      ? commonItemsError
+      : null;
+  const readFromFiles =
+    activeTab === "runes"
+      ? readRunesFromFiles
+      : activeTab === "common"
+      ? readCommonItemsFromFiles
+      : () => {};
+  const applyChanges =
+    activeTab === "runes"
+      ? applyRunesChanges
+      : activeTab === "common"
+      ? applyCommonItemsChanges
+      : () => {};
 
   const handleApplyClick = () => {
     setShowConfirmModal(true);
@@ -66,9 +118,7 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
   return (
     <div
       className={`flex-1 grid ${
-        activeTab === "runes" && error
-          ? "grid-rows-[auto_auto_44px_1fr]"
-          : "grid-rows-[auto_44px_1fr]"
+        error ? "grid-rows-[auto_auto_44px_1fr]" : "grid-rows-[auto_44px_1fr]"
       } ${isDarkTheme ? "bg-gray-900" : "bg-gray-50"}`}
     >
       {/* AppToolbar - показывается на всех вкладках */}
@@ -89,8 +139,8 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
         onApplyClick={handleApplyClick}
       />
 
-      {/* Error Display для рун */}
-      {activeTab === "runes" && error && (
+      {/* Error Display для всех табов */}
+      {error && (
         <div
           className={`
             mx-4 mt-4 px-4 py-2 rounded-lg border
@@ -116,11 +166,16 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       {/* Tab Content */}
       <div className="flex-1">
         <div className={`h-full ${isDarkTheme ? "bg-gray-800" : "bg-white"}`}>
-          <MainSpaceBody activeTab={activeTab} isDarkTheme={isDarkTheme} />
+          <MainSpaceBody
+            activeTab={activeTab}
+            isDarkTheme={isDarkTheme}
+            onReadFromFiles={readFromFiles}
+            onApplyChanges={applyChanges}
+          />
         </div>
       </div>
 
-      {/* Модальное окно подтверждения для рун */}
+      {/* Модальное окно подтверждения для всех табов */}
       <Modal
         isOpen={showConfirmModal}
         onClose={handleCancelApply}
