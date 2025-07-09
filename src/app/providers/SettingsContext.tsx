@@ -60,10 +60,32 @@ interface GeneralRuneSettings {
   boxLimitersColor: string;
 }
 
+// Настройки для элементов CommonTab
+export interface CommonItemSettings {
+  enabled: boolean;
+  locales: Locales;
+}
+
+export interface CommonSettings {
+  arrows: CommonItemSettings;
+  bolts: CommonItemSettings;
+  staminaPotions: CommonItemSettings;
+  antidotes: CommonItemSettings;
+  thawingPotions: CommonItemSettings;
+  collapseStates: {
+    arrows: boolean;
+    bolts: boolean;
+    staminaPotions: boolean;
+    antidotes: boolean;
+    thawingPotions: boolean;
+  };
+}
+
 // Настройки профиля (только специфичные для профиля данные)
 interface AppSettings {
   runes: Record<ERune, RuneSettings>;
   generalRunes: GeneralRuneSettings;
+  common: CommonSettings;
   // В будущем добавим:
   // items: Record<string, ItemSettings>;
   // skills: Record<string, SkillSettings>;
@@ -119,6 +141,22 @@ interface SettingsContextType {
   resetGeneralRuneSettings: () => void;
   applyGeneralRuneSettingsToAll: () => void;
 
+  // Setter'ы для CommonTab
+  getCommonSettings: () => CommonSettings;
+  getCommonItemSettings: (
+    item: keyof Omit<CommonSettings, "collapseStates">
+  ) => CommonItemSettings;
+  getCommonCollapseStates: () => CommonSettings["collapseStates"];
+  updateCommonItemSettings: (
+    item: keyof Omit<CommonSettings, "collapseStates">,
+    newSettings: Partial<CommonItemSettings>
+  ) => void;
+  updateCommonCollapseState: (
+    item: keyof CommonSettings["collapseStates"],
+    isOpen: boolean
+  ) => void;
+  resetCommonSettings: () => void;
+
   // Общие для профиля
   resetAllSettings: () => void;
 
@@ -156,6 +194,42 @@ const getDefaultGeneralRuneSettings = (): GeneralRuneSettings => ({
   numberColor: "yellow",
   boxLimiters: "~",
   boxLimitersColor: "white",
+});
+
+// Дефолтные настройки для элемента CommonTab
+const getDefaultCommonItemSettings = (): CommonItemSettings => ({
+  enabled: false,
+  locales: {
+    enUS: "",
+    ruRU: "",
+    zhTW: "",
+    deDE: "",
+    esES: "",
+    frFR: "",
+    itIT: "",
+    koKR: "",
+    plPL: "",
+    esMX: "",
+    jaJP: "",
+    ptBR: "",
+    zhCN: "",
+  },
+});
+
+// Дефолтные настройки для CommonTab
+const getDefaultCommonSettings = (): CommonSettings => ({
+  arrows: getDefaultCommonItemSettings(),
+  bolts: getDefaultCommonItemSettings(),
+  staminaPotions: getDefaultCommonItemSettings(),
+  antidotes: getDefaultCommonItemSettings(),
+  thawingPotions: getDefaultCommonItemSettings(),
+  collapseStates: {
+    arrows: false,
+    bolts: false,
+    staminaPotions: false,
+    antidotes: false,
+    thawingPotions: false,
+  },
 });
 
 // Миграция старых настроек рун к новому формату
@@ -248,6 +322,7 @@ const createDefaultSettings = (): AppSettings => {
   return {
     runes: runeSettings,
     generalRunes: getDefaultGeneralRuneSettings(),
+    common: getDefaultCommonSettings(),
   };
 };
 
@@ -337,7 +412,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     if (savedSettings) {
       try {
         const parsedSettings = JSON.parse(savedSettings);
-        // Мигрируем настройки рун
+        // Мигрируем настройки рун и добавляем common если его нет
         const migratedSettings = {
           ...parsedSettings,
           runes: Object.fromEntries(
@@ -346,6 +421,16 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
               migrateRuneSettings(value),
             ])
           ),
+          common: parsedSettings.common
+            ? {
+                ...getDefaultCommonSettings(),
+                ...parsedSettings.common,
+                collapseStates: {
+                  ...getDefaultCommonSettings().collapseStates,
+                  ...(parsedSettings.common.collapseStates || {}),
+                },
+              }
+            : getDefaultCommonSettings(),
         };
         setSettings(migratedSettings);
       } catch (error) {
@@ -357,7 +442,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     if (savedProfiles) {
       try {
         const parsedProfiles = JSON.parse(savedProfiles);
-        // Мигрируем настройки рун в загруженных профилях
+        // Мигрируем настройки рун в загруженных профилях и добавляем common если его нет
         const migratedProfiles = parsedProfiles.map((profile: Profile) => ({
           ...profile,
           settings: {
@@ -368,6 +453,16 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
                 migrateRuneSettings(value),
               ])
             ),
+            common: profile.settings.common
+              ? {
+                  ...getDefaultCommonSettings(),
+                  ...profile.settings.common,
+                  collapseStates: {
+                    ...getDefaultCommonSettings().collapseStates,
+                    ...(profile.settings.common.collapseStates || {}),
+                  },
+                }
+              : getDefaultCommonSettings(),
           },
         }));
         setProfiles(migratedProfiles);
@@ -752,6 +847,16 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
                   migrateRuneSettings(value),
                 ])
               ),
+              common: parsedSettings.common
+                ? {
+                    ...getDefaultCommonSettings(),
+                    ...parsedSettings.common,
+                    collapseStates: {
+                      ...getDefaultCommonSettings().collapseStates,
+                      ...(parsedSettings.common.collapseStates || {}),
+                    },
+                  }
+                : getDefaultCommonSettings(),
             };
             setSettings(migratedSettings);
           } catch (error) {
@@ -800,7 +905,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
           throw new Error("Invalid profile data");
         }
 
-        // Мигрируем настройки рун в импортируемом профиле
+        // Мигрируем настройки рун в импортируемом профиле и добавляем common если его нет
         const migratedSettings = {
           ...profileData.settings,
           runes: Object.fromEntries(
@@ -809,6 +914,16 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
               migrateRuneSettings(value),
             ])
           ),
+          common: profileData.settings.common
+            ? {
+                ...getDefaultCommonSettings(),
+                ...profileData.settings.common,
+                collapseStates: {
+                  ...getDefaultCommonSettings().collapseStates,
+                  ...(profileData.settings.common.collapseStates || {}),
+                },
+              }
+            : getDefaultCommonSettings(),
         };
 
         const newProfile: Profile = {
@@ -829,6 +944,66 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     },
     [profiles, saveProfilesToLocalStorage]
   );
+
+  // Методы для работы с CommonSettings
+  const getCommonSettings = useCallback(
+    () => settings.common,
+    [settings.common]
+  );
+
+  const getCommonItemSettings = useCallback(
+    (item: keyof Omit<CommonSettings, "collapseStates">) => {
+      return settings.common[item];
+    },
+    [settings.common]
+  );
+
+  const getCommonCollapseStates = useCallback(
+    () => settings.common.collapseStates,
+    [settings.common.collapseStates]
+  );
+
+  const updateCommonItemSettings = useCallback(
+    (
+      item: keyof Omit<CommonSettings, "collapseStates">,
+      newSettings: Partial<CommonItemSettings>
+    ) => {
+      setSettings((prevSettings) => ({
+        ...prevSettings,
+        common: {
+          ...prevSettings.common,
+          [item]: {
+            ...prevSettings.common[item],
+            ...newSettings,
+          },
+        },
+      }));
+    },
+    []
+  );
+
+  const updateCommonCollapseState = useCallback(
+    (item: keyof CommonSettings["collapseStates"], isOpen: boolean) => {
+      setSettings((prevSettings) => ({
+        ...prevSettings,
+        common: {
+          ...prevSettings.common,
+          collapseStates: {
+            ...prevSettings.common.collapseStates,
+            [item]: isOpen,
+          },
+        },
+      }));
+    },
+    []
+  );
+
+  const resetCommonSettings = useCallback(() => {
+    setSettings((prevSettings) => ({
+      ...prevSettings,
+      common: getDefaultCommonSettings(),
+    }));
+  }, []);
 
   const contextValue: SettingsContextType = {
     // Методы для настроек приложения
@@ -858,6 +1033,14 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     resetGeneralRuneSettings,
     applyGeneralRuneSettingsToAll,
     resetAllSettings,
+
+    // Методы для CommonTab
+    getCommonSettings,
+    getCommonItemSettings,
+    getCommonCollapseStates,
+    updateCommonItemSettings,
+    updateCommonCollapseState,
+    resetCommonSettings,
 
     // Данные
     settings,

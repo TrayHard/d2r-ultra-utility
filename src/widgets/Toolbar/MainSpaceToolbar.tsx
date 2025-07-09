@@ -4,14 +4,14 @@ import LanguageSwitch from "./LanguageSwitch.tsx";
 
 interface ToolbarProps {
   onLanguageChange: () => void;
-  onChangePathClick: () => void;
+  onSettingsClick: () => void;
   isDarkTheme: boolean;
   onThemeChange: () => void;
 }
 
 const MainSpaceToolbar: React.FC<ToolbarProps> = ({
   onLanguageChange,
-  onChangePathClick,
+  onSettingsClick,
   isDarkTheme,
   onThemeChange,
 }) => {
@@ -25,11 +25,17 @@ const MainSpaceToolbar: React.FC<ToolbarProps> = ({
     >
       <div className="flex justify-between items-center">
         <div className="flex items-center space-x-4">
+          {/* Settings Button */}
           <button
-            onClick={onChangePathClick}
-            className="px-2 py-1 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:bg-red-600 transition-all duration-200 font-medium text-xs shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-red-300"
+            onClick={onSettingsClick}
+            className={`p-1 rounded-full transition-all duration-200 text-sm hover:scale-110 ${
+              isDarkTheme
+                ? "bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white"
+                : "bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-900"
+            }`}
+            title={t("buttons.settings")}
           >
-            {t("buttons.changePath")}
+            ⚙️
           </button>
         </div>
 

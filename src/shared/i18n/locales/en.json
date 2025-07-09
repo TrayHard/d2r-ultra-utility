@@ -12,14 +12,16 @@
     "items": "Item management and analysis",
     "runes": "Rune management and combinations",
     "gems": "Gem management and upgrades",
-    "skills": "Skill tree and build planning",
-    "other": "Additional tools and utilities"
+    "skills": "Skill tree and build planning"
   },
-  "otherPage": {
+  "commonPage": {
+    "show": "Click to show",
+    "hide": "Click to hide",
     "arrows": "Arrows",
     "bolts": "Bolts",
     "staminaPotions": "Stamina Potions",
     "antidotes": "Antidotes",
+    "thawingPotions": "Thawing Potions",
     "enableCustomization": "Enable customization",
     "localeSettings": "Locale Settings"
   },
@@ -37,10 +39,18 @@
     "languageSettings": "Language Settings",
     "languageSettingsDescription": "Select which languages should be available for text processing. English is always required as the base language.",
     "required": "required",
-    "noLanguagesSelected": "No additional languages selected"
+    "noLanguagesSelected": "No additional languages selected",
+    "settingsMovedMessage": "App settings are now available through the gear button in the top panel."
   },
   "buttons": {
-    "changePath": "Change Path"
+    "changePath": "Change Path",
+    "back": "Back",
+    "settings": "Settings"
+  },
+  "settings": {
+    "appSettings": "App Settings",
+    "pathSettings": "Path Settings",
+    "pathSettingsDescription": "Manage the path to your D2R game directory."
   },
   "search": {
     "placeholder": "Search runes...",

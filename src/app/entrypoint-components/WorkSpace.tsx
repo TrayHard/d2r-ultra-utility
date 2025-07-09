@@ -1,11 +1,9 @@
-import React from "react";
-import MainSpaceToolbar from "../../widgets/Toolbar/MainSpaceToolbar.tsx";
-import MainSpace from "./workspace/MainSpace.tsx";
-import {
-  SettingsProvider,
-  useSettings,
-} from "../providers/SettingsContext.tsx";
-import { MessageProvider } from "../../shared/components/Message/MessageProvider.tsx";
+import React, { useState } from "react";
+import { useSettings, SettingsProvider } from "../providers/SettingsContext";
+import MainSpaceToolbar from "../../widgets/Toolbar/MainSpaceToolbar";
+import MainSpace from "./workspace/MainSpace";
+import { MessageProvider } from "../../shared/components/Message/MessageProvider";
+import AppSettingsPage from "../../pages/settings/AppSettingsPage";
 
 interface WorkSpaceProps {
   onChangeClick: () => void;
@@ -13,12 +11,26 @@ interface WorkSpaceProps {
 
 const WorkSpaceContent: React.FC<WorkSpaceProps> = ({ onChangeClick }) => {
   const { getIsDarkTheme, toggleTheme } = useSettings();
+  const [showSettings, setShowSettings] = useState(false);
 
   const isDarkTheme = getIsDarkTheme();
 
   const handleLanguageChange = () => {
     // Язык теперь управляется через SettingsContext в LanguageSwitch
     // Коллбек оставляем для совместимости, но ничего не делаем
+  };
+
+  const handleSettingsClick = () => {
+    setShowSettings(true);
+  };
+
+  const handleBackFromSettings = () => {
+    setShowSettings(false);
+  };
+
+  const handleChangePathClick = () => {
+    setShowSettings(false);
+    onChangeClick();
   };
 
   return (
@@ -28,13 +40,23 @@ const WorkSpaceContent: React.FC<WorkSpaceProps> = ({ onChangeClick }) => {
           isDarkTheme ? "bg-gray-900" : "bg-gray-100"
         }`}
       >
-        <MainSpaceToolbar
-          onLanguageChange={handleLanguageChange}
-          onChangePathClick={onChangeClick}
-          isDarkTheme={isDarkTheme}
-          onThemeChange={toggleTheme}
-        />
-        <MainSpace isDarkTheme={isDarkTheme} />
+        {showSettings ? (
+          <AppSettingsPage
+            isDarkTheme={isDarkTheme}
+            onBack={handleBackFromSettings}
+            onChangePathClick={handleChangePathClick}
+          />
+        ) : (
+          <>
+            <MainSpaceToolbar
+              onLanguageChange={handleLanguageChange}
+              onSettingsClick={handleSettingsClick}
+              isDarkTheme={isDarkTheme}
+              onThemeChange={toggleTheme}
+            />
+            <MainSpace isDarkTheme={isDarkTheme} />
+          </>
+        )}
       </div>
     </MessageProvider>
   );
