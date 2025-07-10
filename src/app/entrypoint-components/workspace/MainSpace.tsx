@@ -9,6 +9,7 @@ import { useSettings } from "../../providers/SettingsContext.tsx";
 import { useGlobalMessage } from "../../../shared/components/Message/MessageProvider.tsx";
 import { useTextWorker } from "../../../shared/hooks/useTextWorker.ts";
 import { useCommonItemsWorker } from "../../../shared/hooks/useCommonItemsWorker.ts";
+import { useGemsWorker } from "../../../shared/hooks/useGemsWorker.ts";
 
 interface MainSpaceProps {
   isDarkTheme: boolean;
@@ -25,7 +26,10 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     updateCommonItemSettings,
     updatePotionGroupSettings,
     updatePotionLevelSettings,
+    updateGemGroupSettings,
+    updateGemLevelSettings,
     getCommonSettings,
+    getGemSettings,
     settings,
     profiles,
     activeProfileId,
@@ -68,30 +72,52 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     getCommonSettings
   );
 
+  // Хук для драгоценных камней
+  const {
+    isLoading: isGemsLoading,
+    error: gemsError,
+    readFromFiles: readGemsFromFiles,
+    applyGemsChanges,
+  } = useGemsWorker(
+    updateGemGroupSettings,
+    updateGemLevelSettings,
+    (message, type, title) => sendMessage(message, { type, title }),
+    t,
+    getGemSettings
+  );
+
   // Определяем, какой хук использовать в зависимости от активного таба
   const isLoading =
     activeTab === "runes"
       ? isRunesLoading
       : activeTab === "common"
       ? isCommonItemsLoading
+      : activeTab === "gems"
+      ? isGemsLoading
       : false;
   const error =
     activeTab === "runes"
       ? runesError
       : activeTab === "common"
       ? commonItemsError
+      : activeTab === "gems"
+      ? gemsError
       : null;
   const readFromFiles =
     activeTab === "runes"
       ? readRunesFromFiles
       : activeTab === "common"
       ? readCommonItemsFromFiles
+      : activeTab === "gems"
+      ? readGemsFromFiles
       : () => {};
   const applyChanges =
     activeTab === "runes"
       ? applyRunesChanges
       : activeTab === "common"
       ? applyCommonItemsChanges
+      : activeTab === "gems"
+      ? applyGemsChanges
       : () => {};
 
   const handleApplyClick = () => {

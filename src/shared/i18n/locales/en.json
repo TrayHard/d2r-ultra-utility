@@ -53,52 +53,52 @@
     "rubies": "Rubies",
     "diamonds": "Diamonds",
     "skullsLevels": {
-      "level1": "Skull Fragment",
-      "level2": "Skull",
-      "level3": "Burning Skull",
-      "level4": "Perfect Skull Fragment",
+      "level1": "Chipped Skull",
+      "level2": "Flawed Skull",
+      "level3": "Skull",
+      "level4": "Flawless Skull",
       "level5": "Perfect Skull"
     },
     "amethystsLevels": {
-      "level1": "Amethyst Fragment",
-      "level2": "Amethyst",
-      "level3": "Burning Amethyst",
-      "level4": "Perfect Amethyst Fragment",
+      "level1": "Chipped Amethyst",
+      "level2": "Flawed Amethyst",
+      "level3": "Amethyst",
+      "level4": "Flawless Amethyst",
       "level5": "Perfect Amethyst"
     },
     "topazesLevels": {
-      "level1": "Topaz Fragment",
-      "level2": "Topaz",
-      "level3": "Burning Topaz",
-      "level4": "Perfect Topaz Fragment",
+      "level1": "Chipped Topaz",
+      "level2": "Flawed Topaz",
+      "level3": "Topaz",
+      "level4": "Flawless Topaz",
       "level5": "Perfect Topaz"
     },
     "sapphiresLevels": {
-      "level1": "Sapphire Fragment",
-      "level2": "Sapphire",
-      "level3": "Burning Sapphire",
-      "level4": "Perfect Sapphire Fragment",
+      "level1": "Chipped Sapphire",
+      "level2": "Flawed Sapphire",
+      "level3": "Sapphire",
+      "level4": "Flawless Sapphire",
       "level5": "Perfect Sapphire"
     },
     "emeraldsLevels": {
-      "level1": "Emerald Fragment",
-      "level2": "Emerald",
-      "level3": "Burning Emerald",
-      "level4": "Perfect Emerald Fragment",
+      "level1": "Chipped Emerald",
+      "level2": "Flawed Emerald",
+      "level3": "Emerald",
+      "level4": "Flawless Emerald",
       "level5": "Perfect Emerald"
     },
     "rubiesLevels": {
-      "level1": "Ruby Fragment",
-      "level2": "Ruby",
-      "level3": "Burning Ruby",
-      "level4": "Perfect Ruby Fragment",
+      "level1": "Chipped Ruby",
+      "level2": "Flawed Ruby",
+      "level3": "Ruby",
+      "level4": "Flawless Ruby",
       "level5": "Perfect Ruby"
     },
     "diamondsLevels": {
-      "level1": "Diamond Fragment",
-      "level2": "Diamond",
-      "level3": "Burning Diamond",
-      "level4": "Perfect Diamond Fragment",
+      "level1": "Chipped Diamond",
+      "level2": "Flawed Diamond",
+      "level3": "Diamond",
+      "level4": "Flawless Diamond",
       "level5": "Perfect Diamond"
     }
   },
@@ -333,7 +333,11 @@
       "highlightSettingsLoaded": "Highlight settings loaded",
       "highlightSettingsLoadedText": "Processed highlight settings for {{processedRunes}} runes",
       "commonItemsLoaded": "Common items loaded",
-      "commonItemsLoadedDescription": "Common items settings have been loaded from game files"
+      "commonItemsLoadedDescription": "Common items settings have been loaded from game files",
+      "gemsLoaded": "Gems loaded",
+      "gemsLoadedDescription": "Gems settings have been loaded from game files",
+      "gemsLoadedDetails": "Successfully loaded {{count}} gems",
+      "gemsChangesAppliedDescription": "Gems settings have been saved to game files"
     },
     "error": {
       "fileLoadError": "File loading error",

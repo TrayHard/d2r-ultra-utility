@@ -1265,21 +1265,32 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       level: number,
       newSettings: Partial<PotionLevelSettings>
     ) => {
-      setSettings((prevSettings) => ({
-        ...prevSettings,
-        gems: {
-          ...(prevSettings.gems || getDefaultGemSettings()),
-          [item]: {
-            ...(prevSettings.gems?.[item] || getDefaultGemSettings()[item]),
-            levels: (
-              prevSettings.gems?.[item]?.levels ||
-              getDefaultGemSettings()[item].levels
-            ).map((lvl, index) =>
-              index === level ? { ...lvl, ...newSettings } : lvl
-            ),
+      setSettings((prevSettings) => {
+        const defaultGemSettings = getDefaultGemSettings();
+        const currentGemSettings = prevSettings.gems || defaultGemSettings;
+        const currentItemSettings =
+          currentGemSettings[item] || defaultGemSettings[item];
+        const currentLevels =
+          currentItemSettings.levels || defaultGemSettings[item].levels;
+
+        if (!currentLevels || level >= currentLevels.length) {
+          console.warn(`Invalid level ${level} for gem ${item}`);
+          return prevSettings;
+        }
+
+        return {
+          ...prevSettings,
+          gems: {
+            ...currentGemSettings,
+            [item]: {
+              ...currentItemSettings,
+              levels: currentLevels.map((lvl, index) =>
+                index === level ? { ...lvl, ...newSettings } : lvl
+              ),
+            },
           },
-        },
-      }));
+        };
+      });
     },
     []
   );

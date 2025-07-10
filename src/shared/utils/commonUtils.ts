@@ -45,6 +45,7 @@ export const SUPPORTED_LOCALES = [
 export const GAME_PATHS = {
   LOCALES: "mods\\D2RMOD\\D2RMOD.mpq\\data\\local\\lng\\strings",
   ITEMS_FILE: "item-names.json",
+  NAMEAFFIXES_FILE: "item-nameaffixes.json",
 } as const;
 
 // Функция для удаления цветовых кодов из текста
@@ -76,6 +77,15 @@ export const generateFinalItemName = (
 
 // Функция для создания финального имени зелья
 export const generateFinalPotionName = (
+  settings: PotionLevelSettings,
+  locale: keyof PotionLevelSettings["locales"]
+): string => {
+  const rawName = settings.locales[locale] || settings.locales.enUS;
+  return removeColorCodes(rawName);
+};
+
+// Функция для создания финального имени драгоценного камня
+export const generateFinalGemName = (
   settings: PotionLevelSettings,
   locale: keyof PotionLevelSettings["locales"]
 ): string => {
