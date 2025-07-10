@@ -89,15 +89,25 @@ export interface CommonSettings {
   rejuvenationPotions: PotionGroupSettings;
 }
 
+export interface GemSettings {
+  skulls: PotionGroupSettings;
+  amethysts: PotionGroupSettings;
+  topazes: PotionGroupSettings;
+  sapphires: PotionGroupSettings;
+  emeralds: PotionGroupSettings;
+  rubies: PotionGroupSettings;
+  diamonds: PotionGroupSettings;
+}
+
 // Настройки профиля (только специфичные для профиля данные)
 interface AppSettings {
   runes: Record<ERune, RuneSettings>;
   generalRunes: GeneralRuneSettings;
   common: CommonSettings;
+  gems: GemSettings;
   // В будущем добавим:
   // items: Record<string, ItemSettings>;
   // skills: Record<string, SkillSettings>;
-  // gems: Record<string, GemSettings>;
 }
 
 // Интерфейс для профиля
@@ -176,6 +186,43 @@ interface SettingsContextType {
     newSettings: Partial<PotionLevelSettings>
   ) => void;
   resetCommonSettings: () => void;
+
+  // Setter'ы для GemsTab
+  getGemSettings: () => GemSettings;
+  getGemGroupSettings: (
+    item:
+      | "skulls"
+      | "amethysts"
+      | "topazes"
+      | "sapphires"
+      | "emeralds"
+      | "rubies"
+      | "diamonds"
+  ) => PotionGroupSettings;
+  updateGemGroupSettings: (
+    item:
+      | "skulls"
+      | "amethysts"
+      | "topazes"
+      | "sapphires"
+      | "emeralds"
+      | "rubies"
+      | "diamonds",
+    newSettings: Partial<PotionGroupSettings>
+  ) => void;
+  updateGemLevelSettings: (
+    item:
+      | "skulls"
+      | "amethysts"
+      | "topazes"
+      | "sapphires"
+      | "emeralds"
+      | "rubies"
+      | "diamonds",
+    level: number,
+    newSettings: Partial<PotionLevelSettings>
+  ) => void;
+  resetGemSettings: () => void;
 
   // Общие для профиля
   resetAllSettings: () => void;
@@ -308,6 +355,16 @@ const getDefaultCommonSettings = (): CommonSettings => ({
   rejuvenationPotions: getDefaultPotionGroupSettings(2), // 2 уровня для реджувок
 });
 
+const getDefaultGemSettings = (): GemSettings => ({
+  skulls: getDefaultPotionGroupSettings(5), // 5 уровней для черепов
+  amethysts: getDefaultPotionGroupSettings(5), // 5 уровней для аметистов
+  topazes: getDefaultPotionGroupSettings(5), // 5 уровней для топазов
+  sapphires: getDefaultPotionGroupSettings(5), // 5 уровней для сапфиров
+  emeralds: getDefaultPotionGroupSettings(5), // 5 уровней для изумрудов
+  rubies: getDefaultPotionGroupSettings(5), // 5 уровней для рубинов
+  diamonds: getDefaultPotionGroupSettings(5), // 5 уровней для бриллиантов
+});
+
 // Миграция старых настроек рун к новому формату
 const migrateRuneSettings = (oldSettings: any): RuneSettings => {
   // Если это уже новый формат
@@ -399,6 +456,7 @@ const createDefaultSettings = (): AppSettings => {
     runes: runeSettings,
     generalRunes: getDefaultGeneralRuneSettings(),
     common: getDefaultCommonSettings(),
+    gems: getDefaultGemSettings(),
   };
 };
 
@@ -417,6 +475,21 @@ const prepareForExport = (profile: Profile): Profile => {
       }
     }
   );
+
+  // Удаляем activeTab из всех драгоценных камней
+  [
+    "skulls",
+    "amethysts",
+    "topazes",
+    "sapphires",
+    "emeralds",
+    "rubies",
+    "diamonds",
+  ].forEach((gemType) => {
+    if (exportProfile.settings.gems[gemType]) {
+      delete exportProfile.settings.gems[gemType].activeTab;
+    }
+  });
 
   return exportProfile;
 };
@@ -506,7 +579,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     if (savedSettings) {
       try {
         const parsedSettings = JSON.parse(savedSettings);
-        // Мигрируем настройки рун и добавляем common если его нет
+        // Мигрируем настройки рун и добавляем common и gems если их нет
         const migratedSettings = {
           ...parsedSettings,
           runes: Object.fromEntries(
@@ -518,6 +591,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
           common: parsedSettings.common
             ? cleanSettings(parsedSettings.common)
             : getDefaultCommonSettings(),
+          gems: parsedSettings.gems
+            ? parsedSettings.gems
+            : getDefaultGemSettings(),
         };
         setSettings(migratedSettings);
       } catch (error) {
@@ -529,7 +605,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     if (savedProfiles) {
       try {
         const parsedProfiles = JSON.parse(savedProfiles);
-        // Мигрируем настройки рун в загруженных профилях и добавляем common если его нет
+        // Мигрируем настройки рун в загруженных профилях и добавляем common и gems если их нет
         const migratedProfiles = parsedProfiles.map((profile: Profile) => ({
           ...profile,
           settings: {
@@ -543,6 +619,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
             common: profile.settings.common
               ? cleanSettings(profile.settings.common)
               : getDefaultCommonSettings(),
+            gems: profile.settings.gems
+              ? profile.settings.gems
+              : getDefaultGemSettings(),
           },
         }));
         setProfiles(migratedProfiles);
@@ -933,6 +1012,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
                     ...parsedSettings.common,
                   }
                 : getDefaultCommonSettings(),
+              gems: parsedSettings.gems
+                ? parsedSettings.gems
+                : getDefaultGemSettings(),
             };
             setSettings(migratedSettings);
           } catch (error) {
@@ -982,7 +1064,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
           throw new Error("Invalid profile data");
         }
 
-        // Мигрируем настройки рун в импортируемом профиле и добавляем common если его нет
+        // Мигрируем настройки рун в импортируемом профиле и добавляем common и gems если их нет
         const migratedSettings = {
           ...profileData.settings,
           runes: Object.fromEntries(
@@ -994,6 +1076,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
           common: profileData.settings.common
             ? cleanSettings(profileData.settings.common)
             : getDefaultCommonSettings(),
+          gems: profileData.settings.gems
+            ? profileData.settings.gems
+            : getDefaultGemSettings(),
         };
 
         const newProfile: Profile = {
@@ -1114,6 +1199,98 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     }));
   }, []);
 
+  // Методы для работы с GemSettings
+  const getGemSettings = useCallback(() => {
+    if (!settings.gems) {
+      return getDefaultGemSettings();
+    }
+    return settings.gems;
+  }, [settings.gems]);
+
+  const getGemGroupSettings = useCallback(
+    (
+      item:
+        | "skulls"
+        | "amethysts"
+        | "topazes"
+        | "sapphires"
+        | "emeralds"
+        | "rubies"
+        | "diamonds"
+    ) => {
+      if (!settings.gems) {
+        return getDefaultGemSettings()[item];
+      }
+      return settings.gems[item];
+    },
+    [settings.gems]
+  );
+
+  const updateGemGroupSettings = useCallback(
+    (
+      item:
+        | "skulls"
+        | "amethysts"
+        | "topazes"
+        | "sapphires"
+        | "emeralds"
+        | "rubies"
+        | "diamonds",
+      newSettings: Partial<PotionGroupSettings>
+    ) => {
+      setSettings((prevSettings) => ({
+        ...prevSettings,
+        gems: {
+          ...(prevSettings.gems || getDefaultGemSettings()),
+          [item]: {
+            ...(prevSettings.gems?.[item] || getDefaultGemSettings()[item]),
+            ...newSettings,
+          },
+        },
+      }));
+    },
+    []
+  );
+
+  const updateGemLevelSettings = useCallback(
+    (
+      item:
+        | "skulls"
+        | "amethysts"
+        | "topazes"
+        | "sapphires"
+        | "emeralds"
+        | "rubies"
+        | "diamonds",
+      level: number,
+      newSettings: Partial<PotionLevelSettings>
+    ) => {
+      setSettings((prevSettings) => ({
+        ...prevSettings,
+        gems: {
+          ...(prevSettings.gems || getDefaultGemSettings()),
+          [item]: {
+            ...(prevSettings.gems?.[item] || getDefaultGemSettings()[item]),
+            levels: (
+              prevSettings.gems?.[item]?.levels ||
+              getDefaultGemSettings()[item].levels
+            ).map((lvl, index) =>
+              index === level ? { ...lvl, ...newSettings } : lvl
+            ),
+          },
+        },
+      }));
+    },
+    []
+  );
+
+  const resetGemSettings = useCallback(() => {
+    setSettings((prevSettings) => ({
+      ...prevSettings,
+      gems: getDefaultGemSettings(),
+    }));
+  }, []);
+
   const contextValue: SettingsContextType = {
     // Методы для настроек приложения
     getAppConfig,
@@ -1151,6 +1328,13 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     updatePotionGroupSettings,
     updatePotionLevelSettings,
     resetCommonSettings,
+
+    // Методы для GemsTab
+    getGemSettings,
+    getGemGroupSettings,
+    updateGemGroupSettings,
+    updateGemLevelSettings,
+    resetGemSettings,
 
     // Данные
     settings,

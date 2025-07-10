@@ -112,7 +112,6 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     { id: "items", label: t("tabs.items") },
     { id: "runes", label: t("tabs.runes") },
     { id: "gems", label: t("tabs.gems") },
-    { id: "skills", label: t("tabs.skills") },
   ];
 
   return (

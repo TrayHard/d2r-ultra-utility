@@ -4,15 +4,13 @@
     "items": "Items",
     "runes": "Runes",
     "gems": "Gems",
-    "skills": "Skills",
     "other": "Other"
   },
   "descriptions": {
     "common": "Common utilities and tools",
     "items": "Item management and analysis",
     "runes": "Rune management and combinations",
-    "gems": "Gem management and upgrades",
-    "skills": "Skill tree and build planning"
+    "gems": "Gem management and upgrades"
   },
   "commonPage": {
     "show": "Click to show",
@@ -44,6 +42,64 @@
     "rejuvenationPotionsLevels": {
       "level1": "Rejuvenation Potion",
       "level2": "Full Rejuvenation Potion"
+    }
+  },
+  "gemsPage": {
+    "skulls": "Skulls",
+    "amethysts": "Amethysts",
+    "topazes": "Topazes",
+    "sapphires": "Sapphires",
+    "emeralds": "Emeralds",
+    "rubies": "Rubies",
+    "diamonds": "Diamonds",
+    "skullsLevels": {
+      "level1": "Skull Fragment",
+      "level2": "Skull",
+      "level3": "Burning Skull",
+      "level4": "Perfect Skull Fragment",
+      "level5": "Perfect Skull"
+    },
+    "amethystsLevels": {
+      "level1": "Amethyst Fragment",
+      "level2": "Amethyst",
+      "level3": "Burning Amethyst",
+      "level4": "Perfect Amethyst Fragment",
+      "level5": "Perfect Amethyst"
+    },
+    "topazesLevels": {
+      "level1": "Topaz Fragment",
+      "level2": "Topaz",
+      "level3": "Burning Topaz",
+      "level4": "Perfect Topaz Fragment",
+      "level5": "Perfect Topaz"
+    },
+    "sapphiresLevels": {
+      "level1": "Sapphire Fragment",
+      "level2": "Sapphire",
+      "level3": "Burning Sapphire",
+      "level4": "Perfect Sapphire Fragment",
+      "level5": "Perfect Sapphire"
+    },
+    "emeraldsLevels": {
+      "level1": "Emerald Fragment",
+      "level2": "Emerald",
+      "level3": "Burning Emerald",
+      "level4": "Perfect Emerald Fragment",
+      "level5": "Perfect Emerald"
+    },
+    "rubiesLevels": {
+      "level1": "Ruby Fragment",
+      "level2": "Ruby",
+      "level3": "Burning Ruby",
+      "level4": "Perfect Ruby Fragment",
+      "level5": "Perfect Ruby"
+    },
+    "diamondsLevels": {
+      "level1": "Diamond Fragment",
+      "level2": "Diamond",
+      "level3": "Burning Diamond",
+      "level4": "Perfect Diamond Fragment",
+      "level5": "Perfect Diamond"
     }
   },
   "common": {

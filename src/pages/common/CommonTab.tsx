@@ -5,6 +5,7 @@ import { localeOptions } from "../../shared/constants";
 import Collapse from "../../shared/components/Collapse";
 import Switch from "../../shared/components/Switch";
 import Tooltip from "../../shared/components/Tooltip";
+import MultipleLeveledLocales from "../../shared/components/MultipleLeveledLocales";
 import type {
   CommonItemSettings,
   PotionGroupSettings,
@@ -393,87 +394,26 @@ const CommonTab: React.FC<CommonTabProps> = ({
     itemType: "healthPotions" | "manaPotions" | "rejuvenationPotions",
     potionSettings: PotionGroupSettings
   ) => {
-    // Проверяем activeTab - если он undefined или больше количества levels, ставим 0
-    const activeTabIndex =
-      potionSettings.activeTab >= 0 &&
-      potionSettings.activeTab < potionSettings.levels.length
-        ? potionSettings.activeTab
-        : 0;
-    const activeLevel = potionSettings.levels[activeTabIndex];
-
     return (
-      <Collapse
+      <MultipleLeveledLocales
         title={t(`commonPage.${itemType}`)}
+        itemType={`commonPage.${itemType}`}
+        settings={potionSettings}
+        selectedLocales={selectedLocales}
         isDarkTheme={isDarkTheme}
+        imagePaths={potionSettings.levels.map((_, index) =>
+          getPotionImagePath(itemType, index)
+        )}
         isOpen={collapseStates[itemType]}
         onToggle={(isOpen) => handleCollapseToggle(itemType, isOpen)}
-      >
-        <div
-          className={`rounded-lg border p-4 ${
-            isDarkTheme
-              ? "bg-gray-800 border-gray-700"
-              : "bg-white border-gray-300"
-          }`}
-        >
-          {/* Табы с картинками зелий */}
-          <div className="flex space-x-2 mb-4 relative">
-            {potionSettings.levels.map((level, index) => (
-              <button
-                key={index}
-                onClick={() => handlePotionTabChange(itemType, index)}
-                className={`p-2 rounded-lg transition-all duration-200 border-2 ${
-                  level.enabled
-                    ? isDarkTheme
-                      ? "border-green-400 bg-green-400/20"
-                      : "border-green-500 bg-green-500/20"
-                    : isDarkTheme
-                    ? "border-gray-600 bg-gray-700/50 hover:border-gray-500"
-                    : "border-gray-300 bg-gray-100/50 hover:border-gray-400"
-                }`}
-                style={{
-                  width: "65px",
-                }}
-              >
-                <img
-                  src={getPotionImagePath(itemType, index)}
-                  alt={t(`commonPage.${itemType}Levels.level${index + 1}`)}
-                  className="w-12 h-12 object-contain"
-                  draggable={false}
-                />
-              </button>
-            ))}
-
-            {/* Подчеркивание активного таба */}
-            <div
-              className={`absolute h-0.5 transition-all duration-300 ease-out ${
-                isDarkTheme ? "bg-green-400" : "bg-green-500"
-              }`}
-              style={{
-                left: `${activeTabIndex * (65 + 8)}px`, // 65px кнопка + 8px gap
-                width: "65px",
-                bottom: "-12px",
-                marginLeft: 0, // переопределяем Tailwind space-x-2
-                marginRight: 0, // переопределяем Tailwind space-x-2
-              }}
-            />
-          </div>
-
-          {/* Контент активного таба */}
-          <div className="space-y-4 mt-8">
-            <div className="flex items-center space-x-3">
-              <Switch
-                enabled={activeLevel.enabled}
-                onChange={(enabled) =>
-                  handlePotionLevelToggle(itemType, activeTabIndex, enabled)
-                }
-                isDarkTheme={isDarkTheme}
-              />
-            </div>
-
-            {renderPotionLocaleInputs(activeLevel, itemType, activeTabIndex)}
-          </div>
-        </div>
-      </Collapse>
+        onTabChange={(tabIndex) => handlePotionTabChange(itemType, tabIndex)}
+        onLevelToggle={(level, enabled) =>
+          handlePotionLevelToggle(itemType, level, enabled)
+        }
+        onLocaleChange={(level, locale, value) =>
+          handlePotionLocaleChange(itemType, level, locale, value)
+        }
+      />
     );
   };
 

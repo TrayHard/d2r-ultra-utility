@@ -1,5 +1,7 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useSettings } from "../../app/providers/SettingsContext";
+import MultipleLeveledLocales from "../../shared/components/MultipleLeveledLocales";
 
 interface GemsTabProps {
   isDarkTheme: boolean;
@@ -7,26 +9,199 @@ interface GemsTabProps {
 
 const GemsTab: React.FC<GemsTabProps> = ({ isDarkTheme }) => {
   const { t } = useTranslation();
+  const {
+    getSelectedLocales,
+    getGemGroupSettings,
+    updateGemGroupSettings,
+    updateGemLevelSettings,
+  } = useSettings();
+  const selectedLocales = getSelectedLocales();
+
+  // Локальные состояния для коллапсов
+  const [collapseStates, setCollapseStates] = useState({
+    skulls: false,
+    amethysts: false,
+    topazes: false,
+    sapphires: false,
+    emeralds: false,
+    rubies: false,
+    diamonds: false,
+  });
+
+  // Получаем настройки драгоценных камней из контекста
+  const skulls = getGemGroupSettings("skulls");
+  const amethysts = getGemGroupSettings("amethysts");
+  const topazes = getGemGroupSettings("topazes");
+  const sapphires = getGemGroupSettings("sapphires");
+  const emeralds = getGemGroupSettings("emeralds");
+  const rubies = getGemGroupSettings("rubies");
+  const diamonds = getGemGroupSettings("diamonds");
+
+  // Проверяем что все настройки загружены
+  if (
+    !skulls ||
+    !amethysts ||
+    !topazes ||
+    !sapphires ||
+    !emeralds ||
+    !rubies ||
+    !diamonds
+  ) {
+    return <div className="p-8 max-w-4xl mx-auto">Loading...</div>;
+  }
+
+  // Обработчики для коллапсов
+  const handleCollapseToggle = (
+    key: keyof typeof collapseStates,
+    isOpen: boolean
+  ) => {
+    setCollapseStates((prev) => ({ ...prev, [key]: isOpen }));
+  };
+
+  // Обработчики для драгоценных камней
+  const handleGemTabChange = (
+    itemType:
+      | "skulls"
+      | "amethysts"
+      | "topazes"
+      | "sapphires"
+      | "emeralds"
+      | "rubies"
+      | "diamonds",
+    tabIndex: number
+  ) => {
+    updateGemGroupSettings(itemType, { activeTab: tabIndex });
+  };
+
+  const handleGemLevelToggle = (
+    itemType:
+      | "skulls"
+      | "amethysts"
+      | "topazes"
+      | "sapphires"
+      | "emeralds"
+      | "rubies"
+      | "diamonds",
+    level: number,
+    enabled: boolean
+  ) => {
+    updateGemLevelSettings(itemType, level, { enabled });
+  };
+
+  const handleGemLocaleChange = (
+    itemType:
+      | "skulls"
+      | "amethysts"
+      | "topazes"
+      | "sapphires"
+      | "emeralds"
+      | "rubies"
+      | "diamonds",
+    level: number,
+    locale: string,
+    value: string
+  ) => {
+    const currentSettings = getGemGroupSettings(itemType);
+    const currentLevelSettings = currentSettings.levels[level];
+    updateGemLevelSettings(itemType, level, {
+      locales: {
+        ...currentLevelSettings.locales,
+        [locale as keyof typeof currentLevelSettings.locales]: value,
+      },
+    });
+  };
+
+  // Получаем путь к изображению для драгоценного камня
+  const getGemImagePath = (
+    itemType:
+      | "skulls"
+      | "amethysts"
+      | "topazes"
+      | "sapphires"
+      | "emeralds"
+      | "rubies"
+      | "diamonds",
+    level: number
+  ): string => {
+    // Маппинг типов камней к названиям файлов
+    const gemFileNames = {
+      skulls: "skull",
+      amethysts: "amethyst",
+      topazes: "topaz",
+      sapphires: "saphire", // Опечатка в названии файлов, но используем как есть
+      emeralds: "emerald",
+      rubies: "ruby",
+      diamonds: "diamond",
+    };
+
+    // level + 1 потому что файлы начинаются с 1, а индексы с 0
+    const fileLevel = level + 1;
+    const gemFileName = gemFileNames[itemType];
+
+    return `/img/common/misc/gems/${gemFileName}${fileLevel}.png`;
+  };
+
+  // Компонент для рендеринга блока драгоценных камней
+  const renderGemBlock = (
+    itemType:
+      | "skulls"
+      | "amethysts"
+      | "topazes"
+      | "sapphires"
+      | "emeralds"
+      | "rubies"
+      | "diamonds",
+    gemSettings: any
+  ) => {
+    return (
+      <MultipleLeveledLocales
+        title={t(`gemsPage.${itemType}`)}
+        itemType={`gemsPage.${itemType}`}
+        settings={gemSettings}
+        selectedLocales={selectedLocales}
+        isDarkTheme={isDarkTheme}
+        imagePaths={gemSettings.levels.map((_: any, index: number) =>
+          getGemImagePath(itemType, index)
+        )}
+        isOpen={collapseStates[itemType]}
+        onToggle={(isOpen) => handleCollapseToggle(itemType, isOpen)}
+        onTabChange={(tabIndex) => handleGemTabChange(itemType, tabIndex)}
+        onLevelToggle={(level, enabled) =>
+          handleGemLevelToggle(itemType, level, enabled)
+        }
+        onLocaleChange={(level, locale, value) =>
+          handleGemLocaleChange(itemType, level, locale, value)
+        }
+      />
+    );
+  };
 
   return (
-    <div className="p-8 text-center h-full flex flex-col justify-center">
-      <div className="max-w-md mx-auto">
-        <div className="w-16 h-16 bg-gray-500 rounded-full flex items-center justify-center mx-auto mb-4">
-          <span className="text-white text-2xl font-bold">💎</span>
-        </div>
-        <h2 className={`text-2xl font-medium mb-4 ${
-          isDarkTheme ? 'text-white' : 'text-gray-900'
-        }`}>
-          {t('tabs.gems')}
-        </h2>
-        <p className={`leading-relaxed ${
-          isDarkTheme ? 'text-gray-300' : 'text-gray-600'
-        }`}>
-          {t('descriptions.gems')}
-        </p>
+    <div className="p-8 max-w-4xl mx-auto">
+      <div className="space-y-6">
+        {/* Черепа */}
+        {renderGemBlock("skulls", skulls)}
+
+        {/* Аметисты */}
+        {renderGemBlock("amethysts", amethysts)}
+
+        {/* Топазы */}
+        {renderGemBlock("topazes", topazes)}
+
+        {/* Сапфиры */}
+        {renderGemBlock("sapphires", sapphires)}
+
+        {/* Изумруды */}
+        {renderGemBlock("emeralds", emeralds)}
+
+        {/* Рубины */}
+        {renderGemBlock("rubies", rubies)}
+
+        {/* Бриллианты */}
+        {renderGemBlock("diamonds", diamonds)}
       </div>
     </div>
   );
 };
 
-export default GemsTab; 
+export default GemsTab;

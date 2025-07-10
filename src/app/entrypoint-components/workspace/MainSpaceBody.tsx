@@ -3,9 +3,8 @@ import CommonTab from "../../../pages/common/CommonTab.tsx";
 import ItemsTab from "../../../pages/items/ItemsTab.tsx";
 import RunesTab from "../../../pages/runes/RunesTab.tsx";
 import GemsTab from "../../../pages/gems/GemsTab.tsx";
-import SkillsTab from "../../../pages/skills/SkillsTab.tsx";
 
-export type TabType = "common" | "items" | "runes" | "gems" | "skills";
+export type TabType = "common" | "items" | "runes" | "gems";
 
 interface MainSpaceBodyProps {
   activeTab: TabType;
@@ -36,10 +35,8 @@ const MainSpaceBody: React.FC<MainSpaceBodyProps> = ({
         return <RunesTab isDarkTheme={isDarkTheme} />;
       case "gems":
         return <GemsTab isDarkTheme={isDarkTheme} />;
-      case "skills":
-        return <SkillsTab isDarkTheme={isDarkTheme} />;
       default:
-        return <div>Unknown tab</div>;
+        return null;
     }
   };
 
