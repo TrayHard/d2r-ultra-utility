@@ -394,6 +394,10 @@ const CommonTab: React.FC<CommonTabProps> = ({
     itemType: "healthPotions" | "manaPotions" | "rejuvenationPotions",
     potionSettings: PotionGroupSettings
   ) => {
+    // Получаем иконку для заголовка: для HP/MP - 5-й уровень (индекс 4), для реджувенации - 2-й уровень (индекс 1)
+    const headerIconIndex = itemType === "rejuvenationPotions" ? 1 : 4;
+    const headerIcon = getPotionImagePath(itemType, headerIconIndex);
+
     return (
       <MultipleLeveledLocales
         title={t(`commonPage.${itemType}`)}
@@ -404,6 +408,7 @@ const CommonTab: React.FC<CommonTabProps> = ({
         imagePaths={potionSettings.levels.map((_, index) =>
           getPotionImagePath(itemType, index)
         )}
+        headerIcon={headerIcon}
         isOpen={collapseStates[itemType]}
         onToggle={(isOpen) => handleCollapseToggle(itemType, isOpen)}
         onTabChange={(tabIndex) => handlePotionTabChange(itemType, tabIndex)}

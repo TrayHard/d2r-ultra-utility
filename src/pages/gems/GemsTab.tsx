@@ -153,6 +153,9 @@ const GemsTab: React.FC<GemsTabProps> = ({ isDarkTheme }) => {
       | "diamonds",
     gemSettings: any
   ) => {
+    // Получаем иконку perfect качества (5-й уровень, индекс 4)
+    const headerIcon = getGemImagePath(itemType, 4);
+
     return (
       <MultipleLeveledLocales
         title={t(`gemsPage.${itemType}`)}
@@ -163,6 +166,7 @@ const GemsTab: React.FC<GemsTabProps> = ({ isDarkTheme }) => {
         imagePaths={gemSettings.levels.map((_: any, index: number) =>
           getGemImagePath(itemType, index)
         )}
+        headerIcon={headerIcon}
         isOpen={collapseStates[itemType]}
         onToggle={(isOpen) => handleCollapseToggle(itemType, isOpen)}
         onTabChange={(tabIndex) => handleGemTabChange(itemType, tabIndex)}

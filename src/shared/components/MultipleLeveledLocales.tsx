@@ -20,6 +20,7 @@ interface MultipleLeveledLocalesProps {
   onTabChange: (tabIndex: number) => void;
   onLevelToggle: (level: number, enabled: boolean) => void;
   onLocaleChange: (level: number, locale: string, value: string) => void;
+  headerIcon?: string; // Путь к изображению для иконки в заголовке
 }
 
 const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
@@ -34,6 +35,7 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
   onTabChange,
   onLevelToggle,
   onLocaleChange,
+  headerIcon,
 }) => {
   const { t } = useTranslation();
 
@@ -105,6 +107,7 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
       isDarkTheme={isDarkTheme}
       isOpen={isOpen}
       onToggle={onToggle}
+      icon={headerIcon}
     >
       <div
         className={`rounded-lg border p-4 ${

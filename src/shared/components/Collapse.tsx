@@ -10,6 +10,7 @@ interface CollapseProps {
   onToggle?: (isOpen: boolean) => void;
   className?: string;
   disabled?: boolean;
+  icon?: string; // Путь к изображению иконки
 }
 
 const Collapse: React.FC<CollapseProps> = ({
@@ -20,6 +21,7 @@ const Collapse: React.FC<CollapseProps> = ({
   onToggle,
   className = "",
   disabled = false,
+  icon,
 }) => {
   const [internalIsOpen, setInternalIsOpen] = useState(false);
 
@@ -62,7 +64,17 @@ const Collapse: React.FC<CollapseProps> = ({
           ${isDarkTheme ? "focus:ring-yellow-400" : "focus:ring-yellow-500"}
         `}
       >
-        <span className="font-medium">{title}</span>
+        <div className="flex items-center">
+          {icon && (
+            <img
+              src={icon}
+              alt=""
+              className="w-6 h-6 mr-2 object-contain flex-shrink-0"
+              draggable={false}
+            />
+          )}
+          <span className="font-medium">{title}</span>
+        </div>
         <Icon
           path={isOpen ? mdiChevronUp : mdiChevronDown}
           size={1}
