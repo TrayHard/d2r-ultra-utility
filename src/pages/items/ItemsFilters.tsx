@@ -110,7 +110,6 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
               }
             `}
           >
-            {isSelected && <span className="checkmark">✓</span>}
             <img
               src={`/img/baseTypes/${baseType}.png`}
               alt={baseType}

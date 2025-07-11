@@ -128,6 +128,7 @@ interface SettingsContextType {
   getGamePath: () => string;
   getTheme: () => "light" | "dark";
   getIsDarkTheme: () => boolean;
+  isThemeChanging: boolean;
 
   // Setter'ы для настроек приложения
   updateAppConfig: (config: Partial<AppConfig>) => void;
@@ -511,6 +512,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isThemeChanging, setIsThemeChanging] = useState(false);
 
   // Wrapper для setAppConfig с автоматическим сохранением
   const setAppConfig = useCallback(
@@ -760,10 +762,16 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   );
 
   const toggleTheme = useCallback(() => {
+    setIsThemeChanging(true);
     setAppConfig((prev) => ({
       ...prev,
       theme: prev.theme === "light" ? "dark" : "light",
     }));
+
+    // Скрываем лоадер через достаточное время для применения стилей
+    setTimeout(() => {
+      setIsThemeChanging(false);
+    }, 0);
   }, [setAppConfig]);
 
   const resetAppConfig = useCallback(() => {
@@ -1310,6 +1318,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     getGamePath,
     getTheme,
     getIsDarkTheme,
+    isThemeChanging,
     updateAppConfig,
     updateSelectedLocales,
     updateAppLanguage,

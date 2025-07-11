@@ -11,7 +11,7 @@ interface WorkSpaceProps {
 }
 
 const WorkSpaceContent: React.FC<WorkSpaceProps> = ({ onChangeClick }) => {
-  const { getIsDarkTheme, toggleTheme } = useSettings();
+  const { getIsDarkTheme, toggleTheme, isThemeChanging } = useSettings();
   const [showSettings, setShowSettings] = useState(false);
 
   const isDarkTheme = getIsDarkTheme();
@@ -53,6 +53,27 @@ const WorkSpaceContent: React.FC<WorkSpaceProps> = ({ onChangeClick }) => {
             isDarkTheme ? "bg-gray-900" : "bg-gray-100"
           }`}
         >
+          {/* Theme changing loader */}
+          {isThemeChanging && (
+            <div
+              className={`fixed inset-0 z-50 flex items-center justify-center ${
+                isDarkTheme ? "bg-gray-900" : "bg-gray-100"
+              }`}
+              style={{ backgroundColor: isDarkTheme ? "#111827" : "#f3f4f6" }}
+            >
+              <div className="flex flex-col items-center gap-4">
+                <div className="w-12 h-12 border-4 border-gray-300 border-t-yellow-500 rounded-full animate-spin"></div>
+                <div
+                  className={`text-lg font-medium ${
+                    isDarkTheme ? "text-white" : "text-gray-900"
+                  }`}
+                >
+                  Переключение темы...
+                </div>
+              </div>
+            </div>
+          )}
+
           {showSettings ? (
             <AppSettingsPage
               isDarkTheme={isDarkTheme}

@@ -32,21 +32,63 @@
   background: url('/img/btn.png') repeat-x 0 -30px !important;
 }
 
-.base-type-button .checkmark {
-  position: absolute;
-  top: -8px;
-  right: -4px;
-  color: #49aa19;
-  font-size: 0.875rem;
-  font-weight: bold;
-}
-
 .base-type-button:hover {
   filter: brightness(1.1);
 }
 
 .base-type-button.selected:hover {
   filter: brightness(0.9);
+}
+
+/* Light theme styles for base-type-button */
+:not(.dark-theme) .base-type-button {
+  background-image: none !important;
+  background-color: transparent !important;
+  border: 1px solid #374151 !important;
+  border-right: 1px solid #374151 !important;
+  color: #374151 !important;
+}
+
+:not(.dark-theme) .base-type-button:hover {
+  background-color: rgba(55, 65, 81, 0.1) !important;
+  filter: none;
+}
+
+:not(.dark-theme) .base-type-button.selected {
+  background-image: none !important;
+  background-color: #374151 !important;
+  color: #ffffff !important;
+}
+
+:not(.dark-theme) .base-type-button.selected:hover {
+  background-color: #4b5563 !important;
+  filter: none;
+}
+
+/* Dark theme styles for base-type-button */
+.dark-theme .base-type-button {
+  background-image: none !important;
+  background-color: #374151 !important;
+  border: 1px solid #4b5563 !important;
+  border-right: 1px solid #4b5563 !important;
+  color: #ffffff !important;
+}
+
+.dark-theme .base-type-button:hover {
+  background-color: #4b5563 !important;
+  filter: none;
+}
+
+.dark-theme .base-type-button.selected {
+  background-color: #eab308 !important;
+  border-color: #eab308 !important;
+  color: #000000 !important;
+}
+
+.dark-theme .base-type-button.selected:hover {
+  background-color: #f59e0b !important;
+  border-color: #f59e0b !important;
+  filter: none;
 }
 
 /* Ant Design Select common styles */
@@ -205,25 +247,25 @@
 
 /* Custom styles for Button */
 .items-filters-button {
-  background-color: #ffffff !important;
-  border-color: #d1d5db !important;
-  color: #111827 !important;
+  background-color: transparent !important;
+  border-color: #374151 !important;
+  color: #374151 !important;
 }
 
 .items-filters-button .anticon {
-  color: #111827 !important;
+  color: #374151 !important;
 }
 
 .items-filters-button:hover,
 .items-filters-button:focus {
-  background-color: #f9fafb !important;
-  border-color: #d1d5db !important;
-  color: #111827 !important;
+  background-color: rgba(55, 65, 81, 0.1) !important;
+  border-color: #374151 !important;
+  color: #374151 !important;
 }
 
 .items-filters-button:hover .anticon,
 .items-filters-button:focus .anticon {
-  color: #111827 !important;
+  color: #374151 !important;
 }
 
 /* Dark theme for Button */
@@ -371,8 +413,12 @@
 }
 
 .items-filters-button.ant-btn-disabled {
-  background-color: #f9fafb !important;
-  border-color: #e5e7eb !important;
+  background-color: transparent !important;
+  border-color: #9ca3af !important;
+  color: #9ca3af !important;
+}
+
+.items-filters-button.ant-btn-disabled .anticon {
   color: #9ca3af !important;
 }
 
@@ -402,6 +448,10 @@
 .dark-theme .items-filters-button.ant-btn-disabled {
   background-color: #1f2937 !important;
   border-color: #374151 !important;
+  color: #6b7280 !important;
+}
+
+.dark-theme .items-filters-button.ant-btn-disabled .anticon {
   color: #6b7280 !important;
 }
 
