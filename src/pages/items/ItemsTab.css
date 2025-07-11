@@ -1,0 +1,39 @@
+.base-type-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  border: 1px solid;
+  transition: all 0.2s;
+  background-repeat: repeat-x;
+  background-position: center;
+}
+
+.base-type-button:not(.selected) {
+  background-image: url('/img/btn.png');
+}
+
+.base-type-button.selected {
+  background-image: none;
+}
+
+.base-type-button .checkmark {
+  position: absolute;
+  top: -8px;
+  right: -4px;
+  color: #49aa19;
+  font-size: 0.875rem;
+  font-weight: bold;
+}
+
+.base-type-button:hover {
+  filter: brightness(1.1);
+}
+
+.base-type-button.selected:hover {
+  filter: brightness(0.9);
+} 

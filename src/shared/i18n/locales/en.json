@@ -206,6 +206,11 @@
       },
       "sizes": {
         "Normal": "Normal",
+        "Exceptional": "Exceptional",
+        "Elite": "Elite",
+        "light": "Light",
+        "medium": "Medium",
+        "heavy": "Heavy",
         "Medium": "Medium",
         "Large": "Large"
       },
@@ -350,6 +355,41 @@
     }
   },
   "itemsPage": {
+    "filters": {
+      "reset": "Reset",
+      "search": "Search items...",
+      "difficultyClass": "Difficulty Class",
+      "limitedToClass": "Limited to Class",
+      "reqLevel": "Req Level",
+      "reqStrength": "Req Strength",
+      "reqDexterity": "Req Dexterity",
+      "weight": "Weight",
+      "baseTypes": "Base Types",
+      "normal": "Normal",
+      "exceptional": "Exceptional",
+      "elite": "Elite",
+      "light": "Light",
+      "medium": "Medium",
+      "heavy": "Heavy",
+      "anyClass": "Any Class",
+      "all": "All",
+      "selected": "selected"
+    },
+    "sorting": {
+      "byType": "By Type",
+      "byName": "By Name",
+      "byLevel": "By Level"
+    },
+    "massEdit": {
+      "selectAll": "Select All",
+      "deselectAll": "Deselect All",
+      "editSelected": "Edit Selected",
+      "modalTitle": "Mass Edit Items",
+      "difficultyClassLabel": "Difficulty Class",
+      "apply": "Apply",
+      "cancel": "Cancel"
+    },
+    "selectItem": "Select an item to edit its settings",
     "baseTypes": {
       "Weapons": "Weapons",
       "MeleeWeapons": "Melee Weapons",

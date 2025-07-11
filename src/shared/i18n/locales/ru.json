@@ -350,6 +350,41 @@
     }
   },
   "itemsPage": {
+    "filters": {
+      "reset": "Сбросить",
+      "search": "Поиск предметов...",
+      "difficultyClass": "Класс сложности",
+      "limitedToClass": "Только для класса",
+      "reqLevel": "Треб. уровень",
+      "reqStrength": "Треб. сила",
+      "reqDexterity": "Треб. ловкость",
+      "weight": "Вес",
+      "baseTypes": "Базовые типы",
+      "normal": "Обычный",
+      "exceptional": "Исключительный",
+      "elite": "Элитный",
+      "light": "Легкий",
+      "medium": "Средний",
+      "heavy": "Тяжелый",
+      "anyClass": "Любой класс",
+      "all": "Все",
+      "selected": "выбрано"
+    },
+    "sorting": {
+      "byType": "По типу",
+      "byName": "По имени",
+      "byLevel": "По уровню"
+    },
+    "massEdit": {
+      "selectAll": "Выбрать все",
+      "deselectAll": "Снять выбор",
+      "editSelected": "Изменить выбранные",
+      "modalTitle": "Массовое редактирование предметов",
+      "difficultyClassLabel": "Класс сложности",
+      "apply": "Применить",
+      "cancel": "Отмена"
+    },
+    "selectItem": "Выберите предмет для редактирования его настроек",
     "baseTypes": {
       "Weapons": "Оружия",
       "MeleeWeapons": "Оруж. ближнего боя",

@@ -1,32 +1,465 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
+import React, { useState, useMemo, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { EBaseType, ECharacterClass } from "./constants";
+import basesData from "./bases.json";
+import Icon from "@mdi/react";
+import { mdiClose } from "@mdi/js";
+import Button from "../../shared/components/Button";
+import ItemsFilters from "./ItemsFilters";
+import ItemsList from "./ItemsList";
+import ItemCard from "./ItemCard";
+import "./ItemsTab.css";
 
 interface ItemsTabProps {
   isDarkTheme: boolean;
 }
 
+interface BaseItem {
+  key: string;
+  imgName: string;
+  baseTypes: string[];
+  limitedToClass: string | null;
+  maxSockets: number;
+  difficultyClass: "normal" | "exceptional" | "elite";
+  reqLvl: number;
+  reqStrength: number;
+  reqDexterity: number;
+  weight: "light" | "medium" | "heavy";
+  id: number;
+}
+
+interface ItemSettings {
+  difficultyClass: "normal" | "exceptional" | "elite";
+}
+
+type SortType = "type" | "name" | "level";
+type SortOrder = "asc" | "desc";
+
 const ItemsTab: React.FC<ItemsTabProps> = ({ isDarkTheme }) => {
   const { t } = useTranslation();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortType, setSortType] = useState<SortType>("type");
+  const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
+  const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
+  const [selectedItemForSettings, setSelectedItemForSettings] = useState<
+    string | null
+  >(null);
+  const [isMassEditModalOpen, setIsMassEditModalOpen] = useState(false);
+  const [lastSelectedItem, setLastSelectedItem] = useState<string | null>(null);
+
+  // Фильтры
+  const [selectedDifficultyClasses, setSelectedDifficultyClasses] = useState<
+    Set<string>
+  >(new Set(["normal", "exceptional", "elite"]));
+  const [selectedLimitedToClasses, setSelectedLimitedToClasses] = useState<
+    Set<string>
+  >(new Set([...Object.values(ECharacterClass), "none"]));
+  const [reqLevelFilter, setReqLevelFilter] = useState<number>(0);
+  const [reqStrengthFilter, setReqStrengthFilter] = useState<number>(0);
+  const [reqDexterityFilter, setReqDexterityFilter] = useState<number>(0);
+  const [selectedWeights, setSelectedWeights] = useState<Set<string>>(
+    new Set(["light"])
+  );
+  const [selectedBaseTypes, setSelectedBaseTypes] = useState<Set<EBaseType>>(
+    new Set()
+  );
+
+  // Dropdown states
+  const [isDifficultyDropdownOpen, setIsDifficultyDropdownOpen] =
+    useState(false);
+  const [isClassDropdownOpen, setIsClassDropdownOpen] = useState(false);
+  const [isWeightDropdownOpen, setIsWeightDropdownOpen] = useState(false);
+
+  // Флаг для отслеживания первого открытия
+  const isFirstLoadRef = useRef(true);
+
+  const items = useMemo(() => {
+    // Фильтруем дубли по id
+    const uniqueItems = (basesData as BaseItem[]).filter(
+      (item, index, arr) => arr.findIndex((i) => i.id === item.id) === index
+    );
+    return uniqueItems;
+  }, []);
+
+  const filteredAndSortedItems = useMemo(() => {
+    let filtered = items.filter((item) => {
+      // Поиск по названию
+      const itemName = t(`itemsPage.bases.${item.key}`) || item.key;
+      if (
+        searchQuery &&
+        !itemName.toLowerCase().includes(searchQuery.toLowerCase())
+      ) {
+        return false;
+      }
+
+      // Фильтр по классу сложности
+      if (!selectedDifficultyClasses.has(item.difficultyClass)) {
+        return false;
+      }
+
+      // Фильтр по ограничению класса
+      const limitedToClass = item.limitedToClass || "none";
+      if (!selectedLimitedToClasses.has(limitedToClass)) {
+        return false;
+      }
+
+      // Фильтры по требованиям
+      if (reqLevelFilter > 0 && item.reqLvl > reqLevelFilter) {
+        return false;
+      }
+      if (reqStrengthFilter > 0 && item.reqStrength > reqStrengthFilter) {
+        return false;
+      }
+      if (reqDexterityFilter > 0 && item.reqDexterity > reqDexterityFilter) {
+        return false;
+      }
+
+      // Фильтр по весу
+      if (!selectedWeights.has(item.weight)) {
+        return false;
+      }
+
+      // Фильтр по базовым типам (если выбран хотя бы один тип)
+      if (selectedBaseTypes.size > 0) {
+        const hasSelectedBaseType = item.baseTypes.some((baseType) =>
+          selectedBaseTypes.has(baseType as EBaseType)
+        );
+
+        // Отладочный лог для проблемных предметов
+        if (
+          (item.key === "circlet" ||
+            item.key === "tiara" ||
+            item.key === "diadem") &&
+          hasSelectedBaseType
+        ) {
+          console.log(`${item.key} прошел фильтр baseTypes:`, {
+            itemBaseTypes: item.baseTypes,
+            selectedBaseTypes: Array.from(selectedBaseTypes),
+            hasSelectedBaseType,
+          });
+        }
+
+        if (!hasSelectedBaseType) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+
+    return filtered.sort((a, b) => {
+      if (sortType === "type") {
+        // Сортировка по типу (оставляем как есть)
+        return 0;
+      } else if (sortType === "name") {
+        const nameA = t(`itemsPage.bases.${a.key}`) || a.key;
+        const nameB = t(`itemsPage.bases.${b.key}`) || b.key;
+        const comparison = nameA.localeCompare(nameB);
+        return sortOrder === "asc" ? comparison : -comparison;
+      } else {
+        // Сортировка по уровню
+        const comparison = a.reqLvl - b.reqLvl;
+        return sortOrder === "asc" ? comparison : -comparison;
+      }
+    });
+  }, [
+    items,
+    searchQuery,
+    selectedDifficultyClasses,
+    selectedLimitedToClasses,
+    reqLevelFilter,
+    reqStrengthFilter,
+    reqDexterityFilter,
+    selectedWeights,
+    selectedBaseTypes,
+    sortType,
+    sortOrder,
+    t,
+  ]);
+
+  // Автоматически выбираем первый предмет только при первом открытии
+  useEffect(() => {
+    if (
+      filteredAndSortedItems.length > 0 &&
+      !selectedItemForSettings &&
+      isFirstLoadRef.current
+    ) {
+      setSelectedItemForSettings(filteredAndSortedItems[0].key);
+      isFirstLoadRef.current = false;
+    }
+  }, [filteredAndSortedItems, selectedItemForSettings]);
+
+  // Закрытие дропдаунов при клике вне
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest(".relative")) {
+        setIsDifficultyDropdownOpen(false);
+        setIsClassDropdownOpen(false);
+        setIsWeightDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleSort = (type: SortType) => {
+    if (sortType === type) {
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      setSortType(type);
+      setSortOrder("asc");
+    }
+    setLastSelectedItem(null);
+  };
+
+  const handleItemSelection = (
+    itemKey: string,
+    isSelected: boolean,
+    shiftKey: boolean = false
+  ) => {
+    const newSelected = new Set(selectedItems);
+
+    if (shiftKey && lastSelectedItem && lastSelectedItem !== itemKey) {
+      const lastIndex = filteredAndSortedItems.findIndex(
+        (item) => item.key === lastSelectedItem
+      );
+      const currentIndex = filteredAndSortedItems.findIndex(
+        (item) => item.key === itemKey
+      );
+
+      if (lastIndex !== -1 && currentIndex !== -1) {
+        const start = Math.min(lastIndex, currentIndex);
+        const end = Math.max(lastIndex, currentIndex);
+
+        for (let i = start; i <= end; i++) {
+          newSelected.add(filteredAndSortedItems[i].key);
+        }
+      }
+    } else {
+      if (isSelected) {
+        newSelected.add(itemKey);
+      } else {
+        newSelected.delete(itemKey);
+      }
+      setLastSelectedItem(itemKey);
+    }
+
+    setSelectedItems(newSelected);
+  };
+
+  const handleSelectAll = () => {
+    const allFiltered = new Set(filteredAndSortedItems.map((item) => item.key));
+    setSelectedItems(allFiltered);
+    setLastSelectedItem(null);
+  };
+
+  const handleDeselectAll = () => {
+    setSelectedItems(new Set());
+    setLastSelectedItem(null);
+  };
+
+  const handleResetFilters = () => {
+    setSearchQuery("");
+    setSelectedDifficultyClasses(new Set(["normal", "exceptional", "elite"]));
+    setSelectedLimitedToClasses(
+      new Set([...Object.values(ECharacterClass), "none"])
+    );
+    setReqLevelFilter(0);
+    setReqStrengthFilter(0);
+    setReqDexterityFilter(0);
+    setSelectedWeights(new Set(["light"]));
+    setSelectedBaseTypes(new Set());
+  };
+
+  const handleMassEditApply = (newSettings: Partial<ItemSettings>) => {
+    // Логика массового редактирования
+    console.log("Mass edit apply:", newSettings, selectedItems);
+  };
+
+  const toggleDifficultyClass = (difficultyClass: string) => {
+    const newSet = new Set(selectedDifficultyClasses);
+    if (newSet.has(difficultyClass)) {
+      newSet.delete(difficultyClass);
+    } else {
+      newSet.add(difficultyClass);
+    }
+    setSelectedDifficultyClasses(newSet);
+  };
+
+  const toggleLimitedToClass = (characterClass: string) => {
+    const newSet = new Set(selectedLimitedToClasses);
+    if (newSet.has(characterClass)) {
+      newSet.delete(characterClass);
+    } else {
+      newSet.add(characterClass);
+    }
+    setSelectedLimitedToClasses(newSet);
+  };
+
+  const toggleWeight = (weight: string) => {
+    const newSet = new Set(selectedWeights);
+    if (newSet.has(weight)) {
+      newSet.delete(weight);
+    } else {
+      newSet.add(weight);
+    }
+    setSelectedWeights(newSet);
+  };
+
+  const toggleBaseType = (baseType: EBaseType) => {
+    const newSet = new Set(selectedBaseTypes);
+    if (newSet.has(baseType)) {
+      newSet.delete(baseType);
+    } else {
+      newSet.add(baseType);
+    }
+    setSelectedBaseTypes(newSet);
+  };
+
+  const selectedItem =
+    items.find((item) => item.key === selectedItemForSettings) ?? null;
 
   return (
-    <div className="p-8 text-center h-full flex flex-col justify-center">
-      <div className="max-w-md mx-auto">
-        <div className="w-16 h-16 bg-gray-500 rounded-full flex items-center justify-center mx-auto mb-4">
-          <span className="text-white text-2xl font-bold">🗡️</span>
-        </div>
-        <h2 className={`text-2xl font-medium mb-4 ${
-          isDarkTheme ? 'text-white' : 'text-gray-900'
-        }`}>
-          {t('tabs.items')}
-        </h2>
-        <p className={`leading-relaxed ${
-          isDarkTheme ? 'text-gray-300' : 'text-gray-600'
-        }`}>
-          {t('descriptions.items')}
-        </p>
+    <div className="h-full flex flex-col">
+      <ItemsFilters
+        isDarkTheme={isDarkTheme}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        selectedDifficultyClasses={selectedDifficultyClasses}
+        selectedLimitedToClasses={selectedLimitedToClasses}
+        reqLevelFilter={reqLevelFilter}
+        reqStrengthFilter={reqStrengthFilter}
+        reqDexterityFilter={reqDexterityFilter}
+        selectedWeights={selectedWeights}
+        selectedBaseTypes={selectedBaseTypes}
+        isDifficultyDropdownOpen={isDifficultyDropdownOpen}
+        setIsDifficultyDropdownOpen={setIsDifficultyDropdownOpen}
+        isClassDropdownOpen={isClassDropdownOpen}
+        setIsClassDropdownOpen={setIsClassDropdownOpen}
+        isWeightDropdownOpen={isWeightDropdownOpen}
+        setIsWeightDropdownOpen={setIsWeightDropdownOpen}
+        onResetFilters={handleResetFilters}
+        onToggleDifficultyClass={toggleDifficultyClass}
+        onToggleLimitedToClass={toggleLimitedToClass}
+        onSetReqLevelFilter={setReqLevelFilter}
+        onSetReqStrengthFilter={setReqStrengthFilter}
+        onSetReqDexterityFilter={setReqDexterityFilter}
+        onToggleWeight={toggleWeight}
+        onToggleBaseType={toggleBaseType}
+      />
+
+      <div className="flex-1 flex">
+        <ItemsList
+          isDarkTheme={isDarkTheme}
+          items={filteredAndSortedItems}
+          selectedItems={selectedItems}
+          selectedItemForSettings={selectedItemForSettings}
+          sortType={sortType}
+          sortOrder={sortOrder}
+          onSort={handleSort}
+          onItemSelection={handleItemSelection}
+          onSelectAll={handleSelectAll}
+          onDeselectAll={handleDeselectAll}
+          onSetSelectedItemForSettings={setSelectedItemForSettings}
+          onOpenMassEditModal={() => setIsMassEditModalOpen(true)}
+        />
+
+        <ItemCard isDarkTheme={isDarkTheme} selectedItem={selectedItem} />
       </div>
+
+      {/* Модальное окно массового редактирования */}
+      {isMassEditModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div
+            className={`w-full max-w-md mx-4 rounded-lg shadow-xl ${
+              isDarkTheme ? "bg-gray-800" : "bg-white"
+            }`}
+          >
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3
+                  className={`text-lg font-semibold ${
+                    isDarkTheme ? "text-white" : "text-gray-900"
+                  }`}
+                >
+                  {t("itemsPage.massEdit.modalTitle")}
+                </h3>
+                <button
+                  onClick={() => setIsMassEditModalOpen(false)}
+                  className={`p-1 rounded-lg hover:bg-opacity-50 ${
+                    isDarkTheme ? "hover:bg-gray-700" : "hover:bg-gray-100"
+                  }`}
+                >
+                  <Icon
+                    path={mdiClose}
+                    size={0.8}
+                    className={isDarkTheme ? "text-gray-400" : "text-gray-500"}
+                  />
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label
+                    className={`block text-sm font-medium mb-2 ${
+                      isDarkTheme ? "text-white" : "text-gray-900"
+                    }`}
+                  >
+                    {t("itemsPage.massEdit.difficultyClassLabel")}
+                  </label>
+                  <select
+                    className={`
+                      w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent
+                      ${
+                        isDarkTheme
+                          ? "bg-gray-700 border-gray-600 text-white"
+                          : "bg-white border-gray-300 text-gray-900"
+                      }
+                    `}
+                  >
+                    <option value="">{t("runePage.massEdit.noChange")}</option>
+                    <option value="normal">
+                      {t("itemsPage.filters.normal")}
+                    </option>
+                    <option value="exceptional">
+                      {t("itemsPage.filters.exceptional")}
+                    </option>
+                    <option value="elite">
+                      {t("itemsPage.filters.elite")}
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-3 mt-6">
+                <Button
+                  variant="secondary"
+                  onClick={() => setIsMassEditModalOpen(false)}
+                  isDarkTheme={isDarkTheme}
+                >
+                  {t("itemsPage.massEdit.cancel")}
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    handleMassEditApply({});
+                    setIsMassEditModalOpen(false);
+                  }}
+                  isDarkTheme={isDarkTheme}
+                >
+                  {t("itemsPage.massEdit.apply")}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default ItemsTab; 
+export default ItemsTab;
