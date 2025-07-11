@@ -50,25 +50,19 @@ const ItemsTab: React.FC<ItemsTabProps> = ({ isDarkTheme }) => {
   // Фильтры
   const [selectedDifficultyClasses, setSelectedDifficultyClasses] = useState<
     Set<string>
-  >(new Set(["normal", "exceptional", "elite"]));
+  >(new Set());
   const [selectedLimitedToClasses, setSelectedLimitedToClasses] = useState<
     Set<string>
-  >(new Set([...Object.values(ECharacterClass), "none"]));
+  >(new Set());
   const [reqLevelFilter, setReqLevelFilter] = useState<number>(0);
   const [reqStrengthFilter, setReqStrengthFilter] = useState<number>(0);
   const [reqDexterityFilter, setReqDexterityFilter] = useState<number>(0);
   const [selectedWeights, setSelectedWeights] = useState<Set<string>>(
-    new Set(["light"])
+    new Set()
   );
   const [selectedBaseTypes, setSelectedBaseTypes] = useState<Set<EBaseType>>(
     new Set()
   );
-
-  // Dropdown states
-  const [isDifficultyDropdownOpen, setIsDifficultyDropdownOpen] =
-    useState(false);
-  const [isClassDropdownOpen, setIsClassDropdownOpen] = useState(false);
-  const [isWeightDropdownOpen, setIsWeightDropdownOpen] = useState(false);
 
   // Флаг для отслеживания первого открытия
   const isFirstLoadRef = useRef(true);
@@ -92,15 +86,20 @@ const ItemsTab: React.FC<ItemsTabProps> = ({ isDarkTheme }) => {
         return false;
       }
 
-      // Фильтр по классу сложности
-      if (!selectedDifficultyClasses.has(item.difficultyClass)) {
+      // Фильтр по классу сложности (если выбран хотя бы один)
+      if (
+        selectedDifficultyClasses.size > 0 &&
+        !selectedDifficultyClasses.has(item.difficultyClass)
+      ) {
         return false;
       }
 
-      // Фильтр по ограничению класса
-      const limitedToClass = item.limitedToClass || "none";
-      if (!selectedLimitedToClasses.has(limitedToClass)) {
-        return false;
+      // Фильтр по ограничению класса (если выбран хотя бы один)
+      if (selectedLimitedToClasses.size > 0) {
+        const limitedToClass = item.limitedToClass || "none";
+        if (!selectedLimitedToClasses.has(limitedToClass)) {
+          return false;
+        }
       }
 
       // Фильтры по требованиям
@@ -114,8 +113,8 @@ const ItemsTab: React.FC<ItemsTabProps> = ({ isDarkTheme }) => {
         return false;
       }
 
-      // Фильтр по весу
-      if (!selectedWeights.has(item.weight)) {
+      // Фильтр по весу (если выбран хотя бы один)
+      if (selectedWeights.size > 0 && !selectedWeights.has(item.weight)) {
         return false;
       }
 
@@ -189,23 +188,6 @@ const ItemsTab: React.FC<ItemsTabProps> = ({ isDarkTheme }) => {
     }
   }, [filteredAndSortedItems, selectedItemForSettings]);
 
-  // Закрытие дропдаунов при клике вне
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-      if (!target.closest(".relative")) {
-        setIsDifficultyDropdownOpen(false);
-        setIsClassDropdownOpen(false);
-        setIsWeightDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
   const handleSort = (type: SortType) => {
     if (sortType === type) {
       setSortOrder(sortOrder === "asc" ? "desc" : "asc");
@@ -264,14 +246,12 @@ const ItemsTab: React.FC<ItemsTabProps> = ({ isDarkTheme }) => {
 
   const handleResetFilters = () => {
     setSearchQuery("");
-    setSelectedDifficultyClasses(new Set(["normal", "exceptional", "elite"]));
-    setSelectedLimitedToClasses(
-      new Set([...Object.values(ECharacterClass), "none"])
-    );
+    setSelectedDifficultyClasses(new Set());
+    setSelectedLimitedToClasses(new Set());
     setReqLevelFilter(0);
     setReqStrengthFilter(0);
     setReqDexterityFilter(0);
-    setSelectedWeights(new Set(["light"]));
+    setSelectedWeights(new Set());
     setSelectedBaseTypes(new Set());
   };
 
@@ -336,12 +316,6 @@ const ItemsTab: React.FC<ItemsTabProps> = ({ isDarkTheme }) => {
         reqDexterityFilter={reqDexterityFilter}
         selectedWeights={selectedWeights}
         selectedBaseTypes={selectedBaseTypes}
-        isDifficultyDropdownOpen={isDifficultyDropdownOpen}
-        setIsDifficultyDropdownOpen={setIsDifficultyDropdownOpen}
-        isClassDropdownOpen={isClassDropdownOpen}
-        setIsClassDropdownOpen={setIsClassDropdownOpen}
-        isWeightDropdownOpen={isWeightDropdownOpen}
-        setIsWeightDropdownOpen={setIsWeightDropdownOpen}
         onResetFilters={handleResetFilters}
         onToggleDifficultyClass={toggleDifficultyClass}
         onToggleLimitedToClass={toggleLimitedToClass}

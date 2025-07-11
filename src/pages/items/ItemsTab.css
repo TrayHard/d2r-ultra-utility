@@ -6,19 +6,30 @@
   padding: 0.5rem 0.75rem;
   font-size: 0.875rem;
   font-weight: 500;
-  border-radius: 0.5rem;
-  border: 1px solid;
+  border-radius: 0;
+  border: none;
+  border-right: 1px solid #0000007d !important;
   transition: all 0.2s;
+  height: 32px;
+  background-color: transparent;
   background-repeat: repeat-x;
-  background-position: center;
+  background-image: url('/img/btn.png');
+  color: #c1d4de !important;
 }
 
-.base-type-button:not(.selected) {
-  background-image: url('/img/btn.png');
+.base-type-button:first-child {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.base-type-button:last-child {
+  border-right: none !important;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
 }
 
 .base-type-button.selected {
-  background-image: none;
+  background: url('/img/btn.png') repeat-x 0 -30px !important;
 }
 
 .base-type-button .checkmark {
@@ -36,4 +47,366 @@
 
 .base-type-button.selected:hover {
   filter: brightness(0.9);
-} 
+}
+
+/* Ant Design Select common styles */
+.ant-select-selector {
+  max-height: 40px !important;
+  overflow-y: auto !important;
+}
+
+/* Custom focus styles to match the yellow theme */
+.ant-select-focused .ant-select-selector {
+  border-color: #eab308 !important;
+  box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.2) !important;
+}
+
+/* Custom styles for items filters */
+.items-filters-input {
+  background-color: #ffffff !important;
+  border-color: #d1d5db !important;
+  color: #111827 !important;
+}
+
+.items-filters-input::placeholder {
+  color: #6b7280 !important;
+}
+
+.items-filters-input .ant-input-prefix {
+  color: #6b7280 !important;
+}
+
+.items-filters-input .ant-input-suffix {
+  color: #6b7280 !important;
+}
+
+.items-filters-input:hover {
+  border-color: #9ca3af !important;
+}
+
+.items-filters-input:focus,
+.items-filters-input.ant-input-focused {
+  border-color: #eab308 !important;
+  box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.2) !important;
+}
+
+/* Dark theme for inputs */
+.dark-theme .items-filters-input {
+  background-color: #374151 !important;
+  border-color: #4b5563 !important;
+  color: #ffffff !important;
+}
+
+.dark-theme .items-filters-input::placeholder {
+  color: #9ca3af !important;
+}
+
+.dark-theme .items-filters-input .ant-input-prefix {
+  color: #9ca3af !important;
+}
+
+.dark-theme .items-filters-input .ant-input-suffix {
+  color: #9ca3af !important;
+}
+
+.dark-theme .items-filters-input:hover {
+  border-color: #6b7280 !important;
+}
+
+.dark-theme .items-filters-input:focus,
+.dark-theme .items-filters-input.ant-input-focused {
+  border-color: #eab308 !important;
+  box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.2) !important;
+}
+
+/* Custom styles for InputNumber */
+.items-filters-input-number {
+  background-color: #ffffff !important;
+  border-color: #d1d5db !important;
+}
+
+.items-filters-input-number .ant-input-number-input {
+  background-color: #ffffff !important;
+  border-color: #d1d5db !important;
+  color: #111827 !important;
+}
+
+.items-filters-input-number .ant-input-number-input::placeholder {
+  color: #6b7280 !important;
+}
+
+.items-filters-input-number .ant-input-number-handler {
+  background-color: #ffffff !important;
+  border-color: #d1d5db !important;
+}
+
+.items-filters-input-number .ant-input-number-handler .anticon {
+  color: #6b7280 !important;
+}
+
+.items-filters-input-number .ant-input-number-handler:hover {
+  background-color: #f9fafb !important;
+}
+
+.items-filters-input-number .ant-input-number-handler:hover .anticon {
+  color: #111827 !important;
+}
+
+.items-filters-input-number:hover {
+  border-color: #9ca3af !important;
+}
+
+.items-filters-input-number.ant-input-number-focused {
+  border-color: #eab308 !important;
+  box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.2) !important;
+}
+
+/* Dark theme for InputNumber */
+.dark-theme .items-filters-input-number {
+  background-color: #374151 !important;
+  border-color: #4b5563 !important;
+}
+
+.dark-theme .items-filters-input-number .ant-input-number-input {
+  background-color: #374151 !important;
+  color: #ffffff !important;
+}
+
+.dark-theme .items-filters-input-number .ant-input-number-input::placeholder {
+  color: #9ca3af !important;
+}
+
+.dark-theme .items-filters-input-number .ant-input-number-handler {
+  background-color: #374151 !important;
+  border-color: #4b5563 !important;
+  color: #ffffff !important;
+}
+
+.dark-theme .items-filters-input-number .ant-input-number-handler .anticon {
+  color: #9ca3af !important;
+}
+
+.dark-theme .items-filters-input-number .ant-input-number-handler:hover {
+  background-color: #4b5563 !important;
+}
+
+.dark-theme .items-filters-input-number .ant-input-number-handler:hover .anticon {
+  color: #ffffff !important;
+}
+
+.dark-theme .items-filters-input-number:hover {
+  border-color: #6b7280 !important;
+}
+
+.dark-theme .items-filters-input-number.ant-input-number-focused {
+  border-color: #eab308 !important;
+  box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.2) !important;
+}
+
+/* Custom styles for Button */
+.items-filters-button {
+  background-color: #ffffff !important;
+  border-color: #d1d5db !important;
+  color: #111827 !important;
+}
+
+.items-filters-button .anticon {
+  color: #111827 !important;
+}
+
+.items-filters-button:hover,
+.items-filters-button:focus {
+  background-color: #f9fafb !important;
+  border-color: #d1d5db !important;
+  color: #111827 !important;
+}
+
+.items-filters-button:hover .anticon,
+.items-filters-button:focus .anticon {
+  color: #111827 !important;
+}
+
+/* Dark theme for Button */
+.dark-theme .items-filters-button {
+  background-color: #374151 !important;
+  border-color: #4b5563 !important;
+  color: #ffffff !important;
+}
+
+.dark-theme .items-filters-button .anticon {
+  color: #ffffff !important;
+}
+
+.dark-theme .items-filters-button:hover,
+.dark-theme .items-filters-button:focus {
+  background-color: #4b5563 !important;
+  border-color: #4b5563 !important;
+  color: #ffffff !important;
+}
+
+.dark-theme .items-filters-button:hover .anticon,
+.dark-theme .items-filters-button:focus .anticon {
+  color: #ffffff !important;
+}
+
+/* Custom styles for Select */
+.items-filters-select .ant-select-selector {
+  background-color: #ffffff !important;
+  border-color: #d1d5db !important;
+  color: #111827 !important;
+}
+
+.items-filters-select .ant-select-selection-placeholder {
+  color: #6b7280 !important;
+}
+
+.items-filters-select .ant-select-selection-item {
+  color: #111827 !important;
+}
+
+.items-filters-select .ant-select-arrow {
+  color: #6b7280 !important;
+}
+
+.items-filters-select .ant-select-clear {
+  color: #6b7280 !important;
+}
+
+.items-filters-select:hover .ant-select-selector {
+  border-color: #9ca3af !important;
+}
+
+.items-filters-select.ant-select-focused .ant-select-selector {
+  border-color: #eab308 !important;
+  box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.2) !important;
+}
+
+/* Dark theme for Select */
+.dark-theme .items-filters-select .ant-select-selector {
+  background-color: #374151 !important;
+  border-color: #4b5563 !important;
+  color: #ffffff !important;
+}
+
+.dark-theme .items-filters-select .ant-select-selection-placeholder {
+  color: #9ca3af !important;
+}
+
+.dark-theme .items-filters-select .ant-select-selection-item {
+  color: #ffffff !important;
+  background-color: #4b5563 !important;
+  border-color: #6b7280 !important;
+}
+
+.dark-theme .items-filters-select .ant-select-arrow {
+  color: #9ca3af !important;
+}
+
+.dark-theme .items-filters-select .ant-select-clear {
+  color: #9ca3af !important;
+}
+
+.dark-theme .items-filters-select:hover .ant-select-selector {
+  border-color: #6b7280 !important;
+}
+
+.dark-theme .items-filters-select.ant-select-focused .ant-select-selector {
+  border-color: #eab308 !important;
+  box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.2) !important;
+}
+
+
+
+/* Dark theme for Select tags */
+.dark-theme .items-filters-select .ant-select-selection-item-remove {
+  color: #9ca3af !important;
+}
+
+.dark-theme .items-filters-select .ant-select-selection-item-remove:hover {
+  color: #ffffff !important;
+}
+
+/* Global styles for dark theme dropdown (when rendered in body) */
+.ant-select-dropdown.dark-theme {
+  background-color: #374151 !important;
+  border-color: #4b5563 !important;
+}
+
+.ant-select-dropdown.dark-theme .ant-select-item {
+  color: #ffffff !important;
+}
+
+.ant-select-dropdown.dark-theme .ant-select-item:hover {
+  background-color: rgba(75, 85, 99, 0.5) !important;
+}
+
+.ant-select-dropdown.dark-theme .ant-select-item-option-selected {
+  background-color: #4b5563 !important;
+}
+
+.ant-select-dropdown.dark-theme .ant-select-item-option-active {
+  background-color: rgba(75, 85, 99, 0.5) !important;
+}
+
+/* Light theme dropdown styles */
+.ant-select-dropdown:not(.dark-theme) .ant-select-item:hover {
+  background-color: #f9fafb !important;
+}
+
+/* Disabled states */
+.items-filters-input.ant-input-disabled {
+  background-color: #f9fafb !important;
+  border-color: #e5e7eb !important;
+  color: #9ca3af !important;
+}
+
+.items-filters-input-number.ant-input-number-disabled {
+  background-color: #f9fafb !important;
+  border-color: #e5e7eb !important;
+}
+
+.items-filters-input-number.ant-input-number-disabled .ant-input-number-input {
+  background-color: #f9fafb !important;
+  color: #9ca3af !important;
+}
+
+.items-filters-button.ant-btn-disabled {
+  background-color: #f9fafb !important;
+  border-color: #e5e7eb !important;
+  color: #9ca3af !important;
+}
+
+.items-filters-select.ant-select-disabled .ant-select-selector {
+  background-color: #f9fafb !important;
+  border-color: #e5e7eb !important;
+  color: #9ca3af !important;
+}
+
+/* Dark theme disabled states */
+.dark-theme .items-filters-input.ant-input-disabled {
+  background-color: #1f2937 !important;
+  border-color: #374151 !important;
+  color: #6b7280 !important;
+}
+
+.dark-theme .items-filters-input-number.ant-input-number-disabled {
+  background-color: #1f2937 !important;
+  border-color: #374151 !important;
+}
+
+.dark-theme .items-filters-input-number.ant-input-number-disabled .ant-input-number-input {
+  background-color: #1f2937 !important;
+  color: #6b7280 !important;
+}
+
+.dark-theme .items-filters-button.ant-btn-disabled {
+  background-color: #1f2937 !important;
+  border-color: #374151 !important;
+  color: #6b7280 !important;
+}
+
+.dark-theme .items-filters-select.ant-select-disabled .ant-select-selector {
+  background-color: #1f2937 !important;
+  border-color: #374151 !important;
+  color: #6b7280 !important;
+}

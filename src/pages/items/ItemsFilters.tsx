@@ -1,10 +1,8 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { EBaseType, ECharacterClass, allBaseTypes } from "./constants";
-import Icon from "@mdi/react";
-import { mdiRefresh, mdiChevronDown } from "@mdi/js";
-import Button from "../../shared/components/Button";
-import Checkbox from "../../shared/components/Checkbox";
+import { Button as AntButton, Input, InputNumber, Select } from "antd";
+import { SearchOutlined, ReloadOutlined } from "@ant-design/icons";
 import "./ItemsTab.css";
 
 interface ItemsFiltersProps {
@@ -18,12 +16,6 @@ interface ItemsFiltersProps {
   reqDexterityFilter: number;
   selectedWeights: Set<string>;
   selectedBaseTypes: Set<EBaseType>;
-  isDifficultyDropdownOpen: boolean;
-  setIsDifficultyDropdownOpen: (open: boolean) => void;
-  isClassDropdownOpen: boolean;
-  setIsClassDropdownOpen: (open: boolean) => void;
-  isWeightDropdownOpen: boolean;
-  setIsWeightDropdownOpen: (open: boolean) => void;
   onResetFilters: () => void;
   onToggleDifficultyClass: (difficultyClass: string) => void;
   onToggleLimitedToClass: (characterClass: string) => void;
@@ -45,12 +37,6 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
   reqDexterityFilter,
   selectedWeights,
   selectedBaseTypes,
-  isDifficultyDropdownOpen,
-  setIsDifficultyDropdownOpen,
-  isClassDropdownOpen,
-  setIsClassDropdownOpen,
-  isWeightDropdownOpen,
-  setIsWeightDropdownOpen,
   onResetFilters,
   onToggleDifficultyClass,
   onToggleLimitedToClass,
@@ -62,80 +48,48 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
 }) => {
   const { t } = useTranslation();
 
-  const renderMultiSelectDropdown = (
-    isOpen: boolean,
-    setIsOpen: (open: boolean) => void,
+  const renderTagSelect = (
     selectedItems: Set<string>,
     allItems: string[],
     onToggle: (item: string) => void,
     getLabel: (item: string) => string,
-    placeholder: string
+    placeholder: string,
+    width: string = "w-48"
   ) => (
-    <div className="relative">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className={`
-          w-full h-10 px-3 pr-8 text-left border rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent
-          ${
-            isDarkTheme
-              ? "bg-gray-700 border-gray-600 text-white"
-              : "bg-white border-gray-300 text-gray-900"
-          }
-        `}
-      >
-        {selectedItems.size === 0
-          ? placeholder
-          : selectedItems.size === allItems.length
-          ? t("itemsPage.filters.all") ?? "All"
-          : `${selectedItems.size} ${
-              t("itemsPage.filters.selected") ?? "selected"
-            }`}
-      </button>
-      <Icon
-        path={mdiChevronDown}
-        size={0.8}
-        className={`absolute right-2 top-1/2 transform -translate-y-1/2 transition-transform ${
-          isOpen ? "rotate-180" : ""
-        } ${isDarkTheme ? "text-gray-400" : "text-gray-500"}`}
-      />
-      {isOpen && (
-        <div
-          className={`
-            absolute z-10 w-full mt-1 border rounded-lg shadow-lg max-h-60 overflow-auto
-            ${
-              isDarkTheme
-                ? "bg-gray-700 border-gray-600"
-                : "bg-white border-gray-300"
+    <div className={width}>
+      <Select
+        mode="tags"
+        placeholder={placeholder}
+        value={Array.from(selectedItems)}
+        onChange={(values: string[]) => {
+          // Добавляем новые значения
+          values.forEach((value) => {
+            if (!selectedItems.has(value)) {
+              onToggle(value);
             }
-          `}
-        >
-          {allItems.map((item) => (
-            <div
-              key={item}
-              onClick={() => onToggle(item)}
-              className={`
-                px-3 py-2 cursor-pointer hover:bg-opacity-50 flex items-center gap-2
-                ${isDarkTheme ? "hover:bg-gray-600" : "hover:bg-gray-100"}
-              `}
-            >
-              <Checkbox
-                checked={selectedItems.has(item)}
-                onChange={() => {}}
-                isDarkTheme={isDarkTheme}
-                size="sm"
-              />
-              <span className={isDarkTheme ? "text-white" : "text-gray-900"}>
-                {getLabel(item)}
-              </span>
-            </div>
-          ))}
-        </div>
-      )}
+          });
+          // Удаляем значения, которых больше нет в списке
+          Array.from(selectedItems).forEach((item) => {
+            if (!values.includes(item)) {
+              onToggle(item);
+            }
+          });
+        }}
+        options={allItems.map((item) => ({
+          label: getLabel(item),
+          value: item,
+        }))}
+        maxTagCount={"responsive"}
+        style={{ width: "100%" }}
+        allowClear
+        className="items-filters-select"
+        dropdownClassName={isDarkTheme ? "dark-theme" : ""}
+      />
     </div>
   );
 
   const renderBaseTypeButtons = () => (
-    <div className="flex flex-wrap gap-1">
+    <div className="flex flex-wrap" style={{ gap: "0" }}>
       {allBaseTypes.map((baseType) => {
         const isSelected = selectedBaseTypes.has(baseType);
         return (
@@ -176,142 +130,105 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
   return (
     <div
       className={`p-4 border-b ${
-        isDarkTheme ? "border-gray-700" : "border-gray-200"
+        isDarkTheme ? "border-gray-700 dark-theme" : "border-gray-200"
       }`}
     >
       {/* Первая строка фильтров */}
       <div className="flex items-center gap-4 mb-4">
-        <Button
-          variant="secondary"
+        <AntButton
+          icon={<ReloadOutlined />}
           onClick={onResetFilters}
-          isDarkTheme={isDarkTheme}
-          icon={mdiRefresh}
-          iconSize={0.8}
+          type="default"
+          className="items-filters-button"
         >
           {t("itemsPage.filters.reset")}
-        </Button>
+        </AntButton>
 
-        <div className="flex-1 relative">
-          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-            <svg
-              className="w-4 h-4 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </div>
-          <input
-            type="text"
+        <div className="w-70">
+          <Input
             placeholder={t("itemsPage.filters.search")}
+            prefix={<SearchOutlined />}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className={`
-              w-full h-10 pl-10 pr-4 text-sm border rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent
-              ${
-                isDarkTheme
-                  ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                  : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
-              }
-            `}
+            allowClear
+            style={{ width: "100%" }}
+            className="items-filters-input"
           />
         </div>
 
-        <div className="w-48">
-          {renderMultiSelectDropdown(
-            isDifficultyDropdownOpen,
-            setIsDifficultyDropdownOpen,
+        <div className="flex flex-row gap-2 items-center">
+          <div className="text-sm font-medium">
+            {t("itemsPage.filters.difficultyClass")}
+          </div>
+          {renderTagSelect(
             selectedDifficultyClasses,
             ["normal", "exceptional", "elite"],
             onToggleDifficultyClass,
-            (item) => t(`itemsPage.filters.${item}`),
-            t("itemsPage.filters.difficultyClass")
+            (item: string) => t(`itemsPage.filters.${item}`),
+            t("itemsPage.filters.difficultyClass"),
+            "w-48"
           )}
         </div>
 
-        <div className="w-48">
-          {renderMultiSelectDropdown(
-            isClassDropdownOpen,
-            setIsClassDropdownOpen,
+        <div className="flex flex-row gap-2 items-center">
+          <div className="text-sm font-medium">
+            {t("itemsPage.filters.limitedToClass")}
+          </div>
+          {renderTagSelect(
             selectedLimitedToClasses,
             [...Object.values(ECharacterClass), "none"],
             onToggleLimitedToClass,
-            (item) =>
-              item === "none" ? t("itemsPage.filters.anyClass") : t(item),
-            t("itemsPage.filters.limitedToClass")
+            (item: string) =>
+              item === "none"
+                ? t("itemsPage.filters.anyClass")
+                : t(`itemsPage.classes.${item.toLowerCase()}`),
+            t("itemsPage.filters.limitedToClass"),
+            "w-48"
           )}
         </div>
 
         <div className="flex gap-2">
-          <input
-            type="number"
+          <InputNumber
             placeholder={t("itemsPage.filters.reqLevel")}
-            value={reqLevelFilter || ""}
-            onChange={(e) => onSetReqLevelFilter(Number(e.target.value) || 0)}
-            className={`
-              w-20 h-10 px-2 text-sm border rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent
-              ${
-                isDarkTheme
-                  ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                  : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
-              }
-            `}
+            value={reqLevelFilter || null}
+            onChange={(value) => onSetReqLevelFilter(value || 0)}
+            style={{ width: "80px" }}
+            size="middle"
+            min={0}
+            className="items-filters-input-number"
           />
-          <input
-            type="number"
+          <InputNumber
             placeholder={t("itemsPage.filters.reqStrength")}
-            value={reqStrengthFilter || ""}
-            onChange={(e) =>
-              onSetReqStrengthFilter(Number(e.target.value) || 0)
-            }
-            className={`
-              w-20 h-10 px-2 text-sm border rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent
-              ${
-                isDarkTheme
-                  ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                  : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
-              }
-            `}
+            value={reqStrengthFilter || null}
+            onChange={(value) => onSetReqStrengthFilter(value || 0)}
+            style={{ width: "90px" }}
+            size="middle"
+            min={0}
+            className="items-filters-input-number"
           />
-          <input
-            type="number"
+          <InputNumber
             placeholder={t("itemsPage.filters.reqDexterity")}
-            value={reqDexterityFilter || ""}
-            onChange={(e) =>
-              onSetReqDexterityFilter(Number(e.target.value) || 0)
-            }
-            className={`
-              w-20 h-10 px-2 text-sm border rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent
-              ${
-                isDarkTheme
-                  ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                  : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
-              }
-            `}
+            value={reqDexterityFilter || null}
+            onChange={(value) => onSetReqDexterityFilter(value || 0)}
+            style={{ width: "90px" }}
+            size="middle"
+            min={0}
+            className="items-filters-input-number"
           />
         </div>
 
-        <div className="w-32">
-          {renderMultiSelectDropdown(
-            isWeightDropdownOpen,
-            setIsWeightDropdownOpen,
-            selectedWeights,
-            ["light", "medium", "heavy"],
-            onToggleWeight,
-            (item) => t(`itemsPage.filters.${item}`),
-            t("itemsPage.filters.weight")
-          )}
-        </div>
+        {renderTagSelect(
+          selectedWeights,
+          ["light", "medium", "heavy"],
+          onToggleWeight,
+          (item: string) => t(`itemsPage.filters.${item}`),
+          t("itemsPage.filters.weight"),
+          "w-32"
+        )}
       </div>
 
       {/* Вторая строка - кнопки базовых типов */}
-      <div className="mb-4">{renderBaseTypeButtons()}</div>
+      {renderBaseTypeButtons()}
     </div>
   );
 };
