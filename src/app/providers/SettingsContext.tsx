@@ -99,14 +99,29 @@ export interface GemSettings {
   diamonds: PotionGroupSettings;
 }
 
+// Настройки для отдельного предмета
+export interface ItemSettings {
+  enabled: boolean;
+  showDifficultyClassMarker: boolean;
+  isManual: boolean;
+  locales: Locales;
+}
+
+export interface ItemsSettings {
+  difficultyClassMarkers: PotionGroupSettings;
+  qualityPrefixes: PotionGroupSettings;
+  // Настройки для отдельных предметов (по ключу предмета)
+  items: Record<string, ItemSettings>;
+}
+
 // Настройки профиля (только специфичные для профиля данные)
 interface AppSettings {
   runes: Record<ERune, RuneSettings>;
   generalRunes: GeneralRuneSettings;
   common: CommonSettings;
   gems: GemSettings;
+  items: ItemsSettings;
   // В будущем добавим:
-  // items: Record<string, ItemSettings>;
   // skills: Record<string, SkillSettings>;
 }
 
@@ -224,6 +239,30 @@ interface SettingsContextType {
     newSettings: Partial<PotionLevelSettings>
   ) => void;
   resetGemSettings: () => void;
+
+  // Setter'ы для ItemsTab
+  getItemsSettings: () => ItemsSettings;
+  getItemsGroupSettings: (
+    item: "difficultyClassMarkers" | "qualityPrefixes"
+  ) => PotionGroupSettings;
+  updateItemsGroupSettings: (
+    item: "difficultyClassMarkers" | "qualityPrefixes",
+    newSettings: Partial<PotionGroupSettings>
+  ) => void;
+  updateItemsLevelSettings: (
+    item: "difficultyClassMarkers" | "qualityPrefixes",
+    level: number,
+    newSettings: Partial<PotionLevelSettings>
+  ) => void;
+  resetItemsSettings: () => void;
+
+  // Setter'ы для отдельных предметов
+  getItemSettings: (itemKey: string) => ItemSettings;
+  updateItemSettings: (
+    itemKey: string,
+    newSettings: Partial<ItemSettings>
+  ) => void;
+  resetItemSettings: (itemKey: string) => void;
 
   // Общие для профиля
   resetAllSettings: () => void;
@@ -366,6 +405,34 @@ const getDefaultGemSettings = (): GemSettings => ({
   diamonds: getDefaultPotionGroupSettings(5), // 5 уровней для бриллиантов
 });
 
+// Дефолтные настройки для отдельного предмета
+const getDefaultItemSettings = (): ItemSettings => ({
+  enabled: true,
+  showDifficultyClassMarker: false,
+  isManual: false,
+  locales: {
+    enUS: "",
+    ruRU: "",
+    zhTW: "",
+    deDE: "",
+    esES: "",
+    frFR: "",
+    itIT: "",
+    koKR: "",
+    plPL: "",
+    esMX: "",
+    jaJP: "",
+    ptBR: "",
+    zhCN: "",
+  },
+});
+
+const getDefaultItemsSettings = (): ItemsSettings => ({
+  difficultyClassMarkers: getDefaultPotionGroupSettings(3), // 3 уровня: Normal, Exceptional, Elite
+  qualityPrefixes: getDefaultPotionGroupSettings(2), // 2 уровня: Damaged, Superior
+  items: {}, // Начинаем с пустого объекта, предметы будут добавляться по мере необходимости
+});
+
 // Миграция старых настроек рун к новому формату
 const migrateRuneSettings = (oldSettings: any): RuneSettings => {
   // Если это уже новый формат
@@ -458,6 +525,7 @@ const createDefaultSettings = (): AppSettings => {
     generalRunes: getDefaultGeneralRuneSettings(),
     common: getDefaultCommonSettings(),
     gems: getDefaultGemSettings(),
+    items: getDefaultItemsSettings(),
   };
 };
 
@@ -489,6 +557,13 @@ const prepareForExport = (profile: Profile): Profile => {
   ].forEach((gemType) => {
     if (exportProfile.settings.gems[gemType]) {
       delete exportProfile.settings.gems[gemType].activeTab;
+    }
+  });
+
+  // Удаляем activeTab из всех настроек предметов
+  ["difficultyClassMarkers", "qualityPrefixes"].forEach((itemType) => {
+    if (exportProfile.settings.items[itemType]) {
+      delete exportProfile.settings.items[itemType].activeTab;
     }
   });
 
@@ -596,6 +671,12 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
           gems: parsedSettings.gems
             ? parsedSettings.gems
             : getDefaultGemSettings(),
+          items: parsedSettings.items
+            ? {
+                ...parsedSettings.items,
+                items: parsedSettings.items.items || {},
+              }
+            : getDefaultItemsSettings(),
         };
         setSettings(migratedSettings);
       } catch (error) {
@@ -624,6 +705,12 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
             gems: profile.settings.gems
               ? profile.settings.gems
               : getDefaultGemSettings(),
+            items: profile.settings.items
+              ? {
+                  ...profile.settings.items,
+                  items: profile.settings.items.items || {},
+                }
+              : getDefaultItemsSettings(),
           },
         }));
         setProfiles(migratedProfiles);
@@ -762,16 +849,14 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   );
 
   const toggleTheme = useCallback(() => {
+    setTimeout(() => {
+      setIsThemeChanging(false);
+    }, 0);
     setIsThemeChanging(true);
     setAppConfig((prev) => ({
       ...prev,
       theme: prev.theme === "light" ? "dark" : "light",
     }));
-
-    // Скрываем лоадер через достаточное время для применения стилей
-    setTimeout(() => {
-      setIsThemeChanging(false);
-    }, 0);
   }, [setAppConfig]);
 
   const resetAppConfig = useCallback(() => {
@@ -1087,6 +1172,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
           gems: profileData.settings.gems
             ? profileData.settings.gems
             : getDefaultGemSettings(),
+          items: profileData.settings.items
+            ? profileData.settings.items
+            : getDefaultItemsSettings(),
         };
 
         const newProfile: Profile = {
@@ -1310,6 +1398,134 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     }));
   }, []);
 
+  // Методы для работы с ItemsSettings
+  const getItemsSettings = useCallback(() => {
+    if (!settings.items) {
+      return getDefaultItemsSettings();
+    }
+    return settings.items;
+  }, [settings.items]);
+
+  const getItemsGroupSettings = useCallback(
+    (item: "difficultyClassMarkers" | "qualityPrefixes") => {
+      if (!settings.items) {
+        return getDefaultItemsSettings()[item];
+      }
+      return settings.items[item];
+    },
+    [settings.items]
+  );
+
+  const updateItemsGroupSettings = useCallback(
+    (
+      item: "difficultyClassMarkers" | "qualityPrefixes",
+      newSettings: Partial<PotionGroupSettings>
+    ) => {
+      setSettings((prevSettings) => ({
+        ...prevSettings,
+        items: {
+          ...(prevSettings.items || getDefaultItemsSettings()),
+          [item]: {
+            ...(prevSettings.items?.[item] || getDefaultItemsSettings()[item]),
+            ...newSettings,
+          },
+        },
+      }));
+    },
+    []
+  );
+
+  const updateItemsLevelSettings = useCallback(
+    (
+      item: "difficultyClassMarkers" | "qualityPrefixes",
+      level: number,
+      newSettings: Partial<PotionLevelSettings>
+    ) => {
+      setSettings((prevSettings) => {
+        const defaultItemsSettings = getDefaultItemsSettings();
+        const currentItemsSettings = prevSettings.items || defaultItemsSettings;
+        const currentItemSettings =
+          currentItemsSettings[item] || defaultItemsSettings[item];
+        const currentLevels =
+          currentItemSettings.levels || defaultItemsSettings[item].levels;
+
+        if (!currentLevels || level >= currentLevels.length) {
+          console.warn(`Invalid level ${level} for item ${item}`);
+          return prevSettings;
+        }
+
+        return {
+          ...prevSettings,
+          items: {
+            ...currentItemsSettings,
+            [item]: {
+              ...currentItemSettings,
+              levels: currentLevels.map((lvl, index) =>
+                index === level ? { ...lvl, ...newSettings } : lvl
+              ),
+            },
+          },
+        };
+      });
+    },
+    []
+  );
+
+  const resetItemsSettings = useCallback(() => {
+    setSettings((prevSettings) => ({
+      ...prevSettings,
+      items: getDefaultItemsSettings(),
+    }));
+  }, []);
+
+  // Методы для работы с настройками отдельных предметов
+  const getItemSettings = useCallback(
+    (itemKey: string) => {
+      if (
+        !settings.items ||
+        !settings.items.items ||
+        !settings.items.items[itemKey]
+      ) {
+        return getDefaultItemSettings();
+      }
+      return settings.items.items[itemKey];
+    },
+    [settings.items]
+  );
+
+  const updateItemSettings = useCallback(
+    (itemKey: string, newSettings: Partial<ItemSettings>) => {
+      setSettings((prevSettings) => ({
+        ...prevSettings,
+        items: {
+          ...(prevSettings.items || getDefaultItemsSettings()),
+          items: {
+            ...(prevSettings.items?.items || {}),
+            [itemKey]: {
+              ...(prevSettings.items?.items?.[itemKey] ||
+                getDefaultItemSettings()),
+              ...newSettings,
+            },
+          },
+        },
+      }));
+    },
+    []
+  );
+
+  const resetItemSettings = useCallback((itemKey: string) => {
+    setSettings((prevSettings) => ({
+      ...prevSettings,
+      items: {
+        ...(prevSettings.items || getDefaultItemsSettings()),
+        items: {
+          ...(prevSettings.items?.items || {}),
+          [itemKey]: getDefaultItemSettings(),
+        },
+      },
+    }));
+  }, []);
+
   const contextValue: SettingsContextType = {
     // Методы для настроек приложения
     getAppConfig,
@@ -1355,6 +1571,18 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     updateGemGroupSettings,
     updateGemLevelSettings,
     resetGemSettings,
+
+    // Методы для ItemsTab
+    getItemsSettings,
+    getItemsGroupSettings,
+    updateItemsGroupSettings,
+    updateItemsLevelSettings,
+    resetItemsSettings,
+
+    // Методы для отдельных предметов
+    getItemSettings,
+    updateItemSettings,
+    resetItemSettings,
 
     // Данные
     settings,

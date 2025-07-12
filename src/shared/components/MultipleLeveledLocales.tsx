@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
+import { Tooltip } from "antd";
 import { localeOptions } from "../constants";
 import Collapse from "./Collapse";
 import Switch from "./Switch";
@@ -15,6 +16,7 @@ interface MultipleLeveledLocalesProps {
   selectedLocales: string[];
   isDarkTheme: boolean;
   imagePaths: string[];
+  tooltips?: string[]; // Массив тултипов для кнопок
   isOpen: boolean;
   onToggle: (isOpen: boolean) => void;
   onTabChange: (tabIndex: number) => void;
@@ -30,6 +32,7 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
   selectedLocales,
   isDarkTheme,
   imagePaths,
+  tooltips,
   isOpen,
   onToggle,
   onTabChange,
@@ -118,31 +121,41 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
       >
         {/* Табы с картинками */}
         <div className="flex space-x-2 mb-4 relative">
-          {settings.levels.map((level, index) => (
-            <button
-              key={index}
-              onClick={() => onTabChange(index)}
-              className={`p-2 rounded-lg transition-all duration-200 border-2 ${
-                level.enabled
-                  ? isDarkTheme
-                    ? "border-green-400 bg-green-400/20"
-                    : "border-green-500 bg-green-500/20"
-                  : isDarkTheme
-                  ? "border-gray-600 bg-gray-700/50 hover:border-gray-500"
-                  : "border-gray-300 bg-gray-100/50 hover:border-gray-400"
-              }`}
-              style={{
-                width: "65px",
-              }}
-            >
-              <img
-                src={imagePaths[index]}
-                alt={t(`${itemType}Levels.level${index + 1}`)}
-                className="w-12 h-12 object-contain"
-                draggable={false}
-              />
-            </button>
-          ))}
+          {settings.levels.map((level, index) => {
+            const buttonContent = (
+              <button
+                key={index}
+                onClick={() => onTabChange(index)}
+                className={`p-2 rounded-lg transition-all duration-200 border-2 ${
+                  level.enabled
+                    ? isDarkTheme
+                      ? "border-green-400 bg-green-400/20"
+                      : "border-green-500 bg-green-500/20"
+                    : isDarkTheme
+                    ? "border-gray-600 bg-gray-700/50 hover:border-gray-500"
+                    : "border-gray-300 bg-gray-100/50 hover:border-gray-400"
+                }`}
+                style={{
+                  width: "65px",
+                }}
+              >
+                <img
+                  src={imagePaths[index]}
+                  alt={t(`${itemType}Levels.level${index + 1}`)}
+                  className="w-12 h-12 object-contain"
+                  draggable={false}
+                />
+              </button>
+            );
+
+            return tooltips && tooltips[index] ? (
+              <Tooltip key={index} title={tooltips[index]} placement="top">
+                {buttonContent}
+              </Tooltip>
+            ) : (
+              buttonContent
+            );
+          })}
 
           {/* Подчеркивание активного таба */}
           <div

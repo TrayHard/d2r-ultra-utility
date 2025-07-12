@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { EBaseType, ECharacterClass, allBaseTypes } from "./constants";
 import { Button as AntButton, Input, InputNumber, Select } from "antd";
 import { SearchOutlined, ReloadOutlined } from "@ant-design/icons";
+import Icon from "@mdi/react";
+import { mdiTune } from "@mdi/js";
+import ItemsSettingsModal from "./ItemsSettingsModal";
 import "./ItemsTab.css";
 
 interface ItemsFiltersProps {
@@ -47,6 +50,7 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
   onToggleBaseType,
 }) => {
   const { t } = useTranslation();
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 
   const renderTagSelect = (
     selectedItems: Set<string>,
@@ -224,10 +228,35 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
           t("itemsPage.filters.weight"),
           "w-32"
         )}
+
+        {/* Кнопка настроек */}
+        <div className="ml-auto">
+          <button
+            onClick={() => setIsSettingsModalOpen(true)}
+            className={`
+              p-2 rounded-md border transition-colors
+              ${
+                isDarkTheme
+                  ? "bg-gray-700 border-gray-600 text-white hover:bg-gray-600"
+                  : "bg-white border-gray-300 text-gray-900 hover:bg-gray-50"
+              }
+            `}
+            title={t("itemsPage.settings.title")}
+          >
+            <Icon path={mdiTune} size={0.8} />
+          </button>
+        </div>
       </div>
 
       {/* Вторая строка - кнопки базовых типов */}
       {renderBaseTypeButtons()}
+
+      {/* Модальное окно настроек предметов */}
+      <ItemsSettingsModal
+        isOpen={isSettingsModalOpen}
+        onClose={() => setIsSettingsModalOpen(false)}
+        isDarkTheme={isDarkTheme}
+      />
     </div>
   );
 };
