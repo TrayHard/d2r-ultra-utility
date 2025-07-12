@@ -26,6 +26,14 @@ interface BaseItem {
   reqDexterity: number;
   weight: "light" | "medium" | "heavy";
   id: number;
+  uniques?: Array<{
+    key: string;
+    imgName: string;
+  }>;
+  setItems?: Array<{
+    key: string;
+    imgName: string;
+  }>;
 }
 
 interface ItemSettings {
@@ -77,13 +85,45 @@ const ItemsTab: React.FC<ItemsTabProps> = ({ isDarkTheme }) => {
 
   const filteredAndSortedItems = useMemo(() => {
     let filtered = items.filter((item) => {
-      // Поиск по названию
+      // Поиск по названию базового предмета
       const itemName = t(`itemsPage.bases.${item.key}`) || item.key;
-      if (
-        searchQuery &&
-        !itemName.toLowerCase().includes(searchQuery.toLowerCase())
-      ) {
-        return false;
+      let matchesSearch = false;
+
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+
+        // Проверяем название базового предмета
+        if (itemName.toLowerCase().includes(query)) {
+          matchesSearch = true;
+        }
+
+        // Проверяем названия уникальных предметов
+        if (!matchesSearch && item.uniques) {
+          for (const unique of item.uniques) {
+            const uniqueName =
+              t(`itemsPage.uniques.${unique.key}`) || unique.key;
+            if (uniqueName.toLowerCase().includes(query)) {
+              matchesSearch = true;
+              break;
+            }
+          }
+        }
+
+        // Проверяем названия сетовых предметов
+        if (!matchesSearch && item.setItems) {
+          for (const setItem of item.setItems) {
+            const setItemName =
+              t(`itemsPage.setItems.${setItem.key}`) || setItem.key;
+            if (setItemName.toLowerCase().includes(query)) {
+              matchesSearch = true;
+              break;
+            }
+          }
+        }
+
+        if (!matchesSearch) {
+          return false;
+        }
       }
 
       // Фильтр по классу сложности (если выбран хотя бы один)
