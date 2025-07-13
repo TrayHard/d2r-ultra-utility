@@ -154,28 +154,30 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem }) => {
     useSettings();
 
   // Получаем настройки для выбранного предмета (даже если его нет)
-  const settings = selectedItem
-    ? getItemSettings(selectedItem.key)
-    : {
-        enabled: true,
-        showDifficultyClassMarker: false,
-        isManual: false,
-        locales: {
-          enUS: "",
-          ruRU: "",
-          zhTW: "",
-          deDE: "",
-          esES: "",
-          frFR: "",
-          itIT: "",
-          koKR: "",
-          plPL: "",
-          esMX: "",
-          jaJP: "",
-          ptBR: "",
-          zhCN: "",
-        },
-      };
+  const settings = React.useMemo(() => {
+    return selectedItem
+      ? getItemSettings(selectedItem.key)
+      : {
+          enabled: true,
+          showDifficultyClassMarker: false,
+          isManual: false,
+          locales: {
+            enUS: "",
+            ruRU: "",
+            zhTW: "",
+            deDE: "",
+            esES: "",
+            frFR: "",
+            itIT: "",
+            koKR: "",
+            plPL: "",
+            esMX: "",
+            jaJP: "",
+            ptBR: "",
+            zhCN: "",
+          },
+        };
+  }, [selectedItem, getItemSettings]);
   const languageCodes = getSelectedLocales();
 
   // Локальные состояния для настроек (всегда инициализируются)
@@ -191,7 +193,12 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem }) => {
     setShowDifficultyClassMarker(settings.showDifficultyClassMarker);
     setIsManual(settings.isManual);
     setLocales(settings.locales);
-  }, [settings]);
+  }, [
+    settings.enabled,
+    settings.showDifficultyClassMarker,
+    settings.isManual,
+    JSON.stringify(settings.locales), // Используем JSON.stringify для глубокого сравнения
+  ]);
 
   // Обработчики изменений
   const handleSettingChange = React.useCallback(

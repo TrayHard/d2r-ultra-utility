@@ -30,7 +30,13 @@ const MainSpaceBody: React.FC<MainSpaceBodyProps> = ({
           />
         );
       case "items":
-        return <ItemsTab isDarkTheme={isDarkTheme} />;
+        return (
+          <ItemsTab
+            isDarkTheme={isDarkTheme}
+            onReadFromFiles={onReadFromFiles}
+            onApplyChanges={onApplyChanges}
+          />
+        );
       case "runes":
         return <RunesTab isDarkTheme={isDarkTheme} />;
       case "gems":

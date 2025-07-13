@@ -342,7 +342,9 @@
       "gemsLoaded": "Gems loaded",
       "gemsLoadedDescription": "Gems settings have been loaded from game files",
       "gemsLoadedDetails": "Successfully loaded {{count}} gems",
-      "gemsChangesAppliedDescription": "Gems settings have been saved to game files"
+      "gemsChangesAppliedDescription": "Gems settings have been saved to game files",
+      "itemsLoaded": "Items loaded",
+      "itemsLoadedDetails": "Loaded {{prefixes}} quality prefixes and {{items}} items from files"
     },
     "error": {
       "fileLoadError": "File loading error",
@@ -355,6 +357,12 @@
     }
   },
   "itemsPage": {
+    "loadFromFiles": "Load from Files",
+    "loadingFromFiles": "Loading...",
+    "errors": {
+      "pathNotSet": "Game path is not set. Please configure the path in app settings.",
+      "pathNotSetTitle": "Error"
+    },
     "settings": {
       "title": "Items Settings",
       "difficultyClassMarkers": "Difficulty Class Markers",

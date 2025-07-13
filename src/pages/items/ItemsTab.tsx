@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { EBaseType, ECharacterClass } from "./constants";
+import { EBaseType } from "./constants";
 import basesData from "./bases.json";
 import Icon from "@mdi/react";
 import { mdiClose } from "@mdi/js";
@@ -8,10 +8,13 @@ import Button from "../../shared/components/Button";
 import ItemsFilters from "./ItemsFilters";
 import ItemsList from "./ItemsList";
 import ItemCard from "./ItemCard";
+
 import "./ItemsTab.css";
 
 interface ItemsTabProps {
   isDarkTheme: boolean;
+  onReadFromFiles?: () => void;
+  onApplyChanges?: () => void;
 }
 
 interface BaseItem {
@@ -43,7 +46,11 @@ interface ItemSettings {
 type SortType = "type" | "name" | "level";
 type SortOrder = "asc" | "desc";
 
-const ItemsTab: React.FC<ItemsTabProps> = ({ isDarkTheme }) => {
+const ItemsTab: React.FC<ItemsTabProps> = ({
+  isDarkTheme,
+  onReadFromFiles,
+  onApplyChanges,
+}) => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [sortType, setSortType] = useState<SortType>("type");

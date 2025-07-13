@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import MainSpaceBody, { TabType } from "./MainSpaceBody.tsx";
 import Tabs, { TabItem } from "../../../shared/components/Tabs.tsx";
@@ -10,6 +10,8 @@ import { useGlobalMessage } from "../../../shared/components/Message/MessageProv
 import { useTextWorker } from "../../../shared/hooks/useTextWorker.ts";
 import { useCommonItemsWorker } from "../../../shared/hooks/useCommonItemsWorker.ts";
 import { useGemsWorker } from "../../../shared/hooks/useGemsWorker.ts";
+import { useItemsWorker } from "../../../shared/hooks/useItemsWorker.ts";
+import basesData from "../../../pages/items/bases.json";
 
 interface MainSpaceProps {
   isDarkTheme: boolean;
@@ -28,8 +30,13 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     updatePotionLevelSettings,
     updateGemGroupSettings,
     updateGemLevelSettings,
+    updateItemsGroupSettings,
+    updateItemsLevelSettings,
+    updateItemSettings,
     getCommonSettings,
     getGemSettings,
+    getItemsSettings,
+    getSelectedLocales,
     settings,
     profiles,
     activeProfileId,
@@ -86,6 +93,35 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     getGemSettings
   );
 
+  // Подготавливаем данные для хука предметов
+  const itemsForWorker = useMemo(() => {
+    // Фильтруем дубли по id
+    const uniqueItems = (basesData as any[]).filter(
+      (item, index, arr) => arr.findIndex((i) => i.id === item.id) === index
+    );
+    return uniqueItems.map((item) => ({
+      key: item.key,
+      id: item.id,
+    }));
+  }, []);
+
+  // Хук для предметов
+  const {
+    isLoading: isItemsLoading,
+    error: itemsError,
+    readFromFiles: readItemsFromFiles,
+    applyChanges: applyItemsChanges,
+  } = useItemsWorker(
+    updateItemsGroupSettings,
+    updateItemsLevelSettings,
+    updateItemSettings,
+    (message, type, title) => sendMessage(message, { type, title }),
+    t,
+    getItemsSettings,
+    getSelectedLocales,
+    itemsForWorker
+  );
+
   // Определяем, какой хук использовать в зависимости от активного таба
   const isLoading =
     activeTab === "runes"
@@ -94,6 +130,8 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       ? isCommonItemsLoading
       : activeTab === "gems"
       ? isGemsLoading
+      : activeTab === "items"
+      ? isItemsLoading
       : false;
   const error =
     activeTab === "runes"
@@ -102,6 +140,8 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       ? commonItemsError
       : activeTab === "gems"
       ? gemsError
+      : activeTab === "items"
+      ? itemsError
       : null;
   const readFromFiles =
     activeTab === "runes"
@@ -110,6 +150,8 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       ? readCommonItemsFromFiles
       : activeTab === "gems"
       ? readGemsFromFiles
+      : activeTab === "items"
+      ? readItemsFromFiles
       : () => {};
   const applyChanges =
     activeTab === "runes"
@@ -118,6 +160,8 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       ? applyCommonItemsChanges
       : activeTab === "gems"
       ? applyGemsChanges
+      : activeTab === "items"
+      ? applyItemsChanges
       : () => {};
 
   const handleApplyClick = () => {

@@ -337,7 +337,9 @@
       "gemsLoaded": "Драгоценные камни загружены",
       "gemsLoadedDescription": "Настройки драгоценных камней загружены из файлов игры",
       "gemsLoadedDetails": "Успешно загружено {{count}} драгоценных камней",
-      "gemsChangesAppliedDescription": "Настройки драгоценных камней сохранены в файлы игры"
+      "gemsChangesAppliedDescription": "Настройки драгоценных камней сохранены в файлы игры",
+      "itemsLoaded": "Предметы загружены",
+      "itemsLoadedDetails": "Загружено {{prefixes}} префиксов качества и {{items}} предметов из файлов"
     },
     "error": {
       "fileLoadError": "Ошибка загрузки файлов",
@@ -350,6 +352,12 @@
     }
   },
   "itemsPage": {
+    "loadFromFiles": "Загрузить из файлов",
+    "loadingFromFiles": "Загрузка...",
+    "errors": {
+      "pathNotSet": "Путь к игре не настроен. Пожалуйста, настройте путь в настройках приложения.",
+      "pathNotSetTitle": "Ошибка"
+    },
     "settings": {
       "title": "Настройки предметов",
       "difficultyClassMarkers": "Маркеры класса сложности",

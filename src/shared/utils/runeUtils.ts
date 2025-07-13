@@ -802,9 +802,9 @@ export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
  * Пути к файлам
  */
 export const GAME_PATHS = {
-  LOCALES: "mods\\D2RMOD\\D2RMOD.mpq\\data\\local\\lng\\strings",
+  LOCALES: "mods\\D2RMOD\\data\\local\\lng\\strings",
   RUNES_FILE: "item-runes.json",
-  RUNE_HIGHLIGHT: "mods\\D2RMOD\\D2RMOD.mpq\\data\\hd\\items\\misc\\rune",
+  RUNE_HIGHLIGHT: "mods\\D2RMOD\\data\\hd\\items\\misc\\rune",
 } as const;
 
 /**
