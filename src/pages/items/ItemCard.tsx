@@ -5,6 +5,7 @@ import { mdiEye } from "@mdi/js";
 import { Badge } from "antd";
 import Switcher from "../../shared/components/Switcher";
 import { ItemSettings, useSettings } from "../../app/providers/SettingsContext";
+import ColorHint from "../../shared/components/ColorHint";
 
 interface BaseItem {
   key: string;
@@ -581,27 +582,30 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem }) => {
                       >
                         {langCode}:
                       </label>
-                      <input
-                        type="text"
-                        value={locales[langCode as keyof typeof locales]}
-                        onChange={(e) =>
-                          handleLanguageNameChange(langCode, e.target.value)
-                        }
-                        placeholder={
-                          t(`runePage.controls.placeholders.${langCode}`) ||
-                          `Name in ${langCode}`
-                        }
-                        disabled={!enabled}
-                        className={`
-                          flex-1 px-3 py-2 text-sm rounded-lg border transition-all duration-200
-                          ${
-                            isDarkTheme
-                              ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
-                              : "bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
+                      <div className="flex-1 flex items-center space-x-2">
+                        <input
+                          type="text"
+                          value={locales[langCode as keyof typeof locales]}
+                          onChange={(e) =>
+                            handleLanguageNameChange(langCode, e.target.value)
                           }
-                          ${!enabled ? "opacity-50 cursor-not-allowed" : ""}
-                        `}
-                      />
+                          placeholder={
+                            t(`runePage.controls.placeholders.${langCode}`) ||
+                            `Name in ${langCode}`
+                          }
+                          disabled={!enabled}
+                          className={`
+                            flex-1 px-3 py-2 text-sm rounded-lg border transition-all duration-200
+                            ${
+                              isDarkTheme
+                                ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
+                                : "bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
+                            }
+                            ${!enabled ? "opacity-50 cursor-not-allowed" : ""}
+                          `}
+                        />
+                        <ColorHint isDarkTheme={isDarkTheme} />
+                      </div>
                     </div>
                   </div>
                 ))}

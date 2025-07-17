@@ -14,13 +14,9 @@ import type {
   PotionGroupSettings,
 } from "../../app/providers/SettingsContext";
 
-// Маппинг ID качества предметов
-const QUALITY_PREFIXES_IDS = {
-  1723: 0, // Damaged
-  1724: 1, // Superior
-  1725: 0, // Damaged (может быть дубликат)
-  20910: 1, // Superior (может быть дубликат)
-};
+// Маппинг ID качества предметов (для справки)
+// Low Quality (level 0): 1723, 1724, 1725, 20910 - сравниваются между собой
+// Superior (level 1): 1727 - читается напрямую
 
 // Типы функций для обновления настроек
 type UpdateItemsGroupSettingsFunction = (
@@ -106,60 +102,106 @@ export const useItemsWorker = (
 
       // Обрабатываем Quality Prefixes
       let processedPrefixes = 0;
-      const qualityPrefixesIds = Object.keys(QUALITY_PREFIXES_IDS).map(Number);
 
-      for (const id of qualityPrefixesIds) {
-        const item = nameAffixesData.find((dataItem) => dataItem.id === id);
-        if (item) {
-          const level =
-            QUALITY_PREFIXES_IDS[id as keyof typeof QUALITY_PREFIXES_IDS];
+      // Superior level (1) - просто читаем ID 1727
+      const superiorItem = nameAffixesData.find(
+        (dataItem) => dataItem.id === 1727
+      );
+      if (superiorItem) {
+        console.log("Processing Superior (ID 1727):", superiorItem);
 
-          const locales: PotionLevelSettings["locales"] = {
-            enUS: "",
-            ruRU: "",
-            zhTW: "",
-            deDE: "",
-            esES: "",
-            frFR: "",
-            itIT: "",
-            koKR: "",
-            plPL: "",
-            esMX: "",
-            jaJP: "",
-            ptBR: "",
-            zhCN: "",
-          };
+        const superiorLocales: PotionLevelSettings["locales"] = {
+          enUS: "",
+          ruRU: "",
+          zhTW: "",
+          deDE: "",
+          esES: "",
+          frFR: "",
+          itIT: "",
+          koKR: "",
+          plPL: "",
+          esMX: "",
+          jaJP: "",
+          ptBR: "",
+          zhCN: "",
+        };
 
-          // Заполняем локали
+        // Заполняем Superior локали из ID 1727
+        SUPPORTED_LOCALES.forEach((locale) => {
+          const rawValue = superiorItem[locale] || "";
+          superiorLocales[locale] = removeColorCodes(rawValue);
+        });
+
+        console.log("Superior locales from ID 1727:", superiorLocales);
+
+        updateItemsLevelSettings("qualityPrefixes", 1, {
+          locales: superiorLocales,
+          enabled: true,
+        });
+
+        processedPrefixes++;
+      }
+
+      // Low Quality level (0) - сравниваем ID 1723, 1724, 1725, 20910
+      const lowQualityIds = [1723, 1724, 1725, 20910];
+      const lowQualityItems = lowQualityIds
+        .map((id) => nameAffixesData.find((dataItem) => dataItem.id === id))
+        .filter((item) => item !== undefined);
+
+      console.log("Low Quality items found:", lowQualityItems);
+
+      if (lowQualityItems.length > 0) {
+        // Проверяем, одинаковы ли значения в каждой локали между всеми ID
+        const allSameInAllLocales = SUPPORTED_LOCALES.every((locale) => {
+          const values = lowQualityItems.map((item) =>
+            removeColorCodes(item[locale] || "")
+          );
+          const firstValue = values[0];
+          return values.every((val) => val === firstValue);
+        });
+
+        console.log(
+          "All same in all locales for Low Quality:",
+          allSameInAllLocales
+        );
+
+        const lowQualityLocales: PotionLevelSettings["locales"] = {
+          enUS: "",
+          ruRU: "",
+          zhTW: "",
+          deDE: "",
+          esES: "",
+          frFR: "",
+          itIT: "",
+          koKR: "",
+          plPL: "",
+          esMX: "",
+          jaJP: "",
+          ptBR: "",
+          zhCN: "",
+        };
+
+        // Если значения НЕ одинаковые, заполняем Low Quality первым найденным значением
+        if (!allSameInAllLocales) {
+          const firstItem = lowQualityItems[0];
           SUPPORTED_LOCALES.forEach((locale) => {
-            const rawValue = item[locale] || "";
-            locales[locale] = removeColorCodes(rawValue);
+            const rawValue = firstItem[locale] || "";
+            lowQualityLocales[locale] = removeColorCodes(rawValue);
           });
-
-          // Проверяем, одинаковы ли значения в выбранных локалях
-          const selectedLocaleValues = selectedLocales.map(
-            (locale) => locales[locale as keyof typeof locales]
+          console.log(
+            "Low Quality locales filled (values differ):",
+            lowQualityLocales
           );
-          const allSame = selectedLocaleValues.every(
-            (val) => val === selectedLocaleValues[0]
-          );
-
-          // Если значения одинаковые, оставляем их, если разные - очищаем
-          if (!allSame) {
-            selectedLocales.forEach((locale) => {
-              locales[locale as keyof typeof locales] = "";
-            });
-          }
-
-          // Определяем enabled состояние
-          const enabled = true; // По требованию, переключатель всегда включен
-
-          updateItemsLevelSettings("qualityPrefixes", level, {
-            locales,
-            enabled,
-          });
-          processedPrefixes++;
+        } else {
+          console.log("Low Quality locales left empty (all values same)");
         }
+
+        updateItemsLevelSettings("qualityPrefixes", 0, {
+          locales: lowQualityLocales,
+          enabled: true,
+        });
+
+        processedPrefixes++;
       }
 
       // Обрабатываем отдельные предметы
@@ -384,36 +426,60 @@ export const useItemsWorker = (
       // Обрабатываем Quality Prefixes
       const qualityPrefixes = itemsSettings.qualityPrefixes;
       if (qualityPrefixes.enabled) {
-        // ID маппинг для Quality Prefixes
-        const qualityPrefixesIdMap = {
-          1723: 0, // Damaged
-          1724: 1, // Superior
-          1725: 0, // Damaged
-          20910: 1, // Superior
-        };
+        // Superior level (1) - записываем только в ID 1727
+        const superiorLevel = qualityPrefixes.levels[1];
+        if (superiorLevel) {
+          const superiorLocale = updatedNameAffixesData.find(
+            (locale) => locale.id === 1727
+          );
+          if (superiorLocale) {
+            for (const locale of selectedLocales) {
+              const localeKey = locale as keyof LocaleItem;
+              const settingsLocaleKey =
+                locale as keyof typeof superiorLevel.locales;
+              const prefixName = superiorLevel.locales[settingsLocaleKey];
 
-        Object.entries(qualityPrefixesIdMap).forEach(([id, level]) => {
-          const prefixId = parseInt(id);
-          const prefixLevel = qualityPrefixes.levels[level];
-
-          if (prefixLevel) {
-            const prefixLocale = updatedNameAffixesData.find(
-              (locale) => locale.id === prefixId
-            );
-            if (prefixLocale) {
-              for (const locale of selectedLocales) {
-                const localeKey = locale as keyof LocaleItem;
-                const settingsLocaleKey =
-                  locale as keyof typeof prefixLevel.locales;
-                const prefixName = prefixLevel.locales[settingsLocaleKey];
-
-                if (prefixName && prefixName.trim()) {
-                  (prefixLocale as any)[localeKey] = prefixName;
-                }
+              if (prefixName && prefixName.trim()) {
+                (superiorLocale as any)[localeKey] = prefixName;
               }
             }
           }
-        });
+        }
+
+        // Low Quality level (0) - записываем в ID 1723, 1724, 1725, 20910
+        const lowQualityLevel = qualityPrefixes.levels[0];
+        if (lowQualityLevel) {
+          const lowQualityIds = [1723, 1724, 1725, 20910];
+
+          // Проверяем, есть ли хотя бы одно непустое значение
+          const hasNonEmptyValues = selectedLocales.some((locale) => {
+            const settingsLocaleKey =
+              locale as keyof typeof lowQualityLevel.locales;
+            const prefixName = lowQualityLevel.locales[settingsLocaleKey];
+            return prefixName && prefixName.trim();
+          });
+
+          // Записываем только если есть непустые значения
+          if (hasNonEmptyValues) {
+            lowQualityIds.forEach((id) => {
+              const prefixLocale = updatedNameAffixesData.find(
+                (locale) => locale.id === id
+              );
+              if (prefixLocale) {
+                for (const locale of selectedLocales) {
+                  const localeKey = locale as keyof LocaleItem;
+                  const settingsLocaleKey =
+                    locale as keyof typeof lowQualityLevel.locales;
+                  const prefixName = lowQualityLevel.locales[settingsLocaleKey];
+
+                  if (prefixName && prefixName.trim()) {
+                    (prefixLocale as any)[localeKey] = prefixName;
+                  }
+                }
+              }
+            });
+          }
+        }
       }
 
       // Записываем обновленные данные обратно в файлы

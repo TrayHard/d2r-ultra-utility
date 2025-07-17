@@ -1,0 +1,37 @@
+/* Стили для тултипа с цветовыми кодами */
+.color-hint-tooltip .ant-tooltip-inner {
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+  min-width: 320px;
+}
+
+.color-hint-tooltip .ant-tooltip-content {
+  min-width: 320px;
+}
+
+/* Скролл в темной теме */
+.color-hint-tooltip .ant-tooltip-inner::-webkit-scrollbar {
+  width: 6px;
+}
+
+.color-hint-tooltip .ant-tooltip-inner::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.color-hint-tooltip .ant-tooltip-inner::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.color-hint-tooltip .ant-tooltip-inner::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Анимация для цветовых блоков */
+.color-hint-tooltip .color-item:hover {
+  transform: scale(1.02);
+  background-color: rgba(255, 255, 255, 0.1) !important;
+} 

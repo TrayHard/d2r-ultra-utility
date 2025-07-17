@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import Dropdown from "../../shared/components/Dropdown.tsx";
 import Switcher from "../../shared/components/Switcher.tsx";
 import Checkbox from "../../shared/components/Checkbox.tsx";
+import ColorHint from "../../shared/components/ColorHint.tsx";
 import {
   RuneSettings,
   useSettings,
@@ -892,26 +893,32 @@ const RuneCard: React.FC<RuneCardProps> = ({
                             {t(`runePage.controls.languageLabels.${langCode}`)}{" "}
                             ({langCode})
                           </label>
-                          <textarea
-                            value={
-                              runeNames[langCode as keyof typeof runeNames]
-                            }
-                            onChange={(e) =>
-                              handleLanguageNameChange(langCode, e.target.value)
-                            }
-                            placeholder={t(
-                              `runePage.controls.placeholders.${langCode}`
-                            )}
-                            rows={3}
-                            className={`
-                                w-full px-3 py-2 text-sm rounded-lg border transition-all duration-200 resize-vertical
-                                ${
-                                  isDarkTheme
-                                    ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
-                                    : "bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
-                                }
-                              `}
-                          />
+                          <div className="flex items-start space-x-2">
+                            <textarea
+                              value={
+                                runeNames[langCode as keyof typeof runeNames]
+                              }
+                              onChange={(e) =>
+                                handleLanguageNameChange(
+                                  langCode,
+                                  e.target.value
+                                )
+                              }
+                              placeholder={t(
+                                `runePage.controls.placeholders.${langCode}`
+                              )}
+                              rows={3}
+                              className={`
+                                  flex-1 px-3 py-2 text-sm rounded-lg border transition-all duration-200 resize-vertical
+                                  ${
+                                    isDarkTheme
+                                      ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
+                                      : "bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
+                                  }
+                                `}
+                            />
+                            <ColorHint isDarkTheme={isDarkTheme} />
+                          </div>
                         </div>
                       ) : (
                         // В обычном режиме - только input с подписью сбоку
@@ -923,27 +930,32 @@ const RuneCard: React.FC<RuneCardProps> = ({
                           >
                             {langCode}:
                           </label>
-                          <input
-                            type="text"
-                            value={
-                              runeNames[langCode as keyof typeof runeNames]
-                            }
-                            onChange={(e) =>
-                              handleLanguageNameChange(langCode, e.target.value)
-                            }
-                            placeholder={t(
-                              `runePage.controls.placeholders.${langCode}`
-                            )}
-                            style={{ marginRight: "8px" }}
-                            className={`
-                                flex-1 px-3 py-2 text-sm rounded-lg border transition-all duration-200
-                                ${
-                                  isDarkTheme
-                                    ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
-                                    : "bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
-                                }
-                              `}
-                          />
+                          <div className="flex-1 flex items-center space-x-2">
+                            <input
+                              type="text"
+                              value={
+                                runeNames[langCode as keyof typeof runeNames]
+                              }
+                              onChange={(e) =>
+                                handleLanguageNameChange(
+                                  langCode,
+                                  e.target.value
+                                )
+                              }
+                              placeholder={t(
+                                `runePage.controls.placeholders.${langCode}`
+                              )}
+                              className={`
+                                  flex-1 px-3 py-2 text-sm rounded-lg border transition-all duration-200
+                                  ${
+                                    isDarkTheme
+                                      ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
+                                      : "bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
+                                  }
+                                `}
+                            />
+                            <ColorHint isDarkTheme={isDarkTheme} />
+                          </div>
                         </div>
                       )}
                     </div>

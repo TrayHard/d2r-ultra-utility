@@ -204,6 +204,12 @@
         "ptBR": "Name in Portuguese",
         "zhCN": "Name in Chinese (Simplified)"
       },
+      "colorHint": {
+        "title": "Color Codes",
+        "description": "Use these codes to colorize text in game",
+        "clickToCopy": "Click on any color to copy its code",
+        "copied": "Copied {{code}} to clipboard"
+      },
       "sizes": {
         "Normal": "Normal",
         "Exceptional": "Exceptional",

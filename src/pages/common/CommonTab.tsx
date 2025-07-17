@@ -6,6 +6,7 @@ import Collapse from "../../shared/components/Collapse";
 import Switch from "../../shared/components/Switch";
 import Tooltip from "../../shared/components/Tooltip";
 import MultipleLeveledLocales from "../../shared/components/MultipleLeveledLocales";
+import ColorHint from "../../shared/components/ColorHint";
 import type {
   CommonItemSettings,
   PotionGroupSettings,
@@ -192,36 +193,39 @@ const CommonTab: React.FC<CommonTabProps> = ({
               >
                 {locale.label}:
               </span>
-              <input
-                type="text"
-                value={
-                  itemSettings.locales[
-                    locale.value as keyof typeof itemSettings.locales
-                  ] ?? ""
-                }
-                onChange={(e) =>
-                  handleLocaleChange(itemType, locale.value, e.target.value)
-                }
-                disabled={!itemSettings.enabled}
-                placeholder={t(
-                  `runePage.controls.placeholders.${locale.value}`
-                )}
-                className={`
-                  flex-1 px-3 py-2 rounded-md border transition-colors
-                  ${
-                    isDarkTheme
-                      ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                      : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
+              <div className="flex-1 flex items-center space-x-2">
+                <input
+                  type="text"
+                  value={
+                    itemSettings.locales[
+                      locale.value as keyof typeof itemSettings.locales
+                    ] ?? ""
                   }
-                  ${
-                    !itemSettings.enabled
-                      ? "opacity-50 cursor-not-allowed"
-                      : isDarkTheme
-                      ? "focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
-                      : "focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
+                  onChange={(e) =>
+                    handleLocaleChange(itemType, locale.value, e.target.value)
                   }
-                `}
-              />
+                  disabled={!itemSettings.enabled}
+                  placeholder={t(
+                    `runePage.controls.placeholders.${locale.value}`
+                  )}
+                  className={`
+                    flex-1 px-3 py-2 rounded-md border transition-colors
+                    ${
+                      isDarkTheme
+                        ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                        : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
+                    }
+                    ${
+                      !itemSettings.enabled
+                        ? "opacity-50 cursor-not-allowed"
+                        : isDarkTheme
+                        ? "focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
+                        : "focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
+                    }
+                  `}
+                />
+                <ColorHint isDarkTheme={isDarkTheme} />
+              </div>
             </div>
           ))}
       </div>
@@ -248,41 +252,44 @@ const CommonTab: React.FC<CommonTabProps> = ({
               >
                 {locale.label}:
               </span>
-              <input
-                type="text"
-                value={
-                  levelSettings.locales[
-                    locale.value as keyof typeof levelSettings.locales
-                  ] ?? ""
-                }
-                onChange={(e) =>
-                  handlePotionLocaleChange(
-                    itemType,
-                    level,
-                    locale.value,
-                    e.target.value
-                  )
-                }
-                disabled={!levelSettings.enabled}
-                placeholder={t(
-                  `runePage.controls.placeholders.${locale.value}`
-                )}
-                className={`
-                  flex-1 px-3 py-2 rounded-md border transition-colors
-                  ${
-                    isDarkTheme
-                      ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                      : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
+              <div className="flex-1 flex items-center space-x-2">
+                <input
+                  type="text"
+                  value={
+                    levelSettings.locales[
+                      locale.value as keyof typeof levelSettings.locales
+                    ] ?? ""
                   }
-                  ${
-                    !levelSettings.enabled
-                      ? "opacity-50 cursor-not-allowed"
-                      : isDarkTheme
-                      ? "focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
-                      : "focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
+                  onChange={(e) =>
+                    handlePotionLocaleChange(
+                      itemType,
+                      level,
+                      locale.value,
+                      e.target.value
+                    )
                   }
-                `}
-              />
+                  disabled={!levelSettings.enabled}
+                  placeholder={t(
+                    `runePage.controls.placeholders.${locale.value}`
+                  )}
+                  className={`
+                    flex-1 px-3 py-2 rounded-md border transition-colors
+                    ${
+                      isDarkTheme
+                        ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                        : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
+                    }
+                    ${
+                      !levelSettings.enabled
+                        ? "opacity-50 cursor-not-allowed"
+                        : isDarkTheme
+                        ? "focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
+                        : "focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
+                    }
+                  `}
+                />
+                <ColorHint isDarkTheme={isDarkTheme} />
+              </div>
             </div>
           ))}
       </div>
