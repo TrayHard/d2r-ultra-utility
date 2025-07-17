@@ -103,7 +103,6 @@ export interface GemSettings {
 export interface ItemSettings {
   enabled: boolean;
   showDifficultyClassMarker: boolean;
-  isManual: boolean;
   locales: Locales;
 }
 
@@ -409,7 +408,6 @@ const getDefaultGemSettings = (): GemSettings => ({
 const getDefaultItemSettings = (): ItemSettings => ({
   enabled: true,
   showDifficultyClassMarker: false,
-  isManual: false,
   locales: {
     enUS: "",
     ruRU: "",

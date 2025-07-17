@@ -160,7 +160,6 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem }) => {
       : {
           enabled: true,
           showDifficultyClassMarker: false,
-          isManual: false,
           locales: {
             enUS: "",
             ruRU: "",
@@ -184,19 +183,16 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem }) => {
   const [enabled, setEnabled] = React.useState(settings.enabled);
   const [showDifficultyClassMarker, setShowDifficultyClassMarker] =
     React.useState(settings.showDifficultyClassMarker);
-  const [isManual, setIsManual] = React.useState(settings.isManual);
   const [locales, setLocales] = React.useState(settings.locales);
 
   // Обновляем локальные состояния при изменении настроек
   React.useEffect(() => {
     setEnabled(settings.enabled);
     setShowDifficultyClassMarker(settings.showDifficultyClassMarker);
-    setIsManual(settings.isManual);
     setLocales(settings.locales);
   }, [
     settings.enabled,
     settings.showDifficultyClassMarker,
-    settings.isManual,
     JSON.stringify(settings.locales), // Используем JSON.stringify для глубокого сравнения
   ]);
 
@@ -222,14 +218,6 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem }) => {
     (checked: boolean) => {
       setShowDifficultyClassMarker(checked);
       handleSettingChange({ showDifficultyClassMarker: checked });
-    },
-    [handleSettingChange]
-  );
-
-  const handleManualChange = React.useCallback(
-    (checked: boolean) => {
-      setIsManual(checked);
-      handleSettingChange({ isManual: checked });
     },
     [handleSettingChange]
   );
@@ -581,84 +569,40 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem }) => {
                   {t("runePage.controls.languageCustomization") ||
                     "Language Customization"}
                 </h4>
-                <Switcher
-                  checked={isManual}
-                  onChange={handleManualChange}
-                  label={t("runePage.controls.manualMode") || "Manual Mode"}
-                  isDarkTheme={isDarkTheme}
-                  size="sm"
-                  disabled={!enabled}
-                />
               </div>
               <div className="space-y-3 overflow-y-auto max-h-[calc(100vh-400px)]">
                 {languageCodes.map((langCode) => (
                   <div key={langCode}>
-                    {isManual ? (
-                      // В ручном режиме - подпись сверху + textarea
-                      <div className="space-y-1 mx-2">
-                        <label
-                          className={`text-xs font-medium ${
-                            isDarkTheme ? "text-gray-400" : "text-gray-600"
-                          }`}
-                        >
-                          {t(`runePage.controls.languageLabels.${langCode}`)} (
-                          {langCode})
-                        </label>
-                        <textarea
-                          value={locales[langCode as keyof typeof locales]}
-                          onChange={(e) =>
-                            handleLanguageNameChange(langCode, e.target.value)
+                    <div className="flex items-center space-x-3">
+                      <label
+                        className={`text-xs font-medium flex-shrink-0 w-8 ${
+                          isDarkTheme ? "text-gray-400" : "text-gray-600"
+                        }`}
+                      >
+                        {langCode}:
+                      </label>
+                      <input
+                        type="text"
+                        value={locales[langCode as keyof typeof locales]}
+                        onChange={(e) =>
+                          handleLanguageNameChange(langCode, e.target.value)
+                        }
+                        placeholder={
+                          t(`runePage.controls.placeholders.${langCode}`) ||
+                          `Name in ${langCode}`
+                        }
+                        disabled={!enabled}
+                        className={`
+                          flex-1 px-3 py-2 text-sm rounded-lg border transition-all duration-200
+                          ${
+                            isDarkTheme
+                              ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
+                              : "bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
                           }
-                          placeholder={
-                            t(`runePage.controls.placeholders.${langCode}`) ||
-                            `Name in ${langCode}`
-                          }
-                          rows={3}
-                          disabled={!enabled}
-                          className={`
-                            w-full px-3 py-2 text-sm rounded-lg border transition-all duration-200 resize-vertical
-                            ${
-                              isDarkTheme
-                                ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
-                                : "bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
-                            }
-                            ${!enabled ? "opacity-50 cursor-not-allowed" : ""}
-                          `}
-                        />
-                      </div>
-                    ) : (
-                      // В обычном режиме - только input с подписью сбоку
-                      <div className="flex items-center space-x-3">
-                        <label
-                          className={`text-xs font-medium flex-shrink-0 w-8 ${
-                            isDarkTheme ? "text-gray-400" : "text-gray-600"
-                          }`}
-                        >
-                          {langCode}:
-                        </label>
-                        <input
-                          type="text"
-                          value={locales[langCode as keyof typeof locales]}
-                          onChange={(e) =>
-                            handleLanguageNameChange(langCode, e.target.value)
-                          }
-                          placeholder={
-                            t(`runePage.controls.placeholders.${langCode}`) ||
-                            `Name in ${langCode}`
-                          }
-                          disabled={!enabled}
-                          className={`
-                            flex-1 px-3 py-2 text-sm rounded-lg border transition-all duration-200
-                            ${
-                              isDarkTheme
-                                ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
-                                : "bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
-                            }
-                            ${!enabled ? "opacity-50 cursor-not-allowed" : ""}
-                          `}
-                        />
-                      </div>
-                    )}
+                          ${!enabled ? "opacity-50 cursor-not-allowed" : ""}
+                        `}
+                      />
+                    </div>
                   </div>
                 ))}
               </div>

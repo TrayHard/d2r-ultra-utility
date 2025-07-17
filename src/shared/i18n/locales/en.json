@@ -344,7 +344,8 @@
       "gemsLoadedDetails": "Successfully loaded {{count}} gems",
       "gemsChangesAppliedDescription": "Gems settings have been saved to game files",
       "itemsLoaded": "Items loaded",
-      "itemsLoadedDetails": "Loaded {{prefixes}} quality prefixes and {{items}} items from files"
+      "itemsLoadedDetails": "Loaded {{prefixes}} quality prefixes and {{items}} items from files",
+      "itemsApplied": "Items settings applied successfully"
     },
     "error": {
       "fileLoadError": "File loading error",
@@ -353,7 +354,8 @@
       "saveError": "Save error",
       "applyError": "Apply error",
       "settingsNotFound": "Settings not found",
-      "highlightLoadError": "Highlight settings loading error"
+      "highlightLoadError": "Highlight settings loading error",
+      "itemsApplyFailed": "Failed to apply items settings"
     }
   },
   "itemsPage": {

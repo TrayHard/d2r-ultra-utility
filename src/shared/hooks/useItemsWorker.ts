@@ -288,9 +288,172 @@ export const useItemsWorker = (
 
   // Функция для применения изменений к файлам
   const applyChanges = useCallback(async () => {
-    // TODO: Реализовать применение изменений
-    console.log("Apply changes not implemented yet for items");
-  }, []);
+    if (
+      !sendMessage ||
+      !t ||
+      !getItemsSettings ||
+      !getSelectedLocales ||
+      !items
+    ) {
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // Загружаем сохраненные настройки
+      const savedSettings = loadSavedSettings();
+      if (!savedSettings?.homeDirectory) {
+        throw new Error("Game path not found in settings");
+      }
+
+      // Убираем .exe из пути если он есть и нормализуем путь
+      let homeDir = savedSettings.homeDirectory.replace(/[\/\\]+$/, "");
+      if (homeDir.endsWith(".exe")) {
+        homeDir = homeDir.substring(0, homeDir.lastIndexOf("\\"));
+      }
+
+      const itemNamesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.ITEMS_FILE}`;
+      const nameAffixesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.NAMEAFFIXES_FILE}`;
+
+      // Читаем файлы
+      const itemNamesContent = await readTextFile(itemNamesPath);
+      const nameAffixesContent = await readTextFile(nameAffixesPath);
+
+      const itemNamesData: LocaleItem[] = JSON.parse(itemNamesContent);
+      const nameAffixesData: LocaleItem[] = JSON.parse(nameAffixesContent);
+
+      const selectedLocales = getSelectedLocales();
+      const itemsSettings = getItemsSettings();
+
+      // Создаем копии данных для изменений
+      const updatedItemNamesData = [...itemNamesData];
+      const updatedNameAffixesData = [...nameAffixesData];
+
+      // Обрабатываем каждый предмет
+      for (const item of items) {
+        const itemSettings = itemsSettings.items[item.key];
+        if (!itemSettings?.enabled) continue;
+
+        // Находим предмет в bases.json по id
+        const baseItem = (
+          await import("../../pages/items/bases.json")
+        ).default.find((base: any) => base.id === item.id);
+        if (!baseItem) continue;
+
+        // Определяем уровень маркера сложности
+        const difficultyLevel =
+          baseItem.difficultyClass === "normal"
+            ? 0
+            : baseItem.difficultyClass === "exceptional"
+            ? 1
+            : 2;
+
+        // Получаем маркер сложности из настроек
+        const difficultyMarkers =
+          itemsSettings.difficultyClassMarkers.levels[difficultyLevel];
+
+        // Находим локализацию предмета в item-names.json
+        const itemLocale = updatedItemNamesData.find(
+          (locale) => locale.id === item.id
+        );
+        if (!itemLocale) continue;
+
+        // Обновляем локали предмета
+        for (const locale of selectedLocales) {
+          const localeKey = locale as keyof LocaleItem;
+          const settingsLocaleKey = locale as keyof typeof itemSettings.locales;
+          const itemName = itemSettings.locales[settingsLocaleKey];
+
+          if (itemName && itemName.trim()) {
+            // Добавляем маркер сложности в конце, если он включен
+            let finalName = itemName;
+            if (itemSettings.showDifficultyClassMarker && difficultyMarkers) {
+              const marker = difficultyMarkers.locales[settingsLocaleKey];
+              if (marker && marker.trim()) {
+                finalName = `${itemName} ${marker}`;
+              }
+            }
+
+            (itemLocale as any)[localeKey] = finalName;
+          }
+        }
+      }
+
+      // Обрабатываем Quality Prefixes
+      const qualityPrefixes = itemsSettings.qualityPrefixes;
+      if (qualityPrefixes.enabled) {
+        // ID маппинг для Quality Prefixes
+        const qualityPrefixesIdMap = {
+          1723: 0, // Damaged
+          1724: 1, // Superior
+          1725: 0, // Damaged
+          20910: 1, // Superior
+        };
+
+        Object.entries(qualityPrefixesIdMap).forEach(([id, level]) => {
+          const prefixId = parseInt(id);
+          const prefixLevel = qualityPrefixes.levels[level];
+
+          if (prefixLevel) {
+            const prefixLocale = updatedNameAffixesData.find(
+              (locale) => locale.id === prefixId
+            );
+            if (prefixLocale) {
+              for (const locale of selectedLocales) {
+                const localeKey = locale as keyof LocaleItem;
+                const settingsLocaleKey =
+                  locale as keyof typeof prefixLevel.locales;
+                const prefixName = prefixLevel.locales[settingsLocaleKey];
+
+                if (prefixName && prefixName.trim()) {
+                  (prefixLocale as any)[localeKey] = prefixName;
+                }
+              }
+            }
+          }
+        });
+      }
+
+      // Записываем обновленные данные обратно в файлы
+      await writeTextFile(
+        itemNamesPath,
+        JSON.stringify(updatedItemNamesData, null, 2)
+      );
+      await writeTextFile(
+        nameAffixesPath,
+        JSON.stringify(updatedNameAffixesData, null, 2)
+      );
+
+      sendMessage(
+        t("messages.success.itemsApplied") ||
+          "Items settings applied successfully",
+        "success"
+      );
+    } catch (error) {
+      console.error("Error applying items changes:", error);
+      setError(
+        error instanceof Error ? error.message : "Unknown error occurred"
+      );
+      sendMessage(
+        t("messages.error.itemsApplyFailed") ||
+          "Failed to apply items settings",
+        "error"
+      );
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [
+    sendMessage,
+    t,
+    getItemsSettings,
+    getSelectedLocales,
+    items,
+    setIsLoading,
+    setError,
+  ]);
 
   return {
     isLoading,

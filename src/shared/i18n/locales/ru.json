@@ -339,7 +339,8 @@
       "gemsLoadedDetails": "Успешно загружено {{count}} драгоценных камней",
       "gemsChangesAppliedDescription": "Настройки драгоценных камней сохранены в файлы игры",
       "itemsLoaded": "Предметы загружены",
-      "itemsLoadedDetails": "Загружено {{prefixes}} префиксов качества и {{items}} предметов из файлов"
+      "itemsLoadedDetails": "Загружено {{prefixes}} префиксов качества и {{items}} предметов из файлов",
+      "itemsApplied": "Настройки предметов успешно применены"
     },
     "error": {
       "fileLoadError": "Ошибка загрузки файлов",
@@ -348,7 +349,8 @@
       "saveError": "Ошибка сохранения",
       "applyError": "Ошибка применения",
       "settingsNotFound": "Настройки не найдены",
-      "highlightLoadError": "Ошибка загрузки настроек подсветки"
+      "highlightLoadError": "Ошибка загрузки настроек подсветки",
+      "itemsApplyFailed": "Не удалось применить настройки предметов"
     }
   },
   "itemsPage": {
