@@ -3,7 +3,6 @@ import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import {
   idToGemMapper,
   gemToIdMapper,
-  EGem,
   settingsKeyToGemMapper,
 } from "../../pages/gems/constants/gems";
 import type {

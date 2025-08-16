@@ -180,16 +180,7 @@ export const useTextWorker = (
           }
         });
 
-        // Определяем самые популярные настройки
-        const mostPopularDividerType =
-          Object.entries(dividerTypes).sort(([, a], [, b]) => b - a)[0]?.[0] ||
-          "parentheses";
-        const mostPopularDividerColor =
-          Object.entries(dividerColors).sort(([, a], [, b]) => b - a)[0]?.[0] ||
-          "white";
-        const mostPopularNumberColor =
-          Object.entries(numberColors).sort(([, a], [, b]) => b - a)[0]?.[0] ||
-          "yellow";
+        // Можно использовать вычисленные популярные значения при необходимости
       }
 
       // Отправляем сообщение об успехе

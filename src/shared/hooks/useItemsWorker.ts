@@ -7,22 +7,11 @@ import {
   removeColorCodes,
   loadSavedSettings,
 } from "../utils/commonUtils";
-import type {
-  ItemSettings,
-  ItemsSettings,
-  PotionLevelSettings,
-  PotionGroupSettings,
-} from "../../app/providers/SettingsContext";
+import type { ItemSettings, ItemsSettings, PotionLevelSettings } from "../../app/providers/SettingsContext";
 
 // Маппинг ID качества предметов (для справки)
 // Low Quality (level 0): 1723, 1724, 1725, 20910 - сравниваются между собой
 // Superior (level 1): 1727 - читается напрямую
-
-// Типы функций для обновления настроек
-type UpdateItemsGroupSettingsFunction = (
-  item: "difficultyClassMarkers" | "qualityPrefixes",
-  settings: Partial<PotionGroupSettings>
-) => void;
 
 type UpdateItemsLevelSettingsFunction = (
   item: "difficultyClassMarkers" | "qualityPrefixes",
@@ -36,7 +25,6 @@ type UpdateItemSettingsFunction = (
 ) => void;
 
 export const useItemsWorker = (
-  updateItemsGroupSettings?: UpdateItemsGroupSettingsFunction,
   updateItemsLevelSettings?: UpdateItemsLevelSettingsFunction,
   updateItemSettings?: UpdateItemSettingsFunction,
   sendMessage?: (
