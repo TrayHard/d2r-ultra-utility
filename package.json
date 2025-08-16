@@ -9,7 +9,7 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "tdev": "tauri dev",
-    "tbuild": "tauri build",
+    "tbuild": "tauri build && node scripts/postbuild-rename.js",
     "tauri": "tauri"
   },
   "dependencies": {
