@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "tcheck": "tsc --noEmit",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "tdev": "tauri dev",
+    "tbuild": "tauri build",
     "tauri": "tauri"
   },
   "dependencies": {
