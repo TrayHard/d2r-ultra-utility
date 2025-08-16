@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Diablo II Utility",
+  "productName": "Diablo II Ultra Utility",
   "version": "0.1.0",
-  "identifier": "com.d2r-utility.app",
+  "identifier": "com.d2r-ultra-utility.app",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Diablo II Utility",
+        "title": "Diablo II Ultra Utility",
         "width": 800,
         "height": 600,
         "decorations": false,

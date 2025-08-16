@@ -8,7 +8,7 @@ interface CustomTitleBarProps {
 }
 
 const CustomTitleBar: React.FC<CustomTitleBarProps> = ({
-  title = "Diablo II Utility",
+  title = "Diablo II Ultra Utility",
 }) => {
   const handleMinimize = async () => {
     try {
