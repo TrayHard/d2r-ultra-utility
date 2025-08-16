@@ -3,15 +3,10 @@ import { useTranslation } from "react-i18next";
 import { useSettings } from "../../app/providers/SettingsContext";
 import { localeOptions } from "../../shared/constants";
 import Collapse from "../../shared/components/Collapse";
-import Switch from "../../shared/components/Switch";
 import Tooltip from "../../shared/components/Tooltip";
 import MultipleLeveledLocales from "../../shared/components/MultipleLeveledLocales";
 import ColorHint from "../../shared/components/ColorHint";
-import type {
-  CommonItemSettings,
-  PotionGroupSettings,
-  PotionLevelSettings,
-} from "../../app/providers/SettingsContext";
+import type { CommonItemSettings, PotionGroupSettings } from "../../app/providers/SettingsContext";
 
 interface CommonTabProps {
   isDarkTheme: boolean;
@@ -21,8 +16,6 @@ interface CommonTabProps {
 
 const CommonTab: React.FC<CommonTabProps> = ({
   isDarkTheme,
-  onReadFromFiles,
-  onApplyChanges,
 }) => {
   const { t } = useTranslation();
   const {
@@ -232,69 +225,7 @@ const CommonTab: React.FC<CommonTabProps> = ({
     );
   };
 
-  // Компонент для рендеринга инпутов локалей зелий
-  const renderPotionLocaleInputs = (
-    levelSettings: PotionLevelSettings,
-    itemType: "healthPotions" | "manaPotions" | "rejuvenationPotions",
-    level: number
-  ) => {
-    return (
-      <div className="space-y-3">
-        {localeOptions
-          .filter((locale) => selectedLocales.includes(locale.value))
-          .map((locale) => (
-            <div key={locale.value} className="flex items-center space-x-3">
-              <span
-                className={`
-                  w-20 text-sm font-medium
-                  ${isDarkTheme ? "text-gray-300" : "text-gray-700"}
-                `}
-              >
-                {locale.label}:
-              </span>
-              <div className="flex-1 flex items-center space-x-2">
-                <input
-                  type="text"
-                  value={
-                    levelSettings.locales[
-                      locale.value as keyof typeof levelSettings.locales
-                    ] ?? ""
-                  }
-                  onChange={(e) =>
-                    handlePotionLocaleChange(
-                      itemType,
-                      level,
-                      locale.value,
-                      e.target.value
-                    )
-                  }
-                  disabled={!levelSettings.enabled}
-                  placeholder={t(
-                    `runePage.controls.placeholders.${locale.value}`
-                  )}
-                  className={`
-                    flex-1 px-3 py-2 rounded-md border transition-colors
-                    ${
-                      isDarkTheme
-                        ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                        : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
-                    }
-                    ${
-                      !levelSettings.enabled
-                        ? "opacity-50 cursor-not-allowed"
-                        : isDarkTheme
-                        ? "focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
-                        : "focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
-                    }
-                  `}
-                />
-                <ColorHint isDarkTheme={isDarkTheme} />
-              </div>
-            </div>
-          ))}
-      </div>
-    );
-  };
+  //
 
   // Получаем путь к изображению для каждого типа простого элемента
   const getImagePath = (

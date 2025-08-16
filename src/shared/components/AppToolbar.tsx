@@ -44,8 +44,8 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
     onProfileCreate(name, settings);
   };
 
-  const handleProfileSave = (profileId: string, name: string) => {
-    onProfileSave(profileId, settings);
+  const handleProfileSave = (profileId: string, settingsParam: any) => {
+    onProfileSave(profileId, settingsParam);
   };
 
   return (

@@ -26,11 +26,9 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
   const {
     updateRuneSettings,
     updateCommonItemSettings,
-    updatePotionGroupSettings,
     updatePotionLevelSettings,
     updateGemGroupSettings,
     updateGemLevelSettings,
-    updateItemsGroupSettings,
     updateItemsLevelSettings,
     updateItemSettings,
     getCommonSettings,
@@ -59,7 +57,11 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     applyChanges: applyRunesChanges,
   } = useTextWorker(
     updateRuneSettings,
-    (message, type, title) => sendMessage(message, { type, title }),
+    (
+      message: string,
+      type?: "success" | "error" | "warning" | "info",
+      title?: string
+    ) => sendMessage(message, { type, title }),
     t,
     () => settings.runes
   );
@@ -72,9 +74,12 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     applyCommonItemsChanges,
   } = useCommonItemsWorker(
     updateCommonItemSettings,
-    updatePotionGroupSettings,
     updatePotionLevelSettings,
-    (message, type, title) => sendMessage(message, { type, title }),
+    (
+      message: string,
+      type?: "success" | "error" | "warning" | "info",
+      title?: string
+    ) => sendMessage(message, { type, title }),
     t,
     getCommonSettings
   );
@@ -88,7 +93,11 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
   } = useGemsWorker(
     updateGemGroupSettings,
     updateGemLevelSettings,
-    (message, type, title) => sendMessage(message, { type, title }),
+    (
+      message: string,
+      type?: "success" | "error" | "warning" | "info",
+      title?: string
+    ) => sendMessage(message, { type, title }),
     t,
     getGemSettings
   );
@@ -112,10 +121,13 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     readFromFiles: readItemsFromFiles,
     applyChanges: applyItemsChanges,
   } = useItemsWorker(
-    updateItemsGroupSettings,
     updateItemsLevelSettings,
     updateItemSettings,
-    (message, type, title) => sendMessage(message, { type, title }),
+    (
+      message: string,
+      type?: "success" | "error" | "warning" | "info",
+      title?: string
+    ) => sendMessage(message, { type, title }),
     t,
     getItemsSettings,
     getSelectedLocales,

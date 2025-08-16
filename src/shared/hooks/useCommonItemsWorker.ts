@@ -3,7 +3,6 @@ import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import {
   idToCommonItemMapper,
   commonItemToIdMapper,
-  ECommonItem,
   commonItemGroups,
   settingsKeyToCommonItemMapper,
 } from "../../pages/common/constants/commonItems";
@@ -28,11 +27,6 @@ type UpdateCommonItemSettingsFunction = (
   settings: Partial<CommonItemSettings>
 ) => void;
 
-type UpdatePotionGroupSettingsFunction = (
-  item: "healthPotions" | "manaPotions" | "rejuvenationPotions",
-  settings: Partial<PotionGroupSettings>
-) => void;
-
 type UpdatePotionLevelSettingsFunction = (
   item: "healthPotions" | "manaPotions" | "rejuvenationPotions",
   level: number,
@@ -41,7 +35,6 @@ type UpdatePotionLevelSettingsFunction = (
 
 export const useCommonItemsWorker = (
   updateCommonItemSettings?: UpdateCommonItemSettingsFunction,
-  updatePotionGroupSettings?: UpdatePotionGroupSettingsFunction,
   updatePotionLevelSettings?: UpdatePotionLevelSettingsFunction,
   sendMessage?: (
     message: string,

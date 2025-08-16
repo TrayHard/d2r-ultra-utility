@@ -48,8 +48,6 @@ type SortOrder = "asc" | "desc";
 
 const ItemsTab: React.FC<ItemsTabProps> = ({
   isDarkTheme,
-  onReadFromFiles,
-  onApplyChanges,
 }) => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
