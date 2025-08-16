@@ -104,6 +104,7 @@ export interface ItemSettings {
   enabled: boolean;
   showDifficultyClassMarker: boolean;
   locales: Locales;
+  preservedLocales?: Locales;
 }
 
 export interface ItemsSettings {
@@ -423,6 +424,7 @@ const getDefaultItemSettings = (): ItemSettings => ({
     ptBR: "",
     zhCN: "",
   },
+  preservedLocales: undefined,
 });
 
 const getDefaultItemsSettings = (): ItemsSettings => ({
@@ -1493,20 +1495,43 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
 
   const updateItemSettings = useCallback(
     (itemKey: string, newSettings: Partial<ItemSettings>) => {
-      setSettings((prevSettings) => ({
-        ...prevSettings,
-        items: {
-          ...(prevSettings.items || getDefaultItemsSettings()),
+      setSettings((prevSettings) => {
+        const prevItem =
+          prevSettings.items?.items?.[itemKey] || getDefaultItemSettings();
+
+        let nextItem: ItemSettings = { ...prevItem, ...newSettings };
+
+        // Если выключаем предмет, сохраняем текущие локали в preservedLocales
+        if (prevItem.enabled && newSettings.enabled === false) {
+          nextItem = {
+            ...nextItem,
+            preservedLocales: { ...prevItem.locales },
+          };
+        }
+
+        // Если включаем предмет обратно и локали пустые, пытаемся восстановить
+        if (!prevItem.enabled && newSettings.enabled === true) {
+          const toRestore = prevItem.preservedLocales;
+          if (toRestore) {
+            nextItem = {
+              ...nextItem,
+              locales: { ...toRestore },
+              preservedLocales: undefined,
+            };
+          }
+        }
+
+        return {
+          ...prevSettings,
           items: {
-            ...(prevSettings.items?.items || {}),
-            [itemKey]: {
-              ...(prevSettings.items?.items?.[itemKey] ||
-                getDefaultItemSettings()),
-              ...newSettings,
+            ...(prevSettings.items || getDefaultItemsSettings()),
+            items: {
+              ...(prevSettings.items?.items || {}),
+              [itemKey]: nextItem,
             },
           },
-        },
-      }));
+        };
+      });
     },
     []
   );
