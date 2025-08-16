@@ -690,7 +690,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "d2r-utility"
+name = "d2r-ultra-utility"
 version = "0.1.0"
 dependencies = [
  "rfd",
