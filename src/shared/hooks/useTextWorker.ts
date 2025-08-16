@@ -11,7 +11,6 @@ import { RuneSettings } from "../../app/providers/SettingsContext.tsx";
 import {
   generateFinalRuneName,
   generateRuneHighlightData,
-  removeColorCodes,
   parseNumberingSettings,
   parseRuneTextColor,
   parseRuneBoxSize,
