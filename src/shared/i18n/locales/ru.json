@@ -131,7 +131,9 @@
     "pathSettings": "Настройки пути",
     "pathSettingsDescription": "Управление путем к папке с игрой D2R (конкретно к D2R.exe).",
     "currentPath": "Текущий путь",
-    "pathNotSet": "Путь не задан"
+    "pathNotSet": "Путь не задан",
+    "about": "О приложении",
+    "appVersion": "Версия приложения"
   },
   "search": {
     "placeholder": "Поиск рун...",

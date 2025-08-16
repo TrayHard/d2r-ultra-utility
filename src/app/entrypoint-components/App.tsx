@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
+import { check } from "@tauri-apps/plugin-updater";
+import { relaunch } from "@tauri-apps/plugin-process";
 import ProgressBar from "../../shared/components/ProgressBar.tsx";
 import CustomTitleBar from "../../widgets/CustomTitleBar.tsx";
 
@@ -75,6 +77,22 @@ function App() {
     message: "Initializing...",
     found_count: 0,
   });
+
+  // Проверяем обновления при старте (в фоне)
+  useEffect(() => {
+    (async () => {
+      try {
+        const update = await check();
+        if (update?.available) {
+          await update.download();
+          await update.install();
+          await relaunch();
+        }
+      } catch (e) {
+        // тихо игнорируем ошибки апдейта, чтобы не мешать UX
+      }
+    })();
+  }, []);
 
         // Проверяем сохраненные настройки при загрузке
   useEffect(() => {
