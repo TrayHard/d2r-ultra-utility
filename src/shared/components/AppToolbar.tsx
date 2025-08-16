@@ -10,6 +10,7 @@ interface AppToolbarProps {
   profiles: any;
   activeProfileId: string | null;
   isLoading: boolean;
+  activeTab: "common" | "items" | "runes" | "gems";
   onProfileSelect: (id: string) => void;
   onProfileCreate: (name: string, settings: any) => void;
   onProfileSave: (profileId: string, settings: any) => void;
@@ -27,6 +28,7 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
   profiles,
   activeProfileId,
   isLoading,
+  activeTab,
   onProfileSelect,
   onProfileCreate,
   onProfileSave,
@@ -38,6 +40,7 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
   onApplyClick,
 }) => {
   const { t } = useTranslation();
+  const tabLabel = t(`tabs.${activeTab}`);
 
   // Обертки для функций, которые ожидает ProfileManager
   const handleProfileCreate = (name: string) => {
@@ -84,7 +87,7 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
             isDarkTheme={isDarkTheme}
             icon={mdiFileDocumentMultiple}
           >
-            {t("runePage.textWorker.readFromFiles")}
+            {t("runePage.textWorker.readFromFilesFor", { tab: tabLabel })}
           </Button>
 
           <Button
@@ -94,7 +97,7 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
             isDarkTheme={isDarkTheme}
             icon={mdiCheck}
           >
-            {t("runePage.textWorker.apply")}
+            {t("runePage.textWorker.applyFor", { tab: tabLabel })}
           </Button>
         </div>
       </div>
