@@ -24,11 +24,23 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
     updateAppLanguage,
     getIsDarkTheme,
     toggleTheme,
+    getGamePath,
   } = useSettings();
 
   const selectedLocales = getSelectedLocales();
   const currentAppLanguage = getAppLanguage();
   const isCurrentlyDarkTheme = getIsDarkTheme();
+  const currentGamePath = getGamePath();
+  let displayedGamePath = currentGamePath;
+  if (!displayedGamePath || displayedGamePath.length === 0) {
+    try {
+      const savedRaw = localStorage.getItem("d2r-path-settings");
+      if (savedRaw) {
+        const saved = JSON.parse(savedRaw);
+        displayedGamePath = saved?.homeDirectory || saved?.d2rPath || "";
+      }
+    } catch {}
+  }
 
   // Доступные языки для интерфейса приложения
   const appLanguageOptions = [
@@ -121,6 +133,27 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
                   >
                     {t("settings.pathSettingsDescription")}
                   </p>
+
+                  <div className="mb-4">
+                    <p
+                      className={`text-sm mb-2 ${
+                        isDarkTheme ? "text-gray-300" : "text-gray-700"
+                      }`}
+                    >
+                      {t("settings.currentPath")}
+                    </p>
+                    <div
+                      className={`font-mono text-xs break-all p-2 rounded border ${
+                        isDarkTheme
+                          ? "bg-gray-700 text-gray-100 border-gray-600"
+                          : "bg-gray-100 text-gray-800 border-gray-300"
+                      }`}
+                    >
+                      {displayedGamePath && displayedGamePath.length > 0
+                        ? displayedGamePath + "\\D2R.exe"
+                        : t("settings.pathNotSet")}
+                    </div>
+                  </div>
 
                   <Button
                     onClick={onChangePathClick}

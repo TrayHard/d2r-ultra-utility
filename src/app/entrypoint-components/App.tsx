@@ -54,9 +54,9 @@ const savePath = (filePath: string) => {
   }));
 };
 
-const clearSavedPath = () => {
-  localStorage.removeItem(SETTINGS_KEY);
-};
+// const clearSavedPath = () => {
+//   localStorage.removeItem(SETTINGS_KEY);
+// };
 
 type AppState = 'loading' | 'saved-path' | 'searching' | 'path-selection' | 'manual-input';
 
@@ -153,15 +153,18 @@ function App() {
     setAppState('saved-path');
   };
 
-  const handleChangePath = () => {
-    clearSavedPath();
-    setSavedPath(null);
-    setHomeDirectory(null);
-    setFoundPaths([]);
-    setManualResults([]);
-    setManualFileName("");
-    setManualFilePath("");
-    startAutoSearch();
+  const handleChangePath = async () => {
+    try {
+      const filePath = await invoke<string>("open_file_dialog");
+      if (filePath?.trim()) {
+        handlePathSelect(filePath.trim());
+      }
+    } catch (error) {
+      // Пользователь мог отменить выбор файла — просто игнорируем
+      if (error && (error as any) !== "No file selected") {
+        console.error("Error opening file dialog:", error);
+      }
+    }
   };
 
   const handlePathSelectionCancel = () => {
