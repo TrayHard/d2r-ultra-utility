@@ -42,7 +42,7 @@ export const SUPPORTED_LOCALES = [
 
 // Пути к файлам игры
 export const GAME_PATHS = {
-  LOCALES: `${MOD_ROOT}\\data\\local\\lng\\strings`,
+  LOCALES: `${MOD_ROOT}\\local\\lng\\strings`,
   ITEMS_FILE: "item-names.json",
   NAMEAFFIXES_FILE: "item-nameaffixes.json",
 } as const;
