@@ -1,6 +1,6 @@
 import { ERune, runeNumbers } from "../../pages/runes/constants/runes.ts";
 import { RuneSettings } from "../../app/providers/SettingsContext.tsx";
-import { colorCodes } from "../constants.ts";
+import { colorCodes, MOD_ROOT } from "../constants.ts";
 
 // Шаблоны для подсветки рун
 const HIGHLIGHT_RUNE_TEMPLATE = `{
@@ -802,9 +802,9 @@ export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
  * Пути к файлам
  */
 export const GAME_PATHS = {
-  LOCALES: "mods\\D2RMOD\\data\\local\\lng\\strings",
+  LOCALES: `${MOD_ROOT}\\data\\local\\lng\\strings`,
   RUNES_FILE: "item-runes.json",
-  RUNE_HIGHLIGHT: "mods\\D2RMOD\\data\\hd\\items\\misc\\rune",
+  RUNE_HIGHLIGHT: `${MOD_ROOT}\\data\\hd\\items\\misc\\rune`,
 } as const;
 
 /**

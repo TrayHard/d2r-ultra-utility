@@ -1,7 +1,6 @@
-import { ECommonItem } from "../../pages/common/constants/commonItems";
+import { MOD_ROOT } from "../constants";
 import type {
   CommonItemSettings,
-  PotionGroupSettings,
   PotionLevelSettings,
 } from "../../app/providers/SettingsContext";
 
@@ -43,7 +42,7 @@ export const SUPPORTED_LOCALES = [
 
 // Пути к файлам игры
 export const GAME_PATHS = {
-  LOCALES: "mods\\D2RMOD\\D2RMOD.mpq\\data\\local\\lng\\strings",
+  LOCALES: `${MOD_ROOT}\\data\\local\\lng\\strings`,
   ITEMS_FILE: "item-names.json",
   NAMEAFFIXES_FILE: "item-nameaffixes.json",
 } as const;

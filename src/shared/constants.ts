@@ -38,3 +38,5 @@ export const localeOptions = [
 ];
 
 export const localeCodes = localeOptions.map((option) => option.value);
+
+export const MOD_ROOT = "mods\\D2RMOD\\D2RMOD.mpq\\";
