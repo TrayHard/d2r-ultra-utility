@@ -295,7 +295,9 @@
     },
     "textWorker": {
       "readFromFiles": "Считать из файлов",
-      "apply": "Применить к файлам"
+      "apply": "Применить к файлам",
+      "readFromFilesFor": "Считать настройки: {{tab}}",
+      "applyFor": "Применить настройки: {{tab}}"
     },
     "confirmModal": {
       "title": "Подтверждение применения",

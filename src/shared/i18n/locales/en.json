@@ -300,7 +300,9 @@
     },
     "textWorker": {
       "readFromFiles": "Read from files",
-      "apply": "Apply"
+      "apply": "Apply",
+      "readFromFilesFor": "Read from files: {{tab}} settings",
+      "applyFor": "Apply settings: {{tab}}"
     },
     "confirmModal": {
       "title": "Confirm Apply",

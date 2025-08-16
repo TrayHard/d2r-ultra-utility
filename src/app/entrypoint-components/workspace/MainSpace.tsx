@@ -209,6 +209,7 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
         profiles={profiles}
         activeProfileId={activeProfileId}
         isLoading={isLoading}
+        activeTab={activeTab}
         onProfileSelect={loadProfile}
         onProfileCreate={createProfile}
         onProfileSave={saveProfile}
