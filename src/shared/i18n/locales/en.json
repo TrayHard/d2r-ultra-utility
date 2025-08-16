@@ -131,7 +131,9 @@
     "pathSettings": "Path Settings",
     "pathSettingsDescription": "Manage the path to your D2R game directory (specifically to D2R.exe).",
     "currentPath": "Current path",
-    "pathNotSet": "Path is not set"
+    "pathNotSet": "Path is not set",
+    "about": "About",
+    "appVersion": "App Version"
   },
   "search": {
     "placeholder": "Search runes...",

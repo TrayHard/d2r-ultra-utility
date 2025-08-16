@@ -1,7 +1,7 @@
 {
   "name": "d2r-ultra-utility",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -16,6 +16,8 @@
     "@mdi/js": "^7.4.47",
     "@mdi/react": "^1.6.1",
     "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-updater": "^2",
+    "@tauri-apps/plugin-process": "^2",
     "@tauri-apps/plugin-fs": "^2.3.0",
     "@tauri-apps/plugin-opener": "^2",
     "@types/react-window": "^1.8.8",

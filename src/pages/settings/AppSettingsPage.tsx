@@ -4,6 +4,7 @@ import { useSettings } from "../../app/providers/SettingsContext";
 import { localeOptions } from "../../shared/constants";
 import Switcher from "../../shared/components/Switcher";
 import Button from "../../shared/components/Button";
+import { getVersion } from "@tauri-apps/api/app";
 
 interface AppSettingsPageProps {
   isDarkTheme: boolean;
@@ -31,6 +32,16 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
   const currentAppLanguage = getAppLanguage();
   const isCurrentlyDarkTheme = getIsDarkTheme();
   const currentGamePath = getGamePath();
+  const [appVersion, setAppVersion] = React.useState<string>("");
+
+  React.useEffect(() => {
+    (async () => {
+      try {
+        const v = await getVersion();
+        setAppVersion(v);
+      } catch {}
+    })();
+  }, []);
   let displayedGamePath = currentGamePath;
   if (!displayedGamePath || displayedGamePath.length === 0) {
     try {
@@ -330,6 +341,33 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
                       );
                     })}
                   </div>
+                </div>
+              </div>
+            </div>
+
+            {/* О приложении / версия */}
+            <div
+              className={`p-6 rounded-lg border ${
+                isDarkTheme
+                  ? "bg-gray-800 border-gray-700"
+                  : "bg-white border-gray-200"
+              }`}
+            >
+              <h3
+                className={`text-xl font-semibold mb-4 ${
+                  isDarkTheme ? "text-white" : "text-gray-900"
+                }`}
+              >
+                {t("settings.about")}
+              </h3>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className={isDarkTheme ? "text-gray-300" : "text-gray-700"}>
+                    {t("settings.appVersion")}
+                  </span>
+                  <span className="font-mono text-sm text-gray-300">
+                    {appVersion || "—"}
+                  </span>
                 </div>
               </div>
             </div>
