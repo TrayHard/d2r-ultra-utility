@@ -27,6 +27,7 @@ interface ItemsFiltersProps {
   onSetReqDexterityFilter: (dexterity: number) => void;
   onToggleWeight: (weight: string) => void;
   onToggleBaseType: (baseType: EBaseType) => void;
+  filtersRef: React.RefObject<HTMLDivElement>;
 }
 
 const ItemsFilters: React.FC<ItemsFiltersProps> = ({
@@ -48,6 +49,7 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
   onSetReqDexterityFilter,
   onToggleWeight,
   onToggleBaseType,
+  filtersRef,
 }) => {
   const { t } = useTranslation();
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
@@ -132,12 +134,13 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
 
   return (
     <div
-      className={`p-4 border-b ${
+      ref={filtersRef}
+      className={`py-4 px-3 border-b ${
         isDarkTheme ? "border-gray-700 dark-theme" : "border-gray-200"
       }`}
     >
       {/* Первая строка фильтров */}
-      <div className="flex items-center gap-4 mb-4">
+      <div className="flex items-center gap-2 mb-4">
         <AntButton
           icon={<ReloadOutlined />}
           onClick={onResetFilters}
@@ -159,36 +162,26 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
           />
         </div>
 
-        <div className="flex flex-row gap-2 items-center">
-          <div className="text-sm font-medium">
-            {t("itemsPage.filters.difficultyClass")}
-          </div>
-          {renderTagSelect(
-            selectedDifficultyClasses,
-            ["normal", "exceptional", "elite"],
-            onToggleDifficultyClass,
-            (item: string) => t(`itemsPage.filters.${item}`),
-            t("itemsPage.filters.difficultyClass"),
-            "w-48"
-          )}
-        </div>
+        {renderTagSelect(
+          selectedDifficultyClasses,
+          ["normal", "exceptional", "elite"],
+          onToggleDifficultyClass,
+          (item: string) => t(`itemsPage.filters.${item}`),
+          t("itemsPage.filters.difficultyClass"),
+          "grow basis-48"
+        )}
 
-        <div className="flex flex-row gap-2 items-center">
-          <div className="text-sm font-medium">
-            {t("itemsPage.filters.limitedToClass")}
-          </div>
-          {renderTagSelect(
-            selectedLimitedToClasses,
-            [...Object.values(ECharacterClass), "none"],
-            onToggleLimitedToClass,
-            (item: string) =>
-              item === "none"
-                ? t("itemsPage.filters.anyClass")
-                : t(`itemsPage.classes.${item.toLowerCase()}`),
-            t("itemsPage.filters.limitedToClass"),
-            "w-48"
-          )}
-        </div>
+        {renderTagSelect(
+          selectedLimitedToClasses,
+          [...Object.values(ECharacterClass), "none"],
+          onToggleLimitedToClass,
+          (item: string) =>
+            item === "none"
+              ? t("itemsPage.filters.anyClass")
+              : t(`itemsPage.classes.${item.toLowerCase()}`),
+          t("itemsPage.filters.limitedToClass"),
+          "grow basis-48"
+        )}
 
         <div className="flex gap-2">
           <InputNumber

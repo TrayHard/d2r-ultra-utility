@@ -44,7 +44,7 @@ const Tabs: React.FC<TabsProps> = ({
             onClick={() => onTabChange(tab.id)}
             className={`px-6 py-3 text-sm font-medium transition-colors duration-200 focus:outline-none border-none bg-transparent shadow-none rounded-none ${
               activeTab === tab.id
-                ? isDarkTheme ? 'text-green-400' : 'text-green-600'
+                ? isDarkTheme ? 'text-yellow-400' : 'text-yellow-600'
                 : isDarkTheme
                   ? 'text-gray-400 hover:text-gray-200'
                   : 'text-gray-500 hover:text-gray-700'
@@ -57,7 +57,7 @@ const Tabs: React.FC<TabsProps> = ({
         {/* Animated Tab Indicator */}
         <div
           className={`absolute bottom-0 h-0.5 transition-all duration-300 ease-out ${
-            isDarkTheme ? 'bg-green-400' : 'bg-green-600'
+            isDarkTheme ? 'bg-yellow-400' : 'bg-yellow-600'
           }`}
           style={{
             left: `${indicatorStyle.left}px`,
