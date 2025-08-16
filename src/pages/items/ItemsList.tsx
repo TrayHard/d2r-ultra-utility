@@ -48,6 +48,8 @@ interface ItemsListProps {
   onDeselectAll: () => void;
   onSetSelectedItemForSettings: (itemKey: string) => void;
   onOpenMassEditModal: () => void;
+  className?: string;
+  filtersRef: React.RefObject<HTMLDivElement>;
 }
 
 interface ItemRowProps {
@@ -176,10 +178,19 @@ const ItemsList: React.FC<ItemsListProps> = ({
   onDeselectAll,
   onSetSelectedItemForSettings,
   onOpenMassEditModal,
+  className,
+  filtersRef,
 }) => {
   const { t } = useTranslation();
   const listRef = React.useRef<HTMLDivElement>(null);
   const virtualListRef = React.useRef<List>(null);
+  const [computedListHeight, setComputedListHeight] = React.useState<number>(0);
+
+  React.useEffect(() => {
+    if (listRef.current) {
+      setComputedListHeight(window.innerHeight - (filtersRef.current?.clientHeight ?? 0) - 300);
+    }
+  }, [filtersRef.current?.clientHeight]);
 
   // Обработчик клавиатуры для навигации по стрелочкам
   React.useEffect(() => {
@@ -221,13 +232,13 @@ const ItemsList: React.FC<ItemsListProps> = ({
     <div
       ref={listRef}
       tabIndex={0}
-      className={`w-96 flex-shrink-0 border-r focus:outline-none ${
+      className={`border-r focus:outline-none ${className ?? ""} ${
         isDarkTheme ? "border-gray-700" : "border-gray-200"
       }`}
     >
       {/* Навигационный блок */}
       <div
-        className={`py-4 px-2 border-b ${
+        className={`py-4 px-3 border-b ${
           isDarkTheme ? "border-gray-700" : "border-gray-200"
         }`}
       >
@@ -329,7 +340,7 @@ const ItemsList: React.FC<ItemsListProps> = ({
       </div>
 
       {/* Список предметов */}
-      <div className="flex-1 min-h-0 pt-4">
+      <div className="flex-1 min-h-0 pt-4 px-1">
         {items.length === 0 ? (
           <div className="text-center py-12">
             <p
@@ -343,7 +354,7 @@ const ItemsList: React.FC<ItemsListProps> = ({
         ) : (
           <List
             ref={virtualListRef}
-            height={window.innerHeight - 200}
+            height={computedListHeight}
             width="100%"
             itemCount={items.length}
             itemSize={80}

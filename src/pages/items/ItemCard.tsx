@@ -26,6 +26,7 @@ interface BaseItem {
 interface ItemCardProps {
   isDarkTheme: boolean;
   selectedItem: BaseItem | null;
+  className?: string;
 }
 
 // Компонент для отображения связанных предметов
@@ -33,7 +34,8 @@ const RelatedItemsBlock: React.FC<{
   isDarkTheme: boolean;
   enabled: boolean;
   selectedItem: BaseItem;
-}> = ({ isDarkTheme, enabled, selectedItem }) => {
+  className?: string;
+}> = ({ isDarkTheme, enabled, selectedItem, className }) => {
   const { t } = useTranslation();
   const hasUniques = selectedItem.uniques && selectedItem.uniques.length > 0;
   const hasSetItems = selectedItem.setItems && selectedItem.setItems.length > 0;
@@ -45,7 +47,7 @@ const RelatedItemsBlock: React.FC<{
   return (
     <div
       className={`
-        p-4 rounded-lg border transition-all duration-300
+        p-4 rounded-lg border transition-all duration-300 ${className ?? ""}
         ${
           isDarkTheme
             ? "bg-gray-800/50 border-gray-700"

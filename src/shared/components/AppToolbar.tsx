@@ -79,15 +79,19 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
         />
 
         {/* Кнопки управления файлами */}
-        <div className="flex gap-2">
+        <div className="flex gap-2 ml-2">
           <Button
             variant="info"
             onClick={onReadFromFiles}
             isLoading={isLoading}
             isDarkTheme={isDarkTheme}
             icon={mdiFileDocumentMultiple}
+            title={t("runePage.textWorker.readFromFilesFor", { tab: tabLabel })}
+            className="w-56"
           >
-            {t("runePage.textWorker.readFromFilesFor", { tab: tabLabel })}
+            <span className="truncate min-w-0" title={t("runePage.textWorker.readFromFilesFor", { tab: tabLabel })}>
+              {t("runePage.textWorker.readFromFilesFor", { tab: tabLabel })}
+            </span>
           </Button>
 
           <Button
@@ -96,8 +100,12 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
             disabled={isLoading}
             isDarkTheme={isDarkTheme}
             icon={mdiCheck}
+            title={t("runePage.textWorker.applyFor", { tab: tabLabel })}
+            className="w-56"
           >
-            {t("runePage.textWorker.applyFor", { tab: tabLabel })}
+            <span className="truncate min-w-0" title={t("runePage.textWorker.applyFor", { tab: tabLabel })}>
+              {t("runePage.textWorker.applyFor", { tab: tabLabel })}
+            </span>
           </Button>
         </div>
       </div>

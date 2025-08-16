@@ -370,6 +370,8 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
 
   const selectedItem =
     items.find((item) => item.key === selectedItemForSettings) ?? null;
+  
+  const filtersRef = useRef<HTMLDivElement>(null);
 
   return (
     <div className="h-full flex flex-col">
@@ -392,9 +394,10 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
         onSetReqDexterityFilter={setReqDexterityFilter}
         onToggleWeight={toggleWeight}
         onToggleBaseType={toggleBaseType}
+        filtersRef={filtersRef}
       />
 
-      <div className="flex-1 flex">
+      <div className="grid grid-cols-[20rem_1fr]">
         <ItemsList
           isDarkTheme={isDarkTheme}
           items={filteredAndSortedItems}
@@ -408,6 +411,7 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
           onDeselectAll={handleDeselectAll}
           onSetSelectedItemForSettings={setSelectedItemForSettings}
           onOpenMassEditModal={() => setIsMassEditModalOpen(true)}
+          filtersRef={filtersRef}
         />
 
         <ItemCard isDarkTheme={isDarkTheme} selectedItem={selectedItem} />
