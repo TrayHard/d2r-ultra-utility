@@ -30,7 +30,6 @@ const WorkSpaceContent: React.FC<WorkSpaceProps> = ({ onChangeClick }) => {
   };
 
   const handleChangePathClick = () => {
-    setShowSettings(false);
     onChangeClick();
   };
 

@@ -129,7 +129,9 @@
   "settings": {
     "appSettings": "Настройки приложения",
     "pathSettings": "Настройки пути",
-    "pathSettingsDescription": "Управление путем к папке с игрой D2R."
+    "pathSettingsDescription": "Управление путем к папке с игрой D2R (конкретно к D2R.exe).",
+    "currentPath": "Текущий путь",
+    "pathNotSet": "Путь не задан"
   },
   "search": {
     "placeholder": "Поиск рун...",
