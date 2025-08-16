@@ -414,7 +414,11 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
           filtersRef={filtersRef}
         />
 
-        <ItemCard isDarkTheme={isDarkTheme} selectedItem={selectedItem} />
+        <ItemCard
+          isDarkTheme={isDarkTheme}
+          selectedItem={selectedItem}
+          searchQuery={searchQuery}
+        />
       </div>
 
       {/* Модальное окно массового редактирования */}

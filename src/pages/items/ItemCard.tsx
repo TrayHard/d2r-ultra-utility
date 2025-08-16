@@ -27,6 +27,7 @@ interface ItemCardProps {
   isDarkTheme: boolean;
   selectedItem: BaseItem | null;
   className?: string;
+  searchQuery?: string;
 }
 
 // Компонент для отображения связанных предметов
@@ -35,7 +36,8 @@ const RelatedItemsBlock: React.FC<{
   enabled: boolean;
   selectedItem: BaseItem;
   className?: string;
-}> = ({ isDarkTheme, enabled, selectedItem, className }) => {
+  searchQuery?: string;
+}> = ({ isDarkTheme, enabled, selectedItem, className, searchQuery }) => {
   const { t } = useTranslation();
   const hasUniques = selectedItem.uniques && selectedItem.uniques.length > 0;
   const hasSetItems = selectedItem.setItems && selectedItem.setItems.length > 0;
@@ -43,6 +45,31 @@ const RelatedItemsBlock: React.FC<{
   if (!hasUniques && !hasSetItems) {
     return null;
   }
+
+  const escapeRegExp = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+  const highlightText = (text: string): React.ReactNode => {
+    const query = (searchQuery ?? "").trim();
+    if (!query) return text;
+    try {
+      const regex = new RegExp(`(${escapeRegExp(query)})`, "ig");
+      const parts = text.split(regex);
+      return parts.map((part, index) =>
+        index % 2 === 1 ? (
+          <span
+            key={index}
+            className={isDarkTheme ? "bg-yellow-300 text-black" : "bg-yellow-600 text-black"}
+          >
+            {part}
+          </span>
+        ) : (
+          <React.Fragment key={index}>{part}</React.Fragment>
+        )
+      );
+    } catch {
+      return text;
+    }
+  };
 
   return (
     <div
@@ -94,7 +121,10 @@ const RelatedItemsBlock: React.FC<{
                       isDarkTheme ? "text-yellow-200" : "text-yellow-700"
                     }`}
                   >
-                    {t(`itemsPage.uniques.${uniqueItem.key}`) || uniqueItem.key}
+                    {highlightText(
+                      (t(`itemsPage.uniques.${uniqueItem.key}`) as string) ||
+                        uniqueItem.key
+                    )}
                   </span>
                 </div>
               ))}
@@ -139,7 +169,10 @@ const RelatedItemsBlock: React.FC<{
                       isDarkTheme ? "text-green-200" : "text-green-700"
                     }`}
                   >
-                    {t(`itemsPage.setItems.${setItem.key}`) || setItem.key}
+                    {highlightText(
+                      (t(`itemsPage.setItems.${setItem.key}`) as string) ||
+                        setItem.key
+                    )}
                   </span>
                 </div>
               ))}
@@ -151,7 +184,7 @@ const RelatedItemsBlock: React.FC<{
   );
 };
 
-const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem }) => {
+const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQuery }) => {
   const { t } = useTranslation();
   const { getSelectedLocales, getItemSettings, updateItemSettings } =
     useSettings();
@@ -277,6 +310,25 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem }) => {
     );
   }
 
+  const escapeRegExp = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const highlightTitle = (text: string): React.ReactNode => {
+    const query = (searchQuery ?? "").trim();
+    if (!query) return text;
+    try {
+      const regex = new RegExp(`(${escapeRegExp(query)})`, "ig");
+      const parts = text.split(regex);
+      return parts.map((part, index) =>
+        index % 2 === 1 ? (
+          <span key={index} className={isDarkTheme ? "bg-yellow-300 text-black" : "bg-yellow-600 text-black"}>{part}</span>
+        ) : (
+          <React.Fragment key={index}>{part}</React.Fragment>
+        )
+      );
+    } catch {
+      return text;
+    }
+  };
+
   return (
     <div className="flex-1 p-6">
       <div className="h-full">
@@ -319,7 +371,10 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem }) => {
                     isDarkTheme ? "text-white" : "text-gray-900"
                   } ${!enabled ? "opacity-50" : ""}`}
                 >
-                  {t(`itemsPage.bases.${selectedItem.key}`) || selectedItem.key}
+                  {highlightTitle(
+                    (t(`itemsPage.bases.${selectedItem.key}`) as string) ||
+                      selectedItem.key
+                  )}
                 </h3>
                 <p
                   className={`text-sm mb-3 ${
@@ -402,6 +457,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem }) => {
                 isDarkTheme={isDarkTheme}
                 enabled={enabled}
                 selectedItem={selectedItem}
+                searchQuery={searchQuery}
               />
 
               {/* Атрибуты предмета в стилизованном блочке */}
