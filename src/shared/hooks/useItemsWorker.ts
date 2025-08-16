@@ -364,13 +364,27 @@ export const useItemsWorker = (
       // Обрабатываем каждый предмет
       for (const item of items) {
         const itemSettings = itemsSettings.items[item.key];
-        if (!itemSettings?.enabled) continue;
 
         // Находим предмет в bases.json по id
         const baseItem = (
           await import("../../pages/items/bases.json")
         ).default.find((base: any) => base.id === item.id);
         if (!baseItem) continue;
+
+        // Находим локализацию предмета в item-names.json
+        const itemLocale = updatedItemNamesData.find(
+          (locale) => locale.id === item.id
+        );
+        if (!itemLocale) continue;
+
+        // Если предмет выключен — очищаем ВСЕ поддерживаемые локали в файле и идем дальше
+        if (!itemSettings?.enabled) {
+          for (const locale of SUPPORTED_LOCALES) {
+            const localeKey = locale as keyof LocaleItem;
+            (itemLocale as any)[localeKey] = "";
+          }
+          continue;
+        }
 
         // Определяем уровень маркера сложности
         const difficultyLevel =
@@ -383,12 +397,6 @@ export const useItemsWorker = (
         // Получаем маркер сложности из настроек
         const difficultyMarkers =
           itemsSettings.difficultyClassMarkers.levels[difficultyLevel];
-
-        // Находим локализацию предмета в item-names.json
-        const itemLocale = updatedItemNamesData.find(
-          (locale) => locale.id === item.id
-        );
-        if (!itemLocale) continue;
 
         // Обновляем локали предмета
         for (const locale of selectedLocales) {

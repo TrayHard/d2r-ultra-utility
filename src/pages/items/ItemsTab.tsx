@@ -8,6 +8,8 @@ import Button from "../../shared/components/Button";
 import ItemsFilters from "./ItemsFilters";
 import ItemsList from "./ItemsList";
 import ItemCard from "./ItemCard";
+import TriStateSwitch, { TriState } from "../../shared/components/TriStateSwitch";
+import { useSettings, ItemSettings as ItemSettingsType } from "../../app/providers/SettingsContext";
 
 import "./ItemsTab.css";
 
@@ -39,9 +41,8 @@ interface BaseItem {
   }>;
 }
 
-interface ItemSettings {
-  difficultyClass: "normal" | "exceptional" | "elite";
-}
+// Используем тип из SettingsContext
+type ItemSettings = ItemSettingsType;
 
 type SortType = "type" | "name" | "level";
 type SortOrder = "asc" | "desc";
@@ -59,6 +60,9 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
   >(null);
   const [isMassEditModalOpen, setIsMassEditModalOpen] = useState(false);
   const [lastSelectedItem, setLastSelectedItem] = useState<string | null>(null);
+
+  // Доступ к обновлению настроек предметов
+  const { updateItemSettings } = useSettings();
 
   // Фильтры
   const [selectedDifficultyClasses, setSelectedDifficultyClasses] = useState<
@@ -300,9 +304,28 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
     setSelectedBaseTypes(new Set());
   };
 
+  // Состояния TriState для массового редактирования
+  const [massEnabled, setMassEnabled] = useState<TriState>(null);
+  const [massShowDifficultyMarker, setMassShowDifficultyMarker] = useState<TriState>(null);
+
+  const resetMassEditStates = () => {
+    setMassEnabled(null);
+    setMassShowDifficultyMarker(null);
+  };
+
   const handleMassEditApply = (newSettings: Partial<ItemSettings>) => {
-    // Логика массового редактирования
-    console.log("Mass edit apply:", newSettings, selectedItems);
+    // Собираем изменения из TriState и переданных настроек (если будут расширяться)
+    const updates: Partial<ItemSettings> = { ...newSettings };
+    if (massEnabled !== null) updates.enabled = massEnabled;
+    if (massShowDifficultyMarker !== null) updates.showDifficultyClassMarker = massShowDifficultyMarker;
+
+    if (Object.keys(updates).length === 0) {
+      return;
+    }
+
+    selectedItems.forEach((itemKey) => {
+      updateItemSettings(itemKey, updates);
+    });
   };
 
   const toggleDifficultyClass = (difficultyClass: string) => {
@@ -408,7 +431,10 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
                   {t("itemsPage.massEdit.modalTitle")}
                 </h3>
                 <button
-                  onClick={() => setIsMassEditModalOpen(false)}
+                  onClick={() => {
+                    setIsMassEditModalOpen(false);
+                    resetMassEditStates();
+                  }}
                   className={`p-1 rounded-lg hover:bg-opacity-50 ${
                     isDarkTheme ? "hover:bg-gray-700" : "hover:bg-gray-100"
                   }`}
@@ -422,42 +448,44 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
               </div>
 
               <div className="space-y-4">
-                <div>
-                  <label
-                    className={`block text-sm font-medium mb-2 ${
-                      isDarkTheme ? "text-white" : "text-gray-900"
-                    }`}
-                  >
-                    {t("itemsPage.massEdit.difficultyClassLabel")}
-                  </label>
-                  <select
-                    className={`
-                      w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent
-                      ${
-                        isDarkTheme
-                          ? "bg-gray-700 border-gray-600 text-white"
-                          : "bg-white border-gray-300 text-gray-900"
-                      }
-                    `}
-                  >
-                    <option value="">{t("runePage.massEdit.noChange")}</option>
-                    <option value="normal">
-                      {t("itemsPage.filters.normal")}
-                    </option>
-                    <option value="exceptional">
-                      {t("itemsPage.filters.exceptional")}
-                    </option>
-                    <option value="elite">
-                      {t("itemsPage.filters.elite")}
-                    </option>
-                  </select>
+                {/* Переключатель Enabled */}
+                <div className={`p-3 rounded-lg ${isDarkTheme ? "bg-gray-800" : "bg-gray-50"}`}>
+                  <div className="flex items-center justify-between">
+                    <span className={`text-sm font-medium ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}>
+                      {t("itemsPage.settings.enableItem")}
+                    </span>
+                    <TriStateSwitch
+                      value={massEnabled}
+                      onChange={setMassEnabled}
+                      isDarkTheme={isDarkTheme}
+                      size="md"
+                    />
+                  </div>
+                </div>
+
+                {/* Переключатель Show Difficulty Class Marker */}
+                <div className={`p-3 rounded-lg ${isDarkTheme ? "bg-gray-800" : "bg-gray-50"}`}>
+                  <div className="flex items-center justify-between">
+                    <span className={`text-sm font-medium ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}>
+                      {t("itemsPage.settings.showDifficultyClassMarker")}
+                    </span>
+                    <TriStateSwitch
+                      value={massShowDifficultyMarker}
+                      onChange={setMassShowDifficultyMarker}
+                      isDarkTheme={isDarkTheme}
+                      size="md"
+                    />
+                  </div>
                 </div>
               </div>
 
               <div className="flex justify-end gap-3 mt-6">
                 <Button
                   variant="secondary"
-                  onClick={() => setIsMassEditModalOpen(false)}
+                  onClick={() => {
+                    setIsMassEditModalOpen(false);
+                    resetMassEditStates();
+                  }}
                   isDarkTheme={isDarkTheme}
                 >
                   {t("itemsPage.massEdit.cancel")}
@@ -467,8 +495,10 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
                   onClick={() => {
                     handleMassEditApply({});
                     setIsMassEditModalOpen(false);
+                    resetMassEditStates();
                   }}
                   isDarkTheme={isDarkTheme}
+                  disabled={massEnabled === null && massShowDifficultyMarker === null}
                 >
                   {t("itemsPage.massEdit.apply")}
                 </Button>
