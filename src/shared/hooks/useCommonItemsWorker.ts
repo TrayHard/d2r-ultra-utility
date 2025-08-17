@@ -16,7 +16,6 @@ import {
   LocaleItem,
   SUPPORTED_LOCALES,
   GAME_PATHS,
-  removeColorCodes,
   loadSavedSettings,
   generateFinalItemName,
   generateFinalPotionName,
@@ -98,19 +97,19 @@ export const useCommonItemsWorker = (
 
           // Извлекаем локали для предмета
           const itemLocales = {
-            enUS: removeColorCodes(item.enUS || ""),
-            ruRU: removeColorCodes(item.ruRU || ""),
-            zhTW: removeColorCodes(item.zhTW || ""),
-            deDE: removeColorCodes(item.deDE || ""),
-            esES: removeColorCodes(item.esES || ""),
-            frFR: removeColorCodes(item.frFR || ""),
-            itIT: removeColorCodes(item.itIT || ""),
-            koKR: removeColorCodes(item.koKR || ""),
-            plPL: removeColorCodes(item.plPL || ""),
-            esMX: removeColorCodes(item.esMX || ""),
-            jaJP: removeColorCodes(item.jaJP || ""),
-            ptBR: removeColorCodes(item.ptBR || ""),
-            zhCN: removeColorCodes(item.zhCN || ""),
+            enUS: item.enUS || "", // Сохраняем цветовые коды
+            ruRU: item.ruRU || "", // Сохраняем цветовые коды
+            zhTW: item.zhTW || "", // Сохраняем цветовые коды
+            deDE: item.deDE || "", // Сохраняем цветовые коды
+            esES: item.esES || "", // Сохраняем цветовые коды
+            frFR: item.frFR || "", // Сохраняем цветовые коды
+            itIT: item.itIT || "", // Сохраняем цветовые коды
+            koKR: item.koKR || "", // Сохраняем цветовые коды
+            plPL: item.plPL || "", // Сохраняем цветовые коды
+            esMX: item.esMX || "", // Сохраняем цветовые коды
+            jaJP: item.jaJP || "", // Сохраняем цветовые коды
+            ptBR: item.ptBR || "", // Сохраняем цветовые коды
+            zhCN: item.zhCN || "", // Сохраняем цветовые коды
           };
 
           // Определяем состояние включенности на основе наличия содержимого в английской локали
