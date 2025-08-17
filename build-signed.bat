@@ -75,7 +75,7 @@ for /f "delims=" %%O in ('git remote 2^>nul ^| findstr /r /c:"^origin$"') do set
 
 echo Committing and tagging version %NEW_VERSION%...
 git add package.json package-lock.json src-tauri/tauri.conf.json
-git commit -m "%NEW_VERSION%"
+git commit -m "v%NEW_VERSION%"
 if errorlevel 1 (
   echo [WARN] Nothing to commit or commit failed.
 )
