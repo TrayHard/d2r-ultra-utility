@@ -146,6 +146,16 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
 
   return (
     <div className="flex items-center gap-2">
+      {/* Import Profile Button */}
+      <Button
+        variant="secondary"
+        onClick={() => fileInputRef.current?.click()}
+        isDarkTheme={isDarkTheme}
+        icon={mdiImport}
+        size="sm"
+        title={t("profiles.importProfile")}
+      />
+      
       {/* Profile Selector */}
       <Dropdown
         selectedValue={activeProfileId ?? ""}
@@ -221,16 +231,6 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
         icon={mdiExport}
         size="sm"
         title={t("profiles.exportProfile")}
-      />
-
-      {/* Import Profile Button */}
-      <Button
-        variant="secondary"
-        onClick={() => fileInputRef.current?.click()}
-        isDarkTheme={isDarkTheme}
-        icon={mdiImport}
-        size="sm"
-        title={t("profiles.importProfile")}
       />
 
       {/* Hidden File Input */}
