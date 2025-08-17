@@ -50,7 +50,9 @@ const UpdateButton: React.FC<UpdateButtonProps> = ({ isDarkTheme }) => {
     <button
       onClick={handleUpdate}
       disabled={!updateAvailable || isUpdating}
-      className={`p-1 rounded-full transition-all duration-200 hover:scale-110 ${
+      className={`p-1 rounded-full transition-all duration-200 ${
+        updateAvailable ? "hover:scale-110" : ""
+      } ${
         isUpdating ? "opacity-75 cursor-not-allowed" : ""
       } bg-transparent`}
       title={
