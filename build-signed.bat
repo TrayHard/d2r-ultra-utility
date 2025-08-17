@@ -21,7 +21,6 @@ if not defined NEW_VERSION (
 echo New version: %NEW_VERSION%
 
 set "KEY_FILE=.tauri_key"
-set "PWD_FILE=.tauri_key_password"
 if not exist "%KEY_FILE%" (
   echo [ERROR] Key file "%KEY_FILE%" not found.
   popd
@@ -37,10 +36,6 @@ if not defined TAURI_SIGNING_PRIVATE_KEY (
   exit /b 1
 )
 
-if exist "%PWD_FILE%" (
-  set "TAURI_SIGNING_PRIVATE_KEY_PASSWORD="
-  for /f "usebackq delims=" %%A in ("%PWD_FILE%") do call set "TAURI_SIGNING_PRIVATE_KEY_PASSWORD=%%TAURI_SIGNING_PRIVATE_KEY_PASSWORD%%%%A"
-)
 
 echo Building with signing...
 npm run tbuild
