@@ -15,7 +15,11 @@
     "core:window:allow-maximize",
     "core:window:allow-close",
     "core:window:allow-start-dragging",
-    "core:window:allow-toggle-maximize"
+    "core:window:allow-toggle-maximize",
+    "updater:default",
+    "updater:allow-check",
+    "updater:allow-download",
+    "updater:allow-install"
   ],
   "scope": {
     "fs": {

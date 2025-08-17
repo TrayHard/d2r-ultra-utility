@@ -87,7 +87,7 @@ async function generateLatestJson() {
 		platforms: {
 			"windows-x86_64": {
 				signature,
-				url: win.fileName
+				url: `https://github.com/TrayHard/d2r-ultra-utility/releases/download/v${version}/${win.fileName}`
 			}
 		}
 	};
