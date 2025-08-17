@@ -3,6 +3,11 @@ import { initReactI18next } from "react-i18next";
 
 import enTranslations from "./locales/en.json";
 import ruTranslations from "./locales/ru.json";
+import deTranslations from "./locales/de.json";
+import ukTranslations from "./locales/uk.json";
+import plTranslations from "./locales/pl.json";
+import esTranslations from "./locales/es.json";
+import frTranslations from "./locales/fr.json";
 
 const resources = {
   en: {
@@ -11,15 +16,50 @@ const resources = {
   ru: {
     translation: ruTranslations,
   },
+  de: {
+    translation: deTranslations,
+  },
+  uk: {
+    translation: ukTranslations,
+  },
+  pl: {
+    translation: plTranslations,
+  },
+  es: {
+    translation: esTranslations,
+  },
+  fr: {
+    translation: frTranslations,
+  },
 };
 
 // Получаем сохраненный язык из localStorage
+const mapAppLanguageToI18n = (appLanguage?: string) => {
+  switch (appLanguage) {
+    case "ruRU":
+      return "ru";
+    case "deDE":
+      return "de";
+    case "ukUA":
+      return "uk";
+    case "plPL":
+      return "pl";
+    case "esES":
+      return "es";
+    case "frFR":
+      return "fr";
+    case "enUS":
+    default:
+      return "en";
+  }
+};
+
 const getSavedLanguage = () => {
   try {
     const savedAppConfig = localStorage.getItem("d2r-app-config");
     if (savedAppConfig) {
       const parsedAppConfig = JSON.parse(savedAppConfig);
-      return parsedAppConfig.appLanguage === "ruRU" ? "ru" : "en";
+      return mapAppLanguageToI18n(parsedAppConfig.appLanguage);
     }
   } catch (error) {
     console.error("Error getting saved language:", error);

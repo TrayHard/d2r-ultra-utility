@@ -589,6 +589,26 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [isThemeChanging, setIsThemeChanging] = useState(false);
 
+  const mapAppLanguageToI18n = useCallback((appLanguage?: string) => {
+    switch (appLanguage) {
+      case "ruRU":
+        return "ru";
+      case "deDE":
+        return "de";
+      case "ukUA":
+        return "uk";
+      case "plPL":
+        return "pl";
+      case "esES":
+        return "es";
+      case "frFR":
+        return "fr";
+      case "enUS":
+      default:
+        return "en";
+    }
+  }, []);
+
   // Wrapper для setAppConfig с автоматическим сохранением
   const setAppConfig = useCallback(
     (
@@ -640,16 +660,14 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         setAppConfig(newAppConfig, true); // skipSave = true
 
         // Инициализируем язык в i18n
-        const i18nLang = newAppConfig.appLanguage === "ruRU" ? "ru" : "en";
-        i18n.changeLanguage(i18nLang);
+        i18n.changeLanguage(mapAppLanguageToI18n(newAppConfig.appLanguage));
       } catch (error) {
         console.error("Error loading app config from localStorage:", error);
       }
     } else {
       // Если нет сохраненных настроек, используем дефолтный язык
       const defaultConfig = getDefaultAppConfig();
-      const i18nLang = defaultConfig.appLanguage === "ruRU" ? "ru" : "en";
-      i18n.changeLanguage(i18nLang);
+      i18n.changeLanguage(mapAppLanguageToI18n(defaultConfig.appLanguage));
     }
 
     // Загружаем настройки профиля (если нет активного профиля)
@@ -822,10 +840,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       }));
 
       // Переключаем язык в i18n
-      const i18nLang = language === "ruRU" ? "ru" : "en";
-      i18n.changeLanguage(i18nLang);
+      i18n.changeLanguage(mapAppLanguageToI18n(language));
     },
-    [setAppConfig]
+    [setAppConfig, mapAppLanguageToI18n]
   );
 
   const updateGamePath = useCallback(

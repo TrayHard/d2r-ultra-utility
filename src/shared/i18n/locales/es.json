@@ -1,0 +1,330 @@
+{
+  "tabs": {
+    "common": "Común",
+    "items": "Objetos",
+    "runes": "Runas",
+    "gems": "Gemas",
+    "other": "Otros"
+  },
+  "update": {
+    "checking": "Buscando actualizaciones...",
+    "available": "Actualización disponible - Haz clic para instalar",
+    "downloading": "Descargando actualización...",
+    "installing": "Instalando actualización...",
+    "upToDate": "Actualizado"
+  },
+  "descriptions": {
+    "common": "Utilidades y herramientas comunes",
+    "items": "Gestión y análisis de objetos",
+    "runes": "Gestión de runas y combinaciones",
+    "gems": "Gestión y mejora de gemas"
+  },
+  "commonPage": {
+    "show": "Clic para mostrar",
+    "hide": "Clic para ocultar",
+    "arrows": "Flechas",
+    "bolts": "Virotes",
+    "staminaPotions": "Pociones de aguante",
+    "antidotes": "Antídotos",
+    "thawingPotions": "Pociones descongelantes",
+    "healthPotions": "Pociones de vida",
+    "manaPotions": "Pociones de maná",
+    "rejuvenationPotions": "Pociones de rejuvenecimiento",
+    "enableCustomization": "Habilitar personalización",
+    "localeSettings": "Ajustes de localización",
+    "healthPotionsLevels": {
+      "level1": "Poción menor de vida",
+      "level2": "Poción ligera de vida",
+      "level3": "Poción de vida",
+      "level4": "Poción superior de vida",
+      "level5": "Poción super de vida"
+    },
+    "manaPotionsLevels": {
+      "level1": "Poción menor de maná",
+      "level2": "Poción ligera de maná",
+      "level3": "Poción de maná",
+      "level4": "Poción superior de maná",
+      "level5": "Poción super de maná"
+    },
+    "rejuvenationPotionsLevels": {
+      "level1": "Poción de rejuvenecimiento",
+      "level2": "Poción total de rejuvenecimiento"
+    }
+  },
+  "gemsPage": {
+    "skulls": "Calaveras",
+    "amethysts": "Amatistas",
+    "topazes": "Topacios",
+    "sapphires": "Zafiros",
+    "emeralds": "Esmeraldas",
+    "rubies": "Rubíes",
+    "diamonds": "Diamantes",
+    "skullsLevels": {
+      "level1": "Calavera astillada",
+      "level2": "Calavera defectuosa",
+      "level3": "Calavera",
+      "level4": "Calavera impecable",
+      "level5": "Calavera perfecta"
+    },
+    "amethystsLevels": {
+      "level1": "Amatista astillada",
+      "level2": "Amatista defectuosa",
+      "level3": "Amatista",
+      "level4": "Amatista impecable",
+      "level5": "Amatista perfecta"
+    },
+    "topazesLevels": {
+      "level1": "Topacio astillado",
+      "level2": "Topacio defectuoso",
+      "level3": "Topacio",
+      "level4": "Topacio impecable",
+      "level5": "Topacio perfecto"
+    },
+    "sapphiresLevels": {
+      "level1": "Zafiro astillado",
+      "level2": "Zafiro defectuoso",
+      "level3": "Zafiro",
+      "level4": "Zafiro impecable",
+      "level5": "Zafiro perfecto"
+    },
+    "emeraldsLevels": {
+      "level1": "Esmeralda astillada",
+      "level2": "Esmeralda defectuosa",
+      "level3": "Esmeralda",
+      "level4": "Esmeralda impecable",
+      "level5": "Esmeralda perfecta"
+    },
+    "rubiesLevels": {
+      "level1": "Rubí astillado",
+      "level2": "Rubí defectuoso",
+      "level3": "Rubí",
+      "level4": "Rubí impecable",
+      "level5": "Rubí perfecto"
+    },
+    "diamondsLevels": {
+      "level1": "Diamante astillado",
+      "level2": "Diamante defectuoso",
+      "level3": "Diamante",
+      "level4": "Diamante impecable",
+      "level5": "Diamante perfecto"
+    }
+  },
+  "common": {
+    "loading": "Cargando...",
+    "applying": "Aplicando...",
+    "themeSettings": "Ajustes de tema",
+    "themeSettingsDescription": "Elige tu tema preferido para la aplicación.",
+    "darkTheme": "Tema oscuro",
+    "lightTheme": "Tema claro",
+    "appLanguageSettings": "Idioma de la aplicación",
+    "appLanguageSettingsDescription": "Selecciona el idioma de la interfaz de la aplicación.",
+    "appLanguageLabels": {
+      "enUS": "Inglés",
+      "ruRU": "Ruso",
+      "deDE": "Alemán",
+      "ukUA": "Ucraniano",
+      "plPL": "Polaco",
+      "esES": "Español",
+      "frFR": "Francés"
+    },
+    "languageSettings": "Ajustes de idioma",
+    "languageSettingsDescription": "Selecciona qué idiomas deben estar disponibles para el procesamiento de texto. El inglés es siempre requerido.",
+    "required": "requerido",
+    "noLanguagesSelected": "No se seleccionaron idiomas adicionales",
+    "settingsMovedMessage": "Los ajustes de la aplicación ahora están disponibles mediante el botón de engranaje en la barra superior."
+  },
+  "runePage": {
+    "tabs": {
+      "general": "General",
+      "runeSpecific": "Runas",
+      "generalPlaceholder": "Los ajustes generales estarán aquí"
+    },
+    "settings": {
+      "preview": "Vista previa",
+      "selectRune": "Selecciona una runa para editar",
+      "previewUnavailable": "Vista previa no disponible en modo manual"
+    },
+    "controls": {
+      "highlightRune": "Resaltar runa",
+      "showRuneNumber": "Mostrar número de runa",
+      "boxSize": "Tamaño de caja",
+      "color": "Color",
+      "languageCustomization": "Personalización de idioma",
+      "manualMode": "Modo manual",
+      "preview": "Vista previa",
+      "previewTitle": "Vista previa del texto",
+      "howItLooks": "Vista previa de la runa:",
+      "runeNumber": "Número de runa",
+      "previewLanguage": "Idioma de vista previa",
+      "customName": "Nombre personalizado",
+      "settings": "Ajustes",
+      "runeNumberTitle": "Número de runa",
+      "divider": "Separador",
+      "dividerColor": "Color del separador",
+      "numberColor": "Color del número",
+      "dividerTypes": {
+        "parentheses": "(...)",
+        "brackets": "[...]",
+        "pipe": "| ..."
+      },
+      "applyToAllRunes": "Aplicar a todas las runas",
+      "languageLabels": {
+        "enUS": "Inglés",
+        "ruRU": "Ruso",
+        "zhTW": "Chino (Trad.)",
+        "deDE": "Alemán",
+        "esES": "Español",
+        "frFR": "Francés",
+        "itIT": "Italiano",
+        "koKR": "Coreano",
+        "plPL": "Polaco",
+        "esMX": "Español",
+        "jaJP": "Japonés",
+        "ptBR": "Portugués",
+        "zhCN": "Chino (Simplificado)"
+      },
+      "placeholders": {
+        "enUS": "Nombre en inglés",
+        "ruRU": "Nombre en ruso",
+        "zhTW": "Nombre en chino (Trad.)",
+        "deDE": "Nombre en alemán",
+        "esES": "Nombre en español",
+        "frFR": "Nombre en francés",
+        "itIT": "Nombre en italiano",
+        "koKR": "Nombre en coreano",
+        "plPL": "Nombre en polaco",
+        "esMX": "Nombre en español",
+        "jaJP": "Nombre en japonés",
+        "ptBR": "Nombre en portugués",
+        "zhCN": "Nombre en chino (Simplificado)"
+      },
+      "colorHint": {
+        "title": "Códigos de color",
+        "description": "Usa estos códigos para colorear el texto en el juego",
+        "clickToCopy": "Haz clic en un color para copiar su código",
+        "copied": "{{code}} copiado al portapapeles"
+      },
+      "sizes": {
+        "Normal": "Normal",
+        "Exceptional": "Excepcional",
+        "Elite": "Élite",
+        "light": "Ligero",
+        "medium": "Medio",
+        "heavy": "Pesado",
+        "Medium": "Medio",
+        "Large": "Grande"
+      },
+      "colors": {
+        "white": "Blanco",
+        "gray": "Gris",
+        "black": "Negro",
+        "beige": "Beige",
+        "lightred": "Rojo claro",
+        "red": "Rojo",
+        "dimred": "Rojo tenue",
+        "orange": "Naranja",
+        "lightgold": "Oro claro",
+        "yellow": "Amarillo",
+        "lightyellow": "Amarillo claro",
+        "green": "Verde",
+        "dimgreen": "Verde tenue",
+        "darkgreen": "Verde oscuro",
+        "indigo": "Índigo",
+        "lightindigo": "Índigo claro",
+        "turquoise": "Turquesa",
+        "lightblue": "Azul claro",
+        "pink": "Rosa",
+        "purple": "Púrpura"
+      }
+    },
+    "runes": {
+      "el": "El",
+      "eld": "Eld",
+      "tir": "Tir",
+      "nef": "Nef",
+      "eth": "Eth",
+      "ith": "Ith",
+      "tal": "Tal",
+      "ral": "Ral",
+      "ort": "Ort",
+      "thul": "Thul",
+      "amn": "Amn",
+      "sol": "Sol",
+      "shael": "Shael",
+      "dol": "Dol",
+      "hel": "Hel",
+      "io": "Io",
+      "lum": "Lum",
+      "ko": "Ko",
+      "fal": "Fal",
+      "lem": "Lem",
+      "pul": "Pul",
+      "um": "Um",
+      "mal": "Mal",
+      "ist": "Ist",
+      "gul": "Gul",
+      "vex": "Vex",
+      "ohm": "Ohm",
+      "lo": "Lo",
+      "sur": "Sur",
+      "ber": "Ber",
+      "jah": "Jah",
+      "cham": "Cham",
+      "zod": "Zod"
+    },
+    "massEdit": {
+      "selectAll": "Seleccionar todo",
+      "deselectAll": "Deseleccionar todo",
+      "selected": "seleccionado",
+      "apply": "Aplicar",
+      "reset": "Restablecer",
+      "highlight": "Resaltar",
+      "showNumbers": "Mostrar números",
+      "boxSize": "Tamaño de caja",
+      "color": "Color",
+      "editSelected": "Editar seleccionados",
+      "modalTitle": "Edición masiva",
+      "basicSettings": "Ajustes básicos",
+      "numberingSettings": "Ajustes de numeración",
+      "noChange": "Sin cambios",
+      "cancel": "Cancelar",
+      "applyToRunes": "Aplicar a {{count}} runas"
+    },
+    "textWorker": {
+      "readFromFiles": "Leer de archivos",
+      "apply": "Aplicar",
+      "readFromFilesFor": "Leer de archivos: ajustes de {{tab}}",
+      "applyFor": "Aplicar ajustes: {{tab}}"
+    },
+    "confirmModal": {
+      "title": "Confirmar aplicación",
+      "message": "¿Seguro que deseas aplicar cambios a los archivos? Esta acción no se puede deshacer.",
+      "cancel": "Cancelar",
+      "confirm": "Aplicar"
+    }
+  },
+  "buttons": {
+    "changePath": "Cambiar ruta",
+    "back": "Atrás",
+    "settings": "Ajustes"
+  },
+  "settings": {
+    "appSettings": "Ajustes de la aplicación",
+    "pathSettings": "Ajustes de ruta",
+    "pathSettingsDescription": "Gestiona la ruta a tu directorio del juego D2R (específicamente a D2R.exe).",
+    "currentPath": "Ruta actual",
+    "pathNotSet": "Ruta no configurada",
+    "about": "Acerca de",
+    "appVersion": "Versión de la app"
+  },
+  "search": {
+    "placeholder": "Buscar runas...",
+    "noResults": "No se encontraron runas"
+  },
+  "sorting": {
+    "name": "Nombre",
+    "level": "Nivel"
+  }
+}
+
+

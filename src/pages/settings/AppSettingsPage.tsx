@@ -58,6 +58,11 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
   const appLanguageOptions = [
     { value: "enUS", label: "English" },
     { value: "ruRU", label: "Русский" },
+    { value: "deDE", label: "Deutsch" },
+    { value: "ukUA", label: "Українська" },
+    { value: "plPL", label: "Polski" },
+    { value: "esES", label: "Español" },
+    { value: "frFR", label: "Français" },
   ];
 
   const handleAppLanguageChange = (language: string) => {
@@ -317,7 +322,7 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
                     {t("common.appLanguageSettingsDescription")}
                   </p>
 
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     {appLanguageOptions.map((language) => {
                       const isSelected = currentAppLanguage === language.value;
 

@@ -1,0 +1,505 @@
+{
+  "tabs": {
+    "common": "Загальне",
+    "items": "Предмети",
+    "runes": "Руни",
+    "gems": "Камені",
+    "other": "Інше"
+  },
+  "update": {
+    "checking": "Перевірка оновлень...",
+    "available": "Доступне оновлення — Натисніть для встановлення",
+    "downloading": "Завантаження оновлення...",
+    "installing": "Встановлення оновлення...",
+    "upToDate": "Актуальна версія"
+  },
+  "descriptions": {
+    "common": "Загальні утиліти та інструменти",
+    "items": "Керування та аналіз предметів",
+    "runes": "Керування рунами та комбінації",
+    "gems": "Керування каменями та покращення"
+  },
+  "commonPage": {
+    "show": "Натисніть, щоб показувати",
+    "hide": "Натисніть, щоб ховати",
+    "arrows": "Стріли",
+    "bolts": "Болти",
+    "staminaPotions": "Еліксири витривалості",
+    "antidotes": "Протиотрути",
+    "thawingPotions": "Еліксири відтавання",
+    "healthPotions": "Еліксири здоров'я",
+    "manaPotions": "Еліксири мани",
+    "rejuvenationPotions": "Еліксири відновлення",
+    "enableCustomization": "Увімкнути налаштування",
+    "localeSettings": "Налаштування локалей",
+    "healthPotionsLevels": {
+      "level1": "Малий еліксир лікування",
+      "level2": "Легкий еліксир лікування",
+      "level3": "Еліксир лікування",
+      "level4": "Великий еліксир лікування",
+      "level5": "Супер еліксир лікування"
+    },
+    "manaPotionsLevels": {
+      "level1": "Малий еліксир мани",
+      "level2": "Легкий еліксир мани",
+      "level3": "Еліксир мани",
+      "level4": "Великий еліксир мани",
+      "level5": "Супер еліксир мани"
+    },
+    "rejuvenationPotionsLevels": {
+      "level1": "Еліксир відновлення",
+      "level2": "Повний еліксир відновлення"
+    }
+  },
+  "gemsPage": {
+    "skulls": "Черепи",
+    "amethysts": "Аметисти",
+    "topazes": "Топази",
+    "sapphires": "Сапфіри",
+    "emeralds": "Смарагди",
+    "rubies": "Рубіни",
+    "diamonds": "Алмази",
+    "skullsLevels": {
+      "level1": "Надщерблений череп",
+      "level2": "Помилковий череп",
+      "level3": "Череп",
+      "level4": "Бездоганний череп",
+      "level5": "Досконалий череп"
+    },
+    "amethystsLevels": {
+      "level1": "Надщерблений аметист",
+      "level2": "Помилковий аметист",
+      "level3": "Аметист",
+      "level4": "Бездоганний аметист",
+      "level5": "Досконалий аметист"
+    },
+    "topazesLevels": {
+      "level1": "Надщерблений топаз",
+      "level2": "Помилковий топаз",
+      "level3": "Топаз",
+      "level4": "Бездоганний топаз",
+      "level5": "Досконалий топаз"
+    },
+    "sapphiresLevels": {
+      "level1": "Надщерблений сапфір",
+      "level2": "Помилковий сапфір",
+      "level3": "Сапфір",
+      "level4": "Бездоганний сапфір",
+      "level5": "Досконалий сапфір"
+    },
+    "emeraldsLevels": {
+      "level1": "Надщерблений смарагд",
+      "level2": "Помилковий смарагд",
+      "level3": "Смарагд",
+      "level4": "Бездоганний смарагд",
+      "level5": "Досконалий смарагд"
+    },
+    "rubiesLevels": {
+      "level1": "Надщерблений рубін",
+      "level2": "Помилковий рубін",
+      "level3": "Рубін",
+      "level4": "Бездоганний рубін",
+      "level5": "Досконалий рубін"
+    },
+    "diamondsLevels": {
+      "level1": "Надщерблений алмаз",
+      "level2": "Помилковий алмаз",
+      "level3": "Алмаз",
+      "level4": "Бездоганний алмаз",
+      "level5": "Досконалий алмаз"
+    }
+  },
+  "common": {
+    "loading": "Завантаження...",
+    "applying": "Застосування...",
+    "themeSettings": "Налаштування теми",
+    "themeSettingsDescription": "Виберіть бажану тему для застосунку.",
+    "darkTheme": "Темна тема",
+    "lightTheme": "Світла тема",
+    "appLanguageSettings": "Мова застосунку",
+    "appLanguageSettingsDescription": "Виберіть мову інтерфейсу застосунку.",
+    "appLanguageLabels": {
+      "enUS": "English",
+      "ruRU": "Русский",
+      "deDE": "Deutsch",
+      "ukUA": "Українська",
+      "plPL": "Polski",
+      "esES": "Español",
+      "frFR": "Français"
+    },
+    "languageSettings": "Налаштування мов",
+    "languageSettingsDescription": "Виберіть, які мови мають бути доступні для обробки тексту. Англійська — обов'язкова.",
+    "required": "обов'язково",
+    "noLanguagesSelected": "Додаткові мови не вибрано",
+    "settingsMovedMessage": "Налаштування застосунку тепер доступні через кнопку-шестерню у верхній панелі."
+  },
+  "buttons": {
+    "changePath": "Змінити шлях",
+    "back": "Назад",
+    "settings": "Налаштування"
+  },
+  "settings": {
+    "appSettings": "Налаштування застосунку",
+    "pathSettings": "Налаштування шляху",
+    "pathSettingsDescription": "Керуйте шляхом до каталогу гри D2R (саме до D2R.exe).",
+    "currentPath": "Поточний шлях",
+    "pathNotSet": "Шлях не задано",
+    "about": "Про застосунок",
+    "appVersion": "Версія застосунку"
+  },
+  "search": {
+    "placeholder": "Пошук рун...",
+    "noResults": "Руни не знайдено"
+  },
+  "sorting": {
+    "name": "Назва",
+    "level": "Рівень"
+  },
+  "runePage": {
+    "tabs": {
+      "general": "Загальне",
+      "runeSpecific": "Руни",
+      "generalPlaceholder": "Загальні налаштування будуть тут"
+    },
+    "settings": {
+      "preview": "Передперегляд",
+      "selectRune": "Оберіть руну для редагування",
+      "previewUnavailable": "Передперегляд недоступний у ручному режимі"
+    },
+    "controls": {
+      "highlightRune": "Підсвітка руни",
+      "showRuneNumber": "Показувати номер руни",
+      "boxSize": "Розмір боксу",
+      "color": "Колір",
+      "languageCustomization": "Налаштування мов",
+      "manualMode": "Ручний режим",
+      "preview": "Передперегляд",
+      "previewTitle": "Передперегляд тексту",
+      "howItLooks": "Руна у грі:",
+      "runeNumber": "Номер руни",
+      "previewLanguage": "Мова передперегляду",
+      "customName": "Користувацька назва",
+      "settings": "Налаштування",
+      "runeNumberTitle": "Номер руни",
+      "divider": "Роздільник",
+      "dividerColor": "Колір роздільника",
+      "numberColor": "Колір номера",
+      "dividerTypes": {
+        "parentheses": "(...)",
+        "brackets": "[...]",
+        "pipe": "| ..."
+      },
+      "applyToAllRunes": "Застосувати до всіх рун",
+      "languageLabels": {
+        "enUS": "Англійська",
+        "ruRU": "Російська",
+        "zhTW": "Китайська (традиц.)",
+        "deDE": "Німецька",
+        "esES": "Іспанська",
+        "frFR": "Французька",
+        "itIT": "Італійська",
+        "koKR": "Корейська",
+        "plPL": "Польська",
+        "esMX": "Іспанська",
+        "jaJP": "Японська",
+        "ptBR": "Португальська",
+        "zhCN": "Китайська (спрощ.)"
+      },
+      "placeholders": {
+        "enUS": "Назва англійською",
+        "ruRU": "Назва російською",
+        "zhTW": "Назва китайською (традиц.)",
+        "deDE": "Назва німецькою",
+        "esES": "Назва іспанською",
+        "frFR": "Назва французькою",
+        "itIT": "Назва італійською",
+        "koKR": "Назва корейською",
+        "plPL": "Назва польською",
+        "esMX": "Назва іспанською",
+        "jaJP": "Назва японською",
+        "ptBR": "Назва португальською",
+        "zhCN": "Назва китайською (спрощ.)"
+      },
+      "colorHint": {
+        "title": "Коди кольорів",
+        "description": "Використовуйте ці коди для фарбування тексту у грі",
+        "clickToCopy": "Натисніть на колір, щоб скопіювати код",
+        "copied": "Код {{code}} скопійовано до буфера"
+      },
+      "sizes": {
+        "Normal": "Звичайний",
+        "Exceptional": "Покращений",
+        "Elite": "Елітний",
+        "light": "Легкий",
+        "medium": "Середній",
+        "heavy": "Важкий",
+        "Medium": "Середній",
+        "Large": "Великий"
+      },
+      "colors": {
+        "white": "Білий",
+        "gray": "Сірий",
+        "black": "Чорний",
+        "beige": "Бежевий",
+        "lightred": "Світло-червоний",
+        "red": "Червоний",
+        "dimred": "Тьмяно-червоний",
+        "orange": "Помаранчевий",
+        "lightgold": "Світло-золотий",
+        "yellow": "Жовтий",
+        "lightyellow": "Світло-жовтий",
+        "green": "Зелений",
+        "dimgreen": "Тьмяно-зелений",
+        "darkgreen": "Темно-зелений",
+        "indigo": "Індіго",
+        "lightindigo": "Світло-індіго",
+        "turquoise": "Бірюзовий",
+        "lightblue": "Світло-блакитний",
+        "pink": "Рожевий",
+        "purple": "Фіолетовий"
+      }
+    },
+    "runes": {
+      "el": "El",
+      "eld": "Eld",
+      "tir": "Tir",
+      "nef": "Nef",
+      "eth": "Eth",
+      "ith": "Ith",
+      "tal": "Tal",
+      "ral": "Ral",
+      "ort": "Ort",
+      "thul": "Thul",
+      "amn": "Amn",
+      "sol": "Sol",
+      "shael": "Shael",
+      "dol": "Dol",
+      "hel": "Hel",
+      "io": "Io",
+      "lum": "Lum",
+      "ko": "Ko",
+      "fal": "Fal",
+      "lem": "Lem",
+      "pul": "Pul",
+      "um": "Um",
+      "mal": "Mal",
+      "ist": "Ist",
+      "gul": "Gul",
+      "vex": "Vex",
+      "ohm": "Ohm",
+      "lo": "Lo",
+      "sur": "Sur",
+      "ber": "Ber",
+      "jah": "Jah",
+      "cham": "Cham",
+      "zod": "Zod"
+    },
+    "massEdit": {
+      "selectAll": "Вибрати все",
+      "deselectAll": "Скинути вибір",
+      "selected": "вибрано",
+      "apply": "Застосувати",
+      "reset": "Скинути",
+      "highlight": "Підсвітка",
+      "showNumbers": "Показувати номери",
+      "boxSize": "Розмір боксу",
+      "color": "Колір",
+      "editSelected": "Редагувати вибране",
+      "modalTitle": "Масове редагування",
+      "basicSettings": "Базові налаштування",
+      "numberingSettings": "Налаштування нумерації",
+      "noChange": "Без змін",
+      "cancel": "Скасувати",
+      "applyToRunes": "Застосувати до {{count}} рун"
+    },
+    "textWorker": {
+      "readFromFiles": "Зчитати з файлів",
+      "apply": "Застосувати",
+      "readFromFilesFor": "Зчитати з файлів: {{tab}}",
+      "applyFor": "Застосувати налаштування: {{tab}}"
+    },
+    "confirmModal": {
+      "title": "Підтвердження застосування",
+      "message": "Ви впевнені, що хочете застосувати зміни до файлів? Це дію не можна скасувати.",
+      "cancel": "Скасувати",
+      "confirm": "Застосувати"
+    }
+  },
+  "profiles": {
+    "selectProfile": "Виберіть профіль",
+    "createProfile": "Створити профіль",
+    "saveProfile": "Зберегти профіль",
+    "renameProfile": "Перейменувати профіль",
+    "deleteProfile": "Видалити профіль",
+    "exportProfile": "Експортувати профіль",
+    "importProfile": "Імпортувати профіль",
+    "profileName": "Назва профілю",
+    "enterProfileName": "Введіть назву профілю",
+    "create": "Створити",
+    "rename": "Перейменувати",
+    "delete": "Видалити",
+    "cancel": "Скасувати",
+    "deleteConfirmation": "Ви впевнені, що хочете видалити профіль \"{{name}}\"? Цю дію не можна скасувати.",
+    "messages": {
+      "success": "Успіх",
+      "error": "Помилка",
+      "profileCreated": "Профіль \"{{name}}\" створено",
+      "profileRenamed": "Профіль перейменовано на \"{{name}}\"",
+      "profileDeleted": "Профіль \"{{name}}\" видалено",
+      "profileExported": "Профіль експортовано",
+      "profileImported": "Профіль імпортовано",
+      "importError": "Помилка імпорту профілю"
+    }
+  },
+  "messages": {
+    "success": {
+      "filesLoaded": "Файли завантажено",
+      "localesLoadedText": "Успішно завантажено {{count}} елементів локалізації, оброблено {{processedRunes}} рун",
+      "changesSaved": "Зміни збережено",
+      "changesAppliedText": "Зміни успішно застосовано до файлів гри",
+      "changesApplied": "Зміни застосовано успішно",
+      "changesAppliedDescription": "Ваші налаштування збережено у файлах гри",
+      "highlightSettingsLoaded": "Налаштування підсвітки завантажено",
+      "highlightSettingsLoadedText": "Оброблено підсвітку для {{processedRunes}} рун",
+      "commonItemsLoaded": "Звичайні предмети завантажено",
+      "commonItemsLoadedDescription": "Налаштування звичайних предметів зчитано з файлів гри",
+      "gemsLoaded": "Камені завантажено",
+      "gemsLoadedDescription": "Налаштування каменів зчитано з файлів гри",
+      "gemsLoadedDetails": "Успішно завантажено {{count}} каменів",
+      "gemsChangesAppliedDescription": "Налаштування каменів збережено у файлах гри",
+      "itemsLoaded": "Предмети завантажено",
+      "itemsLoadedDetails": "Завантажено: {{prefixes}} префіксів якості і {{items}} предметів з файлів",
+      "itemsApplied": "Налаштування предметів успішно застосовано"
+    },
+    "error": {
+      "fileLoadError": "Помилка завантаження файлів",
+      "pathNotFound": "Шлях до гри не знайдено в налаштуваннях",
+      "unknownError": "Невідома помилка під час читання файлів",
+      "saveError": "Помилка збереження",
+      "applyError": "Помилка застосування",
+      "settingsNotFound": "Налаштування не знайдено",
+      "highlightLoadError": "Помилка завантаження налаштувань підсвітки",
+      "itemsApplyFailed": "Не вдалося застосувати налаштування предметів"
+    }
+  },
+  "itemsPage": {
+    "loadFromFiles": "Завантажити з файлів",
+    "loadingFromFiles": "Завантаження...",
+    "errors": {
+      "pathNotSet": "Шлях до гри не налаштовано. Будь ласка, налаштуйте шлях у налаштуваннях застосунку.",
+      "pathNotSetTitle": "Помилка"
+    },
+    "settings": {
+      "title": "Налаштування предметів",
+      "difficultyClassMarkers": "Маркери класу складності",
+      "qualityPrefixes": "Префікси якості",
+      "showDifficultyClassMarker": "Показувати маркер класу складності",
+      "enableItem": "Увімкнути предмет",
+      "difficultyClassMarkersLevels": {
+        "level1": "Звичайний",
+        "level2": "Покращений",
+        "level3": "Елітний"
+      },
+      "qualityPrefixesLevels": {
+        "level1": "Пошкоджений",
+        "level2": "Покращений"
+      },
+      "tooltips": {
+        "difficultyClassMarkers": {
+          "level1": "Звичайний",
+          "level2": "Покращений",
+          "level3": "Елітний"
+        },
+        "qualityPrefixes": {
+          "level1": "Усі префікси низької якості",
+          "level2": "Покращений"
+        }
+      }
+    },
+    "filters": {
+      "reset": "Скинути",
+      "search": "Пошук предметів...",
+      "difficultyClass": "Клас складності",
+      "limitedToClass": "Лише для класу",
+      "reqLevel": "Вим. рівень",
+      "reqStrength": "Вим. сила",
+      "reqDexterity": "Вим. спритність",
+      "weight": "Вага",
+      "baseTypes": "Базові типи",
+      "normal": "Звичайний",
+      "exceptional": "Покращений",
+      "elite": "Елітний",
+      "light": "Легкий",
+      "medium": "Середній",
+      "heavy": "Важкий",
+      "anyClass": "Будь-який клас",
+      "all": "Усі",
+      "selected": "вибрано"
+    },
+    "sorting": {
+      "byType": "За типом",
+      "byName": "За назвою",
+      "byLevel": "За рівнем"
+    },
+    "massEdit": {
+      "selectAll": "Вибрати все",
+      "deselectAll": "Скинути вибір",
+      "editSelected": "Редагувати вибране",
+      "modalTitle": "Масове редагування предметів",
+      "difficultyClassLabel": "Клас складності",
+      "apply": "Застосувати",
+      "cancel": "Скасувати"
+    },
+    "selectItem": "Оберіть предмет для редагування налаштувань",
+    "attributes": "Атрибути",
+    "maxSockets": "Макс. гнізд",
+    "relatedItems": {
+      "uniques": "Унікальні предмети",
+      "setItems": "Сетові предмети"
+    },
+    "baseTypes": {
+      "Weapons": "Зброя",
+      "MeleeWeapons": "Ближній бій",
+      "Swords": "Мечі",
+      "Axes": "Сокири",
+      "Scepters": "Скіпетри",
+      "Hammers": "Молоти",
+      "Maces": "Булави",
+      "Clubs": "Дубини",
+      "Polearms": "Древкова",
+      "Spears": "Списи",
+      "Katars": "Катар",
+      "Daggers": "Кинджали",
+      "Staves": "Посохи",
+      "Wands": "Жезли",
+      "MissileWeapons": "Стрілецька",
+      "BodyArmor": "Броня",
+      "Shields": "Щити",
+      "Helms": "Шоломи",
+      "PaladinShields": "Щити паладина",
+      "Orbs": "Сфери",
+      "Pelts": "Шоломи друїда",
+      "ShrunkenHeads": "Сушені голови",
+      "Bows": "Луки",
+      "Crossbows": "Арбалети",
+      "Throwing": "Метальна",
+      "Javelins": "Дротики",
+      "Mauls": "Кувалди",
+      "Belts": "Пояси",
+      "Gloves": "Рукавички",
+      "Boots": "Черевики",
+      "BarbHelms": "Шоломи варвара"
+    },
+    "classes": {
+      "amazon": "Амазонка",
+      "sorceress": "Чарівниця",
+      "necromancer": "Некромант",
+      "paladin": "Паладин",
+      "barbarian": "Варвар",
+      "druid": "Друїд",
+      "assassin": "Асасин"
+    }
+  }
+}
+
+

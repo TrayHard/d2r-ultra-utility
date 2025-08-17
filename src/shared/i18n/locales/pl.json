@@ -1,0 +1,330 @@
+{
+  "tabs": {
+    "common": "Ogólne",
+    "items": "Przedmioty",
+    "runes": "Runy",
+    "gems": "Kamyki",
+    "other": "Inne"
+  },
+  "update": {
+    "checking": "Sprawdzanie aktualizacji...",
+    "available": "Dostępna aktualizacja — Kliknij, aby zainstalować",
+    "downloading": "Pobieranie aktualizacji...",
+    "installing": "Instalowanie aktualizacji...",
+    "upToDate": "Aktualne"
+  },
+  "descriptions": {
+    "common": "Ogólne narzędzia i funkcje",
+    "items": "Zarządzanie i analiza przedmiotów",
+    "runes": "Zarządzanie runami i kombinacje",
+    "gems": "Zarządzanie kamieniami i ulepszenia"
+  },
+  "commonPage": {
+    "show": "Kliknij, aby pokazać",
+    "hide": "Kliknij, aby ukryć",
+    "arrows": "Strzały",
+    "bolts": "Bełty",
+    "staminaPotions": "Eliksiry wytrzymałości",
+    "antidotes": "Antidotum",
+    "thawingPotions": "Eliksiry rozmrażające",
+    "healthPotions": "Mikstury zdrowia",
+    "manaPotions": "Mikstury many",
+    "rejuvenationPotions": "Mikstury odnowy",
+    "enableCustomization": "Włącz dostosowanie",
+    "localeSettings": "Ustawienia lokalizacji",
+    "healthPotionsLevels": {
+      "level1": "Mała mikstura zdrowia",
+      "level2": "Lekka mikstura zdrowia",
+      "level3": "Mikstura zdrowia",
+      "level4": "Duża mikstura zdrowia",
+      "level5": "Super mikstura zdrowia"
+    },
+    "manaPotionsLevels": {
+      "level1": "Mała mikstura many",
+      "level2": "Lekka mikstura many",
+      "level3": "Mikstura many",
+      "level4": "Duża mikstura many",
+      "level5": "Super mikstura many"
+    },
+    "rejuvenationPotionsLevels": {
+      "level1": "Mikstura odnowy",
+      "level2": "Pełna mikstura odnowy"
+    }
+  },
+  "gemsPage": {
+    "skulls": "Czaszki",
+    "amethysts": "Ametysty",
+    "topazes": "Topazy",
+    "sapphires": "Szafiry",
+    "emeralds": "Szmaragdy",
+    "rubies": "Rubiny",
+    "diamonds": "Diamenty",
+    "skullsLevels": {
+      "level1": "Wyszczerbiona czaszka",
+      "level2": "Skazona czaszka",
+      "level3": "Czaszka",
+      "level4": "Bez skazy czaszka",
+      "level5": "Doskonala czaszka"
+    },
+    "amethystsLevels": {
+      "level1": "Wyszczerbiony ametyst",
+      "level2": "Skazony ametyst",
+      "level3": "Ametyst",
+      "level4": "Bez skazy ametyst",
+      "level5": "Doskonaly ametyst"
+    },
+    "topazesLevels": {
+      "level1": "Wyszczerbiony topaz",
+      "level2": "Skazony topaz",
+      "level3": "Topaz",
+      "level4": "Bez skazy topaz",
+      "level5": "Doskonaly topaz"
+    },
+    "sapphiresLevels": {
+      "level1": "Wyszczerbiony szafir",
+      "level2": "Skazony szafir",
+      "level3": "Szafir",
+      "level4": "Bez skazy szafir",
+      "level5": "Doskonaly szafir"
+    },
+    "emeraldsLevels": {
+      "level1": "Wyszczerbiony szmaragd",
+      "level2": "Skazony szmaragd",
+      "level3": "Szmaragd",
+      "level4": "Bez skazy szmaragd",
+      "level5": "Doskonaly szmaragd"
+    },
+    "rubiesLevels": {
+      "level1": "Wyszczerbiony rubin",
+      "level2": "Skazony rubin",
+      "level3": "Rubin",
+      "level4": "Bez skazy rubin",
+      "level5": "Doskonaly rubin"
+    },
+    "diamondsLevels": {
+      "level1": "Wyszczerbiony diament",
+      "level2": "Skazony diament",
+      "level3": "Diament",
+      "level4": "Bez skazy diament",
+      "level5": "Doskonaly diament"
+    }
+  },
+  "common": {
+    "loading": "Ładowanie...",
+    "applying": "Zastosowywanie...",
+    "themeSettings": "Ustawienia motywu",
+    "themeSettingsDescription": "Wybierz preferowany motyw aplikacji.",
+    "darkTheme": "Ciemny motyw",
+    "lightTheme": "Jasny motyw",
+    "appLanguageSettings": "Język aplikacji",
+    "appLanguageSettingsDescription": "Wybierz język interfejsu aplikacji.",
+    "appLanguageLabels": {
+      "enUS": "Angielski",
+      "ruRU": "Rosyjski",
+      "deDE": "Niemiecki",
+      "ukUA": "Ukraiński",
+      "plPL": "Polski",
+      "esES": "Hiszpański",
+      "frFR": "Francuski"
+    },
+    "languageSettings": "Ustawienia języków",
+    "languageSettingsDescription": "Wybierz języki dostępne do przetwarzania tekstu. Angielski jest zawsze wymagany.",
+    "required": "wymagany",
+    "noLanguagesSelected": "Nie wybrano dodatkowych języków",
+    "settingsMovedMessage": "Ustawienia aplikacji dostępne są teraz przez ikonę koła zębatego na górnym pasku."
+  },
+  "runePage": {
+    "tabs": {
+      "general": "Ogólne",
+      "runeSpecific": "Runy",
+      "generalPlaceholder": "Ustawienia ogólne będą tutaj"
+    },
+    "settings": {
+      "preview": "Podgląd",
+      "selectRune": "Wybierz runę do edycji",
+      "previewUnavailable": "Podgląd niedostępny w trybie ręcznym"
+    },
+    "controls": {
+      "highlightRune": "Podświetl runę",
+      "showRuneNumber": "Pokaż numer runy",
+      "boxSize": "Rozmiar pola",
+      "color": "Kolor",
+      "languageCustomization": "Dostosowanie języka",
+      "manualMode": "Tryb ręczny",
+      "preview": "Podgląd",
+      "previewTitle": "Podgląd tekstu",
+      "howItLooks": "Podgląd runy:",
+      "runeNumber": "Numer runy",
+      "previewLanguage": "Język podglądu",
+      "customName": "Niestandardowa nazwa",
+      "settings": "Ustawienia",
+      "runeNumberTitle": "Numer runy",
+      "divider": "Separator",
+      "dividerColor": "Kolor separatora",
+      "numberColor": "Kolor numeru",
+      "dividerTypes": {
+        "parentheses": "(...)",
+        "brackets": "[...]",
+        "pipe": "| ..."
+      },
+      "applyToAllRunes": "Zastosuj do wszystkich run",
+      "languageLabels": {
+        "enUS": "Angielski",
+        "ruRU": "Rosyjski",
+        "zhTW": "Chiński (trad.)",
+        "deDE": "Niemiecki",
+        "esES": "Hiszpański",
+        "frFR": "Francuski",
+        "itIT": "Włoski",
+        "koKR": "Koreański",
+        "plPL": "Polski",
+        "esMX": "Hiszpański",
+        "jaJP": "Japoński",
+        "ptBR": "Portugalski",
+        "zhCN": "Chiński (uproszcz.)"
+      },
+      "placeholders": {
+        "enUS": "Nazwa po angielsku",
+        "ruRU": "Nazwa po rosyjsku",
+        "zhTW": "Nazwa po chińsku (trad.)",
+        "deDE": "Nazwa po niemiecku",
+        "esES": "Nazwa po hiszpańsku",
+        "frFR": "Nazwa po francusku",
+        "itIT": "Nazwa po włosku",
+        "koKR": "Nazwa po koreańsku",
+        "plPL": "Nazwa po polsku",
+        "esMX": "Nazwa po hiszpańsku",
+        "jaJP": "Nazwa po japońsku",
+        "ptBR": "Nazwa po portugalsku",
+        "zhCN": "Nazwa po chińsku (uproszcz.)"
+      },
+      "colorHint": {
+        "title": "Kody kolorów",
+        "description": "Użyj tych kodów, aby kolorować tekst w grze",
+        "clickToCopy": "Kliknij kolor, aby skopiować kod",
+        "copied": "Skopiowano {{code}} do schowka"
+      },
+      "sizes": {
+        "Normal": "Normalny",
+        "Exceptional": "Wyjątkowy",
+        "Elite": "Elitarny",
+        "light": "Lekki",
+        "medium": "Średni",
+        "heavy": "Ciężki",
+        "Medium": "Średni",
+        "Large": "Duży"
+      },
+      "colors": {
+        "white": "Biały",
+        "gray": "Szary",
+        "black": "Czarny",
+        "beige": "Beżowy",
+        "lightred": "Jasnoczerwony",
+        "red": "Czerwony",
+        "dimred": "Ciemnoczerwony",
+        "orange": "Pomarańczowy",
+        "lightgold": "Jasnozłoty",
+        "yellow": "Żółty",
+        "lightyellow": "Jasnożółty",
+        "green": "Zielony",
+        "dimgreen": "Ciemnozielony",
+        "darkgreen": "Ciemnozielony",
+        "indigo": "Indygo",
+        "lightindigo": "Jasne indygo",
+        "turquoise": "Turkusowy",
+        "lightblue": "Jasnoniebieski",
+        "pink": "Różowy",
+        "purple": "Fioletowy"
+      }
+    },
+    "runes": {
+      "el": "El",
+      "eld": "Eld",
+      "tir": "Tir",
+      "nef": "Nef",
+      "eth": "Eth",
+      "ith": "Ith",
+      "tal": "Tal",
+      "ral": "Ral",
+      "ort": "Ort",
+      "thul": "Thul",
+      "amn": "Amn",
+      "sol": "Sol",
+      "shael": "Shael",
+      "dol": "Dol",
+      "hel": "Hel",
+      "io": "Io",
+      "lum": "Lum",
+      "ko": "Ko",
+      "fal": "Fal",
+      "lem": "Lem",
+      "pul": "Pul",
+      "um": "Um",
+      "mal": "Mal",
+      "ist": "Ist",
+      "gul": "Gul",
+      "vex": "Vex",
+      "ohm": "Ohm",
+      "lo": "Lo",
+      "sur": "Sur",
+      "ber": "Ber",
+      "jah": "Jah",
+      "cham": "Cham",
+      "zod": "Zod"
+    },
+    "massEdit": {
+      "selectAll": "Zaznacz wszystko",
+      "deselectAll": "Odznacz wszystko",
+      "selected": "zaznaczono",
+      "apply": "Zastosuj",
+      "reset": "Resetuj",
+      "highlight": "Podświetlenie",
+      "showNumbers": "Numery run",
+      "boxSize": "Rozmiar pola",
+      "color": "Kolor",
+      "editSelected": "Edytuj zaznaczone",
+      "modalTitle": "Masowa edycja",
+      "basicSettings": "Podstawowe ustawienia",
+      "numberingSettings": "Ustawienia numeracji",
+      "noChange": "Bez zmian",
+      "cancel": "Anuluj",
+      "applyToRunes": "Zastosuj do {{count}} run"
+    },
+    "textWorker": {
+      "readFromFiles": "Czytaj z plików",
+      "apply": "Zastosuj",
+      "readFromFilesFor": "Czytaj z plików: ustawienia {{tab}}",
+      "applyFor": "Zastosuj ustawienia: {{tab}}"
+    },
+    "confirmModal": {
+      "title": "Potwierdź zastosowanie",
+      "message": "Czy na pewno chcesz zastosować zmiany do plików? Tego działania nie można cofnąć.",
+      "cancel": "Anuluj",
+      "confirm": "Zastosuj"
+    }
+  },
+  "buttons": {
+    "changePath": "Zmień ścieżkę",
+    "back": "Wstecz",
+    "settings": "Ustawienia"
+  },
+  "settings": {
+    "appSettings": "Ustawienia aplikacji",
+    "pathSettings": "Ustawienia ścieżki",
+    "pathSettingsDescription": "Zarządzaj ścieżką do katalogu gry D2R (konkretnie do D2R.exe).",
+    "currentPath": "Bieżąca ścieżka",
+    "pathNotSet": "Ścieżka nie ustawiona",
+    "about": "O aplikacji",
+    "appVersion": "Wersja aplikacji"
+  },
+  "search": {
+    "placeholder": "Szukaj run...",
+    "noResults": "Nie znaleziono run"
+  },
+  "sorting": {
+    "name": "Nazwa",
+    "level": "Poziom"
+  }
+}
+
+
