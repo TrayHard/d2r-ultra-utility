@@ -81,12 +81,8 @@ if errorlevel 1 (
 )
 
 git tag -a v%NEW_VERSION% -m "%NEW_VERSION%" 2>nul
-if defined HAS_ORIGIN (
-  git push -u origin HEAD
-  git push origin v%NEW_VERSION%
-) else (
-  echo [WARN] Remote 'origin' not configured. Skipping push.
-)
+git push -u origin HEAD
+git push origin v%NEW_VERSION%
 
 :after_git
 
