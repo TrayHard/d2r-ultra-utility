@@ -65,28 +65,28 @@ export const idToGemMapper: Record<
   // Сапфиры
   2246: { gem: EGem.sapphire1, file: "item-names" }, // item-names.json
   2247: { gem: EGem.sapphire2, file: "item-names" }, // item-names.json
-  2248: { gem: EGem.sapphire3, file: "item-nameaffixes" }, // item-nameaffixes.json
+  2248: { gem: EGem.sapphire3, file: "item-nameaffixes" }, // item-nameaffixes.json, тут все правильно!
   2249: { gem: EGem.sapphire4, file: "item-names" }, // item-names.json
   2250: { gem: EGem.sapphire5, file: "item-names" }, // item-names.json
 
   // Изумруды
   2251: { gem: EGem.emerald1, file: "item-names" }, // item-names.json
   2252: { gem: EGem.emerald2, file: "item-names" }, // item-names.json
-  2253: { gem: EGem.emerald3, file: "item-nameaffixes" }, // item-nameaffixes.json
-  2254: { gem: EGem.emerald4, file: "item-names" }, // item-names.json
+  2254: { gem: EGem.emerald3, file: "item-nameaffixes" }, // item-nameaffixes.json, тут все правильно!
+  2253: { gem: EGem.emerald4, file: "item-names" }, // item-names.json
   2255: { gem: EGem.emerald5, file: "item-names" }, // item-names.json
 
   // Рубины
   2256: { gem: EGem.ruby1, file: "item-names" }, // item-names.json
   2257: { gem: EGem.ruby2, file: "item-names" }, // item-names.json
-  2258: { gem: EGem.ruby3, file: "item-nameaffixes" }, // item-nameaffixes.json
+  2258: { gem: EGem.ruby3, file: "item-nameaffixes" }, // item-nameaffixes.json, тут все правильно!
   2259: { gem: EGem.ruby4, file: "item-names" }, // item-names.json
   2260: { gem: EGem.ruby5, file: "item-names" }, // item-names.json
 
   // Алмазы
   2261: { gem: EGem.diamond1, file: "item-names" }, // item-names.json
   2262: { gem: EGem.diamond2, file: "item-names" }, // item-names.json
-  2263: { gem: EGem.diamond3, file: "item-nameaffixes" }, // item-nameaffixes.json
+  2263: { gem: EGem.diamond3, file: "item-nameaffixes" }, // item-nameaffixes.json, тут все правильно!
   2264: { gem: EGem.diamond4, file: "item-names" }, // item-names.json
   2265: { gem: EGem.diamond5, file: "item-names" }, // item-names.json
 
@@ -112,22 +112,22 @@ export const gemToIdMapper: Record<EGem, GemIdInfo> = {
   [EGem.topaz5]: { id: 2245, file: "item-names" },
   [EGem.sapphire1]: { id: 2246, file: "item-names" },
   [EGem.sapphire2]: { id: 2247, file: "item-names" },
-  [EGem.sapphire3]: { id: 2248, file: "item-nameaffixes" },
+  [EGem.sapphire3]: { id: 2248, file: "item-nameaffixes" }, // тут все правильно!
   [EGem.sapphire4]: { id: 2249, file: "item-names" },
   [EGem.sapphire5]: { id: 2250, file: "item-names" },
   [EGem.emerald1]: { id: 2251, file: "item-names" },
   [EGem.emerald2]: { id: 2252, file: "item-names" },
-  [EGem.emerald3]: { id: 2253, file: "item-nameaffixes" },
-  [EGem.emerald4]: { id: 2254, file: "item-names" },
+  [EGem.emerald3]: { id: 2254, file: "item-nameaffixes" }, // тут все правильно!
+  [EGem.emerald4]: { id: 2253, file: "item-names" },
   [EGem.emerald5]: { id: 2255, file: "item-names" },
   [EGem.ruby1]: { id: 2256, file: "item-names" },
   [EGem.ruby2]: { id: 2257, file: "item-names" },
-  [EGem.ruby3]: { id: 2258, file: "item-nameaffixes" },
+  [EGem.ruby3]: { id: 2258, file: "item-nameaffixes" }, // тут все правильно!
   [EGem.ruby4]: { id: 2259, file: "item-names" },
   [EGem.ruby5]: { id: 2260, file: "item-names" },
   [EGem.diamond1]: { id: 2261, file: "item-names" },
   [EGem.diamond2]: { id: 2262, file: "item-names" },
-  [EGem.diamond3]: { id: 2263, file: "item-nameaffixes" },
+  [EGem.diamond3]: { id: 2263, file: "item-nameaffixes" }, // тут все правильно!
   [EGem.diamond4]: { id: 2264, file: "item-names" },
   [EGem.diamond5]: { id: 2265, file: "item-names" },
   [EGem.skull1]: { id: 2277, file: "item-names" },
