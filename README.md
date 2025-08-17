@@ -3,8 +3,54 @@
 Desktop application to enhance your Diablo II Resurrected playing experience.
 
 ## Features:
-- [x] Editing loot filter for items
-- [x] Editing loot filter for runes
-- [x] Using different profiles in different circumstances e.g. leveling\endgame farm or different settings for different characters (Bowazon wants to see arrows on the ground, others - don't)
-- [x] Sharing profiles with others
-- [x] Choosing which languages for locales need to be displayed
+
+### Loot filters
+
+#### Items
+<img src="https://i.imgur.com/UNbCk9M.png" width="900" />
+
+- You can filter items by requirements, weight, difficulty class and character class limitations
+
+- You can search through them by their names and names of the uniques and set items which they are related to
+
+- You can see which uniques and set items are related to the item
+
+- You can mass edit them, e.g. turn off displaying all Normal + Nightmare weapons if you farm in endgame and so on (and easily switch it off using Profiles feature mentioned below)
+
+<img src="https://i.imgur.com/k8Brnzv.png" width="450" />
+
+#### Runes
+<img src="https://i.imgur.com/0J0nJvV.png" height="500" />
+
+- You can define how they should look like
+
+- You can highlight the runes you want
+
+- You can select and mass edit them
+<img src="https://i.imgur.com/oCHX84L.png" width="500" />
+
+- You can edit them manually directly
+<img src="https://i.imgur.com/3MxTkwj.png" width="500" />
+
+#### Common items
+<img src="https://i.imgur.com/nrNPm91.png" height="500" />
+
+#### Profiles
+Now you can store all your loot filter settings and switch between them very quickly. Different characters or different game stage (levelling\endgame farm)? You can change the profile for your needs. 
+And you can also export\import it to save it for yourself or to share with friends!
+
+<img src="https://i.imgur.com/iauOqA6.png" height="500" />
+
+#### Localizations
+You can choose the game locales you are interested in
+
+<img src="https://i.imgur.com/yXO5l13.png" height="500" />
+
+And the application itself suppots now:
+- English
+- Russian
+- German
+- Ukrainian
+- Polish
+- Spanish
+- French
