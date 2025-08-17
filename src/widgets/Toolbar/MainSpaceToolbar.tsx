@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import LanguageSwitch from "./LanguageSwitch.tsx";
+import UpdateButton from "./UpdateButton.tsx";
 
 interface ToolbarProps {
   onLanguageChange: () => void;
@@ -40,6 +41,9 @@ const MainSpaceToolbar: React.FC<ToolbarProps> = ({
         </div>
 
         <div className="flex items-center space-x-4">
+          {/* Update Button */}
+          <UpdateButton isDarkTheme={isDarkTheme} />
+
           {/* Theme Toggle */}
           <button
             onClick={onThemeChange}
