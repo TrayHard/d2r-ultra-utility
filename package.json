@@ -1,7 +1,7 @@
 {
   "name": "d2r-ultra-utility",
   "private": true,
-  "version": "0.1.2",
+  "version": "0.2.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,7 +9,7 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "tdev": "tauri dev",
-    "tbuild": "tauri build && node scripts/postbuild-rename.js",
+    "tbuild": "tauri build && node scripts/postbuild-rename.js && node scripts/generate-latest-json.js",
     "tauri": "tauri"
   },
   "dependencies": {
