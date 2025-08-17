@@ -1,0 +1,505 @@
+{
+  "tabs": {
+    "common": "Allgemein",
+    "items": "Gegenstände",
+    "runes": "Runen",
+    "gems": "Edelsteine",
+    "other": "Sonstiges"
+  },
+  "update": {
+    "checking": "Nach Updates wird gesucht...",
+    "available": "Update verfügbar - Zum Installieren klicken",
+    "downloading": "Update wird heruntergeladen...",
+    "installing": "Update wird installiert...",
+    "upToDate": "Aktuell"
+  },
+  "descriptions": {
+    "common": "Allgemeine Hilfsprogramme und Tools",
+    "items": "Verwaltung und Analyse von Gegenständen",
+    "runes": "Verwaltung von Runen und Kombinationen",
+    "gems": "Verwaltung und Aufwertungen von Edelsteinen"
+  },
+  "common": {
+    "loading": "Laden...",
+    "applying": "Anwenden...",
+    "themeSettings": "Design-Einstellungen",
+    "themeSettingsDescription": "Wählen Sie Ihr bevorzugtes Design für die Anwendung.",
+    "darkTheme": "Dunkles Design",
+    "lightTheme": "Helles Design",
+    "appLanguageSettings": "Sprache der Anwendung",
+    "appLanguageSettingsDescription": "Wählen Sie die Sprache der Benutzeroberfläche.",
+    "appLanguageLabels": {
+      "enUS": "Englisch",
+      "ruRU": "Russisch",
+      "deDE": "Deutsch",
+      "ukUA": "Ukrainisch",
+      "plPL": "Polnisch",
+      "esES": "Spanisch",
+      "frFR": "Französisch"
+    },
+    "languageSettings": "Spracheinstellungen",
+    "languageSettingsDescription": "Wählen Sie, welche Sprachen für die Textverarbeitung verfügbar sein sollen. Englisch ist immer erforderlich.",
+    "required": "erforderlich",
+    "noLanguagesSelected": "Keine zusätzlichen Sprachen ausgewählt",
+    "settingsMovedMessage": "App-Einstellungen sind jetzt über die Zahnrad-Schaltfläche in der oberen Leiste verfügbar."
+  },
+  "buttons": {
+    "changePath": "Pfad ändern",
+    "back": "Zurück",
+    "settings": "Einstellungen"
+  },
+  "settings": {
+    "appSettings": "App-Einstellungen",
+    "pathSettings": "Pfad-Einstellungen",
+    "pathSettingsDescription": "Verwalten Sie den Pfad zu Ihrem D2R-Spielverzeichnis (konkret zu D2R.exe).",
+    "currentPath": "Aktueller Pfad",
+    "pathNotSet": "Pfad nicht festgelegt",
+    "about": "Info",
+    "appVersion": "App-Version"
+  },
+  "search": {
+    "placeholder": "Runen suchen...",
+    "noResults": "Keine Runen gefunden"
+  },
+  "sorting": {
+    "name": "Name",
+    "level": "Stufe"
+  },
+  "commonPage": {
+    "show": "Klicken zum Anzeigen",
+    "hide": "Klicken zum Ausblenden",
+    "arrows": "Pfeile",
+    "bolts": "Bolzen",
+    "staminaPotions": "Ausdauertränke",
+    "antidotes": "Gegengifte",
+    "thawingPotions": "Auftautränke",
+    "healthPotions": "Heiltränke",
+    "manaPotions": "Manatränke",
+    "rejuvenationPotions": "Wiederherstellungstränke",
+    "enableCustomization": "Anpassung aktivieren",
+    "localeSettings": "Locale-Einstellungen",
+    "healthPotionsLevels": {
+      "level1": "Kleiner Heiltrank",
+      "level2": "Leichter Heiltrank",
+      "level3": "Heiltrank",
+      "level4": "Großer Heiltrank",
+      "level5": "Über-Heiltrank"
+    },
+    "manaPotionsLevels": {
+      "level1": "Kleiner Manatrank",
+      "level2": "Leichter Manatrank",
+      "level3": "Manatrank",
+      "level4": "Großer Manatrank",
+      "level5": "Über-Manatrank"
+    },
+    "rejuvenationPotionsLevels": {
+      "level1": "Wiederherstellungstrank",
+      "level2": "Voller Wiederherstellungstrank"
+    }
+  },
+  "gemsPage": {
+    "skulls": "Schädel",
+    "amethysts": "Amethyste",
+    "topazes": "Topase",
+    "sapphires": "Saphire",
+    "emeralds": "Smaragde",
+    "rubies": "Rubine",
+    "diamonds": "Diamanten",
+    "skullsLevels": {
+      "level1": "Abgesplitterter Schädel",
+      "level2": "Fehlerhafter Schädel",
+      "level3": "Schädel",
+      "level4": "Makelloser Schädel",
+      "level5": "Perfekter Schädel"
+    },
+    "amethystsLevels": {
+      "level1": "Abgesplitterter Amethyst",
+      "level2": "Fehlerhafter Amethyst",
+      "level3": "Amethyst",
+      "level4": "Makelloser Amethyst",
+      "level5": "Perfekter Amethyst"
+    },
+    "topazesLevels": {
+      "level1": "Abgesplitterter Topas",
+      "level2": "Fehlerhafter Topas",
+      "level3": "Topas",
+      "level4": "Makelloser Topas",
+      "level5": "Perfekter Topas"
+    },
+    "sapphiresLevels": {
+      "level1": "Abgesplitterter Saphir",
+      "level2": "Fehlerhafter Saphir",
+      "level3": "Saphir",
+      "level4": "Makelloser Saphir",
+      "level5": "Perfekter Saphir"
+    },
+    "emeraldsLevels": {
+      "level1": "Abgesplitterter Smaragd",
+      "level2": "Fehlerhafter Smaragd",
+      "level3": "Smaragd",
+      "level4": "Makelloser Smaragd",
+      "level5": "Perfekter Smaragd"
+    },
+    "rubiesLevels": {
+      "level1": "Abgesplitterter Rubin",
+      "level2": "Fehlerhafter Rubin",
+      "level3": "Rubin",
+      "level4": "Makelloser Rubin",
+      "level5": "Perfekter Rubin"
+    },
+    "diamondsLevels": {
+      "level1": "Abgesplitterter Diamant",
+      "level2": "Fehlerhafter Diamant",
+      "level3": "Diamant",
+      "level4": "Makelloser Diamant",
+      "level5": "Perfekter Diamant"
+    }
+  },
+  "runePage": {
+    "tabs": {
+      "general": "Allgemein",
+      "runeSpecific": "Runenspezifisch",
+      "generalPlaceholder": "Allgemeine Einstellungen werden hier sein"
+    },
+    "settings": {
+      "preview": "Vorschau",
+      "selectRune": "Wähle eine Rune zur Bearbeitung",
+      "previewUnavailable": "Vorschau im manuellen Modus nicht verfügbar"
+    },
+    "controls": {
+      "highlightRune": "Rune hervorheben",
+      "showRuneNumber": "Runennummer anzeigen",
+      "boxSize": "Boxgröße",
+      "color": "Farbe",
+      "languageCustomization": "Sprachanpassung",
+      "manualMode": "Manueller Modus",
+      "preview": "Vorschau",
+      "previewTitle": "Textvorschau",
+      "howItLooks": "Rune-Vorschau:",
+      "runeNumber": "Runennummer",
+      "previewLanguage": "Vorschausprache",
+      "customName": "Benutzerdefinierter Name",
+      "settings": "Einstellungen",
+      "runeNumberTitle": "Runennummer",
+      "divider": "Trenner",
+      "dividerColor": "Trennerfarbe",
+      "numberColor": "Zahlenfarbe",
+      "dividerTypes": {
+        "parentheses": "(...) ",
+        "brackets": "[...]",
+        "pipe": "| ..."
+      },
+      "applyToAllRunes": "Auf alle Runen anwenden",
+      "languageLabels": {
+        "enUS": "Englisch",
+        "ruRU": "Russisch",
+        "zhTW": "Chinesisch (Trad.)",
+        "deDE": "Deutsch",
+        "esES": "Spanisch",
+        "frFR": "Französisch",
+        "itIT": "Italienisch",
+        "koKR": "Koreanisch",
+        "plPL": "Polnisch",
+        "esMX": "Spanisch",
+        "jaJP": "Japanisch",
+        "ptBR": "Portugiesisch",
+        "zhCN": "Chinesisch (vereinfacht)"
+      },
+      "placeholders": {
+        "enUS": "Name auf Englisch",
+        "ruRU": "Name auf Russisch",
+        "zhTW": "Name auf Chinesisch (Trad.)",
+        "deDE": "Name auf Deutsch",
+        "esES": "Name auf Spanisch",
+        "frFR": "Name auf Französisch",
+        "itIT": "Name auf Italienisch",
+        "koKR": "Name auf Koreanisch",
+        "plPL": "Name auf Polnisch",
+        "esMX": "Name auf Spanisch",
+        "jaJP": "Name auf Japanisch",
+        "ptBR": "Name auf Portugiesisch",
+        "zhCN": "Name auf Chinesisch (vereinfacht)"
+      },
+      "colorHint": {
+        "title": "Farb-Codes",
+        "description": "Nutze diese Codes, um Text im Spiel zu färben",
+        "clickToCopy": "Klicke auf eine Farbe, um den Code zu kopieren",
+        "copied": "{{code}} in die Zwischenablage kopiert"
+      },
+      "sizes": {
+        "Normal": "Normal",
+        "Exceptional": "Außergewöhnlich",
+        "Elite": "Elite",
+        "light": "Leicht",
+        "medium": "Mittel",
+        "heavy": "Schwer",
+        "Medium": "Mittel",
+        "Large": "Groß"
+      },
+      "colors": {
+        "white": "Weiß",
+        "gray": "Grau",
+        "black": "Schwarz",
+        "beige": "Beige",
+        "lightred": "Hellrot",
+        "red": "Rot",
+        "dimred": "Dunkelrot",
+        "orange": "Orange",
+        "lightgold": "Hellgold",
+        "yellow": "Gelb",
+        "lightyellow": "Hellgelb",
+        "green": "Grün",
+        "dimgreen": "Dunkelgrün",
+        "darkgreen": "Dunkelgrün",
+        "indigo": "Indigo",
+        "lightindigo": "Hellindigo",
+        "turquoise": "Türkis",
+        "lightblue": "Hellblau",
+        "pink": "Pink",
+        "purple": "Lila"
+      }
+    },
+    "runes": {
+      "el": "El",
+      "eld": "Eld",
+      "tir": "Tir",
+      "nef": "Nef",
+      "eth": "Eth",
+      "ith": "Ith",
+      "tal": "Tal",
+      "ral": "Ral",
+      "ort": "Ort",
+      "thul": "Thul",
+      "amn": "Amn",
+      "sol": "Sol",
+      "shael": "Shael",
+      "dol": "Dol",
+      "hel": "Hel",
+      "io": "Io",
+      "lum": "Lum",
+      "ko": "Ko",
+      "fal": "Fal",
+      "lem": "Lem",
+      "pul": "Pul",
+      "um": "Um",
+      "mal": "Mal",
+      "ist": "Ist",
+      "gul": "Gul",
+      "vex": "Vex",
+      "ohm": "Ohm",
+      "lo": "Lo",
+      "sur": "Sur",
+      "ber": "Ber",
+      "jah": "Jah",
+      "cham": "Cham",
+      "zod": "Zod"
+    },
+    "massEdit": {
+      "selectAll": "Alle auswählen",
+      "deselectAll": "Auswahl aufheben",
+      "selected": "ausgewählt",
+      "apply": "Anwenden",
+      "reset": "Zurücksetzen",
+      "highlight": "Hervorheben",
+      "showNumbers": "Nummern anzeigen",
+      "boxSize": "Boxgröße",
+      "color": "Farbe",
+      "editSelected": "Ausgewählte bearbeiten",
+      "modalTitle": "Massenbearbeitung",
+      "basicSettings": "Grundeinstellungen",
+      "numberingSettings": "Nummerierungs-Einstellungen",
+      "noChange": "Ohne Änderung",
+      "cancel": "Abbrechen",
+      "applyToRunes": "Auf {{count}} Runen anwenden"
+    },
+    "textWorker": {
+      "readFromFiles": "Aus Dateien lesen",
+      "apply": "Anwenden",
+      "readFromFilesFor": "Aus Dateien lesen: {{tab}} Einstellungen",
+      "applyFor": "Einstellungen anwenden: {{tab}}"
+    },
+    "confirmModal": {
+      "title": "Anwendung bestätigen",
+      "message": "Sicher, dass Änderungen in Dateien angewendet werden? Diese Aktion kann nicht rückgängig gemacht werden.",
+      "cancel": "Abbrechen",
+      "confirm": "Anwenden"
+    }
+  },
+  "profiles": {
+    "selectProfile": "Profil auswählen",
+    "createProfile": "Profil erstellen",
+    "saveProfile": "Profil speichern",
+    "renameProfile": "Profil umbenennen",
+    "deleteProfile": "Profil löschen",
+    "exportProfile": "Profil exportieren",
+    "importProfile": "Profil importieren",
+    "profileName": "Profilname",
+    "enterProfileName": "Profilnamen eingeben",
+    "create": "Erstellen",
+    "rename": "Umbenennen",
+    "delete": "Löschen",
+    "cancel": "Abbrechen",
+    "deleteConfirmation": "Profil \"{{name}}\" wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "messages": {
+      "success": "Erfolg",
+      "error": "Fehler",
+      "profileCreated": "Profil \"{{name}}\" erstellt",
+      "profileRenamed": "Profil in \"{{name}}\" umbenannt",
+      "profileDeleted": "Profil \"{{name}}\" gelöscht",
+      "profileExported": "Profil exportiert",
+      "profileImported": "Profil importiert",
+      "importError": "Fehler beim Import des Profils"
+    }
+  },
+  "messages": {
+    "success": {
+      "filesLoaded": "Dateien geladen",
+      "localesLoadedText": "{{count}} Lokalisierungselemente geladen, {{processedRunes}} Runen verarbeitet",
+      "changesSaved": "Änderungen gespeichert",
+      "changesAppliedText": "Änderungen erfolgreich auf Spieldateien angewendet",
+      "changesApplied": "Änderungen erfolgreich angewendet",
+      "changesAppliedDescription": "Ihre Einstellungen wurden in die Spieldateien gespeichert",
+      "highlightSettingsLoaded": "Hervorhebungseinstellungen geladen",
+      "highlightSettingsLoadedText": "Hervorhebung für {{processedRunes}} Runen verarbeitet",
+      "commonItemsLoaded": "Allgemeine Gegenstände geladen",
+      "commonItemsLoadedDescription": "Einstellungen für allgemeine Gegenstände aus Spieldateien geladen",
+      "gemsLoaded": "Edelsteine geladen",
+      "gemsLoadedDescription": "Einstellungen für Edelsteine aus Spieldateien geladen",
+      "gemsLoadedDetails": "Erfolgreich {{count}} Edelsteine geladen",
+      "gemsChangesAppliedDescription": "Einstellungen der Edelsteine in Spieldateien gespeichert",
+      "itemsLoaded": "Gegenstände geladen",
+      "itemsLoadedDetails": "Geladen: {{prefixes}} Qualitätspräfixe und {{items}} Gegenstände aus Dateien",
+      "itemsApplied": "Einstellungen für Gegenstände erfolgreich angewendet"
+    },
+    "error": {
+      "fileLoadError": "Fehler beim Laden von Dateien",
+      "pathNotFound": "Spielpfad nicht in den Einstellungen gefunden",
+      "unknownError": "Unbekannter Fehler beim Lesen der Dateien",
+      "saveError": "Speicherfehler",
+      "applyError": "Anwendungsfehler",
+      "settingsNotFound": "Einstellungen nicht gefunden",
+      "highlightLoadError": "Fehler beim Laden der Hervorhebung",
+      "itemsApplyFailed": "Anwenden der Gegenstandseinstellungen fehlgeschlagen"
+    }
+  },
+  "itemsPage": {
+    "loadFromFiles": "Aus Dateien laden",
+    "loadingFromFiles": "Laden...",
+    "errors": {
+      "pathNotSet": "Spielpfad nicht gesetzt. Bitte Pfad in den App-Einstellungen konfigurieren.",
+      "pathNotSetTitle": "Fehler"
+    },
+    "settings": {
+      "title": "Gegenstandseinstellungen",
+      "difficultyClassMarkers": "Kennzeichnung der Schwierigkeitsklasse",
+      "qualityPrefixes": "Qualitätspräfixe",
+      "showDifficultyClassMarker": "Schwierigkeitsklasse anzeigen",
+      "enableItem": "Gegenstand aktivieren",
+      "difficultyClassMarkersLevels": {
+        "level1": "Normal",
+        "level2": "Außergewöhnlich",
+        "level3": "Elite"
+      },
+      "qualityPrefixesLevels": {
+        "level1": "Beschädigt",
+        "level2": "Überlegen"
+      },
+      "tooltips": {
+        "difficultyClassMarkers": {
+          "level1": "Normal",
+          "level2": "Außergewöhnlich",
+          "level3": "Elite"
+        },
+        "qualityPrefixes": {
+          "level1": "Alle Präfixe niedriger Qualität",
+          "level2": "Überlegen"
+        }
+      }
+    },
+    "filters": {
+      "reset": "Zurücksetzen",
+      "search": "Gegenstände suchen...",
+      "difficultyClass": "Schwierigkeitsklasse",
+      "limitedToClass": "Beschränkt auf Klasse",
+      "reqLevel": "Ben. Stufe",
+      "reqStrength": "Ben. Stärke",
+      "reqDexterity": "Ben. Geschick",
+      "weight": "Gewicht",
+      "baseTypes": "Basistypen",
+      "normal": "Normal",
+      "exceptional": "Außergewöhnlich",
+      "elite": "Elite",
+      "light": "Leicht",
+      "medium": "Mittel",
+      "heavy": "Schwer",
+      "anyClass": "Beliebige Klasse",
+      "all": "Alle",
+      "selected": "ausgewählt"
+    },
+    "sorting": {
+      "byType": "Nach Typ",
+      "byName": "Nach Name",
+      "byLevel": "Nach Stufe"
+    },
+    "massEdit": {
+      "selectAll": "Alle auswählen",
+      "deselectAll": "Auswahl aufheben",
+      "editSelected": "Ausgewählte bearbeiten",
+      "modalTitle": "Massenbearbeitung von Gegenständen",
+      "difficultyClassLabel": "Schwierigkeitsklasse",
+      "apply": "Anwenden",
+      "cancel": "Abbrechen"
+    },
+    "selectItem": "Wähle einen Gegenstand zum Bearbeiten",
+    "attributes": "Attribute",
+    "maxSockets": "Max. Sockel",
+    "relatedItems": {
+      "uniques": "Einzigartige Gegenstände",
+      "setItems": "Set-Gegenstände"
+    },
+    "baseTypes": {
+      "Weapons": "Waffen",
+      "MeleeWeapons": "Nahkampfwaffen",
+      "Swords": "Schwerter",
+      "Axes": "Äxte",
+      "Scepters": "Zepter",
+      "Hammers": "Hämmer",
+      "Maces": "Streitkolben",
+      "Clubs": "Keulen",
+      "Polearms": "Stangenwaffen",
+      "Spears": "Speere",
+      "Katars": "Katars",
+      "Daggers": "Dolche",
+      "Staves": "Stäbe",
+      "Wands": "Zauberstäbe",
+      "MissileWeapons": "Fernkampfwaffen",
+      "BodyArmor": "Rüstungen",
+      "Shields": "Schilde",
+      "Helms": "Helme",
+      "PaladinShields": "Paladin-Schilde",
+      "Orbs": "Kugeln",
+      "Pelts": "Pelze",
+      "ShrunkenHeads": "Geschrumpfte Köpfe",
+      "Bows": "Bögen",
+      "Crossbows": "Armbrüste",
+      "Throwing": "Wurf",
+      "Javelins": "Wurfspeere",
+      "Mauls": "Flegel",
+      "Belts": "Gürtel",
+      "Gloves": "Handschuhe",
+      "Boots": "Stiefel",
+      "BarbHelms": "Barbarenhelme"
+    },
+    "classes": {
+      "amazon": "Amazone",
+      "sorceress": "Zauberin",
+      "necromancer": "Totenbeschwörer",
+      "paladin": "Paladin",
+      "barbarian": "Barbar",
+      "druid": "Druide",
+      "assassin": "Assassine"
+    }
+  }
+}
+
+
