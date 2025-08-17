@@ -188,7 +188,7 @@ const ItemsList: React.FC<ItemsListProps> = ({
 
   React.useEffect(() => {
     if (listRef.current) {
-      setComputedListHeight(window.innerHeight - (filtersRef.current?.clientHeight ?? 0) - 300);
+      setComputedListHeight(window.innerHeight);
     }
   }, [filtersRef.current?.clientHeight]);
 
