@@ -118,12 +118,20 @@ function App() {
 
   // Подписка на события прогресса
   useEffect(() => {
-    const unlistenProgress = listen<SearchProgress>("search_progress", (event) => {
-      setSearchProgress(event.payload);
-    });
+    let unlisten: (() => void) | null = null;
+
+    const setupListener = async () => {
+      unlisten = await listen<SearchProgress>("search_progress", (event) => {
+        setSearchProgress(event.payload);
+      });
+    };
+
+    setupListener();
 
     return () => {
-      unlistenProgress.then(f => f());
+      if (unlisten) {
+        unlisten();
+      }
     };
   }, []);
 

@@ -33,14 +33,21 @@ async function getVersion() {
 	return null;
 }
 
-async function findWindowsArtifact(bundleDir) {
+async function findWindowsArtifact(bundleDir, version) {
 	const nsisDir = path.join(bundleDir, "nsis");
 	const msiDir = path.join(bundleDir, "msi");
 
 	// Prefer NSIS .exe for updater URL; fallback to MSI
 	if (fs.existsSync(msiDir)) {
 		const entries = await fsp.readdir(msiDir);
-		const msi = entries.find((n) => n.toLowerCase().endsWith(".msi"));
+		// Look for MSI file with the current version first
+		let msi = entries.find((n) => 
+			n.toLowerCase().endsWith(".msi") && n.includes(version)
+		);
+		// If no version-specific file found, fall back to any MSI
+		if (!msi) {
+			msi = entries.find((n) => n.toLowerCase().endsWith(".msi"));
+		}
 		if (msi && fs.existsSync(path.join(msiDir, `${msi}.sig`))) {
 			return { fileName: msi, sigPath: path.join(msiDir, `${msi}.sig`) };
 		}
@@ -48,7 +55,14 @@ async function findWindowsArtifact(bundleDir) {
 
 	if (fs.existsSync(nsisDir)) {
 		const entries = await fsp.readdir(nsisDir);
-		const exe = entries.find((n) => n.toLowerCase().endsWith("-setup.exe"));
+		// Look for EXE file with the current version first
+		let exe = entries.find((n) => 
+			n.toLowerCase().endsWith("-setup.exe") && n.includes(version)
+		);
+		// If no version-specific file found, fall back to any setup EXE
+		if (!exe) {
+			exe = entries.find((n) => n.toLowerCase().endsWith("-setup.exe"));
+		}
 		if (exe && fs.existsSync(path.join(nsisDir, `${exe}.sig`))) {
 			return { fileName: exe, sigPath: path.join(nsisDir, `${exe}.sig`) };
 		}
@@ -72,7 +86,7 @@ async function generateLatestJson() {
 		return;
 	}
 
-	const win = await findWindowsArtifact(bundleDir);
+	const win = await findWindowsArtifact(bundleDir, version);
 	if (!win) {
 		console.log("[generate-latest] No signed Windows artifact found, skipping");
 		return;
@@ -80,6 +94,9 @@ async function generateLatestJson() {
 
 	const signature = (await fsp.readFile(win.sigPath, "utf8")).trim();
 
+	// GitHub replaces spaces with dots in release file names
+	const githubFileName = win.fileName.replace(/\s/g, '.');
+	
 	const latest = {
 		version,
 		notes: `Release ${version}`,
@@ -87,7 +104,7 @@ async function generateLatestJson() {
 		platforms: {
 			"windows-x86_64": {
 				signature,
-				url: `https://github.com/TrayHard/d2r-ultra-utility/releases/download/v${version}/${win.fileName}`
+				url: `https://github.com/TrayHard/d2r-ultra-utility/releases/download/v${version}/${githubFileName}`
 			}
 		}
 	};
