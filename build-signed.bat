@@ -38,20 +38,49 @@ if not defined TAURI_SIGNING_PRIVATE_KEY (
 
 
 echo Building with signing...
-npm run tbuild
+call npm run tbuild
 if errorlevel 1 (
   echo [ERROR] Build failed.
   popd
   exit /b 1
 )
 
+echo Verifying git...
+git --version >nul 2>&1
+if errorlevel 1 (
+  echo [ERROR] Git is not installed or not in PATH. Skipping git steps.
+  goto after_git
+)
+
+set "IN_GIT_REPO="
+if exist ".git" set "IN_GIT_REPO=1"
+if not defined IN_GIT_REPO (
+  for /f "usebackq delims=" %%R in (`git -C "%cd%" rev-parse --is-inside-work-tree 2^>nul`) do set "GIT_INSIDE=%%R"
+  if /I "%GIT_INSIDE%"=="true" set "IN_GIT_REPO=1"
+)
+if not defined IN_GIT_REPO (
+  echo [ERROR] Current directory is not a git repository. Skipping git steps.
+  goto after_git
+)
+
+for /f "delims=" %%O in ('git remote 2^>nul ^| findstr /r /c:"^origin$"') do set "HAS_ORIGIN=1"
+
 echo Committing and tagging version %NEW_VERSION%...
 git add package.json package-lock.json src-tauri/tauri.conf.json
 git commit -m "%NEW_VERSION%"
-if errorlevel 1 echo [WARN] Nothing to commit or commit failed.
-git tag v%NEW_VERSION%
-git push
-git push --tags
+if errorlevel 1 (
+  echo [WARN] Nothing to commit or commit failed.
+)
+
+git tag -a v%NEW_VERSION% -m "%NEW_VERSION%" 2>nul
+if defined HAS_ORIGIN (
+  git push -u origin HEAD
+  git push origin v%NEW_VERSION%
+) else (
+  echo [WARN] Remote 'origin' not configured. Skipping push.
+)
+
+:after_git
 
 echo Opening releases page...
 start "" "https://github.com/TrayHard/d2r-ultra-utility/releases"
