@@ -36,9 +36,11 @@ if not defined TAURI_SIGNING_PRIVATE_KEY (
   exit /b 1
 )
 
+rem Provide an explicit empty password to avoid interactive prompt
+set "TAURI_SIGNING_PRIVATE_KEY_PASSWORD="
 
 echo Building with signing...
-call npm run tbuild
+node scripts/run-tauri-build.js
 if errorlevel 1 (
   echo [ERROR] Build failed.
   popd
