@@ -6,6 +6,13 @@
     "gems": "Gems",
     "other": "Other"
   },
+  "update": {
+    "checking": "Checking for updates...",
+    "available": "Update available - Click to install",
+    "downloading": "Downloading update...",
+    "installing": "Installing update...",
+    "upToDate": "Up to date"
+  },
   "descriptions": {
     "common": "Common utilities and tools",
     "items": "Item management and analysis",

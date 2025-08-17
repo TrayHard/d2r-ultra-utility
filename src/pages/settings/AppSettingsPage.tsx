@@ -5,8 +5,7 @@ import { localeOptions } from "../../shared/constants";
 import Switcher from "../../shared/components/Switcher";
 import Button from "../../shared/components/Button";
 import { getVersion } from "@tauri-apps/api/app";
-import { check } from "@tauri-apps/plugin-updater";
-import { relaunch } from "@tauri-apps/plugin-process";
+// Removed unused updater/process imports
 
 interface AppSettingsPageProps {
   isDarkTheme: boolean;
@@ -370,28 +369,6 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
                   <span className="font-mono text-sm text-gray-300">
                     {appVersion || "—"}
                   </span>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <Button
-                    onClick={async () => {
-                      try {
-                        const update = await check();
-                        console.log({ update });
-                        if (update?.available) {
-                          await update.download();
-                          await update.install();
-                          await relaunch();
-                        }
-                      } catch (error) {
-                        console.error(error);
-                      }
-                    }}
-                    variant="primary"
-                    size="md"
-                  >
-                    CHECK
-                  </Button>
                 </div>
               </div>
             </div>
