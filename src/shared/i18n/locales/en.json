@@ -120,7 +120,12 @@
     "appLanguageSettingsDescription": "Select the language for the application interface.",
     "appLanguageLabels": {
       "enUS": "English",
-      "ruRU": "Русский"
+      "ruRU": "Russian",
+      "deDE": "German",
+      "ukUA": "Ukrainian",
+      "plPL": "Polish",
+      "esES": "Spanish",
+      "frFR": "French"
     },
     "languageSettings": "Language Settings",
     "languageSettingsDescription": "Select which languages should be available for text processing. English is always required as the base language.",

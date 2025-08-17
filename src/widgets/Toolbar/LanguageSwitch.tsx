@@ -20,6 +20,11 @@ const LanguageSwitch: React.FC<LanguageSwitchProps> = ({
   const languageOptions = [
     { value: "enUS", label: "English" },
     { value: "ruRU", label: "Русский" },
+    { value: "deDE", label: "Deutsch" },
+    { value: "ukUA", label: "Українська" },
+    { value: "plPL", label: "Polski" },
+    { value: "esES", label: "Español" },
+    { value: "frFR", label: "Français" },
   ];
 
   const handleLanguageChange = (value: string) => {
