@@ -303,6 +303,18 @@
       "confirm": "Zastosuj"
     }
   },
+  "messages": {
+    "success": {
+      "allLoaded": "Wszystkie ustawienia zostały pomyślnie wczytane"
+    }
+  },
+  "startupLoadModal": {
+    "title": "Wczytać ustawienia z plików?",
+    "message": "Wykryto ścieżkę gry. Czy chcesz teraz wczytać ustawienia dla wszystkich kart z plików gry?",
+    "cancel": "Później",
+    "confirm": "Wczytaj wszystko",
+    "dontAsk": "Nie pytaj ponownie"
+  },
   "buttons": {
     "changePath": "Zmień ścieżkę",
     "back": "Wstecz",
