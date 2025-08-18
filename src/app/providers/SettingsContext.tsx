@@ -84,6 +84,12 @@ export interface CommonSettings {
   staminaPotions: CommonItemSettings;
   antidotes: CommonItemSettings;
   thawingPotions: CommonItemSettings;
+  amulets: CommonItemSettings;
+  rings: CommonItemSettings;
+  jewels: CommonItemSettings;
+  smallCharms: CommonItemSettings;
+  largeCharms: CommonItemSettings;
+  grandCharms: CommonItemSettings;
   healthPotions: PotionGroupSettings;
   manaPotions: PotionGroupSettings;
   rejuvenationPotions: PotionGroupSettings;
@@ -178,7 +184,7 @@ interface SettingsContextType {
   // Setter'ы для CommonTab
   getCommonSettings: () => CommonSettings;
   getCommonItemSettings: (
-    item: "arrows" | "bolts" | "staminaPotions" | "antidotes" | "thawingPotions"
+    item: "arrows" | "bolts" | "staminaPotions" | "antidotes" | "thawingPotions" | "amulets" | "rings" | "jewels" | "smallCharms" | "largeCharms" | "grandCharms"
   ) => CommonItemSettings;
   getPotionGroupSettings: (
     item: "healthPotions" | "manaPotions" | "rejuvenationPotions"
@@ -189,7 +195,13 @@ interface SettingsContextType {
       | "bolts"
       | "staminaPotions"
       | "antidotes"
-      | "thawingPotions",
+      | "thawingPotions"
+      | "amulets"
+      | "rings"
+      | "jewels"
+      | "smallCharms"
+      | "largeCharms"
+      | "grandCharms",
     newSettings: Partial<CommonItemSettings>
   ) => void;
   updatePotionGroupSettings: (
@@ -470,6 +482,12 @@ const getDefaultCommonSettings = (): CommonSettings => ({
   staminaPotions: getDefaultCommonItemSettings(),
   antidotes: getDefaultCommonItemSettings(),
   thawingPotions: getDefaultCommonItemSettings(),
+  amulets: getDefaultCommonItemSettings(),
+  rings: getDefaultCommonItemSettings(),
+  jewels: getDefaultCommonItemSettings(),
+  smallCharms: getDefaultCommonItemSettings(),
+  largeCharms: getDefaultCommonItemSettings(),
+  grandCharms: getDefaultCommonItemSettings(),
   healthPotions: getDefaultPotionGroupSettings(5), // 5 уровней для хп
   manaPotions: getDefaultPotionGroupSettings(5), // 5 уровней для маны
   rejuvenationPotions: getDefaultPotionGroupSettings(2), // 2 уровня для реджувок
@@ -1304,6 +1322,12 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         | "staminaPotions"
         | "antidotes"
         | "thawingPotions"
+        | "amulets"
+        | "rings"
+        | "jewels"
+        | "smallCharms"
+        | "largeCharms"
+        | "grandCharms"
     ) => {
       return settings.common[item];
     },
@@ -1324,7 +1348,13 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         | "bolts"
         | "staminaPotions"
         | "antidotes"
-        | "thawingPotions",
+        | "thawingPotions"
+        | "amulets"
+        | "rings"
+        | "jewels"
+        | "smallCharms"
+        | "largeCharms"
+        | "grandCharms",
       newSettings: Partial<CommonItemSettings>
     ) => {
       setSettings((prevSettings) => ({
