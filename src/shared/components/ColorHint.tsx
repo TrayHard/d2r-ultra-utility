@@ -44,7 +44,7 @@ const ColorHint: React.FC<ColorHintProps> = ({ isDarkTheme }) => {
   };
 
   const tooltipContent = (
-    <div className="min-w-80 max-w-96">
+    <div className="w-full p-2 overflow-x-hidden">
       <div className="mb-3">
         <h3 className="text-sm font-semibold mb-1">
           {t("runePage.controls.colorHint.title") || "Color Codes"}
@@ -55,7 +55,7 @@ const ColorHint: React.FC<ColorHintProps> = ({ isDarkTheme }) => {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto">
+      <div className="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto overflow-x-hidden">
         {colorEntries.map(([colorName, colorCode]) => (
           <div
             key={colorName}
@@ -96,7 +96,7 @@ const ColorHint: React.FC<ColorHintProps> = ({ isDarkTheme }) => {
   return (
     <Tooltip
       title={tooltipContent}
-      trigger="hover"
+      trigger="click"
       placement="topRight"
       overlayClassName="color-hint-tooltip"
       color="#374151"
@@ -104,7 +104,7 @@ const ColorHint: React.FC<ColorHintProps> = ({ isDarkTheme }) => {
       <button
         type="button"
         className={`
-          p-1 rounded-lg transition-all duration-200 hover:scale-110
+          p-2 rounded-lg transition-all duration-200 hover:scale-110
           ${
             isDarkTheme
               ? "text-gray-400 hover:text-yellow-400 hover:bg-gray-700"
