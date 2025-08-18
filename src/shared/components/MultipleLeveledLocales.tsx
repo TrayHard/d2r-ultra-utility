@@ -5,6 +5,8 @@ import { localeOptions } from "../constants";
 import Collapse from "./Collapse";
 import Switch from "./Switch";
 import ColorHint from "./ColorHint";
+import Icon from "@mdi/react";
+import { mdiEyeOutline, mdiEyeOffOutline } from "@mdi/js";
 import type {
   PotionGroupSettings,
   PotionLevelSettings,
@@ -43,6 +45,9 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
 }) => {
   const { t } = useTranslation();
 
+  // Текущее поле локали, находящееся в фокусе. По умолчанию предпросмотр берет enUS
+  const [focusedLocale, setFocusedLocale] = React.useState<string | null>(null);
+
   // Проверяем activeTab - если он undefined или больше количества levels, ставим 0
   const activeTabIndex =
     settings.activeTab >= 0 && settings.activeTab < settings.levels.length
@@ -80,6 +85,8 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
                   onChange={(e) =>
                     onLocaleChange(level, locale.value, e.target.value)
                   }
+                  onFocus={() => setFocusedLocale(locale.value)}
+                  onBlur={() => setFocusedLocale(null)}
                   disabled={!levelSettings.enabled}
                   placeholder={t(
                     `runePage.controls.placeholders.${locale.value}`
@@ -106,6 +113,53 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
           ))}
       </div>
     );
+  };
+
+  // Маппинг игровых цветовых кодов в HEX для предпросмотра
+  const colorCodeToHex: Record<string, string> = {
+    "ÿc0": "#FFFFFF", // white
+    "ÿc5": "#A0A0A0", // gray
+    "ÿc6": "#000000", // black
+    "ÿcM": "#C8B37E", // beige
+    "ÿc1": "#ff5757", // lightred
+    "ÿcU": "#ff0000", // red
+    "ÿcS": "#d44848", // dimred
+    "ÿc@": "#ffaf00", // orange
+    "ÿc7": "#d4c786", // lightgold
+    "ÿc9": "#ffff6e", // yellow
+    "ÿcR": "#FFFF99", // lightyellow
+    "ÿc2": "#00FF00", // green
+    "ÿcA": "#008000", // dimgreen
+    "ÿc:": "#006400", // darkgreen
+    "ÿc3": "#4B0082", // indigo
+    "ÿcP": "#9370DB", // lightindigo
+    "ÿcN": "#40E0D0", // turquoise
+    "ÿcT": "#87CEEB", // lightblue
+    "ÿcO": "#FFC0CB", // pink
+    "ÿc;": "#800080", // purple
+  };
+
+  // Рендер строки с учетом цветовых кодов ÿcX
+  const renderColoredText = (text: string) => {
+    if (!text) return null;
+    const tokenRegex = /(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])/g;
+    const parts = text.split(tokenRegex);
+    let currentColor: string | null = null;
+    const nodes: React.ReactNode[] = [];
+    for (let i = 0; i < parts.length; i++) {
+      const part = parts[i];
+      if (!part) continue;
+      if (part.startsWith("ÿc")) {
+        currentColor = colorCodeToHex[part] || currentColor;
+        continue;
+      }
+      nodes.push(
+        <span key={`p-${i}`} style={currentColor ? { color: currentColor } : undefined}>
+          {part}
+        </span>
+      );
+    }
+    return nodes;
   };
 
   return (
@@ -164,7 +218,7 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
           {/* Подчеркивание активного таба */}
           <div
             className={`absolute h-0.5 transition-all duration-300 ease-out ${
-              isDarkTheme ? "bg-green-400" : "bg-green-500"
+              isDarkTheme ? "bg-yellow-400" : "bg-yellow-500"
             }`}
             style={{
               left: `${activeTabIndex * (65 + 8)}px`, // 65px кнопка + 8px gap
@@ -179,11 +233,57 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
         {/* Контент активного таба */}
         <div className="space-y-4 mt-8">
           <div className="flex items-center space-x-3">
-            <Switch
-              enabled={activeLevel.enabled}
-              onChange={(enabled) => onLevelToggle(activeTabIndex, enabled)}
-              isDarkTheme={isDarkTheme}
-            />
+            <div className="w-20">
+              <Switch
+                enabled={activeLevel.enabled}
+                onChange={(enabled) => onLevelToggle(activeTabIndex, enabled)}
+                isDarkTheme={isDarkTheme}
+                onIcon={<Icon path={mdiEyeOutline} size={0.55} color="#16A34A" />}
+                offIcon={<Icon path={mdiEyeOffOutline} size={0.55} color={isDarkTheme ? "#111827" : "#6B7280"} />}
+              />
+            </div>
+            {/* Предпросмотр текущей локали */}
+            <div className="flex-1 flex grow w-full">
+              {/* Пустой спейсер под ширину метки локали, чтобы выровнять блок по инпутам */}
+              <div
+                className={`
+                  h-9 px-3 rounded-md border flex items-center overflow-hidden text-sm font-mono whitespace-pre w-full
+                  ${
+                    isDarkTheme
+                      ? "bg-gray-800 border-gray-600 text-white"
+                      : "bg-white border-gray-300 text-gray-900"
+                  }
+                `}
+              >
+                <span
+                  className={"mr-2 font-semibold tracking-wide text-xs text-gray-400 font-sans cursor-default select-none"}
+                >
+                  {(t("runePage.controls.preview") || "Preview") + ":"}
+                </span>
+                {(() => {
+                  // 1) Если есть фокус — показываем фокусную локаль
+                  if (focusedLocale) {
+                    const text =
+                      activeLevel.locales[
+                        focusedLocale as keyof typeof activeLevel.locales
+                      ] || "";
+                    return renderColoredText(text);
+                  }
+                  // 2) По умолчанию всегда берём enUS, если он есть
+                  if (activeLevel.locales.enUS) {
+                    return renderColoredText(activeLevel.locales.enUS);
+                  }
+                  // 3) Иначе берём первую из выбранных локалей, если она есть
+                  const firstSelected = selectedLocales[0];
+                  const fallbackText = firstSelected
+                    ? activeLevel.locales[
+                        firstSelected as keyof typeof activeLevel.locales
+                      ] || ""
+                    : "";
+                  return renderColoredText(fallbackText);
+                })()}
+              </div>
+            </div>
           </div>
 
           {renderLocaleInputs(activeLevel, activeTabIndex)}

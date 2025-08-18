@@ -7,7 +7,8 @@ import {
   mdiSortNumericDescending,
   mdiCheckAll,
   mdiCheckboxBlankOutline,
-  mdiPencil,
+  mdiPencilBoxMultiple,
+  mdiTune,
 } from "@mdi/js";
 import { FixedSizeList as List } from "react-window";
 import Button from "../../shared/components/Button";
@@ -48,6 +49,7 @@ interface ItemsListProps {
   onDeselectAll: () => void;
   onSetSelectedItemForSettings: (itemKey: string) => void;
   onOpenMassEditModal: () => void;
+  onOpenSettingsModal: () => void;
   className?: string;
   filtersRef: React.RefObject<HTMLDivElement>;
 }
@@ -178,6 +180,7 @@ const ItemsList: React.FC<ItemsListProps> = ({
   onDeselectAll,
   onSetSelectedItemForSettings,
   onOpenMassEditModal,
+  onOpenSettingsModal,
   className,
   filtersRef,
 }) => {
@@ -242,7 +245,7 @@ const ItemsList: React.FC<ItemsListProps> = ({
           isDarkTheme ? "border-gray-700" : "border-gray-200"
         }`}
       >
-        {/* Сортировка */}
+        {/* Сортировка и кнопка настроек */}
         <div className="flex items-stretch gap-2 mb-4 h-10">
           <Button
             variant="secondary"
@@ -284,14 +287,28 @@ const ItemsList: React.FC<ItemsListProps> = ({
             active={sortType === "level"}
             className="!w-14 !h-full !p-0"
           />
+
+          {/* Кнопка настроек */}
+          <div className="ml-auto">
+            <Button
+              variant="secondary"
+              onClick={onOpenSettingsModal}
+              title={t("itemsPage.settings.title")}
+              isDarkTheme={isDarkTheme}
+              icon={mdiTune}
+              iconSize={0.8}
+              className={`!w-10 !h-full !p-0 ${isDarkTheme ? "!bg-black-700 !border-gray-600" : "!bg-gray-200 !border-gray-300"}`}
+            />
+          </div>
         </div>
 
         {/* Элементы управления выбором */}
-        <div className="flex items-stretch justify-between h-10">
-          <div className="flex items-stretch gap-2">
+        <div className="flex items-stretch justify-between h-10 gap-2">
+          <div className="flex items-stretch gap-2 min-w-0 overflow-hidden flex-1">
             <Button
               variant="secondary"
               size="sm"
+              title={t("itemsPage.massEdit.selectAll")}
               onClick={onSelectAll}
               isDarkTheme={isDarkTheme}
               icon={mdiCheckAll}
@@ -305,6 +322,7 @@ const ItemsList: React.FC<ItemsListProps> = ({
             <Button
               variant="secondary"
               size="sm"
+              title={t("itemsPage.massEdit.deselectAll")}
               onClick={onDeselectAll}
               isDarkTheme={isDarkTheme}
               icon={mdiCheckboxBlankOutline}
@@ -325,7 +343,7 @@ const ItemsList: React.FC<ItemsListProps> = ({
               onClick={onOpenMassEditModal}
               disabled={selectedItems.size === 0}
               isDarkTheme={isDarkTheme}
-              icon={mdiPencil}
+              icon={mdiPencilBoxMultiple}
               iconSize={0.8}
               className={`!w-10 !h-full !p-0 ${
                 selectedItems.size > 0

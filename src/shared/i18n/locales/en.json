@@ -326,33 +326,40 @@
     }
   },
   "profiles": {
+    "sectionTitle": "Profiles",
+    "filesSectionTitle": "File Operations",
     "selectProfile": "Select Profile",
     "createProfile": "Create Profile",
     "saveProfile": "Save Profile",
     "renameProfile": "Rename Profile",
     "deleteProfile": "Delete Profile",
-    "exportProfile": "Export Profile",
-    "importProfile": "Import Profile",
+    "exportProfile": "Export",
+    "importProfile": "Import",
     "profileName": "Profile Name",
+    "currentProfile": "Current Profile",
     "enterProfileName": "Enter profile name",
     "create": "Create",
     "rename": "Rename",
     "delete": "Delete",
     "cancel": "Cancel",
+    "saveConfirmation": "Save changes to profile \"{{name}}\"?",
     "deleteConfirmation": "Are you sure you want to delete profile \"{{name}}\"? This action cannot be undone.",
     "messages": {
       "success": "Success",
       "error": "Error",
+      "profileSaved": "Profile \"{{name}}\" saved",
+      "saveError": "Error saving profile",
       "profileCreated": "Profile \"{{name}}\" created",
       "profileRenamed": "Profile renamed to \"{{name}}\"",
       "profileDeleted": "Profile \"{{name}}\" deleted",
       "profileExported": "Profile exported",
-      "profileImported": "Profile imported",
+      "profileImported": "Profile imported. You can select it in the profiles list.",
       "importError": "Error importing profile"
     }
   },
   "messages": {
     "success": {
+      "allLoaded": "All settings loaded successfully",
       "filesLoaded": "Files loaded",
       "localesLoadedText": "Successfully loaded {{count}} localization elements, processed {{processedRunes}} runes",
       "changesSaved": "Changes saved",
@@ -381,6 +388,13 @@
       "highlightLoadError": "Highlight settings loading error",
       "itemsApplyFailed": "Failed to apply items settings"
     }
+  },
+  "startupLoadModal": {
+    "title": "Load settings from files?",
+    "message": "A game path was detected. Do you want to load settings for all tabs from the game files now?",
+    "cancel": "No",
+    "confirm": "Load All",
+    "dontAsk": "Don't ask me again"
   },
   "itemsPage": {
     "loadFromFiles": "Load from Files",

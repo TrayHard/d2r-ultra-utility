@@ -303,6 +303,18 @@
       "confirm": "Zastosuj"
     }
   },
+  "messages": {
+    "success": {
+      "allLoaded": "Wszystkie ustawienia zostały pomyślnie wczytane"
+    }
+  },
+  "startupLoadModal": {
+    "title": "Wczytać ustawienia z plików?",
+    "message": "Wykryto ścieżkę gry. Czy chcesz teraz wczytać ustawienia dla wszystkich kart z plików gry?",
+    "cancel": "Później",
+    "confirm": "Wczytaj wszystko",
+    "dontAsk": "Nie pytaj ponownie"
+  },
   "buttons": {
     "changePath": "Zmień ścieżkę",
     "back": "Wstecz",
@@ -324,6 +336,38 @@
   "sorting": {
     "name": "Nazwa",
     "level": "Poziom"
+  },
+  "profiles": {
+    "filesSectionTitle": "Operacje na plikach",
+    "sectionTitle": "Profile",
+    "selectProfile": "Wybierz profil",
+    "createProfile": "Utwórz profil",
+    "saveProfile": "Zapisz profil",
+    "renameProfile": "Zmień nazwę profilu",
+    "deleteProfile": "Usuń profil",
+    "exportProfile": "Eksportuj",
+    "importProfile": "Importuj",
+    "profileName": "Nazwa profilu",
+    "currentProfile": "Bieżący profil",
+    "enterProfileName": "Wpisz nazwę profilu",
+    "create": "Utwórz",
+    "rename": "Zmień nazwę",
+    "delete": "Usuń",
+    "cancel": "Anuluj",
+    "saveConfirmation": "Zapisać zmiany w profilu \"{{name}}\"?",
+    "deleteConfirmation": "Czy na pewno chcesz usunąć profil \"{{name}}\"? Tej operacji nie można cofnąć.",
+    "messages": {
+      "success": "Sukces",
+      "error": "Błąd",
+      "profileSaved": "Profil \"{{name}}\" zapisano",
+      "saveError": "Błąd podczas zapisywania profilu",
+      "profileCreated": "Profil \"{{name}}\" utworzono",
+      "profileRenamed": "Zmieniono nazwę profilu na \"{{name}}\"",
+      "profileDeleted": "Profil \"{{name}}\" usunięto",
+      "profileExported": "Profil wyeksportowano",
+      "profileImported": "Profil zaimportowano. Możesz go wybrać z listy profili.",
+      "importError": "Błąd podczas importu profilu"
+    }
   }
 }
 

@@ -71,7 +71,7 @@ export const generateFinalItemName = (
   locale: keyof CommonItemSettings["locales"]
 ): string => {
   const rawName = settings.locales[locale] || settings.locales.enUS;
-  return removeColorCodes(rawName);
+  return rawName; // Сохраняем цветовые коды
 };
 
 // Функция для создания финального имени зелья
@@ -80,7 +80,7 @@ export const generateFinalPotionName = (
   locale: keyof PotionLevelSettings["locales"]
 ): string => {
   const rawName = settings.locales[locale] || settings.locales.enUS;
-  return removeColorCodes(rawName);
+  return rawName; // Сохраняем цветовые коды
 };
 
 // Функция для создания финального имени драгоценного камня
@@ -89,5 +89,5 @@ export const generateFinalGemName = (
   locale: keyof PotionLevelSettings["locales"]
 ): string => {
   const rawName = settings.locales[locale] || settings.locales.enUS;
-  return removeColorCodes(rawName);
+  return rawName; // Сохраняем цветовые коды
 };

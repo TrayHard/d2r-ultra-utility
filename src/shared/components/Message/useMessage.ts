@@ -21,14 +21,21 @@ interface MessageSettings {
 export const useMessage = () => {
   const [messages, setMessages] = useState<MessageData[]>([]);
   const timeoutRefs = useRef<Map<string, number>>(new Map());
+  const mutedTypesRef = useRef<Set<MessageType>>(new Set());
 
   const sendMessage = useCallback((message: string, settings?: MessageSettings) => {
     const id = Date.now().toString() + Math.random().toString(36).substr(2, 9);
     const duration = settings?.duration ?? 4000;
+    const currentType: MessageType = settings?.type ?? 'info';
+
+    // Suppress message if its type is muted
+    if (mutedTypesRef.current.has(currentType)) {
+      return '';
+    }
     
     const messageData: MessageData = {
       id,
-      type: settings?.type ?? 'info',
+      type: currentType,
       title: settings?.title,
       message,
       duration,
@@ -68,6 +75,14 @@ export const useMessage = () => {
     setMessages([]);
   }, []);
 
+  const muteTypes = useCallback((types: MessageType[]) => {
+    mutedTypesRef.current = new Set(types);
+  }, []);
+
+  const unmute = useCallback(() => {
+    mutedTypesRef.current.clear();
+  }, []);
+
   // Удобные методы для разных типов сообщений
   const sendSuccess = useCallback((message: string, title?: string, duration?: number) => {
     return sendMessage(message, { type: 'success', title, duration });
@@ -93,6 +108,8 @@ export const useMessage = () => {
     sendWarning,
     sendInfo,
     removeMessage,
-    clearAllMessages
+    clearAllMessages,
+    muteTypes,
+    unmute
   };
 }; 

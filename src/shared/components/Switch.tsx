@@ -6,6 +6,8 @@ interface SwitchProps {
   isDarkTheme?: boolean;
   disabled?: boolean;
   className?: string;
+  onIcon?: React.ReactNode;
+  offIcon?: React.ReactNode;
 }
 
 const Switch: React.FC<SwitchProps> = ({
@@ -14,6 +16,8 @@ const Switch: React.FC<SwitchProps> = ({
   isDarkTheme = true,
   disabled = false,
   className = "",
+  onIcon,
+  offIcon,
 }) => {
   return (
     <button
@@ -44,11 +48,13 @@ const Switch: React.FC<SwitchProps> = ({
       <span
         aria-hidden="true"
         className={`
-          pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg 
+          pointer-events-none inline-flex items-center justify-center h-5 w-5 transform rounded-full bg-white shadow-lg 
           transition duration-200 ease-in-out
           ${enabled ? "translate-x-5" : "translate-x-0"}
         `}
-      />
+      >
+        {enabled ? onIcon : offIcon}
+      </span>
     </button>
   );
 };

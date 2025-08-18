@@ -11,6 +11,8 @@ interface MessageContextValue {
   sendInfo: (message: string, title?: string, duration?: number) => string;
   removeMessage: (id: string) => void;
   clearAllMessages: () => void;
+  muteTypes: (types: Array<'success' | 'error' | 'warning' | 'info'>) => void;
+  unmute: () => void;
 }
 
 const MessageContext = createContext<MessageContextValue | undefined>(undefined);

@@ -14,7 +14,6 @@ import {
   LocaleItem,
   SUPPORTED_LOCALES,
   GAME_PATHS,
-  removeColorCodes,
   loadSavedSettings,
   generateFinalGemName,
 } from "../utils/commonUtils";
@@ -160,7 +159,7 @@ export const useGemsWorker = (
 
           SUPPORTED_LOCALES.forEach((locale) => {
             const rawValue = item[locale] || "";
-            locales[locale] = removeColorCodes(rawValue);
+            locales[locale] = rawValue; // Сохраняем цветовые коды
           });
 
           // Определяем enabled состояние на основе английской локали

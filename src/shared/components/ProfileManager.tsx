@@ -3,10 +3,9 @@ import { useTranslation } from "react-i18next";
 import {
   mdiContentSave,
   mdiPlus,
-  mdiPencil,
   mdiDelete,
-  mdiExport,
-  mdiImport,
+  mdiFileImport,
+  mdiFileExport,
   mdiCheck,
 } from "@mdi/js";
 import Button from "./Button";
@@ -49,6 +48,7 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showRenameModal, setShowRenameModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showSaveConfirm, setShowSaveConfirm] = useState(false);
   const [newProfileName, setNewProfileName] = useState("");
   const [renameProfileId, setRenameProfileId] = useState<string | null>(null);
   const [deleteProfileId, setDeleteProfileId] = useState<string | null>(null);
@@ -145,102 +145,104 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
   }));
 
   return (
-    <div className="flex items-center gap-2">
-      {/* Import Profile Button */}
-      <Button
-        variant="secondary"
-        onClick={() => fileInputRef.current?.click()}
-        isDarkTheme={isDarkTheme}
-        icon={mdiImport}
-        size="sm"
-        title={t("profiles.importProfile")}
-      />
-      
-      {/* Profile Selector */}
-      <Dropdown
-        selectedValue={activeProfileId ?? ""}
-        onSelect={(value) => onProfileSelect(value)}
-        options={profileOptions}
-        placeholder={t("profiles.selectProfile")}
-        isDarkTheme={isDarkTheme}
-        className="min-w-[150px]"
-      />
+    <div className="space-y-1">
+      <div
+        className={`text-xs font-semibold uppercase tracking-wide ${
+          isDarkTheme ? "text-gray-300" : "text-gray-700"
+        }`}
+      >
+        {t("profiles.sectionTitle")}
+      </div>
+      <div
+        className={`flex items-center gap-2 flex-wrap rounded-md p-2 ${
+          isDarkTheme
+            ? "bg-gray-800 border border-gray-700"
+            : "bg-gray-100 border border-gray-200"
+        }`}
+      >
+        {/* Create Profile Button */}
+        <Button
+          variant="success"
+          onClick={() => setShowCreateModal(true)}
+          isDarkTheme={isDarkTheme}
+          icon={mdiPlus}
+          size="sm"
+          title={t("profiles.createProfile")}
+        />
+        {/* Profile Selector */}
+        <Dropdown
+          selectedValue={activeProfileId ?? ""}
+          onSelect={(value) => onProfileSelect(value)}
+          options={profileOptions}
+          placeholder={t("profiles.selectProfile")}
+          isDarkTheme={isDarkTheme}
+          className="min-w-[250px]"
+          onOptionRename={(value) => {
+            const profile = profiles.find((p) => p.id === value);
+            if (profile) {
+              setRenameProfileId(profile.id);
+              setNewProfileName(profile.name);
+              setShowRenameModal(true);
+            }
+          }}
+          onOptionDelete={(value) => {
+            const profile = profiles.find((p) => p.id === value);
+            if (profile) {
+              setDeleteProfileId(profile.id);
+              setShowDeleteModal(true);
+            }
+          }}
+          renameTitle={t("profiles.renameProfile")}
+          deleteTitle={t("profiles.deleteProfile")}
+        />
 
-      {/* Create Profile Button */}
-      <Button
-        variant="success"
-        onClick={() => setShowCreateModal(true)}
-        isDarkTheme={isDarkTheme}
-        icon={mdiPlus}
-        size="sm"
-        title={t("profiles.createProfile")}
-      />
+        <div className="flex items-center gap-2">
+          {/* Save Profile Button */}
+          <Button
+            variant="info"
+            onClick={() => activeProfileId && setShowSaveConfirm(true)}
+            disabled={!activeProfileId}
+            isDarkTheme={isDarkTheme}
+            icon={mdiContentSave}
+            size="sm"
+            title={t("profiles.saveProfile")}
+          />
+        </div>
 
-      {/* Save Profile Button */}
-      <Button
-        variant="info"
-        onClick={() =>
-          activeProfileId && onProfileSave(activeProfileId, currentSettings)
-        }
-        disabled={!activeProfileId}
-        isDarkTheme={isDarkTheme}
-        icon={mdiContentSave}
-        size="sm"
-        title={t("profiles.saveProfile")}
-      />
+        {/* Import Profile Button */}
+        <Button
+          variant="secondary"
+          onClick={() => fileInputRef.current?.click()}
+          isDarkTheme={isDarkTheme}
+          icon={mdiFileImport}
+          size="sm"
+          title={t("profiles.importProfile")}
+        >
+          {t("profiles.importProfile")}
+        </Button>
 
-      {/* Rename Profile Button */}
-      <Button
-        variant="secondary"
-        onClick={() => {
-          if (activeProfile) {
-            setRenameProfileId(activeProfile.id);
-            setNewProfileName(activeProfile.name);
-            setShowRenameModal(true);
-          }
-        }}
-        disabled={!activeProfileId}
-        isDarkTheme={isDarkTheme}
-        icon={mdiPencil}
-        size="sm"
-        title={t("profiles.renameProfile")}
-      />
+        {/* Export Profile Button */}
+        <Button
+          variant="secondary"
+          onClick={handleExportProfile}
+          disabled={!activeProfileId}
+          isDarkTheme={isDarkTheme}
+          icon={mdiFileExport}
+          size="sm"
+          title={t("profiles.exportProfile")}
+        >
+          {t("profiles.exportProfile")}
+        </Button>
 
-      {/* Delete Profile Button */}
-      <Button
-        variant="danger"
-        onClick={() => {
-          if (activeProfile) {
-            setDeleteProfileId(activeProfile.id);
-            setShowDeleteModal(true);
-          }
-        }}
-        disabled={!activeProfileId}
-        isDarkTheme={isDarkTheme}
-        icon={mdiDelete}
-        size="sm"
-        title={t("profiles.deleteProfile")}
-      />
-
-      {/* Export Profile Button */}
-      <Button
-        variant="secondary"
-        onClick={handleExportProfile}
-        disabled={!activeProfileId}
-        isDarkTheme={isDarkTheme}
-        icon={mdiExport}
-        size="sm"
-        title={t("profiles.exportProfile")}
-      />
-
-      {/* Hidden File Input */}
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept=".json"
-        onChange={handleImportProfile}
-        style={{ display: "none" }}
-      />
+        {/* Hidden File Input */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".json"
+          onChange={handleImportProfile}
+          style={{ display: "none" }}
+        />
+      </div>
 
       {/* Create Profile Modal */}
       <Modal
@@ -383,6 +385,60 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
               icon={mdiDelete}
             >
               {t("profiles.delete")}
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal
+        isOpen={showSaveConfirm}
+        onClose={() => setShowSaveConfirm(false)}
+        title={t("profiles.saveProfile")}
+        isDarkTheme={isDarkTheme}
+        size="sm"
+      >
+        <div className="space-y-4">
+          <p
+            className={`text-sm ${
+              isDarkTheme ? "text-gray-300" : "text-gray-600"
+            }`}
+          >
+            {t("profiles.saveConfirmation", { name: activeProfile?.name })}
+          </p>
+          <div className="flex justify-end gap-2">
+            <Button
+              variant="secondary"
+              onClick={() => setShowSaveConfirm(false)}
+              isDarkTheme={isDarkTheme}
+              size="sm"
+            >
+              {t("profiles.cancel")}
+            </Button>
+            <Button
+              variant="success"
+              onClick={() => {
+                try {
+                  if (activeProfileId) {
+                    onProfileSave(activeProfileId, currentSettings);
+                  }
+                  sendMessage(
+                    t("profiles.messages.profileSaved", { name: activeProfile?.name }),
+                    { type: "success", title: t("profiles.messages.success") }
+                  );
+                } catch (e) {
+                  sendMessage(t("profiles.messages.saveError"), {
+                    type: "error",
+                    title: t("profiles.messages.error"),
+                  });
+                } finally {
+                  setShowSaveConfirm(false);
+                }
+              }}
+              isDarkTheme={isDarkTheme}
+              size="sm"
+              icon={mdiCheck}
+            >
+              {t("profiles.saveProfile")}
             </Button>
           </div>
         </div>

@@ -10,7 +10,7 @@ import {
   mdiSortNumericDescending,
   mdiCheckAll,
   mdiCheckboxBlankOutline,
-  mdiPencil,
+  mdiPencilBoxMultiple,
   mdiEye,
 } from "@mdi/js";
 import Button from "../../shared/components/Button.tsx";
@@ -369,7 +369,7 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
                 onClick={() => setIsMassEditModalOpen(true)}
                 disabled={selectedRunes.size === 0}
                 isDarkTheme={isDarkTheme}
-                icon={mdiPencil}
+                icon={mdiPencilBoxMultiple}
                 iconSize={0.8}
                 className={`!w-10 !h-full !p-0 ${
                   selectedRunes.size > 0

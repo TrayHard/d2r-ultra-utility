@@ -4,7 +4,6 @@ import {
   GAME_PATHS,
   SUPPORTED_LOCALES,
   LocaleItem,
-  removeColorCodes,
   loadSavedSettings,
 } from "../utils/commonUtils";
 import type { ItemSettings, ItemsSettings, PotionLevelSettings } from "../../app/providers/SettingsContext";
@@ -117,7 +116,7 @@ export const useItemsWorker = (
         // Заполняем Superior локали из ID 1727
         SUPPORTED_LOCALES.forEach((locale) => {
           const rawValue = superiorItem[locale] || "";
-          superiorLocales[locale] = removeColorCodes(rawValue);
+          superiorLocales[locale] = rawValue; // Сохраняем цветовые коды
         });
 
         console.log("Superior locales from ID 1727:", superiorLocales);
@@ -142,7 +141,7 @@ export const useItemsWorker = (
         // Проверяем, одинаковы ли значения в каждой локали между всеми ID
         const allSameInAllLocales = SUPPORTED_LOCALES.every((locale) => {
           const values = lowQualityItems.map((item) =>
-            removeColorCodes(item[locale] || "")
+            item[locale] || "" // Сохраняем цветовые коды
           );
           const firstValue = values[0];
           return values.every((val) => val === firstValue);
@@ -174,7 +173,7 @@ export const useItemsWorker = (
           const firstItem = lowQualityItems[0];
           SUPPORTED_LOCALES.forEach((locale) => {
             const rawValue = firstItem[locale] || "";
-            lowQualityLocales[locale] = removeColorCodes(rawValue);
+            lowQualityLocales[locale] = rawValue; // Сохраняем цветовые коды
           });
           console.log(
             "Low Quality locales filled (values differ):",
@@ -220,7 +219,7 @@ export const useItemsWorker = (
             // Заполняем локали
             SUPPORTED_LOCALES.forEach((locale) => {
               const rawValue = itemData[locale] || "";
-              locales[locale] = removeColorCodes(rawValue);
+              locales[locale] = rawValue; // Сохраняем цветовые коды
             });
 
             // Проверяем, пустые ли выбранные локали
