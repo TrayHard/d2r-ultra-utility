@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import {
   mdiContentSave,
   mdiPlus,
-  mdiRename,
   mdiDelete,
   mdiFileImport,
   mdiFileExport,
