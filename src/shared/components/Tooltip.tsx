@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 
 interface TooltipProps {
   children: React.ReactNode;
-  content: string;
+  content: React.ReactNode;
   isDarkTheme?: boolean;
   position?: "top" | "bottom" | "left" | "right";
   delay?: number;
@@ -83,7 +83,7 @@ const Tooltip: React.FC<TooltipProps> = ({
         <div
           ref={tooltipRef}
           className={`
-            absolute z-50 px-3 py-2 text-xs font-medium rounded-lg shadow-lg whitespace-nowrap
+            absolute z-50 px-3 py-2 text-xs font-medium rounded-lg shadow-lg whitespace-normal
             transition-opacity duration-200 pointer-events-none
             ${getPositionClasses()}
             ${

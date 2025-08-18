@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import Icon from "@mdi/react";
 import { mdiEye } from "@mdi/js";
 import { Badge } from "antd";
+import Tooltip from "../../shared/components/Tooltip";
 import Switcher from "../../shared/components/Switcher";
 import { ItemSettings, useSettings } from "../../app/providers/SettingsContext";
 import ColorHint from "../../shared/components/ColorHint";
@@ -347,25 +348,93 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
             <div className="flex-1 space-y-6">
               {/* Картинка предмета */}
               <div className="text-center">
-                <div
-                  className={`w-24 h-24 mx-auto mb-4 rounded-lg flex items-center justify-center border-2 transition-all duration-300 ${
-                    isDarkTheme
-                      ? "bg-gray-700 border-gray-600"
-                      : "bg-gray-100 border-gray-300"
-                  } ${!enabled ? "opacity-50 grayscale" : ""}`}
-                >
-                  <img
-                    src={`/img/bases/${selectedItem.imgName}.png`}
-                    alt={selectedItem.key}
-                    className={`w-20 h-20 object-contain transition-all duration-300 ${
-                      !enabled ? "opacity-50 grayscale" : ""
-                    }`}
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = "none";
-                    }}
-                  />
-                </div>
+                {hasAttributesToShow() ? (
+                  <Tooltip
+                    isDarkTheme={isDarkTheme}
+                    position="top"
+                    delay={300}
+                    content={
+                      <div className="space-y-1 w-[80px]">
+                        {shouldShowAttribute("reqLvl", selectedItem.reqLvl) && (
+                          <div className="flex items-center justify-between gap-3 w-full">
+                            <span className="opacity-80">{t("itemsPage.filters.reqLevel")}</span>
+                            <span className="font-semibold">{selectedItem.reqLvl}</span>
+                          </div>
+                        )}
+                        {shouldShowAttribute("reqStrength", selectedItem.reqStrength) && (
+                          <div className="flex items-center justify-between gap-3 w-full">
+                            <span className="opacity-80">{t("itemsPage.filters.reqStrength")}</span>
+                            <span className="font-semibold">{selectedItem.reqStrength}</span>
+                          </div>
+                        )}
+                        {shouldShowAttribute("reqDexterity", selectedItem.reqDexterity) && (
+                          <div className="flex items-center justify-between gap-3">
+                            <span className="opacity-80">{t("itemsPage.filters.reqDexterity")}</span>
+                            <span className="font-semibold">{selectedItem.reqDexterity}</span>
+                          </div>
+                        )}
+                        {shouldShowAttribute("weight", selectedItem.weight) && (
+                          <div className="flex items-center justify-between gap-3">
+                            <span className="opacity-80">{t("itemsPage.filters.weight")}</span>
+                            <span className="font-semibold">{t(`itemsPage.filters.${selectedItem.weight}`)}</span>
+                          </div>
+                        )}
+                        {shouldShowAttribute("maxSockets", selectedItem.maxSockets) && (
+                          <div className="flex items-center justify-between gap-3">
+                            <span className="opacity-80">{t("itemsPage.maxSockets") || "Max Sockets"}</span>
+                            <span className="font-semibold">{selectedItem.maxSockets}</span>
+                          </div>
+                        )}
+                        {selectedItem.limitedToClass && (
+                          <div className="flex items-center justify-between gap-3">
+                            <span className="opacity-80">{t("itemsPage.filters.limitedToClass")}</span>
+                            <span className="font-semibold">{t(`itemsPage.classes.${selectedItem.limitedToClass}`) || selectedItem.limitedToClass}</span>
+                          </div>
+                        )}
+                      </div>
+                    }
+                  >
+                    <div
+                      className={`w-24 h-24 mx-auto mb-4 rounded-lg flex items-center justify-center border-2 transition-all duration-300 ${
+                        isDarkTheme
+                          ? "bg-gray-700 border-gray-600"
+                          : "bg-gray-100 border-gray-300"
+                      } ${!enabled ? "opacity-50 grayscale" : ""}`}
+                    >
+                      <img
+                        src={`/img/bases/${selectedItem.imgName}.png`}
+                        alt={selectedItem.key}
+                        className={`w-20 h-20 object-contain transition-all duration-300 ${
+                          !enabled ? "opacity-50 grayscale" : ""
+                        }`}
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = "none";
+                        }}
+                      />
+                    </div>
+                  </Tooltip>
+                ) : (
+                  <div
+                    className={`w-24 h-24 mx-auto mb-4 rounded-lg flex items-center justify-center border-2 transition-all duration-300 ${
+                      isDarkTheme
+                        ? "bg-gray-700 border-gray-600"
+                        : "bg-gray-100 border-gray-300"
+                    } ${!enabled ? "opacity-50 grayscale" : ""}`}
+                  >
+                    <img
+                      src={`/img/bases/${selectedItem.imgName}.png`}
+                      alt={selectedItem.key}
+                      className={`w-20 h-20 object-contain transition-all duration-300 ${
+                        !enabled ? "opacity-50 grayscale" : ""
+                      }`}
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = "none";
+                      }}
+                    />
+                  </div>
+                )}
                 <h3
                   className={`text-xl font-semibold mb-2 ${
                     isDarkTheme ? "text-white" : "text-gray-900"
@@ -461,153 +530,6 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
               />
 
               {/* Атрибуты предмета в стилизованном блочке */}
-              {hasAttributesToShow() && (
-                <div
-                  className={`
-                    p-4 rounded-lg border transition-all duration-300
-                    ${
-                      isDarkTheme
-                        ? "bg-gray-800/50 border-gray-700"
-                        : "bg-gray-50/50 border-gray-200"
-                    }
-                    ${!enabled ? "opacity-50" : ""}
-                  `}
-                >
-                  <div className="space-y-2">
-                    {shouldShowAttribute("reqLvl", selectedItem.reqLvl) && (
-                      <div className="flex justify-between items-center">
-                        <span
-                          className={`text-sm font-medium ${
-                            isDarkTheme ? "text-gray-300" : "text-gray-600"
-                          }`}
-                        >
-                          {t("itemsPage.filters.reqLevel")}
-                        </span>
-                        <span
-                          className={`text-sm font-bold px-2 py-1 rounded ${
-                            isDarkTheme
-                              ? "bg-blue-900/50 text-blue-200"
-                              : "bg-blue-100 text-blue-800"
-                          }`}
-                        >
-                          {selectedItem.reqLvl}
-                        </span>
-                      </div>
-                    )}
-                    {shouldShowAttribute(
-                      "reqStrength",
-                      selectedItem.reqStrength
-                    ) && (
-                      <div className="flex justify-between items-center">
-                        <span
-                          className={`text-sm font-medium ${
-                            isDarkTheme ? "text-gray-300" : "text-gray-600"
-                          }`}
-                        >
-                          {t("itemsPage.filters.reqStrength")}
-                        </span>
-                        <span
-                          className={`text-sm font-bold px-2 py-1 rounded ${
-                            isDarkTheme
-                              ? "bg-red-900/50 text-red-200"
-                              : "bg-red-100 text-red-800"
-                          }`}
-                        >
-                          {selectedItem.reqStrength}
-                        </span>
-                      </div>
-                    )}
-                    {shouldShowAttribute(
-                      "reqDexterity",
-                      selectedItem.reqDexterity
-                    ) && (
-                      <div className="flex justify-between items-center">
-                        <span
-                          className={`text-sm font-medium ${
-                            isDarkTheme ? "text-gray-300" : "text-gray-600"
-                          }`}
-                        >
-                          {t("itemsPage.filters.reqDexterity")}
-                        </span>
-                        <span
-                          className={`text-sm font-bold px-2 py-1 rounded ${
-                            isDarkTheme
-                              ? "bg-green-900/50 text-green-200"
-                              : "bg-green-100 text-green-800"
-                          }`}
-                        >
-                          {selectedItem.reqDexterity}
-                        </span>
-                      </div>
-                    )}
-                    {shouldShowAttribute("weight", selectedItem.weight) && (
-                      <div className="flex justify-between items-center">
-                        <span
-                          className={`text-sm font-medium ${
-                            isDarkTheme ? "text-gray-300" : "text-gray-600"
-                          }`}
-                        >
-                          {t("itemsPage.filters.weight")}
-                        </span>
-                        <span
-                          className={`text-sm font-bold px-2 py-1 rounded ${
-                            isDarkTheme
-                              ? "bg-purple-900/50 text-purple-200"
-                              : "bg-purple-100 text-purple-800"
-                          }`}
-                        >
-                          {t(`itemsPage.filters.${selectedItem.weight}`)}
-                        </span>
-                      </div>
-                    )}
-                    {shouldShowAttribute(
-                      "maxSockets",
-                      selectedItem.maxSockets
-                    ) && (
-                      <div className="flex justify-between items-center">
-                        <span
-                          className={`text-sm font-medium ${
-                            isDarkTheme ? "text-gray-300" : "text-gray-600"
-                          }`}
-                        >
-                          {t("itemsPage.maxSockets") || "Max Sockets"}
-                        </span>
-                        <span
-                          className={`text-sm font-bold px-2 py-1 rounded ${
-                            isDarkTheme
-                              ? "bg-orange-900/50 text-orange-200"
-                              : "bg-orange-100 text-orange-800"
-                          }`}
-                        >
-                          {selectedItem.maxSockets}
-                        </span>
-                      </div>
-                    )}
-                    {selectedItem.limitedToClass && (
-                      <div className="flex justify-between items-center">
-                        <span
-                          className={`text-sm font-medium ${
-                            isDarkTheme ? "text-gray-300" : "text-gray-600"
-                          }`}
-                        >
-                          {t("itemsPage.filters.limitedToClass")}
-                        </span>
-                        <span
-                          className={`text-sm font-bold px-2 py-1 rounded ${
-                            isDarkTheme
-                              ? "bg-indigo-900/50 text-indigo-200"
-                              : "bg-indigo-100 text-indigo-800"
-                          }`}
-                        >
-                          {t(
-                            `itemsPage.classes.${selectedItem.limitedToClass}`
-                          ) || selectedItem.limitedToClass}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
             </div>
 
             {/* Вертикальный разделитель */}
