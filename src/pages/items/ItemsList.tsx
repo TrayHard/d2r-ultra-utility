@@ -7,7 +7,7 @@ import {
   mdiSortNumericDescending,
   mdiCheckAll,
   mdiCheckboxBlankOutline,
-  mdiPencil,
+  mdiPencilBoxMultiple,
   mdiTune,
 } from "@mdi/js";
 import { FixedSizeList as List } from "react-window";
@@ -302,11 +302,12 @@ const ItemsList: React.FC<ItemsListProps> = ({
         </div>
 
         {/* Элементы управления выбором */}
-        <div className="flex items-stretch justify-between h-10">
-          <div className="flex items-stretch gap-2">
+        <div className="flex items-stretch justify-between h-10 gap-2">
+          <div className="flex items-stretch gap-2 min-w-0 overflow-hidden flex-1">
             <Button
               variant="secondary"
               size="sm"
+              title={t("itemsPage.massEdit.selectAll")}
               onClick={onSelectAll}
               isDarkTheme={isDarkTheme}
               icon={mdiCheckAll}
@@ -320,6 +321,7 @@ const ItemsList: React.FC<ItemsListProps> = ({
             <Button
               variant="secondary"
               size="sm"
+              title={t("itemsPage.massEdit.deselectAll")}
               onClick={onDeselectAll}
               isDarkTheme={isDarkTheme}
               icon={mdiCheckboxBlankOutline}
@@ -340,7 +342,7 @@ const ItemsList: React.FC<ItemsListProps> = ({
               onClick={onOpenMassEditModal}
               disabled={selectedItems.size === 0}
               isDarkTheme={isDarkTheme}
-              icon={mdiPencil}
+              icon={mdiPencilBoxMultiple}
               iconSize={0.8}
               className={`!w-10 !h-full !p-0 ${
                 selectedItems.size > 0
