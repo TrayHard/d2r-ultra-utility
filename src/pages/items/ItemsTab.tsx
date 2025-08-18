@@ -10,6 +10,7 @@ import ItemsList from "./ItemsList";
 import ItemCard from "./ItemCard";
 import TriStateSwitch, { TriState } from "../../shared/components/TriStateSwitch";
 import { useSettings, ItemSettings as ItemSettingsType } from "../../app/providers/SettingsContext";
+import ItemsSettingsModal from "./ItemsSettingsModal";
 
 import "./ItemsTab.css";
 
@@ -59,6 +60,7 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
     string | null
   >(null);
   const [isMassEditModalOpen, setIsMassEditModalOpen] = useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [lastSelectedItem, setLastSelectedItem] = useState<string | null>(null);
 
   // Доступ к обновлению настроек предметов
@@ -411,6 +413,7 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
           onDeselectAll={handleDeselectAll}
           onSetSelectedItemForSettings={setSelectedItemForSettings}
           onOpenMassEditModal={() => setIsMassEditModalOpen(true)}
+          onOpenSettingsModal={() => setIsSettingsModalOpen(true)}
           filtersRef={filtersRef}
         />
 
@@ -514,6 +517,15 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
             </div>
           </div>
         </div>
+      )}
+
+      {/* Модальное окно настроек предметов */}
+      {isSettingsModalOpen && (
+        <ItemsSettingsModal
+          isOpen={isSettingsModalOpen}
+          onClose={() => setIsSettingsModalOpen(false)}
+          isDarkTheme={isDarkTheme}
+        />
       )}
     </div>
   );

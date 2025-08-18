@@ -8,6 +8,7 @@ import {
   mdiCheckAll,
   mdiCheckboxBlankOutline,
   mdiPencil,
+  mdiTune,
 } from "@mdi/js";
 import { FixedSizeList as List } from "react-window";
 import Button from "../../shared/components/Button";
@@ -48,6 +49,7 @@ interface ItemsListProps {
   onDeselectAll: () => void;
   onSetSelectedItemForSettings: (itemKey: string) => void;
   onOpenMassEditModal: () => void;
+  onOpenSettingsModal: () => void;
   className?: string;
   filtersRef: React.RefObject<HTMLDivElement>;
 }
@@ -178,6 +180,7 @@ const ItemsList: React.FC<ItemsListProps> = ({
   onDeselectAll,
   onSetSelectedItemForSettings,
   onOpenMassEditModal,
+  onOpenSettingsModal,
   className,
   filtersRef,
 }) => {
@@ -242,7 +245,7 @@ const ItemsList: React.FC<ItemsListProps> = ({
           isDarkTheme ? "border-gray-700" : "border-gray-200"
         }`}
       >
-        {/* Сортировка */}
+        {/* Сортировка и кнопка настроек */}
         <div className="flex items-stretch gap-2 mb-4 h-10">
           <Button
             variant="secondary"
@@ -284,6 +287,18 @@ const ItemsList: React.FC<ItemsListProps> = ({
             active={sortType === "level"}
             className="!w-14 !h-full !p-0"
           />
+
+          <div className="ml-auto">
+            <Button
+              variant="secondary"
+              onClick={onOpenSettingsModal}
+              title={t("itemsPage.settings.title")}
+              isDarkTheme={isDarkTheme}
+              icon={mdiTune}
+              iconSize={0.8}
+              className="!w-10 !h-full !p-0"
+            />
+          </div>
         </div>
 
         {/* Элементы управления выбором */}
