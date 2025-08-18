@@ -28,6 +28,9 @@ const CommonTab: React.FC<CommonTabProps> = ({
   } = useSettings();
   const selectedLocales = getSelectedLocales();
 
+  // Состояние для отслеживания фокуса в полях локалей
+  const [focusedLocale, setFocusedLocale] = useState<string | null>(null);
+
   // Локальные состояния для коллапсов
   const [collapseStates, setCollapseStates] = useState({
     arrows: false,
@@ -196,6 +199,53 @@ const CommonTab: React.FC<CommonTabProps> = ({
     });
   };
 
+  // Маппинг игровых цветовых кодов в HEX для предпросмотра
+  const colorCodeToHex: Record<string, string> = {
+    "ÿc0": "#FFFFFF", // white
+    "ÿc5": "#A0A0A0", // gray
+    "ÿc6": "#000000", // black
+    "ÿcM": "#C8B37E", // beige
+    "ÿc1": "#ff5757", // lightred
+    "ÿcU": "#ff0000", // red
+    "ÿcS": "#d44848", // dimred
+    "ÿc@": "#ffaf00", // orange
+    "ÿc7": "#d4c786", // lightgold
+    "ÿc9": "#ffff6e", // yellow
+    "ÿcR": "#FFFF99", // lightyellow
+    "ÿc2": "#00FF00", // green
+    "ÿcA": "#008000", // dimgreen
+    "ÿc:": "#006400", // darkgreen
+    "ÿc3": "#4B0082", // indigo
+    "ÿcP": "#9370DB", // lightindigo
+    "ÿcN": "#40E0D0", // turquoise
+    "ÿcT": "#87CEEB", // lightblue
+    "ÿcO": "#FFC0CB", // pink
+    "ÿc;": "#800080", // purple
+  };
+
+  // Рендер строки с учетом цветовых кодов ÿcX
+  const renderColoredText = (text: string) => {
+    if (!text) return null;
+    const tokenRegex = /(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])/g;
+    const parts = text.split(tokenRegex);
+    let currentColor: string | null = null;
+    const nodes: React.ReactNode[] = [];
+    for (let i = 0; i < parts.length; i++) {
+      const part = parts[i];
+      if (!part) continue;
+      if (part.startsWith("ÿc")) {
+        currentColor = colorCodeToHex[part] || currentColor;
+        continue;
+      }
+      nodes.push(
+        <span key={`p-${i}`} style={currentColor ? { color: currentColor } : undefined}>
+          {part}
+        </span>
+      );
+    }
+    return nodes;
+  };
+
   // Обработчики для зелий
   const handlePotionLevelToggle = (
     itemType: "healthPotions" | "manaPotions" | "rejuvenationPotions",
@@ -245,54 +295,104 @@ const CommonTab: React.FC<CommonTabProps> = ({
       | "grandCharms"
   ) => {
     return (
-      <div className="space-y-3">
-        {localeOptions
-          .filter((locale) => selectedLocales.includes(locale.value))
-          .map((locale) => (
-            <div key={locale.value} className="flex items-center space-x-3">
+      <div className="space-y-4">
+        {/* Предпросмотр */}
+        <div className="flex items-center space-x-3">
+          <div className="w-20"></div>
+          <div className="flex-1 flex grow w-full">
+            <div
+              className={`
+                h-9 px-3 rounded-md border flex items-center overflow-hidden text-sm font-mono whitespace-pre w-full
+                ${
+                  isDarkTheme
+                    ? "bg-gray-800 border-gray-600 text-white"
+                    : "bg-white border-gray-300 text-gray-900"
+                }
+              `}
+            >
               <span
-                className={`
-                  w-20 text-sm font-medium
-                  ${isDarkTheme ? "text-gray-300" : "text-gray-700"}
-                `}
+                className={"mr-2 font-semibold tracking-wide text-xs text-gray-400 font-sans cursor-default select-none"}
               >
-                {locale.label}:
+                {(t("runePage.controls.preview") || "Preview") + ":"}
               </span>
-              <div className="flex-1 flex items-center space-x-2">
-                <input
-                  type="text"
-                  value={
+              {(() => {
+                // 1) Если есть фокус — показываем фокусную локаль
+                if (focusedLocale) {
+                  const text =
                     itemSettings.locales[
-                      locale.value as keyof typeof itemSettings.locales
-                    ] ?? ""
-                  }
-                  onChange={(e) =>
-                    handleLocaleChange(itemType, locale.value, e.target.value)
-                  }
-                  disabled={!itemSettings.enabled}
-                  placeholder={t(
-                    `runePage.controls.placeholders.${locale.value}`
-                  )}
-                  className={`
-                    flex-1 px-3 py-2 rounded-md border transition-colors
-                    ${
-                      isDarkTheme
-                        ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                        : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
-                    }
-                    ${
-                      !itemSettings.enabled
-                        ? "opacity-50 cursor-not-allowed"
-                        : isDarkTheme
-                        ? "focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
-                        : "focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
-                    }
-                  `}
-                />
-                <ColorHint isDarkTheme={isDarkTheme} />
-              </div>
+                      focusedLocale as keyof typeof itemSettings.locales
+                    ] || "";
+                  return renderColoredText(text);
+                }
+                // 2) По умолчанию всегда берём enUS, если он есть
+                if (itemSettings.locales.enUS) {
+                  return renderColoredText(itemSettings.locales.enUS);
+                }
+                // 3) Иначе берём первую из выбранных локалей, если она есть
+                const firstSelected = selectedLocales[0];
+                const fallbackText = firstSelected
+                  ? itemSettings.locales[
+                      firstSelected as keyof typeof itemSettings.locales
+                    ] || ""
+                  : "";
+                return renderColoredText(fallbackText);
+              })()}
             </div>
-          ))}
+          </div>
+        </div>
+
+        {/* Инпуты локалей */}
+        <div className="space-y-3">
+          {localeOptions
+            .filter((locale) => selectedLocales.includes(locale.value))
+            .map((locale) => (
+              <div key={locale.value} className="flex items-center space-x-3">
+                <span
+                  className={`
+                    w-20 text-sm font-medium
+                    ${isDarkTheme ? "text-gray-300" : "text-gray-700"}
+                  `}
+                >
+                  {locale.label}:
+                </span>
+                <div className="flex-1 flex items-center space-x-2">
+                  <input
+                    type="text"
+                    value={
+                      itemSettings.locales[
+                        locale.value as keyof typeof itemSettings.locales
+                      ] ?? ""
+                    }
+                    onChange={(e) =>
+                      handleLocaleChange(itemType, locale.value, e.target.value)
+                    }
+                    onFocus={() => setFocusedLocale(locale.value)}
+                    onBlur={() => setFocusedLocale(null)}
+                    disabled={!itemSettings.enabled}
+                    placeholder={t(
+                      `runePage.controls.placeholders.${locale.value}`
+                    )}
+                    className={`
+                      flex-1 px-3 py-2 rounded-md border transition-colors
+                      ${
+                        isDarkTheme
+                          ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                          : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
+                      }
+                      ${
+                        !itemSettings.enabled
+                          ? "opacity-50 cursor-not-allowed"
+                          : isDarkTheme
+                          ? "focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
+                          : "focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
+                      }
+                    `}
+                  />
+                  <ColorHint isDarkTheme={isDarkTheme} />
+                </div>
+              </div>
+            ))}
+        </div>
       </div>
     );
   };
