@@ -217,8 +217,6 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
           t("itemsPage.filters.weight"),
           "w-32"
         )}
-
-        {/* место под правый край строки оставлено пустым после переноса кнопки настроек */}
       </div>
 
       {/* Вторая строка - кнопки базовых типов */}
