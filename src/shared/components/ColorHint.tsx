@@ -18,25 +18,25 @@ const ColorHint: React.FC<ColorHintProps> = ({ isDarkTheme }) => {
   const getColorStyle = (colorCode: string) => {
     // Мапим цветовые коды на CSS цвета для предварительного просмотра
     const colorMap: Record<string, string> = {
-      ÿc0: "#FFFFFF", // white
-      ÿc5: "#A0A0A0", // gray
-      ÿc6: "#404040", // black
-      ÿcM: "#C8B37E", // beige
-      ÿc1: "#FF6B6B", // lightred
-      ÿcU: "#CC0000", // red
-      ÿcS: "#800000", // dimred
-      "ÿc@": "#FF8C00", // orange
-      ÿc7: "#FFD700", // lightgold
-      ÿc9: "#FFFF00", // yellow
-      ÿcR: "#FFFF99", // lightyellow
-      ÿc2: "#00FF00", // green
-      ÿcA: "#008000", // dimgreen
+      "ÿc0": "#FFFFFF", // white
+      "ÿc5": "#A0A0A0", // gray
+      "ÿc6": "#000000", // black
+      "ÿcM": "#C8B37E", // beige
+      "ÿc1": "#ff5757", // lightred
+      "ÿcU": "#ff0000", // red
+      "ÿcS": "#d44848", // dimred
+      "ÿc@": "#ffaf00", // orange
+      "ÿc7": "#d4c786", // lightgold
+      "ÿc9": "#ffff6e", // yellow
+      "ÿcR": "#FFFF99", // lightyellow
+      "ÿc2": "#00FF00", // green
+      "ÿcA": "#008000", // dimgreen
       "ÿc:": "#006400", // darkgreen
-      ÿc3: "#4B0082", // indigo
-      ÿcP: "#9370DB", // lightindigo
-      ÿcN: "#40E0D0", // turquoise
-      ÿcT: "#87CEEB", // lightblue
-      ÿcO: "#FFC0CB", // pink
+      "ÿc3": "#4B0082", // indigo
+      "ÿcP": "#9370DB", // lightindigo
+      "ÿcN": "#40E0D0", // turquoise
+      "ÿcT": "#87CEEB", // lightblue
+      "ÿcO": "#FFC0CB", // pink
       "ÿc;": "#800080", // purple
     };
 
