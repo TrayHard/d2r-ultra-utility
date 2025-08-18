@@ -200,29 +200,27 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
         <div className="flex items-center gap-2">
           {/* Save Profile Button */}
           <Tooltip
-            content={t("profiles.saveProfile")}
-            isDarkTheme={isDarkTheme}
-            position="top"
-            delay={300}
-          > 
-          <Button
-            variant="info"
-            onClick={() => activeProfileId && setShowSaveConfirm(true)}
-            disabled={!activeProfileId}
-            isDarkTheme={isDarkTheme}
-            icon={mdiContentSave}
-            size="sm"
+            title={t("profiles.saveProfile")}
+            placement="top"
+            mouseEnterDelay={0.3}
+          >
+            <Button
+              variant="info"
+              onClick={() => activeProfileId && setShowSaveConfirm(true)}
+              disabled={!activeProfileId}
+              isDarkTheme={isDarkTheme}
+              icon={mdiContentSave}
+              size="sm"
             />
           </Tooltip>
         </div>
 
         {/* Import Profile Button */}
         <Tooltip
-          content={t("profiles.importProfile")}
-          isDarkTheme={isDarkTheme}
-          position="top"
-          delay={300}
-        > 
+          title={t("profiles.importProfile")}
+          placement="top"
+          mouseEnterDelay={0.3}
+        >
           <Button
             variant="secondary"
             onClick={() => fileInputRef.current?.click()}
@@ -234,11 +232,10 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
 
         {/* Export Profile Button */}
         <Tooltip
-          content={t("profiles.exportProfile")}
-          isDarkTheme={isDarkTheme}
-          position="top"
-          delay={300}
-        > 
+          title={t("profiles.exportProfile")}
+          placement="top"
+          mouseEnterDelay={0.3}
+        >
           <Button
             variant="secondary"
             onClick={handleExportProfile}
