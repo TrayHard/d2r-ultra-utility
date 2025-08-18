@@ -336,6 +336,38 @@
   "sorting": {
     "name": "Nombre",
     "level": "Nivel"
+  },
+  "profiles": {
+    "filesSectionTitle": "Operaciones de archivo",
+    "sectionTitle": "Perfiles",
+    "selectProfile": "Seleccionar perfil",
+    "createProfile": "Crear perfil",
+    "saveProfile": "Guardar perfil",
+    "renameProfile": "Renombrar perfil",
+    "deleteProfile": "Eliminar perfil",
+    "exportProfile": "Exportar",
+    "importProfile": "Importar",
+    "profileName": "Nombre del perfil",
+    "currentProfile": "Perfil actual",
+    "enterProfileName": "Introduce el nombre del perfil",
+    "create": "Crear",
+    "rename": "Renombrar",
+    "delete": "Eliminar",
+    "cancel": "Cancelar",
+    "saveConfirmation": "¿Guardar cambios en el perfil \"{{name}}\"?",
+    "deleteConfirmation": "¿Seguro que deseas eliminar el perfil \"{{name}}\"? Esta acción no se puede deshacer.",
+    "messages": {
+      "success": "Éxito",
+      "error": "Error",
+      "profileSaved": "Perfil \"{{name}}\" guardado",
+      "saveError": "Error al guardar perfil",
+      "profileCreated": "Perfil \"{{name}}\" creado",
+      "profileRenamed": "Perfil renombrado a \"{{name}}\"",
+      "profileDeleted": "Perfil \"{{name}}\" eliminado",
+      "profileExported": "Perfil exportado",
+      "profileImported": "Perfil importado. Puedes seleccionarlo en la lista de perfiles.",
+      "importError": "Error al importar el perfil"
+    }
   }
 }
 

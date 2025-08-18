@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
+import Icon from "@mdi/react";
+import { mdiRename, mdiDelete } from "@mdi/js";
 
 interface DropdownOption {
   value: string;
@@ -18,6 +20,10 @@ interface DropdownProps {
   disabled?: boolean;
   multiple?: boolean;
   mandatoryValues?: string[]; // Значения, которые нельзя отжать
+  onOptionRename?: (value: string) => void;
+  onOptionDelete?: (value: string) => void;
+  renameTitle?: string;
+  deleteTitle?: string;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({
@@ -33,6 +39,10 @@ const Dropdown: React.FC<DropdownProps> = ({
   disabled = false,
   multiple = false,
   mandatoryValues = [],
+  onOptionRename,
+  onOptionDelete,
+  renameTitle = "Rename",
+  deleteTitle = "Delete",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [openUpward, setOpenUpward] = useState(false);
@@ -201,11 +211,15 @@ const Dropdown: React.FC<DropdownProps> = ({
                 : option.value === selectedValue;
               const isMandatory = mandatoryValues.includes(option.value);
 
+              const optionDisabled = multiple && isMandatory && isSelected;
               return (
-                <button
+                <div
                   key={option.value}
-                  onClick={() => handleSelect(option.value)}
-                  disabled={multiple && isMandatory && isSelected}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => {
+                    if (!optionDisabled) handleSelect(option.value);
+                  }}
                   className={`w-full ${
                     sizeClasses.option
                   } text-left hover:bg-opacity-80 transition-colors duration-150 flex items-center justify-between ${
@@ -217,9 +231,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                       ? "text-gray-200 hover:bg-gray-600"
                       : "text-gray-700 hover:bg-gray-100"
                   } ${
-                    multiple && isMandatory && isSelected
-                      ? "opacity-75 cursor-not-allowed"
-                      : ""
+                    optionDisabled ? "opacity-75 cursor-not-allowed" : "cursor-pointer"
                   }`}
                 >
                   <span className="flex items-center gap-2">
@@ -233,10 +245,41 @@ const Dropdown: React.FC<DropdownProps> = ({
                     )}
                     {option.label}
                   </span>
-                  {multiple && isMandatory && (
-                    <span className="text-xs opacity-75">(required)</span>
-                  )}
-                </button>
+                  <span className="flex items-center gap-2 ml-2">
+                    {multiple && isMandatory && isSelected && (
+                      <span className="text-xs opacity-75">(required)</span>
+                    )}
+                    {/* Option-level actions */}
+                    {onOptionRename && (
+                      <div
+                        title={renameTitle}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onOptionRename(option.value);
+                        }}
+                        className={`p-1 rounded hover:opacity-90 ${
+                          isDarkTheme ? "text-gray-200 hover:bg-gray-500" : "text-gray-700 hover:bg-gray-200"
+                        }`}
+                      >
+                        <Icon path={mdiRename} size={0.7} />
+                      </div>
+                    )}
+                    {onOptionDelete && (
+                      <div
+                        title={deleteTitle}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onOptionDelete(option.value);
+                        }}
+                        className={`p-1 rounded hover:opacity-90 ${
+                          isDarkTheme ? "text-gray-200 hover:bg-gray-500" : "text-gray-700 hover:bg-gray-200"
+                        }`}
+                      >
+                        <Icon path={mdiDelete} size={0.7} />
+                      </div>
+                    )}
+                  </span>
+                </div>
               );
             })}
           </div>
