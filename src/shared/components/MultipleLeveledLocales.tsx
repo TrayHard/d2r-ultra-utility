@@ -234,13 +234,17 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
         <div className="space-y-4 mt-8">
           <div className="flex items-center space-x-3">
             <div className="w-20">
-              <Switch
-                enabled={activeLevel.enabled}
-                onChange={(enabled) => onLevelToggle(activeTabIndex, enabled)}
-                isDarkTheme={isDarkTheme}
-                onIcon={<Icon path={mdiEyeOutline} size={0.55} color="#16A34A" />}
-                offIcon={<Icon path={mdiEyeOffOutline} size={0.55} color={isDarkTheme ? "#111827" : "#6B7280"} />}
-              />
+              <Tooltip title={t("runePage.controls.toggleItemVisibilityTooltip")} placement="top">
+                <div>
+                  <Switch
+                    enabled={activeLevel.enabled}
+                    onChange={(enabled) => onLevelToggle(activeTabIndex, enabled)}
+                    isDarkTheme={isDarkTheme}
+                    onIcon={<Icon path={mdiEyeOutline} size={0.55} color="#16A34A" />}
+                    offIcon={<Icon path={mdiEyeOffOutline} size={0.55} color={isDarkTheme ? "#111827" : "#6B7280"} />}
+                  />
+                </div>
+              </Tooltip>
             </div>
             {/* Предпросмотр текущей локали */}
             <div className="flex-1 flex grow w-full">

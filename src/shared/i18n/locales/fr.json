@@ -165,6 +165,7 @@
       "customName": "Nom personnalisé",
       "settings": "Paramètres",
       "runeNumberTitle": "Numéro de rune",
+      "toggleItemVisibilityTooltip": "Désactive l'affichage des noms de cet objet dans le jeu",
       "divider": "Séparateur",
       "dividerColor": "Couleur du séparateur",
       "numberColor": "Couleur du numéro",

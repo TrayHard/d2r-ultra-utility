@@ -187,6 +187,7 @@
       "customName": "Пользовательское название",
       "settings": "Настройки",
       "runeNumberTitle": "Номер руны",
+      "toggleItemVisibilityTooltip": "Отключает показ названий этого предмета в игре",
       "divider": "Разделитель",
       "dividerColor": "Цвет разделителя",
       "numberColor": "Цвет номера",

@@ -165,6 +165,7 @@
       "customName": "Niestandardowa nazwa",
       "settings": "Ustawienia",
       "runeNumberTitle": "Numer runy",
+      "toggleItemVisibilityTooltip": "Wyłącza wyświetlanie nazw tego przedmiotu w grze",
       "divider": "Separator",
       "dividerColor": "Kolor separatora",
       "numberColor": "Kolor numeru",
