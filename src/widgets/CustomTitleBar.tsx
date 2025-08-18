@@ -1,4 +1,6 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
+import { Tooltip } from "antd";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { mdiMinus, mdiSquareOutline, mdiClose } from "@mdi/js";
 import logoImage from "../shared/assets/logo_128.png";
@@ -10,6 +12,8 @@ interface CustomTitleBarProps {
 const CustomTitleBar: React.FC<CustomTitleBarProps> = ({
   title = "Diablo II Ultra Utility",
 }) => {
+  const { t } = useTranslation();
+
   const handleMinimize = async () => {
     try {
       const window = getCurrentWindow();
@@ -59,48 +63,51 @@ const CustomTitleBar: React.FC<CustomTitleBarProps> = ({
 
       {/* Window controls */}
       <div className="flex">
-        <button
-          onClick={handleMinimize}
-          className="flex items-center justify-center w-9 h-9 hover:bg-red-800 transition-all duration-200 group bg-red-900/20"
-          title="Minimize"
-        >
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            className="group-hover:scale-110 transition-transform duration-200 min-w-5 min-h-5"
+        <Tooltip title={t("window.minimize") || "Minimize"} placement="bottom">
+          <button
+            onClick={handleMinimize}
+            className="flex items-center justify-center w-9 h-9 hover:bg-red-800 transition-all duration-200 group bg-red-900/20"
           >
-            <path d={mdiMinus} fill="#fbbf24" />
-          </svg>
-        </button>
-        <button
-          onClick={handleMaximize}
-          className="flex items-center justify-center w-9 h-9 hover:bg-red-800 transition-all duration-200 group bg-red-900/20 min-w-5 min-h-5"
-          title="Maximize"
-        >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            className="group-hover:scale-110 transition-transform duration-200 min-w-4 min-h-4"
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              className="group-hover:scale-110 transition-transform duration-200 min-w-5 min-h-5"
+            >
+              <path d={mdiMinus} fill="#fbbf24" />
+            </svg>
+          </button>
+        </Tooltip>
+        <Tooltip title={t("window.maximize") || "Maximize"} placement="bottom">
+          <button
+            onClick={handleMaximize}
+            className="flex items-center justify-center w-9 h-9 hover:bg-red-800 transition-all duration-200 group bg-red-900/20 min-w-5 min-h-5"
           >
-            <path d={mdiSquareOutline} fill="#fbbf24" />
-          </svg>
-        </button>
-        <button
-          onClick={handleClose}
-          className="flex items-center justify-center w-9 h-9 hover:bg-red-600 hover:shadow-lg transition-all duration-200 group bg-red-900/20"
-          title="Close"
-        >
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            className="group-hover:scale-110 transition-transform duration-200 min-w-5 min-h-5"
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              className="group-hover:scale-110 transition-transform duration-200 min-w-4 min-h-4"
+            >
+              <path d={mdiSquareOutline} fill="#fbbf24" />
+            </svg>
+          </button>
+        </Tooltip>
+        <Tooltip title={t("window.close") || "Close"} placement="bottom">
+          <button
+            onClick={handleClose}
+            className="flex items-center justify-center w-9 h-9 hover:bg-red-600 hover:shadow-lg transition-all duration-200 group bg-red-900/20"
           >
-            <path d={mdiClose} fill="#fbbf24" />
-          </svg>
-        </button>
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              className="group-hover:scale-110 transition-transform duration-200 min-w-5 min-h-5"
+            >
+              <path d={mdiClose} fill="#fbbf24" />
+            </svg>
+          </button>
+        </Tooltip>
       </div>
     </div>
   );

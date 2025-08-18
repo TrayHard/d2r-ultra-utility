@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { Tooltip } from "antd";
 import Icon from "@mdi/react";
 import { mdiRename, mdiDelete } from "@mdi/js";
 
@@ -251,32 +252,34 @@ const Dropdown: React.FC<DropdownProps> = ({
                     )}
                     {/* Option-level actions */}
                     {onOptionRename && (
-                      <div
-                        title={renameTitle}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onOptionRename(option.value);
-                        }}
-                        className={`p-1 rounded hover:opacity-90 ${
-                          isDarkTheme ? "text-gray-200 hover:bg-gray-500" : "text-gray-700 hover:bg-gray-200"
-                        }`}
-                      >
-                        <Icon path={mdiRename} size={0.7} />
-                      </div>
+                      <Tooltip title={renameTitle} placement="top">
+                        <div
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onOptionRename(option.value);
+                          }}
+                          className={`p-1 rounded hover:opacity-90 ${
+                            isDarkTheme ? "text-gray-200 hover:bg-gray-500" : "text-gray-700 hover:bg-gray-200"
+                          }`}
+                        >
+                          <Icon path={mdiRename} size={0.7} />
+                        </div>
+                      </Tooltip>
                     )}
                     {onOptionDelete && (
-                      <div
-                        title={deleteTitle}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onOptionDelete(option.value);
-                        }}
-                        className={`p-1 rounded hover:opacity-90 ${
-                          isDarkTheme ? "text-gray-200 hover:bg-gray-500" : "text-gray-700 hover:bg-gray-200"
-                        }`}
-                      >
-                        <Icon path={mdiDelete} size={0.7} />
-                      </div>
+                      <Tooltip title={deleteTitle} placement="top">
+                        <div
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onOptionDelete(option.value);
+                          }}
+                          className={`p-1 rounded hover:opacity-90 ${
+                            isDarkTheme ? "text-gray-200 hover:bg-gray-500" : "text-gray-700 hover:bg-gray-200"
+                          }`}
+                        >
+                          <Icon path={mdiDelete} size={0.7} />
+                        </div>
+                      </Tooltip>
                     )}
                   </span>
                 </div>

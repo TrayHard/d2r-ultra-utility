@@ -27,6 +27,12 @@
     "staminaPotions": "Potions d'endurance",
     "antidotes": "Antidotes",
     "thawingPotions": "Potions de dégèle",
+    "amulets": "Amulettes",
+    "rings": "Anneaux",
+    "jewels": "Joyaux",
+    "smallCharms": "Charmes mineurs",
+    "largeCharms": "Grands charmes",
+    "grandCharms": "Charmes majeurs",
     "healthPotions": "Potions de vie",
     "manaPotions": "Potions de mana",
     "rejuvenationPotions": "Potions de régénération",
@@ -159,6 +165,7 @@
       "customName": "Nom personnalisé",
       "settings": "Paramètres",
       "runeNumberTitle": "Numéro de rune",
+      "toggleItemVisibilityTooltip": "Désactive l'affichage des noms de cet objet dans le jeu",
       "divider": "Séparateur",
       "dividerColor": "Couleur du séparateur",
       "numberColor": "Couleur du numéro",
@@ -303,10 +310,30 @@
       "confirm": "Appliquer"
     }
   },
+  "files": {
+    "readAll": "Lire depuis les fichiers (tout)",
+    "applyAll": "Appliquer aux fichiers (tout)",
+    "read": "Lire",
+    "apply": "Appliquer",
+    "groups": {
+      "current": "Onglet actuel",
+      "all": "Toute l'appli"
+    }
+  },
   "messages": {
     "success": {
       "allLoaded": "Tous les paramètres ont été chargés avec succès"
     }
+  },
+  "window": {
+    "minimize": "Minimiser",
+    "maximize": "Maximiser",
+    "close": "Fermer"
+  },
+  "triState": {
+    "off": "Désactivé",
+    "noChange": "Sans changement",
+    "on": "Activé"
   },
   "startupLoadModal": {
     "title": "Charger les paramètres depuis les fichiers ?",
@@ -368,6 +395,34 @@
       "profileImported": "Profil importé. Vous pouvez le sélectionner dans la liste des profils.",
       "importError": "Erreur lors de l'import du profil"
     }
+  },
+  "itemsPage": {
+    "settings": { "title": "Paramètres des objets" },
+    "sorting": {
+      "byType": "Par type",
+      "byName": "Par nom",
+      "byLevel": "Par niveau"
+    },
+    "massEdit": {
+      "selectAll": "Tout sélectionner",
+      "deselectAll": "Tout désélectionner",
+      "editSelected": "Modifier la sélection"
+    },
+    "filters": {
+      "reqLevelTooltip": "Indiquez votre niveau pour n'afficher que les objets appropriés",
+      "reqStrengthTooltip": "Indiquez votre force pour n'afficher que les objets appropriés",
+      "reqDexterityTooltip": "Indiquez votre dextérité pour n'afficher que les objets appropriés"
+    }
+  },
+  "window": {
+    "minimize": "Minimiser",
+    "maximize": "Maximiser",
+    "close": "Fermer"
+  },
+  "triState": {
+    "off": "Désactivé",
+    "noChange": "Sans changement",
+    "on": "Activé"
   }
 }
 
