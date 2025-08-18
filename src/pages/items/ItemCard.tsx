@@ -354,7 +354,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
                     position="top"
                     delay={300}
                     content={
-                      <div className="space-y-1 w-[80px]">
+                      <div className="space-y-1 w-[200px]">
                         {shouldShowAttribute("reqLvl", selectedItem.reqLvl) && (
                           <div className="flex items-center justify-between gap-3 w-full">
                             <span className="opacity-80">{t("itemsPage.filters.reqLevel")}</span>
@@ -368,25 +368,25 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
                           </div>
                         )}
                         {shouldShowAttribute("reqDexterity", selectedItem.reqDexterity) && (
-                          <div className="flex items-center justify-between gap-3">
+                          <div className="flex items-center justify-between gap-3 w-full">
                             <span className="opacity-80">{t("itemsPage.filters.reqDexterity")}</span>
                             <span className="font-semibold">{selectedItem.reqDexterity}</span>
                           </div>
                         )}
                         {shouldShowAttribute("weight", selectedItem.weight) && (
-                          <div className="flex items-center justify-between gap-3">
+                          <div className="flex items-center justify-between gap-3 w-full">
                             <span className="opacity-80">{t("itemsPage.filters.weight")}</span>
                             <span className="font-semibold">{t(`itemsPage.filters.${selectedItem.weight}`)}</span>
                           </div>
                         )}
                         {shouldShowAttribute("maxSockets", selectedItem.maxSockets) && (
-                          <div className="flex items-center justify-between gap-3">
+                          <div className="flex items-center justify-between gap-3 w-full">
                             <span className="opacity-80">{t("itemsPage.maxSockets") || "Max Sockets"}</span>
                             <span className="font-semibold">{selectedItem.maxSockets}</span>
                           </div>
                         )}
                         {selectedItem.limitedToClass && (
-                          <div className="flex items-center justify-between gap-3">
+                          <div className="flex items-center justify-between gap-3 w-full">
                             <span className="opacity-80">{t("itemsPage.filters.limitedToClass")}</span>
                             <span className="font-semibold">{t(`itemsPage.classes.${selectedItem.limitedToClass}`) || selectedItem.limitedToClass}</span>
                           </div>
