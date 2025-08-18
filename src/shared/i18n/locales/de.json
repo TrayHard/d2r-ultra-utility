@@ -187,6 +187,7 @@
       "customName": "Benutzerdefinierter Name",
       "settings": "Einstellungen",
       "runeNumberTitle": "Runennummer",
+      "toggleItemVisibilityTooltip": "Deaktiviert die Anzeige von Namen dieses Gegenstands im Spiel",
       "divider": "Trenner",
       "dividerColor": "Trennerfarbe",
       "numberColor": "Zahlenfarbe",

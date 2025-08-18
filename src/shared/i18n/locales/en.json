@@ -187,6 +187,7 @@
       "customName": "Custom Name",
       "settings": "Settings",
       "runeNumberTitle": "Rune Number",
+      "toggleItemVisibilityTooltip": "Disables showing names of this item in game",
       "divider": "Divider",
       "dividerColor": "Divider Color",
       "numberColor": "Number Color",

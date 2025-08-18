@@ -165,6 +165,7 @@
       "customName": "Nombre personalizado",
       "settings": "Ajustes",
       "runeNumberTitle": "Número de runa",
+      "toggleItemVisibilityTooltip": "Desactiva mostrar nombres de este objeto en el juego",
       "divider": "Separador",
       "dividerColor": "Color del separador",
       "numberColor": "Color del número",
