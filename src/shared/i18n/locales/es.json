@@ -385,6 +385,34 @@
       "profileImported": "Perfil importado. Puedes seleccionarlo en la lista de perfiles.",
       "importError": "Error al importar el perfil"
     }
+  },
+  "itemsPage": {
+    "settings": { "title": "Ajustes de objetos" },
+    "sorting": {
+      "byType": "Por tipo",
+      "byName": "Por nombre",
+      "byLevel": "Por nivel"
+    },
+    "massEdit": {
+      "selectAll": "Seleccionar todo",
+      "deselectAll": "Deseleccionar todo",
+      "editSelected": "Editar seleccionados"
+    },
+    "filters": {
+      "reqLevelTooltip": "Indica tu nivel para mostrar solo objetos apropiados",
+      "reqStrengthTooltip": "Indica tu fuerza para mostrar solo objetos apropiados",
+      "reqDexterityTooltip": "Indica tu destreza para mostrar solo objetos apropiados"
+    }
+  },
+  "window": {
+    "minimize": "Minimizar",
+    "maximize": "Maximizar",
+    "close": "Cerrar"
+  },
+  "triState": {
+    "off": "Apagado",
+    "noChange": "Sin cambios",
+    "on": "Encendido"
   }
 }
 

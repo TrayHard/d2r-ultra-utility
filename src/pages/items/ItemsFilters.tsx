@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { EBaseType, ECharacterClass, allBaseTypes } from "./constants";
-import { Button as AntButton, Input, InputNumber, Select } from "antd";
+import { Button as AntButton, Input, InputNumber, Select, Tooltip } from "antd";
 import { SearchOutlined, ReloadOutlined } from "@ant-design/icons";
 import "./ItemsTab.css";
 
@@ -180,33 +180,41 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
         )}
 
         <div className="flex gap-2">
-          <InputNumber
-            placeholder={t("itemsPage.filters.reqLevel")}
-            value={reqLevelFilter || null}
-            onChange={(value) => onSetReqLevelFilter(value || 0)}
-            style={{ width: "80px" }}
-            size="middle"
-            min={0}
-            className="items-filters-input-number"
-          />
-          <InputNumber
-            placeholder={t("itemsPage.filters.reqStrength")}
-            value={reqStrengthFilter || null}
-            onChange={(value) => onSetReqStrengthFilter(value || 0)}
-            style={{ width: "90px" }}
-            size="middle"
-            min={0}
-            className="items-filters-input-number"
-          />
-          <InputNumber
-            placeholder={t("itemsPage.filters.reqDexterity")}
-            value={reqDexterityFilter || null}
-            onChange={(value) => onSetReqDexterityFilter(value || 0)}
-            style={{ width: "90px" }}
-            size="middle"
-            min={0}
-            className="items-filters-input-number"
-          />
+          <Tooltip title={t("itemsPage.filters.reqLevelTooltip")} placement="top">
+            <InputNumber
+              placeholder={t("itemsPage.filters.reqLevel")}
+              value={reqLevelFilter || null}
+              onChange={(value) => onSetReqLevelFilter(value || 0)}
+              style={{ width: "80px" }}
+              size="middle"
+              min={0}
+              className="items-filters-input-number"
+            />
+          </Tooltip>
+
+          <Tooltip title={t("itemsPage.filters.reqStrengthTooltip")} placement="top">
+            <InputNumber
+              placeholder={t("itemsPage.filters.reqStrength")}
+              value={reqStrengthFilter || null}
+              onChange={(value) => onSetReqStrengthFilter(value || 0)}
+              style={{ width: "90px" }}
+              size="middle"
+              min={0}
+              className="items-filters-input-number"
+            />
+          </Tooltip>
+
+          <Tooltip title={t("itemsPage.filters.reqDexterityTooltip")} placement="top">
+            <InputNumber
+              placeholder={t("itemsPage.filters.reqDexterity")}
+              value={reqDexterityFilter || null}
+              onChange={(value) => onSetReqDexterityFilter(value || 0)}
+              style={{ width: "90px" }}
+              size="middle"
+              min={0}
+              className="items-filters-input-number"
+            />
+          </Tooltip>
         </div>
 
         {renderTagSelect(

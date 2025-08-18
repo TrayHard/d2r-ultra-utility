@@ -15,7 +15,7 @@ import {
 } from "@mdi/js";
 import Button from "../../shared/components/Button.tsx";
 import Checkbox from "../../shared/components/Checkbox.tsx";
-import Tooltip from "../../shared/components/Tooltip.tsx";
+import { Tooltip } from "antd";
 import MassEditModal from "../../shared/components/MassEditModal.tsx";
 import { RuneSettings } from "../../app/providers/SettingsContext.tsx";
 import highlightedBg from "../../shared/assets/runes/highlighted.png";
@@ -361,8 +361,8 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
             </div>
 
             <Tooltip
-              content={t("runePage.massEdit.editSelected") ?? "Edit selected"}
-              isDarkTheme={isDarkTheme}
+              title={t("runePage.massEdit.editSelected") ?? "Edit selected"}
+              placement="top"
             >
               <Button
                 variant={selectedRunes.size === 0 ? "secondary" : "primary"}

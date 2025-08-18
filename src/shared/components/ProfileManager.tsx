@@ -13,7 +13,7 @@ import Dropdown from "./Dropdown";
 import Modal from "./Modal";
 import { useGlobalMessage } from "./Message/MessageProvider";
 import { Profile } from "../../app/providers/SettingsContext";
-import Tooltip from "./Tooltip";
+import { Tooltip } from "antd";
 
 interface ProfileManagerProps {
   isDarkTheme: boolean;

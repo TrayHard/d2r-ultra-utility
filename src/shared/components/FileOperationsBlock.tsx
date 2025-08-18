@@ -1,4 +1,5 @@
 import React from "react";
+import { Tooltip } from "antd";
 import { useTranslation } from "react-i18next";
 import { mdiFileDocumentMultiple, mdiCheck, mdiCheckAll } from "@mdi/js";
 import Button from "./Button";
@@ -46,28 +47,34 @@ const FileOperationsBlock: React.FC<FileOperationsBlockProps> = ({
             {t("files.groups.current")}
           </div>
           <div className="flex items-center gap-2">
-            <Button
-              variant="info"
-              size="sm"
-              onClick={onReadCurrent}
-              isLoading={isLoading}
-              isDarkTheme={isDarkTheme}
-              icon={mdiFileDocumentMultiple}
-              title={t("runePage.textWorker.readFromFilesFor", { tab: tabLabel })}
-            >
-              {t("files.read")}
-            </Button>
-            <Button
-              variant="success"
-              size="sm"
-              onClick={onApplyCurrent}
-              disabled={isLoading}
-              isDarkTheme={isDarkTheme}
-              icon={mdiCheck}
-              title={t("runePage.textWorker.applyFor", { tab: tabLabel })}
-            >
-              {t("files.apply")}
-            </Button>
+            <Tooltip title={t("runePage.textWorker.readFromFilesFor", { tab: tabLabel })} placement="top">
+              <div>
+                <Button
+                  variant="info"
+                  size="sm"
+                  onClick={onReadCurrent}
+                  isLoading={isLoading}
+                  isDarkTheme={isDarkTheme}
+                  icon={mdiFileDocumentMultiple}
+                >
+                  {t("files.read")}
+                </Button>
+              </div>
+            </Tooltip>
+            <Tooltip title={t("runePage.textWorker.applyFor", { tab: tabLabel })} placement="top">
+              <div>
+                <Button
+                  variant="success"
+                  size="sm"
+                  onClick={onApplyCurrent}
+                  disabled={isLoading}
+                  isDarkTheme={isDarkTheme}
+                  icon={mdiCheck}
+                >
+                  {t("files.apply")}
+                </Button>
+              </div>
+            </Tooltip>
           </div>
         </div>
         <div className="flex flex-col gap-1">
@@ -78,28 +85,34 @@ const FileOperationsBlock: React.FC<FileOperationsBlockProps> = ({
             {t("files.groups.all")}
           </div>
           <div className="flex items-center gap-2">
-            <Button
-              variant="info"
-              size="sm"
-              onClick={onReadAll}
-              disabled={isLoading}
-              isDarkTheme={isDarkTheme}
-              icon={mdiFileDocumentMultiple}
-              title={t("files.read")}
-            >
-              {t("files.read")}
-            </Button>
-            <Button
-              variant="success"
-              size="sm"
-              onClick={onApplyAll}
-              disabled={isLoading}
-              isDarkTheme={isDarkTheme}
-              icon={mdiCheckAll}
-              title={t("files.apply")}
-            >
-              {t("files.apply")}
-            </Button>
+            <Tooltip title={t("files.read")} placement="top">
+              <div>
+                <Button
+                  variant="info"
+                  size="sm"
+                  onClick={onReadAll}
+                  disabled={isLoading}
+                  isDarkTheme={isDarkTheme}
+                  icon={mdiFileDocumentMultiple}
+                >
+                  {t("files.read")}
+                </Button>
+              </div>
+            </Tooltip>
+            <Tooltip title={t("files.apply")} placement="top">
+              <div>
+                <Button
+                  variant="success"
+                  size="sm"
+                  onClick={onApplyAll}
+                  disabled={isLoading}
+                  isDarkTheme={isDarkTheme}
+                  icon={mdiCheckAll}
+                >
+                  {t("files.apply")}
+                </Button>
+              </div>
+            </Tooltip>
           </div>
         </div>
       </div>

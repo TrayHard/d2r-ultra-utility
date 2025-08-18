@@ -325,6 +325,16 @@
       "allLoaded": "Tous les paramètres ont été chargés avec succès"
     }
   },
+  "window": {
+    "minimize": "Minimiser",
+    "maximize": "Maximiser",
+    "close": "Fermer"
+  },
+  "triState": {
+    "off": "Désactivé",
+    "noChange": "Sans changement",
+    "on": "Activé"
+  },
   "startupLoadModal": {
     "title": "Charger les paramètres depuis les fichiers ?",
     "message": "Un chemin de jeu a été détecté. Voulez-vous charger maintenant les paramètres pour tous les onglets depuis les fichiers du jeu ?",
@@ -385,6 +395,34 @@
       "profileImported": "Profil importé. Vous pouvez le sélectionner dans la liste des profils.",
       "importError": "Erreur lors de l'import du profil"
     }
+  },
+  "itemsPage": {
+    "settings": { "title": "Paramètres des objets" },
+    "sorting": {
+      "byType": "Par type",
+      "byName": "Par nom",
+      "byLevel": "Par niveau"
+    },
+    "massEdit": {
+      "selectAll": "Tout sélectionner",
+      "deselectAll": "Tout désélectionner",
+      "editSelected": "Modifier la sélection"
+    },
+    "filters": {
+      "reqLevelTooltip": "Indiquez votre niveau pour n'afficher que les objets appropriés",
+      "reqStrengthTooltip": "Indiquez votre force pour n'afficher que les objets appropriés",
+      "reqDexterityTooltip": "Indiquez votre dextérité pour n'afficher que les objets appropriés"
+    }
+  },
+  "window": {
+    "minimize": "Minimiser",
+    "maximize": "Maximiser",
+    "close": "Fermer"
+  },
+  "triState": {
+    "off": "Désactivé",
+    "noChange": "Sans changement",
+    "on": "Activé"
   }
 }
 

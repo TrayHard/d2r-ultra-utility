@@ -466,7 +466,10 @@
       "heavy": "Heavy",
       "anyClass": "Any Class",
       "all": "All",
-      "selected": "selected"
+      "selected": "selected",
+      "reqLevelTooltip": "Put your level to display only suitable items",
+      "reqStrengthTooltip": "Put your strength to display only suitable items",
+      "reqDexterityTooltip": "Put your dexterity to display only suitable items"
     },
     "sorting": {
       "byType": "By Type",
@@ -1542,5 +1545,15 @@
       "druid": "Druid",
       "assassin": "Assassin"
     }
+  },
+  "window": {
+    "minimize": "Minimize",
+    "maximize": "Maximize",
+    "close": "Close"
+  },
+  "triState": {
+    "off": "Off",
+    "noChange": "No change",
+    "on": "On"
   }
 }
