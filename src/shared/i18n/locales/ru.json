@@ -27,6 +27,12 @@
     "staminaPotions": "Зелья выносливости",
     "antidotes": "Противоядия",
     "thawingPotions": "Зелья оттаивания",
+    "amulets": "Амулеты",
+    "rings": "Кольца",
+    "jewels": "Самоцветы",
+    "smallCharms": "Маленькие обереги",
+    "largeCharms": "Большие обереги",
+    "grandCharms": "Великие обереги",
     "healthPotions": "Зелья здоровья",
     "manaPotions": "Зелья маны",
     "rejuvenationPotions": "Зелья восстановления",
@@ -181,6 +187,7 @@
       "customName": "Пользовательское название",
       "settings": "Настройки",
       "runeNumberTitle": "Номер руны",
+      "toggleItemVisibilityTooltip": "Отключает показ названий этого предмета в игре",
       "divider": "Разделитель",
       "dividerColor": "Цвет разделителя",
       "numberColor": "Цвет номера",
@@ -310,8 +317,9 @@
     "textWorker": {
       "readFromFiles": "Считать из файлов",
       "apply": "Применить к файлам",
-      "readFromFilesFor": "Считать из файлов: {{tab}}",
-      "applyFor": "Применить настройки: {{tab}}"
+      "readFromFilesFor": "Считать: {{tab}}",
+      "applyFor": "Применить: {{tab}}",
+      "readConfirmMessage": "Считать настройки из файлов? Несохраненные изменения в текущих настройках могут быть перезаписаны."
     },
     "confirmModal": {
       "title": "Подтверждение применения",
@@ -322,7 +330,7 @@
   },
   "profiles": {
     "sectionTitle": "Профили",
-    "filesSectionTitle": "Работа с файлами",
+    "filesSectionTitle": "Работа с файлами в игре",
     "selectProfile": "Выберите профиль",
     "createProfile": "Создать профиль",
     "saveProfile": "Сохранить профиль",
@@ -350,6 +358,16 @@
       "profileExported": "Профиль экспортирован",
       "profileImported": "Профиль импортирован. Вы можете выбрать его в списке профилей.",
       "importError": "Ошибка при импорте профиля"
+    }
+  },
+  "files": {
+    "readAll": "Считать из файлов (всё)",
+    "applyAll": "Применить в файлах (всё)",
+    "read": "Считать",
+    "apply": "Применить",
+    "groups": {
+      "current": "Текущая вкладка",
+      "all": "Всё приложение"
     }
   },
   "messages": {
@@ -433,6 +451,9 @@
       "reqLevel": "Уровень",
       "reqStrength": "Сила",
       "reqDexterity": "Ловкость",
+      "reqLevelTooltip": "Укажите ваш уровень, чтобы показывать только подходящие предметы",
+      "reqStrengthTooltip": "Укажите вашу силу, чтобы показывать только подходящие предметы",
+      "reqDexterityTooltip": "Укажите вашу ловкость, чтобы показывать только подходящие предметы",
       "weight": "Вес",
       "baseTypes": "Базовые типы",
       "normal": "Обычный",
@@ -1519,5 +1540,15 @@
       "druid": "Друид",
       "assassin": "Ассасин"
     }
+  },
+  "window": {
+    "minimize": "Свернуть",
+    "maximize": "Развернуть",
+    "close": "Закрыть"
+  },
+  "triState": {
+    "off": "Выключено",
+    "noChange": "Без изменений",
+    "on": "Включено"
   }
 }

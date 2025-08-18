@@ -1,4 +1,6 @@
 import React from "react";
+import { Tooltip } from "antd";
+import { useTranslation } from "react-i18next";
 
 export type TriState = true | false | null;
 
@@ -152,6 +154,8 @@ const TriStateSwitch: React.FC<TriStateSwitchProps> = ({
     }
   };
 
+  const { t } = useTranslation();
+
   return (
     <div
       className={`
@@ -165,35 +169,38 @@ const TriStateSwitch: React.FC<TriStateSwitchProps> = ({
       `}
     >
       {/* Левый блок - Выключено */}
-      <div
-        className={`${getBlockClasses(false, value === false)} border-r ${
-          isDarkTheme ? "border-gray-600" : "border-gray-300"
-        }`}
-        onClick={() => handleClick(false)}
-        title="Выключено"
-      >
-        {renderIcon(false)}
-      </div>
+      <Tooltip title={t("triState.off") || "Выключено"} placement="top">
+        <div
+          className={`${getBlockClasses(false, value === false)} border-r ${
+            isDarkTheme ? "border-gray-600" : "border-gray-300"
+          }`}
+          onClick={() => handleClick(false)}
+        >
+          {renderIcon(false)}
+        </div>
+      </Tooltip>
 
       {/* Центральный блок - Без изменений */}
-      <div
-        className={`${getBlockClasses(null, value === null)} border-r ${
-          isDarkTheme ? "border-gray-600" : "border-gray-300"
-        }`}
-        onClick={() => handleClick(null)}
-        title="Без изменений"
-      >
-        {renderIcon(null)}
-      </div>
+      <Tooltip title={t("triState.noChange") || "Без изменений"} placement="top">
+        <div
+          className={`${getBlockClasses(null, value === null)} border-r ${
+            isDarkTheme ? "border-gray-600" : "border-gray-300"
+          }`}
+          onClick={() => handleClick(null)}
+        >
+          {renderIcon(null)}
+        </div>
+      </Tooltip>
 
       {/* Правый блок - Включено */}
-      <div
-        className={getBlockClasses(true, value === true)}
-        onClick={() => handleClick(true)}
-        title="Включено"
-      >
-        {renderIcon(true)}
-      </div>
+      <Tooltip title={t("triState.on") || "Включено"} placement="top">
+        <div
+          className={getBlockClasses(true, value === true)}
+          onClick={() => handleClick(true)}
+        >
+          {renderIcon(true)}
+        </div>
+      </Tooltip>
     </div>
   );
 };

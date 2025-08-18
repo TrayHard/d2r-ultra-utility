@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { ERune } from "../../pages/runes/constants/runes.ts";
 import i18n from "../../shared/i18n";
+import { STORAGE_KEYS } from "../../shared/constants";
 
 // Типы для локализации
 interface Locales {
@@ -84,6 +85,12 @@ export interface CommonSettings {
   staminaPotions: CommonItemSettings;
   antidotes: CommonItemSettings;
   thawingPotions: CommonItemSettings;
+  amulets: CommonItemSettings;
+  rings: CommonItemSettings;
+  jewels: CommonItemSettings;
+  smallCharms: CommonItemSettings;
+  largeCharms: CommonItemSettings;
+  grandCharms: CommonItemSettings;
   healthPotions: PotionGroupSettings;
   manaPotions: PotionGroupSettings;
   rejuvenationPotions: PotionGroupSettings;
@@ -178,7 +185,7 @@ interface SettingsContextType {
   // Setter'ы для CommonTab
   getCommonSettings: () => CommonSettings;
   getCommonItemSettings: (
-    item: "arrows" | "bolts" | "staminaPotions" | "antidotes" | "thawingPotions"
+    item: "arrows" | "bolts" | "staminaPotions" | "antidotes" | "thawingPotions" | "amulets" | "rings" | "jewels" | "smallCharms" | "largeCharms" | "grandCharms"
   ) => CommonItemSettings;
   getPotionGroupSettings: (
     item: "healthPotions" | "manaPotions" | "rejuvenationPotions"
@@ -189,7 +196,13 @@ interface SettingsContextType {
       | "bolts"
       | "staminaPotions"
       | "antidotes"
-      | "thawingPotions",
+      | "thawingPotions"
+      | "amulets"
+      | "rings"
+      | "jewels"
+      | "smallCharms"
+      | "largeCharms"
+      | "grandCharms",
     newSettings: Partial<CommonItemSettings>
   ) => void;
   updatePotionGroupSettings: (
@@ -470,6 +483,12 @@ const getDefaultCommonSettings = (): CommonSettings => ({
   staminaPotions: getDefaultCommonItemSettings(),
   antidotes: getDefaultCommonItemSettings(),
   thawingPotions: getDefaultCommonItemSettings(),
+  amulets: getDefaultCommonItemSettings(),
+  rings: getDefaultCommonItemSettings(),
+  jewels: getDefaultCommonItemSettings(),
+  smallCharms: getDefaultCommonItemSettings(),
+  largeCharms: getDefaultCommonItemSettings(),
+  grandCharms: getDefaultCommonItemSettings(),
   healthPotions: getDefaultPotionGroupSettings(5), // 5 уровней для хп
   manaPotions: getDefaultPotionGroupSettings(5), // 5 уровней для маны
   rejuvenationPotions: getDefaultPotionGroupSettings(2), // 2 уровня для реджувок
@@ -699,14 +718,14 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         _setAppConfig((prev) => {
           const newConfig = newConfigOrUpdater(prev);
           if (!skipSave && !isLoading) {
-            localStorage.setItem("d2r-app-config", JSON.stringify(newConfig));
+            localStorage.setItem(STORAGE_KEYS.APP_CONFIG, JSON.stringify(newConfig));
           }
           return newConfig;
         });
       } else {
         if (!skipSave && !isLoading) {
           localStorage.setItem(
-            "d2r-app-config",
+            STORAGE_KEYS.APP_CONFIG,
             JSON.stringify(newConfigOrUpdater)
           );
         }
@@ -718,15 +737,15 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
 
   // Загрузка настроек из localStorage при инициализации
   useEffect(() => {
-    const savedAppConfig = localStorage.getItem("d2r-app-config");
-    const savedSettings = localStorage.getItem("d2r-settings");
-    const savedProfiles = localStorage.getItem("d2r-profiles");
-    const savedActiveProfileId = localStorage.getItem("d2r-active-profile");
+    const savedAppConfig = localStorage.getItem(STORAGE_KEYS.APP_CONFIG);
+    const savedSettings = localStorage.getItem(STORAGE_KEYS.SETTINGS);
+    const savedProfiles = localStorage.getItem(STORAGE_KEYS.PROFILES);
+    const savedActiveProfileId = localStorage.getItem(STORAGE_KEYS.ACTIVE_PROFILE);
 
     // Миграция: удаляем старый ключ языка если он есть
-    const oldLanguageKey = localStorage.getItem("language");
+    const oldLanguageKey = localStorage.getItem(STORAGE_KEYS.LEGACY_LANGUAGE);
     if (oldLanguageKey) {
-      localStorage.removeItem("language");
+      localStorage.removeItem(STORAGE_KEYS.LEGACY_LANGUAGE);
     }
 
     // Загружаем настройки приложения
@@ -835,14 +854,14 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   useEffect(() => {
     // Сохраняем настройки только если нет активного профиля и не загружаемся
     if (!activeProfileId && !isLoading) {
-      localStorage.setItem("d2r-settings", JSON.stringify(settings));
+      localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
     }
   }, [settings, activeProfileId, isLoading]);
 
   // Сохранение профилей в localStorage
   const saveProfilesToLocalStorage = useCallback(
     (updatedProfiles: Profile[]) => {
-      localStorage.setItem("d2r-profiles", JSON.stringify(updatedProfiles));
+      localStorage.setItem(STORAGE_KEYS.PROFILES, JSON.stringify(updatedProfiles));
     },
     []
   );
@@ -851,9 +870,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   const saveActiveProfileToLocalStorage = useCallback(
     (profileId: string | null) => {
       if (profileId) {
-        localStorage.setItem("d2r-active-profile", profileId);
+        localStorage.setItem(STORAGE_KEYS.ACTIVE_PROFILE, profileId);
       } else {
-        localStorage.removeItem("d2r-active-profile");
+        localStorage.removeItem(STORAGE_KEYS.ACTIVE_PROFILE);
       }
     },
     []
@@ -1110,7 +1129,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       setActiveProfileId(newProfile.id);
       saveActiveProfileToLocalStorage(newProfile.id);
       // Удаляем автономные настройки профиля при создании профиля
-      localStorage.removeItem("d2r-settings");
+      localStorage.removeItem(STORAGE_KEYS.SETTINGS);
     },
     [profiles, saveProfilesToLocalStorage, saveActiveProfileToLocalStorage]
   );
@@ -1143,7 +1162,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         setActiveProfileId(profileId);
         saveActiveProfileToLocalStorage(profileId);
         // Удаляем автономные настройки профиля при загрузке профиля
-        localStorage.removeItem("d2r-settings");
+        localStorage.removeItem(STORAGE_KEYS.SETTINGS);
       }
     },
     [profiles, saveActiveProfileToLocalStorage]
@@ -1178,7 +1197,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         saveActiveProfileToLocalStorage(null);
 
         // Пытаемся восстановить автономные настройки из localStorage
-        const savedSettings = localStorage.getItem("d2r-settings");
+        const savedSettings = localStorage.getItem(STORAGE_KEYS.SETTINGS);
         if (savedSettings) {
           try {
             const parsedSettings = JSON.parse(savedSettings);
@@ -1304,6 +1323,12 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         | "staminaPotions"
         | "antidotes"
         | "thawingPotions"
+        | "amulets"
+        | "rings"
+        | "jewels"
+        | "smallCharms"
+        | "largeCharms"
+        | "grandCharms"
     ) => {
       return settings.common[item];
     },
@@ -1324,7 +1349,13 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         | "bolts"
         | "staminaPotions"
         | "antidotes"
-        | "thawingPotions",
+        | "thawingPotions"
+        | "amulets"
+        | "rings"
+        | "jewels"
+        | "smallCharms"
+        | "largeCharms"
+        | "grandCharms",
       newSettings: Partial<CommonItemSettings>
     ) => {
       setSettings((prevSettings) => ({

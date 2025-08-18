@@ -73,6 +73,12 @@
     "staminaPotions": "Ausdauertränke",
     "antidotes": "Gegengifte",
     "thawingPotions": "Auftautränke",
+    "amulets": "Amulette",
+    "rings": "Ringe",
+    "jewels": "Juwelen",
+    "smallCharms": "Kleine Zauber",
+    "largeCharms": "Große Zauber",
+    "grandCharms": "Riesenzauber",
     "healthPotions": "Heiltränke",
     "manaPotions": "Manatränke",
     "rejuvenationPotions": "Wiederherstellungstränke",
@@ -181,6 +187,7 @@
       "customName": "Benutzerdefinierter Name",
       "settings": "Einstellungen",
       "runeNumberTitle": "Runennummer",
+      "toggleItemVisibilityTooltip": "Deaktiviert die Anzeige von Namen dieses Gegenstands im Spiel",
       "divider": "Trenner",
       "dividerColor": "Trennerfarbe",
       "numberColor": "Zahlenfarbe",
@@ -357,6 +364,16 @@
       "importError": "Fehler beim Import des Profils"
     }
   },
+  "files": {
+    "readAll": "Aus Dateien lesen (alle)",
+    "applyAll": "In Dateien anwenden (alle)",
+    "read": "Lesen",
+    "apply": "Anwenden",
+    "groups": {
+      "current": "Aktueller Tab",
+      "all": "Gesamte App"
+    }
+  },
   "messages": {
     "success": {
       "allLoaded": "Alle Einstellungen wurden erfolgreich geladen",
@@ -438,6 +455,9 @@
       "reqLevel": "Ben. Stufe",
       "reqStrength": "Ben. Stärke",
       "reqDexterity": "Ben. Geschick",
+      "reqLevelTooltip": "Gib deine Stufe ein, um nur passende Gegenstände anzuzeigen",
+      "reqStrengthTooltip": "Gib deine Stärke ein, um nur passende Gegenstände anzuzeigen",
+      "reqDexterityTooltip": "Gib deine Geschicklichkeit ein, um nur passende Gegenstände anzuzeigen",
       "weight": "Gewicht",
       "baseTypes": "Basistypen",
       "normal": "Normal",
@@ -513,6 +533,16 @@
       "druid": "Druide",
       "assassin": "Assassine"
     }
+  },
+  "window": {
+    "minimize": "Minimieren",
+    "maximize": "Maximieren",
+    "close": "Schließen"
+  },
+  "triState": {
+    "off": "Aus",
+    "noChange": "Ohne Änderung",
+    "on": "An"
   }
 }
 

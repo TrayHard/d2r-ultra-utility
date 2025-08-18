@@ -27,6 +27,12 @@
     "staminaPotions": "Eliksiry wytrzymałości",
     "antidotes": "Antidotum",
     "thawingPotions": "Eliksiry rozmrażające",
+    "amulets": "Amulety",
+    "rings": "Pierścienie",
+    "jewels": "Klejnoty",
+    "smallCharms": "Mniejsze talizmany",
+    "largeCharms": "Duże talizmany",
+    "grandCharms": "Wielkie talizmany",
     "healthPotions": "Mikstury zdrowia",
     "manaPotions": "Mikstury many",
     "rejuvenationPotions": "Mikstury odnowy",
@@ -159,6 +165,7 @@
       "customName": "Niestandardowa nazwa",
       "settings": "Ustawienia",
       "runeNumberTitle": "Numer runy",
+      "toggleItemVisibilityTooltip": "Wyłącza wyświetlanie nazw tego przedmiotu w grze",
       "divider": "Separator",
       "dividerColor": "Kolor separatora",
       "numberColor": "Kolor numeru",
@@ -303,10 +310,30 @@
       "confirm": "Zastosuj"
     }
   },
+  "files": {
+    "readAll": "Czytaj z plików (wszystko)",
+    "applyAll": "Zastosuj do plików (wszystko)",
+    "read": "Czytaj",
+    "apply": "Zastosuj",
+    "groups": {
+      "current": "Bieżąca karta",
+      "all": "Cała aplikacja"
+    }
+  },
   "messages": {
     "success": {
       "allLoaded": "Wszystkie ustawienia zostały pomyślnie wczytane"
     }
+  },
+  "window": {
+    "minimize": "Zminimalizuj",
+    "maximize": "Zmaksymalizuj",
+    "close": "Zamknij"
+  },
+  "triState": {
+    "off": "Wyłączone",
+    "noChange": "Bez zmian",
+    "on": "Włączone"
   },
   "startupLoadModal": {
     "title": "Wczytać ustawienia z plików?",
@@ -368,6 +395,34 @@
       "profileImported": "Profil zaimportowano. Możesz go wybrać z listy profili.",
       "importError": "Błąd podczas importu profilu"
     }
+  },
+  "itemsPage": {
+    "settings": { "title": "Ustawienia przedmiotów" },
+    "sorting": {
+      "byType": "Według typu",
+      "byName": "Według nazwy",
+      "byLevel": "Według poziomu"
+    },
+    "massEdit": {
+      "selectAll": "Zaznacz wszystko",
+      "deselectAll": "Odznacz wszystko",
+      "editSelected": "Edytuj zaznaczone"
+    },
+    "filters": {
+      "reqLevelTooltip": "Podaj swój poziom, aby wyświetlać tylko odpowiednie przedmioty",
+      "reqStrengthTooltip": "Podaj swoją siłę, aby wyświetlać tylko odpowiednie przedmioty",
+      "reqDexterityTooltip": "Podaj swoją zręczność, aby wyświetlać tylko odpowiednie przedmioty"
+    }
+  },
+  "window": {
+    "minimize": "Zminimalizuj",
+    "maximize": "Zmaksymalizuj",
+    "close": "Zamknij"
+  },
+  "triState": {
+    "off": "Wyłączone",
+    "noChange": "Bez zmian",
+    "on": "Włączone"
   }
 }
 

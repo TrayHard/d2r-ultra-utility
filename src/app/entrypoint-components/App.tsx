@@ -3,6 +3,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import ProgressBar from "../../shared/components/ProgressBar.tsx";
 import CustomTitleBar from "../../widgets/CustomTitleBar.tsx";
+import { STORAGE_KEYS } from "../../shared/constants.ts";
 
 import PathSelector from "../../widgets/Toolbar/PathSelector.tsx";
 import WorkSpace from "./WorkSpace.tsx";
@@ -16,7 +17,7 @@ interface SearchProgress {
 }
 
 // Утилиты для работы с настройками
-const SETTINGS_KEY = 'd2r-path-settings';
+const SETTINGS_KEY = STORAGE_KEYS.PATH_SETTINGS;
 
 interface SavedSettings {
   d2rPath?: string;

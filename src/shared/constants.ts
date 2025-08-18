@@ -40,3 +40,20 @@ export const localeOptions = [
 export const localeCodes = localeOptions.map((option) => option.value);
 
 export const MOD_ROOT = "mods\\D2RMOD\\D2RMOD.mpq\\data";
+
+// Ключи для localStorage
+export const STORAGE_KEYS = {
+	PATH_SETTINGS: "d2r-path-settings",
+	APP_CONFIG: "d2r-app-config",
+	SETTINGS: "d2r-settings",
+	PROFILES: "d2r-profiles",
+	ACTIVE_PROFILE: "d2r-active-profile",
+	LEGACY_LANGUAGE: "language",
+	STARTUP_DONT_ASK: "d2r-startup-load-dont-ask",
+	FIRST_RUN: "d2r-first-run",
+} as const;
+
+// Ключи для sessionStorage
+export const SESSION_KEYS = {
+	STARTUP_MODAL_SHOWN: "d2r-startup-modal-shown",
+} as const;

@@ -27,6 +27,12 @@
     "staminaPotions": "Stamina Potions",
     "antidotes": "Antidotes",
     "thawingPotions": "Thawing Potions",
+    "amulets": "Amulets",
+    "rings": "Rings",
+    "jewels": "Jewels",
+    "smallCharms": "Small Charms",
+    "largeCharms": "Large Charms",
+    "grandCharms": "Grand Charms",
     "healthPotions": "Health Potions",
     "manaPotions": "Mana Potions",
     "rejuvenationPotions": "Rejuvenation Potions",
@@ -181,6 +187,7 @@
       "customName": "Custom Name",
       "settings": "Settings",
       "runeNumberTitle": "Rune Number",
+      "toggleItemVisibilityTooltip": "Disables showing names of this item in game",
       "divider": "Divider",
       "dividerColor": "Divider Color",
       "numberColor": "Number Color",
@@ -316,7 +323,8 @@
       "readFromFiles": "Read from files",
       "apply": "Apply",
       "readFromFilesFor": "Read from files: {{tab}} settings",
-      "applyFor": "Apply settings: {{tab}}"
+      "applyFor": "Apply settings: {{tab}}",
+      "readConfirmMessage": "Read settings from files? Unsaved changes in current settings may be overwritten."
     },
     "confirmModal": {
       "title": "Confirm Apply",
@@ -327,7 +335,7 @@
   },
   "profiles": {
     "sectionTitle": "Profiles",
-    "filesSectionTitle": "File Operations",
+    "filesSectionTitle": "File Operations in game",
     "selectProfile": "Select Profile",
     "createProfile": "Create Profile",
     "saveProfile": "Save Profile",
@@ -355,6 +363,16 @@
       "profileExported": "Profile exported",
       "profileImported": "Profile imported. You can select it in the profiles list.",
       "importError": "Error importing profile"
+    }
+  },
+  "files": {
+    "readAll": "Read from files (all)",
+    "applyAll": "Apply to files (all)",
+    "read": "Read",
+    "apply": "Apply",
+    "groups": {
+      "current": "Current tab",
+      "all": "Entire app"
     }
   },
   "messages": {
@@ -448,7 +466,10 @@
       "heavy": "Heavy",
       "anyClass": "Any Class",
       "all": "All",
-      "selected": "selected"
+      "selected": "selected",
+      "reqLevelTooltip": "Put your level to display only suitable items",
+      "reqStrengthTooltip": "Put your strength to display only suitable items",
+      "reqDexterityTooltip": "Put your dexterity to display only suitable items"
     },
     "sorting": {
       "byType": "By Type",
@@ -1524,5 +1545,15 @@
       "druid": "Druid",
       "assassin": "Assassin"
     }
+  },
+  "window": {
+    "minimize": "Minimize",
+    "maximize": "Maximize",
+    "close": "Close"
+  },
+  "triState": {
+    "off": "Off",
+    "noChange": "No change",
+    "on": "On"
   }
 }

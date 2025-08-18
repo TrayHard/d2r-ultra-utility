@@ -27,6 +27,12 @@
     "staminaPotions": "Pociones de aguante",
     "antidotes": "Antídotos",
     "thawingPotions": "Pociones descongelantes",
+    "amulets": "Amuletos",
+    "rings": "Anillos",
+    "jewels": "Joyas",
+    "smallCharms": "Dijes pequeños",
+    "largeCharms": "Dijes grandes",
+    "grandCharms": "Dijes enormes",
     "healthPotions": "Pociones de vida",
     "manaPotions": "Pociones de maná",
     "rejuvenationPotions": "Pociones de rejuvenecimiento",
@@ -159,6 +165,7 @@
       "customName": "Nombre personalizado",
       "settings": "Ajustes",
       "runeNumberTitle": "Número de runa",
+      "toggleItemVisibilityTooltip": "Desactiva mostrar nombres de este objeto en el juego",
       "divider": "Separador",
       "dividerColor": "Color del separador",
       "numberColor": "Color del número",
@@ -303,6 +310,16 @@
       "confirm": "Aplicar"
     }
   },
+  "files": {
+    "readAll": "Leer de archivos (todo)",
+    "applyAll": "Aplicar a archivos (todo)",
+    "read": "Leer",
+    "apply": "Aplicar",
+    "groups": {
+      "current": "Pestaña actual",
+      "all": "Toda la app"
+    }
+  },
   "messages": {
     "success": {
       "allLoaded": "Todos los ajustes se cargaron correctamente"
@@ -368,6 +385,34 @@
       "profileImported": "Perfil importado. Puedes seleccionarlo en la lista de perfiles.",
       "importError": "Error al importar el perfil"
     }
+  },
+  "itemsPage": {
+    "settings": { "title": "Ajustes de objetos" },
+    "sorting": {
+      "byType": "Por tipo",
+      "byName": "Por nombre",
+      "byLevel": "Por nivel"
+    },
+    "massEdit": {
+      "selectAll": "Seleccionar todo",
+      "deselectAll": "Deseleccionar todo",
+      "editSelected": "Editar seleccionados"
+    },
+    "filters": {
+      "reqLevelTooltip": "Indica tu nivel para mostrar solo objetos apropiados",
+      "reqStrengthTooltip": "Indica tu fuerza para mostrar solo objetos apropiados",
+      "reqDexterityTooltip": "Indica tu destreza para mostrar solo objetos apropiados"
+    }
+  },
+  "window": {
+    "minimize": "Minimizar",
+    "maximize": "Maximizar",
+    "close": "Cerrar"
+  },
+  "triState": {
+    "off": "Apagado",
+    "noChange": "Sin cambios",
+    "on": "Encendido"
   }
 }
 

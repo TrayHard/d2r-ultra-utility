@@ -1,7 +1,8 @@
 import React from "react";
+import { Tooltip } from "antd";
 import { useTranslation } from "react-i18next";
 import { useSettings } from "../../app/providers/SettingsContext";
-import { localeOptions } from "../../shared/constants";
+import { localeOptions, STORAGE_KEYS } from "../../shared/constants";
 import Switcher from "../../shared/components/Switcher";
 import Button from "../../shared/components/Button";
 import { getVersion } from "@tauri-apps/api/app";
@@ -46,7 +47,7 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
   let displayedGamePath = currentGamePath;
   if (!displayedGamePath || displayedGamePath.length === 0) {
     try {
-      const savedRaw = localStorage.getItem("d2r-path-settings");
+      const savedRaw = localStorage.getItem(STORAGE_KEYS.PATH_SETTINGS);
       if (savedRaw) {
         const saved = JSON.parse(savedRaw);
         displayedGamePath = saved?.homeDirectory || saved?.d2rPath || "";
@@ -107,17 +108,18 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             {/* Settings Button */}
-            <button
-              onClick={onBack}
-              className={`p-1 rounded-full transition-all duration-200 text-sm hover:scale-110 ${
-                isDarkTheme
-                  ? "bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white"
-                  : "bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-900"
-              }`}
-              title={t("buttons.back")}
-            >
-              ⚙️
-            </button>
+            <Tooltip title={t("buttons.back")} placement="bottom">
+              <button
+                onClick={onBack}
+                className={`p-1 rounded-full transition-all duration-200 text-sm hover:scale-110 ${
+                  isDarkTheme
+                    ? "bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white"
+                    : "bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                ⚙️
+              </button>
+            </Tooltip>
           </div>
         </div>
       </div>

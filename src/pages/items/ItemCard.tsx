@@ -2,8 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import Icon from "@mdi/react";
 import { mdiEye } from "@mdi/js";
-import { Badge } from "antd";
-import Tooltip from "../../shared/components/Tooltip";
+import { Badge, Tooltip } from "antd";
 import Switcher from "../../shared/components/Switcher";
 import { ItemSettings, useSettings } from "../../app/providers/SettingsContext";
 import ColorHint from "../../shared/components/ColorHint";
@@ -350,10 +349,9 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
               <div className="text-center">
                 {hasAttributesToShow() ? (
                   <Tooltip
-                    isDarkTheme={isDarkTheme}
-                    position="top"
-                    delay={300}
-                    content={
+                    placement="top"
+                    mouseEnterDelay={0.3}
+                    title={
                       <div className="space-y-1 w-[200px]">
                         {shouldShowAttribute("reqLvl", selectedItem.reqLvl) && (
                           <div className="flex items-center justify-between gap-3 w-full">

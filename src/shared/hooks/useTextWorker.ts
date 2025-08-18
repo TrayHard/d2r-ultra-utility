@@ -8,6 +8,7 @@ import {
 } from "../../pages/runes/constants/runes.ts";
 import { itemRunesSchema } from "../types/common.ts";
 import { RuneSettings } from "../../app/providers/SettingsContext.tsx";
+import { STORAGE_KEYS } from "../constants.ts";
 import {
   generateFinalRuneName,
   generateRuneHighlightData,
@@ -43,7 +44,7 @@ interface LocaleItem {
 // Загружаем сохраненные настройки из localStorage
 const loadSavedSettings = () => {
   try {
-    const saved = localStorage.getItem("d2r-path-settings");
+    const saved = localStorage.getItem(STORAGE_KEYS.PATH_SETTINGS);
     return saved ? JSON.parse(saved) : null;
   } catch {
     return null;

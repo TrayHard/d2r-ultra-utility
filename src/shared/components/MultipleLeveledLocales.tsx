@@ -79,7 +79,7 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
                   type="text"
                   value={
                     levelSettings.locales[
-                      locale.value as keyof typeof levelSettings.locales
+                    locale.value as keyof typeof levelSettings.locales
                     ] ?? ""
                   }
                   onChange={(e) =>
@@ -93,15 +93,13 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
                   )}
                   className={`
                     flex-1 px-3 py-2 rounded-md border transition-colors
-                    ${
-                      isDarkTheme
-                        ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                        : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
+                    ${isDarkTheme
+                      ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                      : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
                     }
-                    ${
-                      !levelSettings.enabled
-                        ? "opacity-50 cursor-not-allowed"
-                        : isDarkTheme
+                    ${!levelSettings.enabled
+                      ? "opacity-50 cursor-not-allowed"
+                      : isDarkTheme
                         ? "focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
                         : "focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
                     }
@@ -169,125 +167,119 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
       isOpen={isOpen}
       onToggle={onToggle}
       icon={headerIcon}
+      containerClassName={`rounded-b-lg border p-4 ${isDarkTheme
+        ? "bg-gray-800 border-gray-700"
+        : "bg-white border-gray-300"
+      }`}
     >
-      <div
-        className={`rounded-lg border p-4 ${
-          isDarkTheme
-            ? "bg-gray-800 border-gray-700"
-            : "bg-white border-gray-300"
-        }`}
-      >
-        {/* Табы с картинками */}
-        <div className="flex space-x-2 mb-4 relative">
-          {settings.levels.map((level, index) => {
-            const buttonContent = (
-              <button
-                key={index}
-                onClick={() => onTabChange(index)}
-                className={`p-2 rounded-lg transition-all duration-200 border-2 ${
-                  level.enabled
-                    ? isDarkTheme
-                      ? "border-green-400 bg-green-400/20"
-                      : "border-green-500 bg-green-500/20"
-                    : isDarkTheme
-                    ? "border-gray-600 bg-gray-700/50 hover:border-gray-500"
-                    : "border-gray-300 bg-gray-100/50 hover:border-gray-400"
+
+      {/* Табы с картинками */}
+      <div className="flex space-x-2 mb-4 relative">
+        {settings.levels.map((level, index) => {
+          const buttonContent = (
+            <button
+              key={index}
+              onClick={() => onTabChange(index)}
+              className={`p-2 rounded-lg transition-all duration-200 border-2 ${isDarkTheme
+                  ? "border-gray-600 bg-gray-700/50 hover:border-gray-500"
+                  : "border-gray-300 bg-gray-100/50 hover:border-gray-400"
                 }`}
-                style={{
-                  width: "65px",
-                }}
-              >
-                <img
-                  src={imagePaths[index]}
-                  alt={t(`${itemType}Levels.level${index + 1}`)}
-                  className="w-12 h-12 object-contain"
-                  draggable={false}
-                />
-              </button>
-            );
-
-            return tooltips && tooltips[index] ? (
-              <Tooltip key={index} title={tooltips[index]} placement="top">
-                {buttonContent}
-              </Tooltip>
-            ) : (
-              buttonContent
-            );
-          })}
-
-          {/* Подчеркивание активного таба */}
-          <div
-            className={`absolute h-0.5 transition-all duration-300 ease-out ${
-              isDarkTheme ? "bg-yellow-400" : "bg-yellow-500"
-            }`}
-            style={{
-              left: `${activeTabIndex * (65 + 8)}px`, // 65px кнопка + 8px gap
-              width: "65px",
-              bottom: "-12px",
-              marginLeft: 0, // переопределяем Tailwind space-x-2
-              marginRight: 0, // переопределяем Tailwind space-x-2
-            }}
-          />
-        </div>
-
-        {/* Контент активного таба */}
-        <div className="space-y-4 mt-8">
-          <div className="flex items-center space-x-3">
-            <div className="w-20">
-              <Switch
-                enabled={activeLevel.enabled}
-                onChange={(enabled) => onLevelToggle(activeTabIndex, enabled)}
-                isDarkTheme={isDarkTheme}
-                onIcon={<Icon path={mdiEyeOutline} size={0.55} color="#16A34A" />}
-                offIcon={<Icon path={mdiEyeOffOutline} size={0.55} color={isDarkTheme ? "#111827" : "#6B7280"} />}
+              style={{
+                width: "65px",
+              }}
+            >
+              <img
+                src={imagePaths[index]}
+                alt={t(`${itemType}Levels.level${index + 1}`)}
+                className={`w-12 h-12 object-contain ${level.enabled ? "opacity-100" : "opacity-25"}`}
+                draggable={false}
               />
-            </div>
-            {/* Предпросмотр текущей локали */}
-            <div className="flex-1 flex grow w-full">
-              {/* Пустой спейсер под ширину метки локали, чтобы выровнять блок по инпутам */}
-              <div
-                className={`
-                  h-9 px-3 rounded-md border flex items-center overflow-hidden text-sm font-mono whitespace-pre w-full
-                  ${
-                    isDarkTheme
-                      ? "bg-gray-800 border-gray-600 text-white"
-                      : "bg-white border-gray-300 text-gray-900"
-                  }
-                `}
-              >
-                <span
-                  className={"mr-2 font-semibold tracking-wide text-xs text-gray-400 font-sans cursor-default select-none"}
-                >
-                  {(t("runePage.controls.preview") || "Preview") + ":"}
-                </span>
-                {(() => {
-                  // 1) Если есть фокус — показываем фокусную локаль
-                  if (focusedLocale) {
-                    const text =
-                      activeLevel.locales[
-                        focusedLocale as keyof typeof activeLevel.locales
-                      ] || "";
-                    return renderColoredText(text);
-                  }
-                  // 2) По умолчанию всегда берём enUS, если он есть
-                  if (activeLevel.locales.enUS) {
-                    return renderColoredText(activeLevel.locales.enUS);
-                  }
-                  // 3) Иначе берём первую из выбранных локалей, если она есть
-                  const firstSelected = selectedLocales[0];
-                  const fallbackText = firstSelected
-                    ? activeLevel.locales[
-                        firstSelected as keyof typeof activeLevel.locales
-                      ] || ""
-                    : "";
-                  return renderColoredText(fallbackText);
-                })()}
+            </button>
+          );
+
+          return tooltips && tooltips[index] ? (
+            <Tooltip key={index} title={tooltips[index]} placement="top">
+              {buttonContent}
+            </Tooltip>
+          ) : (
+            buttonContent
+          );
+        })}
+
+        {/* Подчеркивание активного таба */}
+        <div
+          className={`absolute h-0.5 transition-all duration-300 ease-out ${isDarkTheme ? "bg-yellow-400" : "bg-yellow-500"
+            }`}
+          style={{
+            left: `${activeTabIndex * (65 + 8)}px`, // 65px кнопка + 8px gap
+            width: "65px",
+            bottom: "-12px",
+            marginLeft: 0, // переопределяем Tailwind space-x-2
+            marginRight: 0, // переопределяем Tailwind space-x-2
+          }}
+        />
+      </div>
+
+      {/* Контент активного таба */}
+      <div className="space-y-4 mt-8">
+        <div className="flex items-center space-x-3">
+          <div className="w-20">
+            <Tooltip title={t("runePage.controls.toggleItemVisibilityTooltip")} placement="top">
+              <div>
+                <Switch
+                  enabled={activeLevel.enabled}
+                  onChange={(enabled) => onLevelToggle(activeTabIndex, enabled)}
+                  isDarkTheme={isDarkTheme}
+                  onIcon={<Icon path={mdiEyeOutline} size={0.55} color="#16A34A" />}
+                  offIcon={<Icon path={mdiEyeOffOutline} size={0.55} color={isDarkTheme ? "#111827" : "#6B7280"} />}
+                />
               </div>
+            </Tooltip>
+          </div>
+          {/* Предпросмотр текущей локали */}
+          <div className="flex-1 flex grow w-full">
+            {/* Пустой спейсер под ширину метки локали, чтобы выровнять блок по инпутам */}
+            <div
+              className={`
+                  h-9 px-3 rounded-md border flex items-center overflow-hidden text-sm font-mono whitespace-pre w-full
+                  ${isDarkTheme
+                  ? "bg-gray-800 border-gray-600 text-white"
+                  : "bg-white border-gray-300 text-gray-900"
+                }
+                `}
+            >
+              <span
+                className={"mr-2 font-semibold tracking-wide text-xs text-gray-400 font-sans cursor-default select-none"}
+              >
+                {(t("runePage.controls.preview") || "Preview") + ":"}
+              </span>
+              {(() => {
+                // 1) Если есть фокус — показываем фокусную локаль
+                if (focusedLocale) {
+                  const text =
+                    activeLevel.locales[
+                    focusedLocale as keyof typeof activeLevel.locales
+                    ] || "";
+                  return renderColoredText(text);
+                }
+                // 2) По умолчанию всегда берём enUS, если он есть
+                if (activeLevel.locales.enUS) {
+                  return renderColoredText(activeLevel.locales.enUS);
+                }
+                // 3) Иначе берём первую из выбранных локалей, если она есть
+                const firstSelected = selectedLocales[0];
+                const fallbackText = firstSelected
+                  ? activeLevel.locales[
+                  firstSelected as keyof typeof activeLevel.locales
+                  ] || ""
+                  : "";
+                return renderColoredText(fallbackText);
+              })()}
             </div>
           </div>
-
-          {renderLocaleInputs(activeLevel, activeTabIndex)}
         </div>
+
+        {renderLocaleInputs(activeLevel, activeTabIndex)}
       </div>
     </Collapse>
   );
