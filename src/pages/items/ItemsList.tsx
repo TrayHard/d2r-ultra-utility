@@ -13,7 +13,7 @@ import {
 import { FixedSizeList as List } from "react-window";
 import Button from "../../shared/components/Button";
 import Checkbox from "../../shared/components/Checkbox";
-import Tooltip from "../../shared/components/Tooltip";
+import { Tooltip } from "antd";
 
 interface BaseItem {
   key: string;
@@ -290,15 +290,16 @@ const ItemsList: React.FC<ItemsListProps> = ({
 
           {/* Кнопка настроек */}
           <div className="ml-auto">
-            <Button
-              variant="secondary"
-              onClick={onOpenSettingsModal}
-              title={t("itemsPage.settings.title")}
-              isDarkTheme={isDarkTheme}
-              icon={mdiTune}
-              iconSize={0.8}
-              className={`!w-10 !h-full !p-0 ${isDarkTheme ? "!bg-black-700 !border-gray-600" : "!bg-gray-200 !border-gray-300"}`}
-            />
+            <Tooltip title={t("itemsPage.settings.title")} placement="top">
+              <Button
+                variant="secondary"
+                onClick={onOpenSettingsModal}
+                isDarkTheme={isDarkTheme}
+                icon={mdiTune}
+                iconSize={0.8}
+                className={`!w-10 !h-full !p-0 ${isDarkTheme ? "!bg-black-700 !border-gray-600" : "!bg-gray-200 !border-gray-300"}`}
+              />
+            </Tooltip>
           </div>
         </div>
 
@@ -334,10 +335,7 @@ const ItemsList: React.FC<ItemsListProps> = ({
             </Button>
           </div>
 
-          <Tooltip
-            content={t("itemsPage.massEdit.editSelected") ?? "Edit selected"}
-            isDarkTheme={isDarkTheme}
-          >
+          <Tooltip title={t("itemsPage.massEdit.editSelected") ?? "Edit selected"} placement="top">
             <Button
               variant={selectedItems.size === 0 ? "secondary" : "primary"}
               onClick={onOpenMassEditModal}

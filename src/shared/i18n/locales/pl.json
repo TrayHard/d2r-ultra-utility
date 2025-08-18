@@ -325,6 +325,16 @@
       "allLoaded": "Wszystkie ustawienia zostały pomyślnie wczytane"
     }
   },
+  "window": {
+    "minimize": "Zminimalizuj",
+    "maximize": "Zmaksymalizuj",
+    "close": "Zamknij"
+  },
+  "triState": {
+    "off": "Wyłączone",
+    "noChange": "Bez zmian",
+    "on": "Włączone"
+  },
   "startupLoadModal": {
     "title": "Wczytać ustawienia z plików?",
     "message": "Wykryto ścieżkę gry. Czy chcesz teraz wczytać ustawienia dla wszystkich kart z plików gry?",
@@ -385,6 +395,34 @@
       "profileImported": "Profil zaimportowano. Możesz go wybrać z listy profili.",
       "importError": "Błąd podczas importu profilu"
     }
+  },
+  "itemsPage": {
+    "settings": { "title": "Ustawienia przedmiotów" },
+    "sorting": {
+      "byType": "Według typu",
+      "byName": "Według nazwy",
+      "byLevel": "Według poziomu"
+    },
+    "massEdit": {
+      "selectAll": "Zaznacz wszystko",
+      "deselectAll": "Odznacz wszystko",
+      "editSelected": "Edytuj zaznaczone"
+    },
+    "filters": {
+      "reqLevelTooltip": "Podaj swój poziom, aby wyświetlać tylko odpowiednie przedmioty",
+      "reqStrengthTooltip": "Podaj swoją siłę, aby wyświetlać tylko odpowiednie przedmioty",
+      "reqDexterityTooltip": "Podaj swoją zręczność, aby wyświetlać tylko odpowiednie przedmioty"
+    }
+  },
+  "window": {
+    "minimize": "Zminimalizuj",
+    "maximize": "Zmaksymalizuj",
+    "close": "Zamknij"
+  },
+  "triState": {
+    "off": "Wyłączone",
+    "noChange": "Bez zmian",
+    "on": "Włączone"
   }
 }
 

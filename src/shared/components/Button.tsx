@@ -1,4 +1,5 @@
 import React from "react";
+import { Tooltip } from "antd";
 import Icon from "@mdi/react";
 import { mdiLoading } from "@mdi/js";
 
@@ -26,6 +27,7 @@ const Button: React.FC<ButtonProps> = ({
   children,
   disabled,
   className = "",
+  title,
   ...props
 }) => {
   const baseClasses =
@@ -93,7 +95,7 @@ const Button: React.FC<ButtonProps> = ({
     );
   };
 
-  return (
+  const buttonEl = (
     <button
       className={`
         ${baseClasses}
@@ -114,6 +116,16 @@ const Button: React.FC<ButtonProps> = ({
       {iconPosition === "right" && renderIcon()}
     </button>
   );
+
+  if (title) {
+    return (
+      <Tooltip title={title} placement="top">
+        {buttonEl}
+      </Tooltip>
+    );
+  }
+
+  return buttonEl;
 };
 
 export default Button;

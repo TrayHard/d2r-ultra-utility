@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useSettings } from "../../app/providers/SettingsContext";
 import { localeOptions } from "../../shared/constants";
 import Collapse from "../../shared/components/Collapse";
-import Tooltip from "../../shared/components/Tooltip";
+import { Tooltip } from "antd";
 import MultipleLeveledLocales from "../../shared/components/MultipleLeveledLocales";
 import ColorHint from "../../shared/components/ColorHint";
 import type { CommonItemSettings, PotionGroupSettings } from "../../app/providers/SettingsContext";
@@ -474,12 +474,11 @@ const CommonTab: React.FC<CommonTabProps> = ({
   ) => (
     <div className="flex items-stretch space-x-3">
       <Tooltip
-        content={`${
+        title={`${
           itemSettings.enabled ? t("commonPage.hide") : t("commonPage.show")
         } ${t(`commonPage.${titleKey}`)}`}
-        isDarkTheme={isDarkTheme}
-        position="top"
-        delay={300}
+        placement="top"
+        mouseEnterDelay={0.3}
       >
         <div
           className={`w-12 flex items-center justify-center cursor-pointer select-none transition-all duration-200 rounded-md p-2 ${
