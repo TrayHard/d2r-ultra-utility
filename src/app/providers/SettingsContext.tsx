@@ -383,6 +383,86 @@ const getDefaultPotionGroupSettings = (
   activeTab: 0,
 });
 
+// Вспомогательная функция для заполнения всех локалей одинаковым значением
+const createFilledLocales = (value: string): Locales => ({
+  enUS: value,
+  ruRU: value,
+  zhTW: value,
+  deDE: value,
+  esES: value,
+  frFR: value,
+  itIT: value,
+  koKR: value,
+  plPL: value,
+  esMX: value,
+  jaJP: value,
+  ptBR: value,
+  zhCN: value,
+});
+
+// Дефолтные настройки для маркеров класса сложности (Normal/Exceptional/Elite)
+const getDefaultDifficultyClassMarkersSettings = (): PotionGroupSettings => ({
+  enabled: false,
+  levels: [
+    { enabled: false, locales: createFilledLocales("[n]") }, // Normal
+    { enabled: false, locales: createFilledLocales("[x]") }, // Exceptional
+    { enabled: false, locales: createFilledLocales("[e]") }, // Elite
+  ],
+  activeTab: 0,
+});
+
+// Проверка, что все локали пустые
+const areAllLocalesEmpty = (locales: Locales): boolean =>
+  Object.values(locales).every((v) => !v || v.trim() === "");
+
+// Миграция ItemsSettings: заполняем дефолт для difficultyClassMarkers, если локали пустые
+const migrateItemsSettings = (oldItems: any): ItemsSettings => {
+  const defaultItems = getDefaultItemsSettings();
+
+  const oldDifficulty = oldItems?.difficultyClassMarkers;
+  const defaultDifficulty = getDefaultDifficultyClassMarkersSettings();
+
+  const migratedDifficulty: PotionGroupSettings = {
+    enabled: oldDifficulty?.enabled ?? defaultDifficulty.enabled,
+    activeTab: oldDifficulty?.activeTab ?? 0,
+    levels: [0, 1, 2].map((index) => {
+      const oldLevel = oldDifficulty?.levels?.[index];
+      const defaultLevel = defaultDifficulty.levels[index];
+      const locales = oldLevel?.locales
+        ? areAllLocalesEmpty(oldLevel.locales)
+          ? defaultLevel.locales
+          : oldLevel.locales
+        : defaultLevel.locales;
+      return {
+        enabled: oldLevel?.enabled ?? false,
+        locales,
+      } as PotionLevelSettings;
+    }),
+  };
+
+  // Качество трогаем минимально — сохраняем как было либо дефолт из текущей версии
+  const oldQuality = oldItems?.qualityPrefixes;
+  const migratedQuality: PotionGroupSettings = oldQuality
+    ? {
+        enabled: oldQuality.enabled ?? false,
+        activeTab: oldQuality.activeTab ?? 0,
+        levels: (oldQuality.levels || defaultItems.qualityPrefixes.levels).map(
+          (lvl: PotionLevelSettings, i: number) => ({
+            enabled: lvl?.enabled ?? false,
+            locales:
+              lvl?.locales || defaultItems.qualityPrefixes.levels[i]?.locales,
+          })
+        ),
+      }
+    : defaultItems.qualityPrefixes;
+
+  return {
+    difficultyClassMarkers: migratedDifficulty,
+    qualityPrefixes: migratedQuality,
+    items: oldItems?.items || {},
+  } as ItemsSettings;
+};
+
 // Дефолтные настройки для CommonTab
 const getDefaultCommonSettings = (): CommonSettings => ({
   arrows: getDefaultCommonItemSettings(),
@@ -428,7 +508,7 @@ const getDefaultItemSettings = (): ItemSettings => ({
 });
 
 const getDefaultItemsSettings = (): ItemsSettings => ({
-  difficultyClassMarkers: getDefaultPotionGroupSettings(3), // 3 уровня: Normal, Exceptional, Elite
+  difficultyClassMarkers: getDefaultDifficultyClassMarkersSettings(), // 3 уровня: Normal, Exceptional, Elite
   qualityPrefixes: getDefaultPotionGroupSettings(2), // 2 уровня: Damaged, Superior
   items: {}, // Начинаем с пустого объекта, предметы будут добавляться по мере необходимости
 });
@@ -690,10 +770,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
             ? parsedSettings.gems
             : getDefaultGemSettings(),
           items: parsedSettings.items
-            ? {
-                ...parsedSettings.items,
-                items: parsedSettings.items.items || {},
-              }
+            ? migrateItemsSettings(parsedSettings.items)
             : getDefaultItemsSettings(),
         };
         setSettings(migratedSettings);
@@ -724,10 +801,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
               ? profile.settings.gems
               : getDefaultGemSettings(),
             items: profile.settings.items
-              ? {
-                  ...profile.settings.items,
-                  items: profile.settings.items.items || {},
-                }
+              ? migrateItemsSettings(profile.settings.items)
               : getDefaultItemsSettings(),
           },
         }));
@@ -1125,6 +1199,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
               gems: parsedSettings.gems
                 ? parsedSettings.gems
                 : getDefaultGemSettings(),
+              items: parsedSettings.items
+                ? migrateItemsSettings(parsedSettings.items)
+                : getDefaultItemsSettings(),
             };
             setSettings(migratedSettings);
           } catch (error) {
@@ -1190,7 +1267,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
             ? profileData.settings.gems
             : getDefaultGemSettings(),
           items: profileData.settings.items
-            ? profileData.settings.items
+            ? migrateItemsSettings(profileData.settings.items)
             : getDefaultItemsSettings(),
         };
 
