@@ -310,7 +310,7 @@
     "textWorker": {
       "readFromFiles": "Считать из файлов",
       "apply": "Применить к файлам",
-      "readFromFilesFor": "Считать настройки: {{tab}}",
+      "readFromFilesFor": "Считать из файлов: {{tab}}",
       "applyFor": "Применить настройки: {{tab}}"
     },
     "confirmModal": {
@@ -321,33 +321,40 @@
     }
   },
   "profiles": {
+    "sectionTitle": "Профили",
+    "filesSectionTitle": "Работа с файлами",
     "selectProfile": "Выберите профиль",
     "createProfile": "Создать профиль",
     "saveProfile": "Сохранить профиль",
     "renameProfile": "Переименовать профиль",
     "deleteProfile": "Удалить профиль",
-    "exportProfile": "Экспортировать профиль",
-    "importProfile": "Импортировать профиль",
+    "exportProfile": "Экспортировать",
+    "importProfile": "Импортировать",
     "profileName": "Название профиля",
+    "currentProfile": "Текущий профиль",
     "enterProfileName": "Введите название профиля",
     "create": "Создать",
     "rename": "Переименовать",
     "delete": "Удалить",
     "cancel": "Отмена",
     "deleteConfirmation": "Вы уверены, что хотите удалить профиль \"{{name}}\"? Это действие нельзя отменить.",
+    "saveConfirmation": "Сохранить изменения в профиль \"{{name}}\"?",
     "messages": {
       "success": "Успешно",
       "error": "Ошибка",
+      "profileSaved": "Профиль \"{{name}}\" сохранен",
+      "saveError": "Ошибка при сохранении профиля",
       "profileCreated": "Профиль \"{{name}}\" создан",
       "profileRenamed": "Профиль переименован в \"{{name}}\"",
       "profileDeleted": "Профиль \"{{name}}\" удален",
       "profileExported": "Профиль экспортирован",
-      "profileImported": "Профиль импортирован",
+      "profileImported": "Профиль импортирован. Вы можете выбрать его в списке профилей.",
       "importError": "Ошибка при импорте профиля"
     }
   },
   "messages": {
     "success": {
+      "allLoaded": "Все настройки успешно загружены",
       "filesLoaded": "Файлы загружены",
       "localesLoadedText": "Успешно загружено {{count}} элементов локализации, обработано {{processedRunes}} рун",
       "changesSaved": "Изменения сохранены",
@@ -376,6 +383,13 @@
       "highlightLoadError": "Ошибка загрузки настроек подсветки",
       "itemsApplyFailed": "Не удалось применить настройки предметов"
     }
+  },
+  "startupLoadModal": {
+    "title": "Загрузить настройки из файлов?",
+    "message": "Обнаружен путь к клиенту. Хотите загрузить настройки для всех вкладок из файлов игры сейчас?",
+    "cancel": "Нет",
+    "confirm": "Загрузить всё",
+    "dontAsk": "Больше не спрашивать"
   },
   "itemsPage": {
     "loadFromFiles": "Загрузить из файлов",

@@ -1,10 +1,11 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import MainSpaceBody, { TabType } from "./MainSpaceBody.tsx";
 import Tabs, { TabItem } from "../../../shared/components/Tabs.tsx";
 import AppToolbar from "../../../shared/components/AppToolbar.tsx";
 import Modal from "../../../shared/components/Modal.tsx";
 import Button from "../../../shared/components/Button.tsx";
+import Checkbox from "../../../shared/components/Checkbox.tsx";
 import { useSettings } from "../../providers/SettingsContext.tsx";
 import { useGlobalMessage } from "../../../shared/components/Message/MessageProvider.tsx";
 import { useTextWorker } from "../../../shared/hooks/useTextWorker.ts";
@@ -12,6 +13,7 @@ import { useCommonItemsWorker } from "../../../shared/hooks/useCommonItemsWorker
 import { useGemsWorker } from "../../../shared/hooks/useGemsWorker.ts";
 import { useItemsWorker } from "../../../shared/hooks/useItemsWorker.ts";
 import basesData from "../../../pages/items/bases.json";
+import { loadSavedSettings } from "../../../shared/utils/commonUtils.ts";
 
 interface MainSpaceProps {
   isDarkTheme: boolean;
@@ -21,6 +23,9 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<TabType>("common");
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showInitialLoadModal, setShowInitialLoadModal] = useState(false);
+  const [isBulkLoading, setIsBulkLoading] = useState(false);
+  const [dontAskAgain, setDontAskAgain] = useState(false);
 
   // Хуки для работы с настройками
   const {
@@ -47,7 +52,7 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     importProfile,
   } = useSettings();
 
-  const { sendMessage } = useGlobalMessage();
+  const { sendMessage, muteTypes, unmute } = useGlobalMessage();
 
   // Хук для рун
   const {
@@ -61,7 +66,10 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       message: string,
       type?: "success" | "error" | "warning" | "info",
       title?: string
-    ) => sendMessage(message, { type, title }),
+    ) => {
+      if (isBulkLoading && type === "success") return;
+      sendMessage(message, { type, title });
+    },
     t,
     () => settings.runes
   );
@@ -79,7 +87,10 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       message: string,
       type?: "success" | "error" | "warning" | "info",
       title?: string
-    ) => sendMessage(message, { type, title }),
+    ) => {
+      if (isBulkLoading && type === "success") return;
+      sendMessage(message, { type, title });
+    },
     t,
     getCommonSettings
   );
@@ -97,7 +108,10 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       message: string,
       type?: "success" | "error" | "warning" | "info",
       title?: string
-    ) => sendMessage(message, { type, title }),
+    ) => {
+      if (isBulkLoading && type === "success") return;
+      sendMessage(message, { type, title });
+    },
     t,
     getGemSettings
   );
@@ -127,7 +141,10 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       message: string,
       type?: "success" | "error" | "warning" | "info",
       title?: string
-    ) => sendMessage(message, { type, title }),
+    ) => {
+      if (isBulkLoading && type === "success") return;
+      sendMessage(message, { type, title });
+    },
     t,
     getItemsSettings,
     getSelectedLocales,
@@ -175,6 +192,46 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       : activeTab === "items"
       ? applyItemsChanges
       : () => {};
+
+  // Показать модалку предложения загрузки при старте, если путь известен
+  useEffect(() => {
+    const saved = loadSavedSettings();
+    const suppressed = localStorage.getItem("d2r-startup-load-dont-ask") === "true";
+    if (saved?.homeDirectory && !suppressed) {
+      setShowInitialLoadModal(true);
+    }
+  }, []);
+
+  const handleConfirmInitialLoad = async () => {
+    setShowInitialLoadModal(false);
+    setIsBulkLoading(true);
+    muteTypes(["success"]);
+    if (dontAskAgain) {
+      localStorage.setItem("d2r-startup-load-dont-ask", "true");
+    }
+    const results = await Promise.allSettled([
+      readCommonItemsFromFiles(),
+      readItemsFromFiles(),
+      readRunesFromFiles(),
+      readGemsFromFiles(),
+    ]);
+    setIsBulkLoading(false);
+    unmute();
+    const hasError = results.some((r) => r.status === "rejected");
+    if (!hasError) {
+      sendMessage(
+        t("messages.success.allLoaded") || "All settings loaded successfully",
+        { type: "success", title: t("messages.success.filesLoaded") }
+      );
+    }
+  };
+
+  const handleCancelInitialLoad = () => {
+    setShowInitialLoadModal(false);
+    if (dontAskAgain) {
+      localStorage.setItem("d2r-startup-load-dont-ask", "true");
+    }
+  };
 
   const handleApplyClick = () => {
     setShowConfirmModal(true);
@@ -289,6 +346,52 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
               size="sm"
             >
               {t("runePage.confirmModal.confirm")}
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Модалка при запуске для загрузки всех настроек из файлов */}
+      <Modal
+        isOpen={showInitialLoadModal}
+        onClose={handleCancelInitialLoad}
+        title={t("startupLoadModal.title")}
+        isDarkTheme={isDarkTheme}
+        size="sm"
+      >
+        <div className="space-y-4">
+          <p
+            className={`text-sm ${
+              isDarkTheme ? "text-gray-300" : "text-gray-600"
+            }`}
+          >
+            {t("startupLoadModal.message")}
+          </p>
+          <div className="pt-1">
+            <Checkbox
+              checked={dontAskAgain}
+              onChange={setDontAskAgain}
+              isDarkTheme={isDarkTheme}
+              size="md"
+              label={t("startupLoadModal.dontAsk")}
+            />
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button
+              variant="secondary"
+              onClick={handleCancelInitialLoad}
+              isDarkTheme={isDarkTheme}
+              size="sm"
+            >
+              {t("startupLoadModal.cancel")}
+            </Button>
+            <Button
+              variant="success"
+              onClick={handleConfirmInitialLoad}
+              isDarkTheme={isDarkTheme}
+              size="sm"
+            >
+              {t("startupLoadModal.confirm")}
             </Button>
           </div>
         </div>

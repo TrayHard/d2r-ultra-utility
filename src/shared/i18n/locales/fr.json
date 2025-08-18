@@ -303,6 +303,18 @@
       "confirm": "Appliquer"
     }
   },
+  "messages": {
+    "success": {
+      "allLoaded": "Tous les paramètres ont été chargés avec succès"
+    }
+  },
+  "startupLoadModal": {
+    "title": "Charger les paramètres depuis les fichiers ?",
+    "message": "Un chemin de jeu a été détecté. Voulez-vous charger maintenant les paramètres pour tous les onglets depuis les fichiers du jeu ?",
+    "cancel": "Plus tard",
+    "confirm": "Tout charger",
+    "dontAsk": "Ne plus demander"
+  },
   "buttons": {
     "changePath": "Changer le chemin",
     "back": "Retour",
@@ -324,6 +336,38 @@
   "sorting": {
     "name": "Nom",
     "level": "Niveau"
+  },
+  "profiles": {
+    "filesSectionTitle": "Opérations sur les fichiers",
+    "sectionTitle": "Profils",
+    "selectProfile": "Sélectionner un profil",
+    "createProfile": "Créer un profil",
+    "saveProfile": "Enregistrer le profil",
+    "renameProfile": "Renommer le profil",
+    "deleteProfile": "Supprimer le profil",
+    "exportProfile": "Exporter",
+    "importProfile": "Importer",
+    "profileName": "Nom du profil",
+    "currentProfile": "Profil actuel",
+    "enterProfileName": "Saisissez le nom du profil",
+    "create": "Créer",
+    "rename": "Renommer",
+    "delete": "Supprimer",
+    "cancel": "Annuler",
+    "saveConfirmation": "Enregistrer les modifications dans le profil \"{{name}}\" ?",
+    "deleteConfirmation": "Êtes-vous sûr de vouloir supprimer le profil \"{{name}}\" ? Cette action est irréversible.",
+    "messages": {
+      "success": "Succès",
+      "error": "Erreur",
+      "profileSaved": "Profil \"{{name}}\" enregistré",
+      "saveError": "Erreur lors de l'enregistrement du profil",
+      "profileCreated": "Profil \"{{name}}\" créé",
+      "profileRenamed": "Profil renommé en \"{{name}}\"",
+      "profileDeleted": "Profil \"{{name}}\" supprimé",
+      "profileExported": "Profil exporté",
+      "profileImported": "Profil importé. Vous pouvez le sélectionner dans la liste des profils.",
+      "importError": "Erreur lors de l'import du profil"
+    }
   }
 }
 

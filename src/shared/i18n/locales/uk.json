@@ -326,33 +326,40 @@
     }
   },
   "profiles": {
+    "sectionTitle": "Профілі",
+    "filesSectionTitle": "Робота з файлами",
     "selectProfile": "Виберіть профіль",
     "createProfile": "Створити профіль",
     "saveProfile": "Зберегти профіль",
     "renameProfile": "Перейменувати профіль",
     "deleteProfile": "Видалити профіль",
-    "exportProfile": "Експортувати профіль",
-    "importProfile": "Імпортувати профіль",
+    "exportProfile": "Експортувати",
+    "importProfile": "Імпортувати",
     "profileName": "Назва профілю",
+    "currentProfile": "Поточний профіль",
     "enterProfileName": "Введіть назву профілю",
     "create": "Створити",
     "rename": "Перейменувати",
     "delete": "Видалити",
     "cancel": "Скасувати",
+    "saveConfirmation": "Зберегти зміни у профіль \"{{name}}\"?",
     "deleteConfirmation": "Ви впевнені, що хочете видалити профіль \"{{name}}\"? Цю дію не можна скасувати.",
     "messages": {
       "success": "Успіх",
       "error": "Помилка",
+      "profileSaved": "Профіль \"{{name}}\" збережено",
+      "saveError": "Помилка при збереженні профілю",
       "profileCreated": "Профіль \"{{name}}\" створено",
       "profileRenamed": "Профіль перейменовано на \"{{name}}\"",
       "profileDeleted": "Профіль \"{{name}}\" видалено",
       "profileExported": "Профіль експортовано",
-      "profileImported": "Профіль імпортовано",
+      "profileImported": "Профіль імпортовано. Ви можете вибрати його зі списку профілів.",
       "importError": "Помилка імпорту профілю"
     }
   },
   "messages": {
     "success": {
+      "allLoaded": "Усі налаштування успішно завантажено",
       "filesLoaded": "Файли завантажено",
       "localesLoadedText": "Успішно завантажено {{count}} елементів локалізації, оброблено {{processedRunes}} рун",
       "changesSaved": "Зміни збережено",
@@ -381,6 +388,13 @@
       "highlightLoadError": "Помилка завантаження налаштувань підсвітки",
       "itemsApplyFailed": "Не вдалося застосувати налаштування предметів"
     }
+  },
+  "startupLoadModal": {
+    "title": "Завантажити налаштування з файлів?",
+    "message": "Знайдено шлях до гри. Завантажити налаштування для всіх вкладок з файлів гри зараз?",
+    "cancel": "Ні",
+    "confirm": "Завантажити все",
+    "dontAsk": "Більше не питати"
   },
   "itemsPage": {
     "loadFromFiles": "Завантажити з файлів",

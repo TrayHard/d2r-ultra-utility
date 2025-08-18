@@ -326,33 +326,40 @@
     }
   },
   "profiles": {
+    "sectionTitle": "Profile",
+    "filesSectionTitle": "Dateioperationen",
     "selectProfile": "Profil auswählen",
     "createProfile": "Profil erstellen",
     "saveProfile": "Profil speichern",
     "renameProfile": "Profil umbenennen",
     "deleteProfile": "Profil löschen",
-    "exportProfile": "Profil exportieren",
-    "importProfile": "Profil importieren",
+    "exportProfile": "Exportieren",
+    "importProfile": "Importieren",
     "profileName": "Profilname",
+    "currentProfile": "Aktuelles Profil",
     "enterProfileName": "Profilnamen eingeben",
     "create": "Erstellen",
     "rename": "Umbenennen",
     "delete": "Löschen",
     "cancel": "Abbrechen",
+    "saveConfirmation": "Änderungen in Profil \"{{name}}\" speichern?",
     "deleteConfirmation": "Profil \"{{name}}\" wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
     "messages": {
       "success": "Erfolg",
       "error": "Fehler",
+      "profileSaved": "Profil \"{{name}}\" gespeichert",
+      "saveError": "Fehler beim Speichern des Profils",
       "profileCreated": "Profil \"{{name}}\" erstellt",
       "profileRenamed": "Profil in \"{{name}}\" umbenannt",
       "profileDeleted": "Profil \"{{name}}\" gelöscht",
       "profileExported": "Profil exportiert",
-      "profileImported": "Profil importiert",
+      "profileImported": "Profil importiert. Sie können es in der Profilliste auswählen.",
       "importError": "Fehler beim Import des Profils"
     }
   },
   "messages": {
     "success": {
+      "allLoaded": "Alle Einstellungen wurden erfolgreich geladen",
       "filesLoaded": "Dateien geladen",
       "localesLoadedText": "{{count}} Lokalisierungselemente geladen, {{processedRunes}} Runen verarbeitet",
       "changesSaved": "Änderungen gespeichert",
@@ -381,6 +388,13 @@
       "highlightLoadError": "Fehler beim Laden der Hervorhebung",
       "itemsApplyFailed": "Anwenden der Gegenstandseinstellungen fehlgeschlagen"
     }
+  },
+  "startupLoadModal": {
+    "title": "Einstellungen aus Dateien laden?",
+    "message": "Ein Spielpfad wurde erkannt. Möchten Sie jetzt die Einstellungen für alle Tabs aus den Spieldateien laden?",
+    "cancel": "Später",
+    "confirm": "Alles laden",
+    "dontAsk": "Nicht mehr fragen"
   },
   "itemsPage": {
     "loadFromFiles": "Aus Dateien laden",
