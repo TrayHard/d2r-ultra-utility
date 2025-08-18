@@ -288,6 +288,7 @@ const ItemsList: React.FC<ItemsListProps> = ({
             className="!w-14 !h-full !p-0"
           />
 
+          {/* Кнопка настроек */}
           <div className="ml-auto">
             <Button
               variant="secondary"
@@ -296,7 +297,7 @@ const ItemsList: React.FC<ItemsListProps> = ({
               isDarkTheme={isDarkTheme}
               icon={mdiTune}
               iconSize={0.8}
-              className="!w-10 !h-full !p-0"
+              className={`!w-10 !h-full !p-0 ${isDarkTheme ? "!bg-black-700 !border-gray-600" : "!bg-gray-200 !border-gray-300"}`}
             />
           </div>
         </div>
