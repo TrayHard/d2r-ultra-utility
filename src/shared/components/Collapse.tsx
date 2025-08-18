@@ -11,6 +11,7 @@ interface CollapseProps {
   className?: string;
   disabled?: boolean;
   icon?: string; // Путь к изображению иконки
+  iconClassName?: string; // Доп. классы для иконки
 }
 
 const Collapse: React.FC<CollapseProps> = ({
@@ -22,6 +23,7 @@ const Collapse: React.FC<CollapseProps> = ({
   className = "",
   disabled = false,
   icon,
+  iconClassName,
 }) => {
   const [internalIsOpen, setInternalIsOpen] = useState(false);
 
@@ -69,7 +71,7 @@ const Collapse: React.FC<CollapseProps> = ({
             <img
               src={icon}
               alt=""
-              className="w-6 h-6 mr-2 object-contain flex-shrink-0"
+              className={`w-6 h-6 mr-2 object-contain flex-shrink-0 ${iconClassName || ""}`}
               draggable={false}
             />
           )}
