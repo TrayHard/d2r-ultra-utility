@@ -363,6 +363,16 @@
       "importError": "Fehler beim Import des Profils"
     }
   },
+  "files": {
+    "readAll": "Aus Dateien lesen (alle)",
+    "applyAll": "In Dateien anwenden (alle)",
+    "read": "Lesen",
+    "apply": "Anwenden",
+    "groups": {
+      "current": "Aktueller Tab",
+      "all": "Gesamte App"
+    }
+  },
   "messages": {
     "success": {
       "allLoaded": "Alle Einstellungen wurden erfolgreich geladen",

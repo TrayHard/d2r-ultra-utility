@@ -13,6 +13,7 @@ import Dropdown from "./Dropdown";
 import Modal from "./Modal";
 import { useGlobalMessage } from "./Message/MessageProvider";
 import { Profile } from "../../app/providers/SettingsContext";
+import Tooltip from "./Tooltip";
 
 interface ProfileManagerProps {
   isDarkTheme: boolean;
@@ -145,7 +146,7 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
   }));
 
   return (
-    <div className="space-y-1">
+    <div className="flex flex-col items-start justify-start gap-1">
       <div
         className={`text-xs font-semibold uppercase tracking-wide ${
           isDarkTheme ? "text-gray-300" : "text-gray-700"
@@ -154,7 +155,7 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
         {t("profiles.sectionTitle")}
       </div>
       <div
-        className={`flex items-center gap-2 flex-wrap rounded-md p-2 ${
+        className={`flex items-center gap-2 flex-wrap rounded-md h-[80px] p-4 ${
           isDarkTheme
             ? "bg-gray-800 border border-gray-700"
             : "bg-gray-100 border border-gray-200"
@@ -198,6 +199,12 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
 
         <div className="flex items-center gap-2">
           {/* Save Profile Button */}
+          <Tooltip
+            content={t("profiles.saveProfile")}
+            isDarkTheme={isDarkTheme}
+            position="top"
+            delay={300}
+          > 
           <Button
             variant="info"
             onClick={() => activeProfileId && setShowSaveConfirm(true)}
@@ -205,34 +212,42 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
             isDarkTheme={isDarkTheme}
             icon={mdiContentSave}
             size="sm"
-            title={t("profiles.saveProfile")}
-          />
+            />
+          </Tooltip>
         </div>
 
         {/* Import Profile Button */}
-        <Button
-          variant="secondary"
-          onClick={() => fileInputRef.current?.click()}
+        <Tooltip
+          content={t("profiles.importProfile")}
           isDarkTheme={isDarkTheme}
-          icon={mdiFileImport}
-          size="sm"
-          title={t("profiles.importProfile")}
-        >
-          {t("profiles.importProfile")}
-        </Button>
+          position="top"
+          delay={300}
+        > 
+          <Button
+            variant="secondary"
+            onClick={() => fileInputRef.current?.click()}
+            isDarkTheme={isDarkTheme}
+            icon={mdiFileImport}
+            size="sm"
+          />
+        </Tooltip>
 
         {/* Export Profile Button */}
-        <Button
-          variant="secondary"
-          onClick={handleExportProfile}
-          disabled={!activeProfileId}
+        <Tooltip
+          content={t("profiles.exportProfile")}
           isDarkTheme={isDarkTheme}
-          icon={mdiFileExport}
-          size="sm"
-          title={t("profiles.exportProfile")}
-        >
-          {t("profiles.exportProfile")}
-        </Button>
+          position="top"
+          delay={300}
+        > 
+          <Button
+            variant="secondary"
+            onClick={handleExportProfile}
+            disabled={!activeProfileId}
+            isDarkTheme={isDarkTheme}
+            icon={mdiFileExport}
+            size="sm"
+          />
+        </Tooltip>
 
         {/* Hidden File Input */}
         <input

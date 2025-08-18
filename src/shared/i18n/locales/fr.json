@@ -309,6 +309,16 @@
       "confirm": "Appliquer"
     }
   },
+  "files": {
+    "readAll": "Lire depuis les fichiers (tout)",
+    "applyAll": "Appliquer aux fichiers (tout)",
+    "read": "Lire",
+    "apply": "Appliquer",
+    "groups": {
+      "current": "Onglet actuel",
+      "all": "Toute l'appli"
+    }
+  },
   "messages": {
     "success": {
       "allLoaded": "Tous les paramètres ont été chargés avec succès"

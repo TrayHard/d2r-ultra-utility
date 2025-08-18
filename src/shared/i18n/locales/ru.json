@@ -316,8 +316,9 @@
     "textWorker": {
       "readFromFiles": "Считать из файлов",
       "apply": "Применить к файлам",
-      "readFromFilesFor": "Считать из файлов: {{tab}}",
-      "applyFor": "Применить настройки: {{tab}}"
+      "readFromFilesFor": "Считать: {{tab}}",
+      "applyFor": "Применить: {{tab}}",
+      "readConfirmMessage": "Считать настройки из файлов? Несохраненные изменения в текущих настройках могут быть перезаписаны."
     },
     "confirmModal": {
       "title": "Подтверждение применения",
@@ -328,7 +329,7 @@
   },
   "profiles": {
     "sectionTitle": "Профили",
-    "filesSectionTitle": "Работа с файлами",
+    "filesSectionTitle": "Работа с файлами в игре",
     "selectProfile": "Выберите профиль",
     "createProfile": "Создать профиль",
     "saveProfile": "Сохранить профиль",
@@ -356,6 +357,16 @@
       "profileExported": "Профиль экспортирован",
       "profileImported": "Профиль импортирован. Вы можете выбрать его в списке профилей.",
       "importError": "Ошибка при импорте профиля"
+    }
+  },
+  "files": {
+    "readAll": "Считать из файлов (всё)",
+    "applyAll": "Применить в файлах (всё)",
+    "read": "Считать",
+    "apply": "Применить",
+    "groups": {
+      "current": "Текущая вкладка",
+      "all": "Всё приложение"
     }
   },
   "messages": {
