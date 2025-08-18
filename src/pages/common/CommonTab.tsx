@@ -4,6 +4,9 @@ import { useSettings } from "../../app/providers/SettingsContext";
 import { localeOptions } from "../../shared/constants";
 import Collapse from "../../shared/components/Collapse";
 import { Tooltip } from "antd";
+import Switch from "../../shared/components/Switch";
+import Icon from "@mdi/react";
+import { mdiEyeOutline, mdiEyeOffOutline } from "@mdi/js";
 import MultipleLeveledLocales from "../../shared/components/MultipleLeveledLocales";
 import ColorHint from "../../shared/components/ColorHint";
 import type { CommonItemSettings, PotionGroupSettings } from "../../app/providers/SettingsContext";
@@ -90,79 +93,46 @@ const CommonTab: React.FC<CommonTabProps> = ({
   // Обработчики для простых элементов
   const handleArrowsToggle = (enabled: boolean) => {
     updateCommonItemSettings("arrows", { enabled });
-    if (!enabled) {
-      setCollapseStates((prev) => ({ ...prev, arrows: false }));
-    }
   };
 
   const handleBoltsToggle = (enabled: boolean) => {
     updateCommonItemSettings("bolts", { enabled });
-    if (!enabled) {
-      setCollapseStates((prev) => ({ ...prev, bolts: false }));
-    }
   };
 
   const handleStaminaPotionsToggle = (enabled: boolean) => {
     updateCommonItemSettings("staminaPotions", { enabled });
-    if (!enabled) {
-      setCollapseStates((prev) => ({ ...prev, staminaPotions: false }));
-    }
   };
 
   const handleAntidotesToggle = (enabled: boolean) => {
     updateCommonItemSettings("antidotes", { enabled });
-    if (!enabled) {
-      setCollapseStates((prev) => ({ ...prev, antidotes: false }));
-    }
   };
 
   const handleThawingPotionsToggle = (enabled: boolean) => {
     updateCommonItemSettings("thawingPotions", { enabled });
-    if (!enabled) {
-      setCollapseStates((prev) => ({ ...prev, thawingPotions: false }));
-    }
   };
 
   const handleAmuletsToggle = (enabled: boolean) => {
     updateCommonItemSettings("amulets", { enabled });
-    if (!enabled) {
-      setCollapseStates((prev) => ({ ...prev, amulets: false }));
-    }
   };
 
   const handleRingsToggle = (enabled: boolean) => {
     updateCommonItemSettings("rings", { enabled });
-    if (!enabled) {
-      setCollapseStates((prev) => ({ ...prev, rings: false }));
-    }
   };
 
   const handleJewelsToggle = (enabled: boolean) => {
     updateCommonItemSettings("jewels", { enabled });
-    if (!enabled) {
-      setCollapseStates((prev) => ({ ...prev, jewels: false }));
-    }
   };
 
   const handleSmallCharmsToggle = (enabled: boolean) => {
     updateCommonItemSettings("smallCharms", { enabled });
-    if (!enabled) {
-      setCollapseStates((prev) => ({ ...prev, smallCharms: false }));
-    }
   };
 
   const handleLargeCharmsToggle = (enabled: boolean) => {
     updateCommonItemSettings("largeCharms", { enabled });
-    if (!enabled) {
-      setCollapseStates((prev) => ({ ...prev, largeCharms: false }));
-    }
   };
 
   const handleGrandCharmsToggle = (enabled: boolean) => {
     updateCommonItemSettings("grandCharms", { enabled });
-    if (!enabled) {
-      setCollapseStates((prev) => ({ ...prev, grandCharms: false }));
-    }
   };
 
   // Обработчики для коллапсов
@@ -292,13 +262,26 @@ const CommonTab: React.FC<CommonTabProps> = ({
       | "jewels"
       | "smallCharms"
       | "largeCharms"
-      | "grandCharms"
+      | "grandCharms",
+    toggleHandler: (enabled: boolean) => void
   ) => {
     return (
       <div className="space-y-4">
-        {/* Предпросмотр */}
+        {/* Предпросмотр + переключатель состояния */}
         <div className="flex items-center space-x-3">
-          <div className="w-20"></div>
+          <div className="w-20">
+            <Tooltip title={t("runePage.controls.toggleItemVisibilityTooltip")} placement="top">
+              <div>
+                <Switch
+                  enabled={itemSettings.enabled}
+                  onChange={(enabled) => toggleHandler(enabled)}
+                  isDarkTheme={isDarkTheme}
+                  onIcon={<Icon path={mdiEyeOutline} size={0.55} color="#16A34A" />}
+                  offIcon={<Icon path={mdiEyeOffOutline} size={0.55} color={isDarkTheme ? "#111827" : "#6B7280"} />}
+                />
+              </div>
+            </Tooltip>
+          </div>
           <div className="flex-1 flex grow w-full">
             <div
               className={`
@@ -472,48 +455,16 @@ const CommonTab: React.FC<CommonTabProps> = ({
     itemSettings: CommonItemSettings,
     toggleHandler: (enabled: boolean) => void
   ) => (
-    <div className="flex items-stretch space-x-3">
-      <Tooltip
-        title={`${
-          itemSettings.enabled ? t("commonPage.hide") : t("commonPage.show")
-        } ${t(`commonPage.${titleKey}`)}`}
-        placement="top"
-        mouseEnterDelay={0.3}
-      >
-        <div
-          className={`w-12 flex items-center justify-center cursor-pointer select-none transition-all duration-200 rounded-md p-2 ${
-            itemSettings.enabled
-              ? isDarkTheme
-                ? "bg-gray-600/60 hover:bg-gray-500/70"
-                : "bg-gray-400/60 hover:bg-gray-500/70"
-              : isDarkTheme
-              ? "bg-gray-700/30 hover:bg-gray-900/50"
-              : "bg-gray-300/30 hover:bg-gray-500/50"
-          }`}
-          onClick={() => toggleHandler(!itemSettings.enabled)}
-        >
-          <img
-            src={getImagePath(titleKey)}
-            alt={t(`commonPage.${titleKey}`)}
-            className={`max-w-8 max-h-8 object-contain transition-opacity duration-200 ${
-              itemSettings.enabled ? "opacity-100" : "opacity-25"
-            }`}
-            draggable={false}
-          />
-        </div>
-      </Tooltip>
-      <div className="flex-1">
-        <Collapse
-          title={t(`commonPage.${titleKey}`)}
-          isDarkTheme={isDarkTheme}
-          disabled={!itemSettings.enabled}
-          isOpen={collapseStates[titleKey]}
-          onToggle={(isOpen) => handleCollapseToggle(titleKey, isOpen)}
-        >
-          {renderLocaleInputs(itemSettings, titleKey)}
-        </Collapse>
-      </div>
-    </div>
+    <Collapse
+      title={t(`commonPage.${titleKey}`)}
+      isDarkTheme={isDarkTheme}
+      icon={getImagePath(titleKey)}
+      iconClassName={itemSettings.enabled ? "opacity-100" : "opacity-30"}
+      isOpen={collapseStates[titleKey]}
+      onToggle={(isOpen) => handleCollapseToggle(titleKey, isOpen)}
+    >
+      {renderLocaleInputs(itemSettings, titleKey, toggleHandler)}
+    </Collapse>
   );
 
   // Компонент для рендеринга блока зелий с табами
