@@ -353,6 +353,7 @@
   },
   "messages": {
     "success": {
+      "allLoaded": "Alle Einstellungen wurden erfolgreich geladen",
       "filesLoaded": "Dateien geladen",
       "localesLoadedText": "{{count}} Lokalisierungselemente geladen, {{processedRunes}} Runen verarbeitet",
       "changesSaved": "Änderungen gespeichert",
@@ -381,6 +382,13 @@
       "highlightLoadError": "Fehler beim Laden der Hervorhebung",
       "itemsApplyFailed": "Anwenden der Gegenstandseinstellungen fehlgeschlagen"
     }
+  },
+  "startupLoadModal": {
+    "title": "Einstellungen aus Dateien laden?",
+    "message": "Ein Spielpfad wurde erkannt. Möchten Sie jetzt die Einstellungen für alle Tabs aus den Spieldateien laden?",
+    "cancel": "Später",
+    "confirm": "Alles laden",
+    "dontAsk": "Nicht mehr fragen"
   },
   "itemsPage": {
     "loadFromFiles": "Aus Dateien laden",

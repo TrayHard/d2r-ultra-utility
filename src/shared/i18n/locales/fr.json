@@ -303,6 +303,18 @@
       "confirm": "Appliquer"
     }
   },
+  "messages": {
+    "success": {
+      "allLoaded": "Tous les paramètres ont été chargés avec succès"
+    }
+  },
+  "startupLoadModal": {
+    "title": "Charger les paramètres depuis les fichiers ?",
+    "message": "Un chemin de jeu a été détecté. Voulez-vous charger maintenant les paramètres pour tous les onglets depuis les fichiers du jeu ?",
+    "cancel": "Plus tard",
+    "confirm": "Tout charger",
+    "dontAsk": "Ne plus demander"
+  },
   "buttons": {
     "changePath": "Changer le chemin",
     "back": "Retour",

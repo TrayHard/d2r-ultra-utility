@@ -353,6 +353,7 @@
   },
   "messages": {
     "success": {
+      "allLoaded": "All settings loaded successfully",
       "filesLoaded": "Files loaded",
       "localesLoadedText": "Successfully loaded {{count}} localization elements, processed {{processedRunes}} runes",
       "changesSaved": "Changes saved",
@@ -381,6 +382,13 @@
       "highlightLoadError": "Highlight settings loading error",
       "itemsApplyFailed": "Failed to apply items settings"
     }
+  },
+  "startupLoadModal": {
+    "title": "Load settings from files?",
+    "message": "A game path was detected. Do you want to load settings for all tabs from the game files now?",
+    "cancel": "No",
+    "confirm": "Load All",
+    "dontAsk": "Don't ask me again"
   },
   "itemsPage": {
     "loadFromFiles": "Load from Files",
