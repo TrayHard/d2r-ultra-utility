@@ -309,6 +309,16 @@
       "confirm": "Aplicar"
     }
   },
+  "files": {
+    "readAll": "Leer de archivos (todo)",
+    "applyAll": "Aplicar a archivos (todo)",
+    "read": "Leer",
+    "apply": "Aplicar",
+    "groups": {
+      "current": "Pestaña actual",
+      "all": "Toda la app"
+    }
+  },
   "messages": {
     "success": {
       "allLoaded": "Todos los ajustes se cargaron correctamente"

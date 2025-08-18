@@ -322,7 +322,8 @@
       "readFromFiles": "Read from files",
       "apply": "Apply",
       "readFromFilesFor": "Read from files: {{tab}} settings",
-      "applyFor": "Apply settings: {{tab}}"
+      "applyFor": "Apply settings: {{tab}}",
+      "readConfirmMessage": "Read settings from files? Unsaved changes in current settings may be overwritten."
     },
     "confirmModal": {
       "title": "Confirm Apply",
@@ -333,7 +334,7 @@
   },
   "profiles": {
     "sectionTitle": "Profiles",
-    "filesSectionTitle": "File Operations",
+    "filesSectionTitle": "File Operations in game",
     "selectProfile": "Select Profile",
     "createProfile": "Create Profile",
     "saveProfile": "Save Profile",
@@ -361,6 +362,16 @@
       "profileExported": "Profile exported",
       "profileImported": "Profile imported. You can select it in the profiles list.",
       "importError": "Error importing profile"
+    }
+  },
+  "files": {
+    "readAll": "Read from files (all)",
+    "applyAll": "Apply to files (all)",
+    "read": "Read",
+    "apply": "Apply",
+    "groups": {
+      "current": "Current tab",
+      "all": "Entire app"
     }
   },
   "messages": {

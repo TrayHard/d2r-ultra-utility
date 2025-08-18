@@ -1,11 +1,10 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import MainSpaceBody, { TabType } from "./MainSpaceBody.tsx";
 import Tabs, { TabItem } from "../../../shared/components/Tabs.tsx";
 import AppToolbar from "../../../shared/components/AppToolbar.tsx";
 import Modal from "../../../shared/components/Modal.tsx";
 import Button from "../../../shared/components/Button.tsx";
-import Checkbox from "../../../shared/components/Checkbox.tsx";
 import { useSettings } from "../../providers/SettingsContext.tsx";
 import { useGlobalMessage } from "../../../shared/components/Message/MessageProvider.tsx";
 import { useTextWorker } from "../../../shared/hooks/useTextWorker.ts";
@@ -13,7 +12,7 @@ import { useCommonItemsWorker } from "../../../shared/hooks/useCommonItemsWorker
 import { useGemsWorker } from "../../../shared/hooks/useGemsWorker.ts";
 import { useItemsWorker } from "../../../shared/hooks/useItemsWorker.ts";
 import basesData from "../../../pages/items/bases.json";
-import { loadSavedSettings } from "../../../shared/utils/commonUtils.ts";
+// no storage keys needed here anymore
 
 interface MainSpaceProps {
   isDarkTheme: boolean;
@@ -22,10 +21,10 @@ interface MainSpaceProps {
 const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<TabType>("common");
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [showInitialLoadModal, setShowInitialLoadModal] = useState(false);
+  const [confirmAction, setConfirmAction] = useState<
+    null | "readAll" | "applyAll" | "readCurrent" | "applyCurrent"
+  >(null);
   const [isBulkLoading, setIsBulkLoading] = useState(false);
-  const [dontAskAgain, setDontAskAgain] = useState(false);
 
   // Хуки для работы с настройками
   const {
@@ -193,22 +192,9 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       ? applyItemsChanges
       : () => {};
 
-  // Показать модалку предложения загрузки при старте, если путь известен
-  useEffect(() => {
-    const saved = loadSavedSettings();
-    const suppressed = localStorage.getItem("d2r-startup-load-dont-ask") === "true";
-    if (saved?.homeDirectory && !suppressed) {
-      setShowInitialLoadModal(true);
-    }
-  }, []);
-
-  const handleConfirmInitialLoad = async () => {
-    setShowInitialLoadModal(false);
+  const executeReadAll = useCallback(async () => {
     setIsBulkLoading(true);
     muteTypes(["success"]);
-    if (dontAskAgain) {
-      localStorage.setItem("d2r-startup-load-dont-ask", "true");
-    }
     const results = await Promise.allSettled([
       readCommonItemsFromFiles(),
       readItemsFromFiles(),
@@ -224,27 +210,43 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
         { type: "success", title: t("messages.success.filesLoaded") }
       );
     }
-  };
+  }, [
+    muteTypes,
+    readCommonItemsFromFiles,
+    readItemsFromFiles,
+    readRunesFromFiles,
+    readGemsFromFiles,
+    unmute,
+    sendMessage,
+    t,
+  ]);
 
-  const handleCancelInitialLoad = () => {
-    setShowInitialLoadModal(false);
-    if (dontAskAgain) {
-      localStorage.setItem("d2r-startup-load-dont-ask", "true");
+  const executeApplyAll = useCallback(async () => {
+    const results = await Promise.allSettled([
+      applyCommonItemsChanges(),
+      applyItemsChanges(),
+      applyRunesChanges(),
+      applyGemsChanges(),
+    ]);
+    const hasError = results.some((r) => r.status === "rejected");
+    if (!hasError) {
+      sendMessage(
+        t("messages.success.changesSaved") || "Changes saved",
+        { type: "success", title: t("messages.success.changesSaved") }
+      );
     }
+  }, [applyCommonItemsChanges, applyItemsChanges, applyRunesChanges, applyGemsChanges, sendMessage, t]);
+
+  const handleConfirm = () => {
+    const action = confirmAction;
+    setConfirmAction(null);
+    if (action === "readAll") executeReadAll();
+    else if (action === "applyAll") executeApplyAll();
+    else if (action === "readCurrent") readFromFiles();
+    else if (action === "applyCurrent") applyChanges();
   };
 
-  const handleApplyClick = () => {
-    setShowConfirmModal(true);
-  };
-
-  const handleConfirmApply = () => {
-    setShowConfirmModal(false);
-    applyChanges();
-  };
-
-  const handleCancelApply = () => {
-    setShowConfirmModal(false);
-  };
+  const handleCancel = () => setConfirmAction(null);
 
   const tabs: TabItem[] = [
     { id: "common", label: t("tabs.common") },
@@ -274,8 +276,10 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
         onProfileDelete={deleteProfile}
         onProfileExport={exportProfile}
         onProfileImport={importProfile}
-        onReadFromFiles={readFromFiles}
-        onApplyClick={handleApplyClick}
+        onReadAll={() => setConfirmAction("readAll")}
+        onApplyAll={() => setConfirmAction("applyAll")}
+        onReadCurrent={() => setConfirmAction("readCurrent")}
+        onApplyCurrent={() => setConfirmAction("applyCurrent")}
       />
 
       {/* Error Display для всех табов */}
@@ -314,11 +318,15 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
         </div>
       </div>
 
-      {/* Модальное окно подтверждения для всех табов */}
+      {/* Универсальное модальное окно подтверждения */}
       <Modal
-        isOpen={showConfirmModal}
-        onClose={handleCancelApply}
-        title={t("runePage.confirmModal.title")}
+        isOpen={!!confirmAction}
+        onClose={handleCancel}
+        title={
+          confirmAction === "readAll" || confirmAction === "readCurrent"
+            ? t("runePage.textWorker.readFromFiles")
+            : t("runePage.confirmModal.title")
+        }
         isDarkTheme={isDarkTheme}
         size="sm"
       >
@@ -328,12 +336,15 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
               isDarkTheme ? "text-gray-300" : "text-gray-600"
             }`}
           >
-            {t("runePage.confirmModal.message")}
+            {confirmAction === "readAll" || confirmAction === "readCurrent"
+              ? (t("runePage.textWorker.readConfirmMessage") ||
+                "Вы уверены, что хотите прочитать настройки из файлов? Текущие несохраненные изменения в настройках могут быть перезаписаны.")
+              : t("runePage.confirmModal.message")}
           </p>
           <div className="flex justify-end gap-2">
             <Button
               variant="secondary"
-              onClick={handleCancelApply}
+              onClick={handleCancel}
               isDarkTheme={isDarkTheme}
               size="sm"
             >
@@ -341,57 +352,13 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
             </Button>
             <Button
               variant="success"
-              onClick={handleConfirmApply}
+              onClick={handleConfirm}
               isDarkTheme={isDarkTheme}
               size="sm"
             >
-              {t("runePage.confirmModal.confirm")}
-            </Button>
-          </div>
-        </div>
-      </Modal>
-
-      {/* Модалка при запуске для загрузки всех настроек из файлов */}
-      <Modal
-        isOpen={showInitialLoadModal}
-        onClose={handleCancelInitialLoad}
-        title={t("startupLoadModal.title")}
-        isDarkTheme={isDarkTheme}
-        size="sm"
-      >
-        <div className="space-y-4">
-          <p
-            className={`text-sm ${
-              isDarkTheme ? "text-gray-300" : "text-gray-600"
-            }`}
-          >
-            {t("startupLoadModal.message")}
-          </p>
-          <div className="pt-1">
-            <Checkbox
-              checked={dontAskAgain}
-              onChange={setDontAskAgain}
-              isDarkTheme={isDarkTheme}
-              size="md"
-              label={t("startupLoadModal.dontAsk")}
-            />
-          </div>
-          <div className="flex justify-end gap-2">
-            <Button
-              variant="secondary"
-              onClick={handleCancelInitialLoad}
-              isDarkTheme={isDarkTheme}
-              size="sm"
-            >
-              {t("startupLoadModal.cancel")}
-            </Button>
-            <Button
-              variant="success"
-              onClick={handleConfirmInitialLoad}
-              isDarkTheme={isDarkTheme}
-              size="sm"
-            >
-              {t("startupLoadModal.confirm")}
+              {confirmAction === "readAll" || confirmAction === "readCurrent"
+                ? (t("runePage.textWorker.readFromFiles") || "Прочитать")
+                : t("runePage.confirmModal.confirm")}
             </Button>
           </div>
         </div>

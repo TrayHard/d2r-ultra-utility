@@ -1,4 +1,4 @@
-import { MOD_ROOT } from "../constants";
+import { MOD_ROOT, STORAGE_KEYS } from "../constants";
 import type {
   CommonItemSettings,
   PotionLevelSettings,
@@ -57,7 +57,7 @@ export const removeColorCodes = (text: string): string => {
 // Функция для получения настроек из localStorage
 export const loadSavedSettings = () => {
   try {
-    const savedSettings = localStorage.getItem("d2r-path-settings");
+    const savedSettings = localStorage.getItem(STORAGE_KEYS.PATH_SETTINGS);
     return savedSettings ? JSON.parse(savedSettings) : null;
   } catch (error) {
     console.error("Error loading saved settings:", error);

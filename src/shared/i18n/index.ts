@@ -54,9 +54,11 @@ const mapAppLanguageToI18n = (appLanguage?: string) => {
   }
 };
 
+import { STORAGE_KEYS } from "../constants";
+
 const getSavedLanguage = () => {
   try {
-    const savedAppConfig = localStorage.getItem("d2r-app-config");
+    const savedAppConfig = localStorage.getItem(STORAGE_KEYS.APP_CONFIG);
     if (savedAppConfig) {
       const parsedAppConfig = JSON.parse(savedAppConfig);
       return mapAppLanguageToI18n(parsedAppConfig.appLanguage);

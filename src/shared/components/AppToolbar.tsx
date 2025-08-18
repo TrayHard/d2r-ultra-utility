@@ -1,8 +1,8 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { mdiFileDocumentMultiple, mdiCheck } from "@mdi/js";
-import Button from "./Button.tsx";
+// icons are used inside FileOperationsBlock; keep i18n import only here
 import ProfileManager from "./ProfileManager.tsx";
+import FileOperationsBlock from "./FileOperationsBlock";
 
 interface AppToolbarProps {
   isDarkTheme: boolean;
@@ -18,8 +18,10 @@ interface AppToolbarProps {
   onProfileDelete: (id: string) => void;
   onProfileExport: (id: string) => void;
   onProfileImport: (data: any) => void;
-  onReadFromFiles: () => void;
-  onApplyClick: () => void;
+  onReadAll: () => void;
+  onApplyAll: () => void;
+  onReadCurrent: () => void;
+  onApplyCurrent: () => void;
 }
 
 const AppToolbar: React.FC<AppToolbarProps> = ({
@@ -36,8 +38,10 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
   onProfileDelete,
   onProfileExport,
   onProfileImport,
-  onReadFromFiles,
-  onApplyClick,
+  onReadAll,
+  onApplyAll,
+  onReadCurrent,
+  onApplyCurrent,
 }) => {
   const { t } = useTranslation();
   const tabLabel = t(`tabs.${activeTab}`);
@@ -62,7 +66,7 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
         }
       `}
     >
-      <div className="flex justify-between items-center w-full">
+      <div className="flex flex-col md:flex-row md:items-left md:justify-between w-full gap-2">
         {/* Менеджер профилей */}
         <ProfileManager
           isDarkTheme={isDarkTheme}
@@ -79,44 +83,15 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
         />
 
         {/* Кнопки управления файлами */}
-        <div className="flex flex-col items-end gap-1 ml-2">
-          <div
-            className={`text-xs font-semibold uppercase tracking-wide ${
-              isDarkTheme ? "text-gray-300" : "text-gray-700"
-            }`}
-          >
-            {t("profiles.filesSectionTitle")}
-          </div>
-          <div
-            className={`flex items-center gap-2 flex-wrap rounded-md p-2 ${
-              isDarkTheme
-                ? "bg-gray-800 border border-gray-700"
-                : "bg-gray-100 border border-gray-200"
-            }`}
-          >
-            <Button
-              variant="info"
-              onClick={onReadFromFiles}
-              isLoading={isLoading}
-              isDarkTheme={isDarkTheme}
-              icon={mdiFileDocumentMultiple}
-              title={t("runePage.textWorker.readFromFilesFor", { tab: tabLabel })}
-            >
-              {t("runePage.textWorker.readFromFilesFor", { tab: tabLabel })}
-            </Button>
-
-            <Button
-              variant="success"
-              onClick={onApplyClick}
-              disabled={isLoading}
-              isDarkTheme={isDarkTheme}
-              icon={mdiCheck}
-              title={t("runePage.textWorker.applyFor", { tab: tabLabel })}
-            >
-              {t("runePage.textWorker.applyFor", { tab: tabLabel })}
-            </Button>
-          </div>
-        </div>
+        <FileOperationsBlock
+          isDarkTheme={isDarkTheme}
+          isLoading={isLoading}
+          tabLabel={tabLabel}
+          onReadAll={onReadAll}
+          onApplyAll={onApplyAll}
+          onReadCurrent={onReadCurrent}
+          onApplyCurrent={onApplyCurrent}
+        />
       </div>
     </div>
   );

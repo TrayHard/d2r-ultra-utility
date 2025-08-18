@@ -309,6 +309,16 @@
       "confirm": "Zastosuj"
     }
   },
+  "files": {
+    "readAll": "Czytaj z plików (wszystko)",
+    "applyAll": "Zastosuj do plików (wszystko)",
+    "read": "Czytaj",
+    "apply": "Zastosuj",
+    "groups": {
+      "current": "Bieżąca karta",
+      "all": "Cała aplikacja"
+    }
+  },
   "messages": {
     "success": {
       "allLoaded": "Wszystkie ustawienia zostały pomyślnie wczytane"

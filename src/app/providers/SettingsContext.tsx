@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { ERune } from "../../pages/runes/constants/runes.ts";
 import i18n from "../../shared/i18n";
+import { STORAGE_KEYS } from "../../shared/constants";
 
 // Типы для локализации
 interface Locales {
@@ -717,14 +718,14 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         _setAppConfig((prev) => {
           const newConfig = newConfigOrUpdater(prev);
           if (!skipSave && !isLoading) {
-            localStorage.setItem("d2r-app-config", JSON.stringify(newConfig));
+            localStorage.setItem(STORAGE_KEYS.APP_CONFIG, JSON.stringify(newConfig));
           }
           return newConfig;
         });
       } else {
         if (!skipSave && !isLoading) {
           localStorage.setItem(
-            "d2r-app-config",
+            STORAGE_KEYS.APP_CONFIG,
             JSON.stringify(newConfigOrUpdater)
           );
         }
@@ -736,15 +737,15 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
 
   // Загрузка настроек из localStorage при инициализации
   useEffect(() => {
-    const savedAppConfig = localStorage.getItem("d2r-app-config");
-    const savedSettings = localStorage.getItem("d2r-settings");
-    const savedProfiles = localStorage.getItem("d2r-profiles");
-    const savedActiveProfileId = localStorage.getItem("d2r-active-profile");
+    const savedAppConfig = localStorage.getItem(STORAGE_KEYS.APP_CONFIG);
+    const savedSettings = localStorage.getItem(STORAGE_KEYS.SETTINGS);
+    const savedProfiles = localStorage.getItem(STORAGE_KEYS.PROFILES);
+    const savedActiveProfileId = localStorage.getItem(STORAGE_KEYS.ACTIVE_PROFILE);
 
     // Миграция: удаляем старый ключ языка если он есть
-    const oldLanguageKey = localStorage.getItem("language");
+    const oldLanguageKey = localStorage.getItem(STORAGE_KEYS.LEGACY_LANGUAGE);
     if (oldLanguageKey) {
-      localStorage.removeItem("language");
+      localStorage.removeItem(STORAGE_KEYS.LEGACY_LANGUAGE);
     }
 
     // Загружаем настройки приложения
@@ -853,14 +854,14 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   useEffect(() => {
     // Сохраняем настройки только если нет активного профиля и не загружаемся
     if (!activeProfileId && !isLoading) {
-      localStorage.setItem("d2r-settings", JSON.stringify(settings));
+      localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
     }
   }, [settings, activeProfileId, isLoading]);
 
   // Сохранение профилей в localStorage
   const saveProfilesToLocalStorage = useCallback(
     (updatedProfiles: Profile[]) => {
-      localStorage.setItem("d2r-profiles", JSON.stringify(updatedProfiles));
+      localStorage.setItem(STORAGE_KEYS.PROFILES, JSON.stringify(updatedProfiles));
     },
     []
   );
@@ -869,9 +870,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   const saveActiveProfileToLocalStorage = useCallback(
     (profileId: string | null) => {
       if (profileId) {
-        localStorage.setItem("d2r-active-profile", profileId);
+        localStorage.setItem(STORAGE_KEYS.ACTIVE_PROFILE, profileId);
       } else {
-        localStorage.removeItem("d2r-active-profile");
+        localStorage.removeItem(STORAGE_KEYS.ACTIVE_PROFILE);
       }
     },
     []
@@ -1128,7 +1129,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       setActiveProfileId(newProfile.id);
       saveActiveProfileToLocalStorage(newProfile.id);
       // Удаляем автономные настройки профиля при создании профиля
-      localStorage.removeItem("d2r-settings");
+      localStorage.removeItem(STORAGE_KEYS.SETTINGS);
     },
     [profiles, saveProfilesToLocalStorage, saveActiveProfileToLocalStorage]
   );
@@ -1161,7 +1162,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         setActiveProfileId(profileId);
         saveActiveProfileToLocalStorage(profileId);
         // Удаляем автономные настройки профиля при загрузке профиля
-        localStorage.removeItem("d2r-settings");
+        localStorage.removeItem(STORAGE_KEYS.SETTINGS);
       }
     },
     [profiles, saveActiveProfileToLocalStorage]
@@ -1196,7 +1197,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         saveActiveProfileToLocalStorage(null);
 
         // Пытаемся восстановить автономные настройки из localStorage
-        const savedSettings = localStorage.getItem("d2r-settings");
+        const savedSettings = localStorage.getItem(STORAGE_KEYS.SETTINGS);
         if (savedSettings) {
           try {
             const parsedSettings = JSON.parse(savedSettings);
