@@ -310,7 +310,7 @@
     "textWorker": {
       "readFromFiles": "Считать из файлов",
       "apply": "Применить к файлам",
-      "readFromFilesFor": "Считать настройки: {{tab}}",
+      "readFromFilesFor": "Считать из файлов: {{tab}}",
       "applyFor": "Применить настройки: {{tab}}"
     },
     "confirmModal": {
