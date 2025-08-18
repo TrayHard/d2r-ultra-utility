@@ -35,6 +35,12 @@ const CommonTab: React.FC<CommonTabProps> = ({
     staminaPotions: false,
     antidotes: false,
     thawingPotions: false,
+    amulets: false,
+    rings: false,
+    jewels: false,
+    smallCharms: false,
+    largeCharms: false,
+    grandCharms: false,
     healthPotions: false,
     manaPotions: false,
     rejuvenationPotions: false,
@@ -46,6 +52,12 @@ const CommonTab: React.FC<CommonTabProps> = ({
   const staminaPotions = getCommonItemSettings("staminaPotions");
   const antidotes = getCommonItemSettings("antidotes");
   const thawingPotions = getCommonItemSettings("thawingPotions");
+  const amulets = getCommonItemSettings("amulets");
+  const rings = getCommonItemSettings("rings");
+  const jewels = getCommonItemSettings("jewels");
+  const smallCharms = getCommonItemSettings("smallCharms");
+  const largeCharms = getCommonItemSettings("largeCharms");
+  const grandCharms = getCommonItemSettings("grandCharms");
 
   // Получаем настройки зелий с уровнями
   const healthPotions = getPotionGroupSettings("healthPotions");
@@ -59,6 +71,12 @@ const CommonTab: React.FC<CommonTabProps> = ({
     !staminaPotions ||
     !antidotes ||
     !thawingPotions ||
+    !amulets ||
+    !rings ||
+    !jewels ||
+    !smallCharms ||
+    !largeCharms ||
+    !grandCharms ||
     !healthPotions ||
     !manaPotions ||
     !rejuvenationPotions
@@ -102,6 +120,48 @@ const CommonTab: React.FC<CommonTabProps> = ({
     }
   };
 
+  const handleAmuletsToggle = (enabled: boolean) => {
+    updateCommonItemSettings("amulets", { enabled });
+    if (!enabled) {
+      setCollapseStates((prev) => ({ ...prev, amulets: false }));
+    }
+  };
+
+  const handleRingsToggle = (enabled: boolean) => {
+    updateCommonItemSettings("rings", { enabled });
+    if (!enabled) {
+      setCollapseStates((prev) => ({ ...prev, rings: false }));
+    }
+  };
+
+  const handleJewelsToggle = (enabled: boolean) => {
+    updateCommonItemSettings("jewels", { enabled });
+    if (!enabled) {
+      setCollapseStates((prev) => ({ ...prev, jewels: false }));
+    }
+  };
+
+  const handleSmallCharmsToggle = (enabled: boolean) => {
+    updateCommonItemSettings("smallCharms", { enabled });
+    if (!enabled) {
+      setCollapseStates((prev) => ({ ...prev, smallCharms: false }));
+    }
+  };
+
+  const handleLargeCharmsToggle = (enabled: boolean) => {
+    updateCommonItemSettings("largeCharms", { enabled });
+    if (!enabled) {
+      setCollapseStates((prev) => ({ ...prev, largeCharms: false }));
+    }
+  };
+
+  const handleGrandCharmsToggle = (enabled: boolean) => {
+    updateCommonItemSettings("grandCharms", { enabled });
+    if (!enabled) {
+      setCollapseStates((prev) => ({ ...prev, grandCharms: false }));
+    }
+  };
+
   // Обработчики для коллапсов
   const handleCollapseToggle = (
     key: keyof typeof collapseStates,
@@ -117,7 +177,13 @@ const CommonTab: React.FC<CommonTabProps> = ({
       | "bolts"
       | "staminaPotions"
       | "antidotes"
-      | "thawingPotions",
+      | "thawingPotions"
+      | "amulets"
+      | "rings"
+      | "jewels"
+      | "smallCharms"
+      | "largeCharms"
+      | "grandCharms",
     locale: string,
     value: string
   ) => {
@@ -171,6 +237,12 @@ const CommonTab: React.FC<CommonTabProps> = ({
       | "staminaPotions"
       | "antidotes"
       | "thawingPotions"
+      | "amulets"
+      | "rings"
+      | "jewels"
+      | "smallCharms"
+      | "largeCharms"
+      | "grandCharms"
   ) => {
     return (
       <div className="space-y-3">
@@ -235,6 +307,12 @@ const CommonTab: React.FC<CommonTabProps> = ({
       | "staminaPotions"
       | "antidotes"
       | "thawingPotions"
+      | "amulets"
+      | "rings"
+      | "jewels"
+      | "smallCharms"
+      | "largeCharms"
+      | "grandCharms"
   ): string => {
     const imagePaths = {
       arrows: "/img/common/arrows.png",
@@ -242,6 +320,12 @@ const CommonTab: React.FC<CommonTabProps> = ({
       staminaPotions: "/img/potions/stamina_potion.png",
       antidotes: "/img/potions/antidote.png",
       thawingPotions: "/img/potions/thawing_potion.png",
+      amulets: "/img/common/amulet.png",
+      rings: "/img/common/ring.png",
+      jewels: "/img/common/jewel.png",
+      smallCharms: "/img/common/small_charm.png",
+      largeCharms: "/img/common/large_charm.png",
+      grandCharms: "/img/common/grand_charm.png",
     };
     return imagePaths[titleKey];
   };
@@ -278,7 +362,13 @@ const CommonTab: React.FC<CommonTabProps> = ({
       | "bolts"
       | "staminaPotions"
       | "antidotes"
-      | "thawingPotions",
+      | "thawingPotions"
+      | "amulets"
+      | "rings"
+      | "jewels"
+      | "smallCharms"
+      | "largeCharms"
+      | "grandCharms",
     itemSettings: CommonItemSettings,
     toggleHandler: (enabled: boolean) => void
   ) => (
@@ -385,6 +475,24 @@ const CommonTab: React.FC<CommonTabProps> = ({
           thawingPotions,
           handleThawingPotionsToggle
         )}
+
+        {/* Амулеты */}
+        {renderItemSection("amulets", amulets, handleAmuletsToggle)}
+
+        {/* Кольца */}
+        {renderItemSection("rings", rings, handleRingsToggle)}
+
+        {/* Самоцветы */}
+        {renderItemSection("jewels", jewels, handleJewelsToggle)}
+
+        {/* Маленькие обереги */}
+        {renderItemSection("smallCharms", smallCharms, handleSmallCharmsToggle)}
+
+        {/* Большие обереги */}
+        {renderItemSection("largeCharms", largeCharms, handleLargeCharmsToggle)}
+
+        {/* Великие обереги */}
+        {renderItemSection("grandCharms", grandCharms, handleGrandCharmsToggle)}
 
         {/* Блоки зелий с табами */}
         {renderPotionBlock("healthPotions", healthPotions)}
