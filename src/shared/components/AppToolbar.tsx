@@ -79,34 +79,43 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
         />
 
         {/* Кнопки управления файлами */}
-        <div className="flex gap-2 ml-2">
-          <Button
-            variant="info"
-            onClick={onReadFromFiles}
-            isLoading={isLoading}
-            isDarkTheme={isDarkTheme}
-            icon={mdiFileDocumentMultiple}
-            title={t("runePage.textWorker.readFromFilesFor", { tab: tabLabel })}
-            className="min-w-56"
+        <div className="flex flex-col items-end gap-1 ml-2">
+          <div
+            className={`text-xs font-semibold uppercase tracking-wide ${
+              isDarkTheme ? "text-gray-300" : "text-gray-700"
+            }`}
           >
-            <span className="truncate min-w-0" title={t("runePage.textWorker.readFromFilesFor", { tab: tabLabel })}>
+            {t("profiles.filesSectionTitle")}
+          </div>
+          <div
+            className={`flex items-center gap-2 flex-wrap rounded-md p-2 ${
+              isDarkTheme
+                ? "bg-gray-800 border border-gray-700"
+                : "bg-gray-100 border border-gray-200"
+            }`}
+          >
+            <Button
+              variant="info"
+              onClick={onReadFromFiles}
+              isLoading={isLoading}
+              isDarkTheme={isDarkTheme}
+              icon={mdiFileDocumentMultiple}
+              title={t("runePage.textWorker.readFromFilesFor", { tab: tabLabel })}
+            >
               {t("runePage.textWorker.readFromFilesFor", { tab: tabLabel })}
-            </span>
-          </Button>
+            </Button>
 
-          <Button
-            variant="success"
-            onClick={onApplyClick}
-            disabled={isLoading}
-            isDarkTheme={isDarkTheme}
-            icon={mdiCheck}
-            title={t("runePage.textWorker.applyFor", { tab: tabLabel })}
-            className="min-w-56"
-          >
-            <span className="truncate min-w-0" title={t("runePage.textWorker.applyFor", { tab: tabLabel })}>
+            <Button
+              variant="success"
+              onClick={onApplyClick}
+              disabled={isLoading}
+              isDarkTheme={isDarkTheme}
+              icon={mdiCheck}
+              title={t("runePage.textWorker.applyFor", { tab: tabLabel })}
+            >
               {t("runePage.textWorker.applyFor", { tab: tabLabel })}
-            </span>
-          </Button>
+            </Button>
+          </div>
         </div>
       </div>
     </div>
