@@ -173,10 +173,13 @@
       "previewUnavailable": "Передперегляд недоступний у ручному режимі"
     },
     "controls": {
+      "generalSection": "Загальне",
       "highlightRune": "Підсвітка руни",
       "showRuneNumber": "Показувати номер руни",
       "boxSize": "Розмір боксу",
       "color": "Колір",
+      "boxLimiters": "Обмежувачі",
+      "boxLimitersColor": "Колір обмежувачів",
       "languageCustomization": "Налаштування мов",
       "manualMode": "Ручний режим",
       "preview": "Передперегляд",
