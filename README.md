@@ -7,7 +7,7 @@ Desktop application to enhance your Diablo II Resurrected playing experience.
 ### Loot filters
 
 #### Items
-<img src="https://i.imgur.com/UNbCk9M.png" width="900" />
+<img src="https://i.imgur.com/Wyy73ls.png" width="900" />
 
 - You can filter items by requirements, weight, difficulty class and character class limitations
 
