@@ -33,9 +33,16 @@
     "smallCharms": "Маленькие обереги",
     "largeCharms": "Большие обереги",
     "grandCharms": "Великие обереги",
+    "gold": "Золото",
+    "keys": "Ключи",
     "healthPotions": "Зелья здоровья",
     "manaPotions": "Зелья маны",
     "rejuvenationPotions": "Зелья восстановления",
+    "identify": "Идентификация",
+    "portal": "Городской портал",
+    "uberKeys": "Убер-ключи",
+    "essences": "Эссенции и токен",
+    "searchPlaceholder": "Поиск блоков...",
     "enableCustomization": "Включить настройку",
     "localeSettings": "Настройки локалей",
     "healthPotionsLevels": {
@@ -55,6 +62,26 @@
     "rejuvenationPotionsLevels": {
       "level1": "Зелье восстановления",
       "level2": "Полное зелье восстановления"
+    },
+    "identifyLevels": {
+      "level1": "Свиток идентификации",
+      "level2": "Том идентификации"
+    },
+    "portalLevels": {
+      "level1": "Свиток портала",
+      "level2": "Том портала"
+    },
+    "uberKeysLevels": {
+      "level1": "Ключ Ужаса",
+      "level2": "Ключ Ненависти",
+      "level3": "Ключ Разрушения"
+    },
+    "essencesLevels": {
+      "level1": "Эссенция Ненависти",
+      "level2": "Эссенция Страданий",
+      "level3": "Эссенция Ужаса",
+      "level4": "Эссенция Разрушения",
+      "level5": "Токен Отпущения грехов"
     }
   },
   "gemsPage": {

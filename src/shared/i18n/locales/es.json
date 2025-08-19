@@ -36,6 +36,13 @@
     "healthPotions": "Pociones de vida",
     "manaPotions": "Pociones de maná",
     "rejuvenationPotions": "Pociones de rejuvenecimiento",
+    "gold": "Oro",
+    "keys": "Llaves",
+    "identify": "Identificar",
+    "portal": "Portal de ciudad",
+    "uberKeys": "Llaves Uber",
+    "essences": "Esencias y token",
+    "searchPlaceholder": "Buscar bloques...",
     "enableCustomization": "Habilitar personalización",
     "localeSettings": "Ajustes de localización",
     "healthPotionsLevels": {
@@ -55,6 +62,26 @@
     "rejuvenationPotionsLevels": {
       "level1": "Poción de rejuvenecimiento",
       "level2": "Poción total de rejuvenecimiento"
+    },
+    "identifyLevels": {
+      "level1": "Pergamino de identificar",
+      "level2": "Tomo de identificar"
+    },
+    "portalLevels": {
+      "level1": "Pergamino de portal de ciudad",
+      "level2": "Tomo de portal de ciudad"
+    },
+    "uberKeysLevels": {
+      "level1": "Llave del terror",
+      "level2": "Llave del odio",
+      "level3": "Llave de la destrucción"
+    },
+    "essencesLevels": {
+      "level1": "Esencia del odio",
+      "level2": "Esencia del sufrimiento",
+      "level3": "Esencia del terror",
+      "level4": "Esencia de la destrucción",
+      "level5": "Token de absolución"
     }
   },
   "gemsPage": {

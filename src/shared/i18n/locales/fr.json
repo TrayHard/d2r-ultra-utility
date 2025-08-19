@@ -36,6 +36,13 @@
     "healthPotions": "Potions de vie",
     "manaPotions": "Potions de mana",
     "rejuvenationPotions": "Potions de régénération",
+    "gold": "Or",
+    "keys": "Clés",
+    "identify": "Identification",
+    "portal": "Portail de ville",
+    "uberKeys": "Clés Uber",
+    "essences": "Essences et jeton",
+    "searchPlaceholder": "Rechercher des blocs...",
     "enableCustomization": "Activer la personnalisation",
     "localeSettings": "Paramètres de langue",
     "healthPotionsLevels": {
@@ -55,6 +62,26 @@
     "rejuvenationPotionsLevels": {
       "level1": "Potion de régénération",
       "level2": "Potion de régénération totale"
+    },
+    "identifyLevels": {
+      "level1": "Parchemin d'identification",
+      "level2": "Tome d'identification"
+    },
+    "portalLevels": {
+      "level1": "Parchemin de portail de ville",
+      "level2": "Tome de portail de ville"
+    },
+    "uberKeysLevels": {
+      "level1": "Clé de la terreur",
+      "level2": "Clé de la haine",
+      "level3": "Clé de la destruction"
+    },
+    "essencesLevels": {
+      "level1": "Essence de la haine",
+      "level2": "Essence de la souffrance",
+      "level3": "Essence de la terreur",
+      "level4": "Essence de la destruction",
+      "level5": "Jeton d'absolution"
     }
   },
   "gemsPage": {

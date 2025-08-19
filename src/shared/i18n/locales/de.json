@@ -82,6 +82,13 @@
     "healthPotions": "Heiltränke",
     "manaPotions": "Manatränke",
     "rejuvenationPotions": "Wiederherstellungstränke",
+    "gold": "Gold",
+    "keys": "Schlüssel",
+    "identify": "Identifikation",
+    "portal": "Stadtportal",
+    "uberKeys": "Über-Schlüssel",
+    "essences": "Essenzen und Token",
+    "searchPlaceholder": "Blöcke suchen...",
     "enableCustomization": "Anpassung aktivieren",
     "localeSettings": "Locale-Einstellungen",
     "healthPotionsLevels": {
@@ -101,6 +108,26 @@
     "rejuvenationPotionsLevels": {
       "level1": "Wiederherstellungstrank",
       "level2": "Voller Wiederherstellungstrank"
+    },
+    "identifyLevels": {
+      "level1": "Schriftrolle der Identifikation",
+      "level2": "Buch der Identifikation"
+    },
+    "portalLevels": {
+      "level1": "Schriftrolle des Stadtportals",
+      "level2": "Buch des Stadtportals"
+    },
+    "uberKeysLevels": {
+      "level1": "Schlüssel des Schreckens",
+      "level2": "Schlüssel des Hasses",
+      "level3": "Schlüssel der Zerstörung"
+    },
+    "essencesLevels": {
+      "level1": "Essenz des Hasses",
+      "level2": "Essenz des Leidens",
+      "level3": "Essenz des Schreckens",
+      "level4": "Essenz der Zerstörung",
+      "level5": "Zeichen der Absolution"
     }
   },
   "gemsPage": {

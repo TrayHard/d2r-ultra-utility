@@ -25,7 +25,7 @@
     "arrows": "Arrows",
     "bolts": "Bolts",
     "staminaPotions": "Stamina Potions",
-    "antidotes": "Antidotes",
+    "antidotes": "Antidote Potions",
     "thawingPotions": "Thawing Potions",
     "amulets": "Amulets",
     "rings": "Rings",
@@ -33,9 +33,16 @@
     "smallCharms": "Small Charms",
     "largeCharms": "Large Charms",
     "grandCharms": "Grand Charms",
+    "gold": "Gold",
+    "keys": "Keys",
     "healthPotions": "Health Potions",
     "manaPotions": "Mana Potions",
     "rejuvenationPotions": "Rejuvenation Potions",
+    "identify": "Identify",
+    "portal": "Town Portal",
+    "uberKeys": "Uber Keys",
+    "essences": "Essences and Tokens",
+    "searchPlaceholder": "Search blocks...",
     "enableCustomization": "Enable customization",
     "localeSettings": "Locale Settings",
     "healthPotionsLevels": {
@@ -55,6 +62,26 @@
     "rejuvenationPotionsLevels": {
       "level1": "Rejuvenation Potion",
       "level2": "Full Rejuvenation Potion"
+    },
+    "identifyLevels": {
+      "level1": "Scroll of Identify",
+      "level2": "Tome of Identify"
+    },
+    "portalLevels": {
+      "level1": "Scroll of Town Portal",
+      "level2": "Tome of Town Portal"
+    },
+    "uberKeysLevels": {
+      "level1": "Key of Terror",
+      "level2": "Key of Hate",
+      "level3": "Key of Destruction"
+    },
+    "essencesLevels": {
+      "level1": "Essence of Hatred",
+      "level2": "Essence of Suffering",
+      "level3": "Essence of Terror",
+      "level4": "Essence of Destruction",
+      "level5": "Token of Absolution"
     }
   },
   "gemsPage": {

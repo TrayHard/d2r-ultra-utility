@@ -36,6 +36,13 @@
     "healthPotions": "Mikstury zdrowia",
     "manaPotions": "Mikstury many",
     "rejuvenationPotions": "Mikstury odnowy",
+    "gold": "Złoto",
+    "keys": "Klucze",
+    "identify": "Identyfikacja",
+    "portal": "Portal miejski",
+    "uberKeys": "Klucze Uber",
+    "essences": "Esencje i token",
+    "searchPlaceholder": "Szukaj bloków...",
     "enableCustomization": "Włącz dostosowanie",
     "localeSettings": "Ustawienia lokalizacji",
     "healthPotionsLevels": {
@@ -55,6 +62,26 @@
     "rejuvenationPotionsLevels": {
       "level1": "Mikstura odnowy",
       "level2": "Pełna mikstura odnowy"
+    },
+    "identifyLevels": {
+      "level1": "Zwoj identyfikacji",
+      "level2": "Tom identyfikacji"
+    },
+    "portalLevels": {
+      "level1": "Zwoj portalu miejskiego",
+      "level2": "Tom portalu miejskiego"
+    },
+    "uberKeysLevels": {
+      "level1": "Klucz Grozy",
+      "level2": "Klucz Nienawiści",
+      "level3": "Klucz Zniszczenia"
+    },
+    "essencesLevels": {
+      "level1": "Esencja Nienawiści",
+      "level2": "Esencja Cierpienia",
+      "level3": "Esencja Grozy",
+      "level4": "Esencja Zniszczenia",
+      "level5": "Token Odpuszczenia"
     }
   },
   "gemsPage": {

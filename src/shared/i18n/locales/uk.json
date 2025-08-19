@@ -36,6 +36,13 @@
     "healthPotions": "Еліксири здоров'я",
     "manaPotions": "Еліксири мани",
     "rejuvenationPotions": "Еліксири відновлення",
+    "gold": "Золото",
+    "keys": "Ключі",
+    "identify": "Ідентифікація",
+    "portal": "Міський портал",
+    "uberKeys": "Убер-ключі",
+    "essences": "Есенції та токен",
+    "searchPlaceholder": "Пошук блоків...",
     "enableCustomization": "Увімкнути налаштування",
     "localeSettings": "Налаштування локалей",
     "healthPotionsLevels": {
@@ -55,6 +62,26 @@
     "rejuvenationPotionsLevels": {
       "level1": "Еліксир відновлення",
       "level2": "Повний еліксир відновлення"
+    },
+    "identifyLevels": {
+      "level1": "Сувій ідентифікації",
+      "level2": "Том ідентифікації"
+    },
+    "portalLevels": {
+      "level1": "Сувій міського порталу",
+      "level2": "Том міського порталу"
+    },
+    "uberKeysLevels": {
+      "level1": "Ключ Жаху",
+      "level2": "Ключ Ненависті",
+      "level3": "Ключ Руйнування"
+    },
+    "essencesLevels": {
+      "level1": "Есенція Ненависті",
+      "level2": "Есенція Страждання",
+      "level3": "Есенція Жаху",
+      "level4": "Есенція Руйнування",
+      "level5": "Токен Розгрішення"
     }
   },
   "gemsPage": {
