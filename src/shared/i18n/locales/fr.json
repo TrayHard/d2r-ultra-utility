@@ -151,10 +151,13 @@
       "previewUnavailable": "Aperçu indisponible en mode manuel"
     },
     "controls": {
+      "generalSection": "Général",
       "highlightRune": "Surligner la rune",
       "showRuneNumber": "Afficher le numéro de rune",
       "boxSize": "Taille de la boîte",
       "color": "Couleur",
+      "boxLimiters": "Délimiteurs",
+      "boxLimitersColor": "Couleur des délimiteurs",
       "languageCustomization": "Personnalisation de la langue",
       "manualMode": "Mode manuel",
       "preview": "Aperçu",

@@ -173,12 +173,16 @@
       "previewUnavailable": "Предпросмотр недоступен в ручном режиме"
     },
     "controls": {
+      "generalSection": "Общее",
       "highlightRune": "Подсветка руны",
       "showRuneNumber": "Указание номера",
       "boxSize": "Размер бокса",
       "color": "Цвет",
+      "boxLimiters": "Ограничители",
+      "boxLimitersColor": "Цвет ограничителей",
       "languageCustomization": "Настройка языков",
       "manualMode": "Ручной режим",
+      "autoMode": "Автоматический режим",
       "preview": "Предпросмотр",
       "previewTitle": "Предпросмотр текста",
       "howItLooks": "Как это будет выглядеть в игре:",

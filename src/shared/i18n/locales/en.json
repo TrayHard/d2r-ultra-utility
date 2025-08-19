@@ -173,12 +173,16 @@
       "previewUnavailable": "Preview is not available in manual mode"
     },
     "controls": {
+      "generalSection": "General",
       "highlightRune": "Highlight Rune",
       "showRuneNumber": "Show Rune Num",
       "boxSize": "Box Size",
       "color": "Color",
+      "boxLimiters": "Limiters",
+      "boxLimitersColor": "Limiters Color",
       "languageCustomization": "Language Customization",
       "manualMode": "Manual Mode",
+      "autoMode": "Automatic Mode",
       "preview": "Preview",
       "previewTitle": "Text Preview",
       "howItLooks": "Rune preview:",

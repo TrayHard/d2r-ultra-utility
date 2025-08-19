@@ -151,10 +151,13 @@
       "previewUnavailable": "Vista previa no disponible en modo manual"
     },
     "controls": {
+      "generalSection": "General",
       "highlightRune": "Resaltar runa",
       "showRuneNumber": "Mostrar número de runa",
       "boxSize": "Tamaño de caja",
       "color": "Color",
+      "boxLimiters": "Limitadores",
+      "boxLimitersColor": "Color de limitadores",
       "languageCustomization": "Personalización de idioma",
       "manualMode": "Modo manual",
       "preview": "Vista previa",

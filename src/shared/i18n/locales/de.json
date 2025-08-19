@@ -173,10 +173,13 @@
       "previewUnavailable": "Vorschau im manuellen Modus nicht verfügbar"
     },
     "controls": {
+      "generalSection": "Allgemein",
       "highlightRune": "Rune hervorheben",
       "showRuneNumber": "Runennummer anzeigen",
       "boxSize": "Boxgröße",
       "color": "Farbe",
+      "boxLimiters": "Begrenzer",
+      "boxLimitersColor": "Farbe der Begrenzer",
       "languageCustomization": "Sprachanpassung",
       "manualMode": "Manueller Modus",
       "preview": "Vorschau",

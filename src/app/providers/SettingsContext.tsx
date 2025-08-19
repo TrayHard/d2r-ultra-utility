@@ -5,7 +5,7 @@ import React, {
   createContext,
   useEffect,
 } from "react";
-import { ERune } from "../../pages/runes/constants/runes.ts";
+import { ERune, runeHardcodedLocales } from "../../pages/runes/constants/runes.ts";
 import i18n from "../../shared/i18n";
 import { STORAGE_KEYS } from "../../shared/constants";
 
@@ -37,19 +37,25 @@ interface AppConfig {
 
 // Настройки для рун
 export interface RuneSettings {
+  mode: "auto" | "manual"; // Новое поле для режима
   isHighlighted: boolean;
-  numbering: {
-    show: boolean;
-    dividerType: string;
-    dividerColor: string;
-    numberColor: string;
+  // Настройки для автоматического режима
+  autoSettings: {
+    numbering: {
+      show: boolean;
+      dividerType: string;
+      dividerColor: string;
+      numberColor: string;
+    };
+    boxSize: number; // 0 - normal, 1 - medium, 2 - large
+    boxLimiters: string; // Тип ограничителей: "~", "-", "_", "|", "."
+    boxLimitersColor: string; // Цвет ограничителей
+    color: string;
   };
-  boxSize: number; // 0 - normal, 1 - medium, 2 - large
-  boxLimiters: string; // Тип ограничителей: "~", "-", "_", "|", "."
-  boxLimitersColor: string; // Цвет ограничителей
-  color: string;
-  isManual: boolean;
-  locales: Locales;
+  // Настройки для ручного режима
+  manualSettings: {
+    locales: Locales;
+  };
 }
 
 // Общие настройки для всех рун
@@ -534,39 +540,75 @@ const getDefaultItemsSettings = (): ItemsSettings => ({
 
 // Миграция старых настроек рун к новому формату
 const migrateRuneSettings = (oldSettings: any): RuneSettings => {
-  // Если это уже новый формат
-  if (oldSettings.numbering) {
+  // Если это уже новый формат с mode
+  if (oldSettings.mode) {
     return oldSettings as RuneSettings;
   }
 
-  // Если это старый формат, мигрируем
+  // Если это старый формат с numbering (предыдущая версия), мигрируем к новому
+  if (oldSettings.numbering) {
+    return {
+      mode: oldSettings.isManual ? "manual" : "auto",
+      isHighlighted: oldSettings.isHighlighted ?? false,
+      autoSettings: {
+        numbering: oldSettings.numbering,
+        boxSize: oldSettings.boxSize ?? 0,
+        boxLimiters: oldSettings.boxLimiters ?? "~",
+        boxLimitersColor: oldSettings.boxLimitersColor ?? "white",
+        color: oldSettings.color ?? "white",
+      },
+      manualSettings: {
+        locales: oldSettings.locales ?? {
+          enUS: "",
+          ruRU: "",
+          zhTW: "",
+          deDE: "",
+          esES: "",
+          frFR: "",
+          itIT: "",
+          koKR: "",
+          plPL: "",
+          esMX: "",
+          jaJP: "",
+          ptBR: "",
+          zhCN: "",
+        },
+      },
+    };
+  }
+
+  // Если это совсем старый формат (до numbering), мигрируем
   return {
+    mode: oldSettings.isManual ? "manual" : "auto",
     isHighlighted: oldSettings.isHighlighted ?? false,
-    numbering: {
-      show: oldSettings.showNumber ?? false,
-      dividerType: oldSettings.dividerType ?? "parentheses",
-      dividerColor: oldSettings.dividerColor ?? "white",
-      numberColor: oldSettings.numberColor ?? "yellow",
+    autoSettings: {
+      numbering: {
+        show: oldSettings.showNumber ?? false,
+        dividerType: oldSettings.dividerType ?? "parentheses",
+        dividerColor: oldSettings.dividerColor ?? "white",
+        numberColor: oldSettings.numberColor ?? "yellow",
+      },
+      boxSize: oldSettings.boxSize ?? 0,
+      boxLimiters: oldSettings.boxLimiters ?? "~",
+      boxLimitersColor: oldSettings.boxLimitersColor ?? "white",
+      color: oldSettings.color ?? "white",
     },
-    boxSize: oldSettings.boxSize ?? 0,
-    boxLimiters: oldSettings.boxLimiters ?? "~",
-    boxLimitersColor: oldSettings.boxLimitersColor ?? "white",
-    color: oldSettings.color ?? "white",
-    isManual: oldSettings.isManual ?? false,
-    locales: oldSettings.locales ?? {
-      enUS: "",
-      ruRU: "",
-      zhTW: "",
-      deDE: "",
-      esES: "",
-      frFR: "",
-      itIT: "",
-      koKR: "",
-      plPL: "",
-      esMX: "",
-      jaJP: "",
-      ptBR: "",
-      zhCN: "",
+    manualSettings: {
+      locales: oldSettings.locales ?? {
+        enUS: "",
+        ruRU: "",
+        zhTW: "",
+        deDE: "",
+        esES: "",
+        frFR: "",
+        itIT: "",
+        koKR: "",
+        plPL: "",
+        esMX: "",
+        jaJP: "",
+        ptBR: "",
+        zhCN: "",
+      },
     },
   };
 };
@@ -577,32 +619,36 @@ const getDefaultRuneSettings = (
 ): RuneSettings => {
   const defaultGeneral = generalSettings ?? getDefaultGeneralRuneSettings();
   return {
+    mode: "auto",
     isHighlighted: false,
-    numbering: {
-      show: false,
-      dividerType: defaultGeneral.dividerType,
-      dividerColor: defaultGeneral.dividerColor,
-      numberColor: defaultGeneral.numberColor,
+    autoSettings: {
+      numbering: {
+        show: false,
+        dividerType: defaultGeneral.dividerType,
+        dividerColor: defaultGeneral.dividerColor,
+        numberColor: defaultGeneral.numberColor,
+      },
+      boxSize: 0, // Normal
+      boxLimiters: defaultGeneral.boxLimiters,
+      boxLimitersColor: defaultGeneral.boxLimitersColor,
+      color: "white",
     },
-    boxSize: 0, // Normal
-    boxLimiters: defaultGeneral.boxLimiters,
-    boxLimitersColor: defaultGeneral.boxLimitersColor,
-    color: "white",
-    isManual: false,
-    locales: {
-      enUS: "",
-      ruRU: "",
-      zhTW: "",
-      deDE: "",
-      esES: "",
-      frFR: "",
-      itIT: "",
-      koKR: "",
-      plPL: "",
-      esMX: "",
-      jaJP: "",
-      ptBR: "",
-      zhCN: "",
+    manualSettings: {
+      locales: {
+        enUS: "",
+        ruRU: "",
+        zhTW: "",
+        deDE: "",
+        esES: "",
+        frFR: "",
+        itIT: "",
+        koKR: "",
+        plPL: "",
+        esMX: "",
+        jaJP: "",
+        ptBR: "",
+        zhCN: "",
+      },
     },
   };
 };
@@ -616,7 +662,16 @@ const createDefaultSettings = (): AppSettings => {
 
   // Инициализируем настройки для всех рун
   Object.values(ERune).forEach((rune) => {
-    runeSettings[rune] = getDefaultRuneSettings();
+    const defaultSettings = getDefaultRuneSettings();
+    
+    // Для автоматического режима заполняем manualSettings.locales захардкоженными значениями
+    // Это нужно для того, чтобы превью и генерация имен работали правильно
+    const hardcodedLocales = runeHardcodedLocales[rune as ERune];
+    if (hardcodedLocales) {
+      defaultSettings.manualSettings.locales = hardcodedLocales;
+    }
+    
+    runeSettings[rune] = defaultSettings;
   });
 
   return {
@@ -1034,13 +1089,23 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
 
   // Сброс настроек руны к дефолтным
   const resetRuneSettings = useCallback((rune: ERune) => {
-    setSettings((prev) => ({
-      ...prev,
-      runes: {
-        ...prev.runes,
-        [rune]: getDefaultRuneSettings(prev.generalRunes),
-      },
-    }));
+    setSettings((prev) => {
+      const defaultSettings = getDefaultRuneSettings(prev.generalRunes);
+      
+      // Заполняем захардкоженные локали для автоматического режима
+      const hardcodedLocales = runeHardcodedLocales[rune];
+      if (hardcodedLocales) {
+        defaultSettings.manualSettings.locales = hardcodedLocales;
+      }
+      
+      return {
+        ...prev,
+        runes: {
+          ...prev.runes,
+          [rune]: defaultSettings,
+        },
+      };
+    });
   }, []);
 
   // Массовый сброс настроек рун
@@ -1048,7 +1113,15 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     setSettings((prev) => {
       const updatedRunes = { ...prev.runes };
       runes.forEach((rune) => {
-        updatedRunes[rune] = getDefaultRuneSettings(prev.generalRunes);
+        const defaultSettings = getDefaultRuneSettings(prev.generalRunes);
+        
+        // Заполняем захардкоженные локали для автоматического режима
+        const hardcodedLocales = runeHardcodedLocales[rune];
+        if (hardcodedLocales) {
+          defaultSettings.manualSettings.locales = hardcodedLocales;
+        }
+        
+        updatedRunes[rune] = defaultSettings;
       });
 
       return {
@@ -1088,11 +1161,14 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         const rune = runeKey as ERune;
         updatedRunes[rune] = {
           ...updatedRunes[rune],
-          numbering: {
-            ...updatedRunes[rune].numbering,
-            dividerType: prev.generalRunes.dividerType,
-            dividerColor: prev.generalRunes.dividerColor,
-            numberColor: prev.generalRunes.numberColor,
+          autoSettings: {
+            ...updatedRunes[rune].autoSettings,
+            numbering: {
+              ...updatedRunes[rune].autoSettings.numbering,
+              dividerType: prev.generalRunes.dividerType,
+              dividerColor: prev.generalRunes.dividerColor,
+              numberColor: prev.generalRunes.numberColor,
+            },
           },
         };
       });
