@@ -173,12 +173,19 @@
       "previewUnavailable": "Preview is not available in manual mode"
     },
     "controls": {
+      "generalSection": "General",
       "highlightRune": "Highlight Rune",
       "showRuneNumber": "Show Rune Num",
       "boxSize": "Box Size",
       "color": "Color",
+      "boxLimiters": "Limiters",
+      "boxLimitersColor": "Limiters Color",
+      "boxLimitersTypes": {
+        "spaces": "Just spaces"
+      },
       "languageCustomization": "Language Customization",
       "manualMode": "Manual Mode",
+      "autoMode": "Automatic Mode",
       "preview": "Preview",
       "previewTitle": "Text Preview",
       "howItLooks": "Rune preview:",
@@ -445,7 +452,9 @@
         "qualityPrefixes": {
           "level1": "All low quality prefixes",
           "level2": "Superior"
-        }
+        },
+        "enableItem": "Display in game",
+        "showDifficultyClassMarkerSwitch": "Display difficulty class (normal, exceptional, elite)"
       }
     },
     "filters": {

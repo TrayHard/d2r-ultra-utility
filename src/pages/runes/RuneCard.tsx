@@ -1,7 +1,8 @@
 import React from "react";
-import { ERune, runeNumbers } from "./constants/runes.ts";
+import { ERune, runeHardcodedLocales } from "./constants/runes.ts";
 import { useTranslation } from "react-i18next";
-import Dropdown from "../../shared/components/Dropdown.tsx";
+import { Select } from "antd";
+import ColorPallet from "../../shared/components/ColorPallet.tsx";
 import Switcher from "../../shared/components/Switcher.tsx";
 import Checkbox from "../../shared/components/Checkbox.tsx";
 import ColorHint from "../../shared/components/ColorHint.tsx";
@@ -10,14 +11,8 @@ import {
   useSettings,
 } from "../../app/providers/SettingsContext.tsx";
 import {
-  generateFinalRuneName,
   generateStructuredPreview,
-  parseNumberingSettings,
-  parseRuneTextColor,
-  parseRuneBoxSize,
-  parseBoxLimiters,
-  parseBoxLimitersColor,
-  extractBaseRuneName,
+  parseColoredText,
 } from "../../shared/utils/runeUtils.ts";
 import { localeOptions as allLocaleOptions } from "../../shared/constants.ts";
 
@@ -54,52 +49,34 @@ const RuneCard: React.FC<RuneCardProps> = ({
   // Получаем общие настройки как дефолтные значения
   const generalSettings = getGeneralRuneSettings();
 
-  // Используем useMemo для пересчета значений при изменении settings
+  // Основные состояния
+  const mode = React.useMemo(() => settings?.mode ?? "auto", [settings?.mode]);
   const isHighlighted = React.useMemo(
     () => settings?.isHighlighted ?? false,
     [settings?.isHighlighted]
   );
-  const showNumber = React.useMemo(
-    () => settings?.numbering?.show ?? false,
-    [settings?.numbering?.show]
-  );
-  const boxSize = React.useMemo(
-    () => settings?.boxSize ?? 0,
-    [settings?.boxSize]
-  );
-  const color = React.useMemo(
-    () => settings?.color ?? "white",
-    [settings?.color]
-  );
-  const isManual = React.useMemo(
-    () => settings?.isManual ?? false,
-    [settings?.isManual]
+
+  // Автоматические настройки
+  const autoSettings = React.useMemo(
+    () => settings?.autoSettings ?? {
+      numbering: {
+        show: false,
+        dividerType: generalSettings.dividerType,
+        dividerColor: generalSettings.dividerColor,
+        numberColor: generalSettings.numberColor,
+      },
+      boxSize: 0,
+      boxLimiters: generalSettings.boxLimiters,
+      boxLimitersColor: generalSettings.boxLimitersColor,
+      color: "white",
+    },
+    [settings?.autoSettings, generalSettings]
   );
 
-  // Используем useMemo для пересчета значений цветов при изменении settings
-  const dividerType = React.useMemo(
-    () => settings?.numbering?.dividerType ?? generalSettings.dividerType,
-    [settings?.numbering?.dividerType, generalSettings.dividerType]
-  );
-  const dividerColor = React.useMemo(
-    () => settings?.numbering?.dividerColor ?? generalSettings.dividerColor,
-    [settings?.numbering?.dividerColor, generalSettings.dividerColor]
-  );
-  const numberColor = React.useMemo(
-    () => settings?.numbering?.numberColor ?? generalSettings.numberColor,
-    [settings?.numbering?.numberColor, generalSettings.numberColor]
-  );
-  const boxLimiters = React.useMemo(
-    () => settings?.boxLimiters ?? generalSettings.boxLimiters,
-    [settings?.boxLimiters, generalSettings.boxLimiters]
-  );
-  const boxLimitersColor = React.useMemo(
-    () => settings?.boxLimitersColor ?? generalSettings.boxLimitersColor,
-    [settings?.boxLimitersColor, generalSettings.boxLimitersColor]
-  );
-  const runeNames = React.useMemo(
-    () =>
-      settings?.locales ?? {
+  // Ручные настройки
+  const manualSettings = React.useMemo(
+    () => settings?.manualSettings ?? {
+      locales: {
         enUS: "",
         ruRU: "",
         zhTW: "",
@@ -114,7 +91,14 @@ const RuneCard: React.FC<RuneCardProps> = ({
         ptBR: "",
         zhCN: "",
       },
-    [settings?.locales]
+    },
+    [settings?.manualSettings]
+  );
+
+  // Получаем захардкоженные локали для автоматического режима
+  const hardcodedLocales = React.useMemo(
+    () => runeHardcodedLocales[rune],
+    [rune]
   );
 
   // Состояние для выбранной локали предпросмотра
@@ -138,28 +122,26 @@ const RuneCard: React.FC<RuneCardProps> = ({
   React.useEffect(() => {
     setPreviewKey((prev) => prev + 1);
   }, [
-    dividerType,
-    dividerColor,
-    numberColor,
-    showNumber,
-    color,
-    boxSize,
-    boxLimiters,
-    boxLimitersColor,
-    isManual,
-    runeNames,
+    mode,
+    isHighlighted,
+    autoSettings,
+    manualSettings,
     previewLocale,
   ]);
 
   // Handle language name change
   const handleLanguageNameChange = (langCode: string, value: string) => {
-    const newRuneNames = {
-      ...runeNames,
+    const newLocales = {
+      ...manualSettings.locales,
       [langCode]: value,
     };
 
     // Обновляем настройки сразу при изменении языковых полей
-    handleSettingChange({ locales: newRuneNames });
+    handleSettingChange({
+      manualSettings: {
+        locales: newLocales,
+      },
+    });
   };
 
   // Handle settings change
@@ -167,19 +149,10 @@ const RuneCard: React.FC<RuneCardProps> = ({
     if (!onSettingsChange) return;
 
     const updatedSettings: RuneSettings = {
+      mode,
       isHighlighted,
-      numbering: {
-        show: showNumber,
-        dividerType,
-        dividerColor,
-        numberColor,
-      },
-      boxSize,
-      boxLimiters,
-      boxLimitersColor,
-      color,
-      isManual,
-      locales: runeNames,
+      autoSettings,
+      manualSettings,
       ...newSettings,
     };
 
@@ -191,143 +164,97 @@ const RuneCard: React.FC<RuneCardProps> = ({
     handleSettingChange({ isHighlighted: checked });
   };
 
-  const handleShowNumberChange = (checked: boolean) => {
+  const handleModeChange = (newMode: "auto" | "manual") => {
+    handleSettingChange({ mode: newMode });
+  };
+
+  // Обработчики для автоматических настроек
+  const handleAutoShowNumberChange = (checked: boolean) => {
     handleSettingChange({
-      numbering: { show: checked, dividerType, dividerColor, numberColor },
+      autoSettings: {
+        ...autoSettings,
+        numbering: {
+          ...autoSettings.numbering,
+          show: checked,
+        },
+      },
     });
   };
 
-  const handleBoxSizeChange = (size: string) => {
+  const handleAutoBoxSizeChange = (size: string) => {
     const sizeNumber = parseInt(size);
-    handleSettingChange({ boxSize: sizeNumber });
-  };
-
-  const handleColorChange = (newColor: string) => {
-    handleSettingChange({ color: newColor });
-  };
-
-  const handleManualChange = (checked: boolean) => {
-    if (checked) {
-      // При переходе В ручной режим заполняем инпуты финальными именами с учетом всех настроек
-      const finalRuneNames = { ...runeNames };
-
-      languageCodes.forEach((langCode) => {
-        const currentSettings: RuneSettings = {
-          isHighlighted,
-          numbering: {
-            show: showNumber,
-            dividerType,
-            dividerColor,
-            numberColor,
-          },
-          boxSize,
-          boxLimiters,
-          boxLimitersColor,
-          color,
-          isManual: false,
-          locales: runeNames,
-        };
-
-        // Генерируем финальное имя с учетом всех настроек (с цветовыми кодами и ограничителями)
-        finalRuneNames[langCode as keyof typeof finalRuneNames] =
-          generateFinalRuneName(
-            rune,
-            currentSettings,
-            langCode as keyof RuneSettings["locales"]
-          );
-      });
-
-      handleSettingChange({
-        isManual: checked,
-        locales: finalRuneNames,
-      });
-    } else {
-      // При выходе ИЗ ручного режима анализируем содержимое инпутов и заполняем настройки
-      const runeNumber = runeNumbers[rune];
-
-      // Анализируем первую доступную локаль для извлечения настроек
-      const textForAnalysis = runeNames.enUS || runeNames.ruRU || "";
-
-      if (textForAnalysis) {
-        // Анализируем настройки аналогично чтению из файлов
-        const numberingSettings = parseNumberingSettings(
-          textForAnalysis,
-          runeNumber
-        );
-        const textColor = parseRuneTextColor(textForAnalysis);
-        const boxSizeFromText = parseRuneBoxSize(textForAnalysis);
-        const boxLimitersFromText = parseBoxLimiters(textForAnalysis);
-        const boxLimitersColorFromText = parseBoxLimitersColor(textForAnalysis);
-
-        // Извлекаем чистые базовые имена для всех локалей
-        const cleanRuneNames = { ...runeNames };
-        languageCodes.forEach((langCode) => {
-          const localeText = runeNames[langCode as keyof typeof runeNames];
-          cleanRuneNames[langCode as keyof typeof cleanRuneNames] =
-            extractBaseRuneName(localeText, runeNumber);
-        });
-
-        // Обновляем все настройки на основе анализа
-        handleSettingChange({
-          isManual: checked,
-          numbering: numberingSettings,
-          color: textColor,
-          boxSize: boxSizeFromText,
-          boxLimiters: boxLimitersFromText,
-          boxLimitersColor: boxLimitersColorFromText,
-          locales: cleanRuneNames,
-        });
-      } else {
-        // Если текста нет, просто выключаем ручной режим
-        handleSettingChange({ isManual: checked });
-      }
-    }
-  };
-
-  const handleDividerTypeChange = (type: string) => {
     handleSettingChange({
-      numbering: {
-        show: showNumber,
-        dividerType: type,
-        dividerColor,
-        numberColor,
+      autoSettings: {
+        ...autoSettings,
+        boxSize: sizeNumber,
       },
     });
   };
 
-  const handleDividerColorChange = (color: string) => {
+  const handleAutoColorChange = (newColor: string) => {
     handleSettingChange({
-      numbering: {
-        show: showNumber,
-        dividerType,
-        dividerColor: color,
-        numberColor,
+      autoSettings: {
+        ...autoSettings,
+        color: newColor,
       },
     });
   };
 
-  const handleNumberColorChange = (color: string) => {
+  const handleAutoDividerTypeChange = (type: string) => {
     handleSettingChange({
-      numbering: {
-        show: showNumber,
-        dividerType,
-        dividerColor,
-        numberColor: color,
+      autoSettings: {
+        ...autoSettings,
+        numbering: {
+          ...autoSettings.numbering,
+          dividerType: type,
+        },
       },
     });
   };
 
-  const handleBoxLimitersChange = (limiters: string) => {
+  const handleAutoDividerColorChange = (color: string) => {
     handleSettingChange({
-      boxLimiters: limiters,
+      autoSettings: {
+        ...autoSettings,
+        numbering: {
+          ...autoSettings.numbering,
+          dividerColor: color,
+        },
+      },
     });
   };
 
-  const handleBoxLimitersColorChange = (color: string) => {
+  const handleAutoNumberColorChange = (color: string) => {
     handleSettingChange({
-      boxLimitersColor: color,
+      autoSettings: {
+        ...autoSettings,
+        numbering: {
+          ...autoSettings.numbering,
+          numberColor: color,
+        },
+      },
     });
   };
+
+  const handleAutoBoxLimitersChange = (limiters: string) => {
+    handleSettingChange({
+      autoSettings: {
+        ...autoSettings,
+        boxLimiters: limiters,
+      },
+    });
+  };
+
+  const handleAutoBoxLimitersColorChange = (color: string) => {
+    handleSettingChange({
+      autoSettings: {
+        ...autoSettings,
+        boxLimitersColor: color,
+      },
+    });
+  };
+
+
 
   // Options for dropdowns
   const sizeOptions = [
@@ -345,30 +272,8 @@ const RuneCard: React.FC<RuneCardProps> = ({
     { value: "pipe", label: t("runePage.controls.dividerTypes.pipe") },
   ];
 
-  const colorOptions = [
-    { value: "white", label: t("runePage.controls.colors.white") },
-    { value: "gray", label: t("runePage.controls.colors.gray") },
-    { value: "black", label: t("runePage.controls.colors.black") },
-    { value: "beige", label: t("runePage.controls.colors.beige") },
-    { value: "lightred", label: t("runePage.controls.colors.lightred") },
-    { value: "red", label: t("runePage.controls.colors.red") },
-    { value: "dimred", label: t("runePage.controls.colors.dimred") },
-    { value: "orange", label: t("runePage.controls.colors.orange") },
-    { value: "lightgold", label: t("runePage.controls.colors.lightgold") },
-    { value: "yellow", label: t("runePage.controls.colors.yellow") },
-    { value: "lightyellow", label: t("runePage.controls.colors.lightyellow") },
-    { value: "green", label: t("runePage.controls.colors.green") },
-    { value: "dimgreen", label: t("runePage.controls.colors.dimgreen") },
-    { value: "darkgreen", label: t("runePage.controls.colors.darkgreen") },
-    { value: "indigo", label: t("runePage.controls.colors.indigo") },
-    { value: "lightindigo", label: t("runePage.controls.colors.lightindigo") },
-    { value: "turquoise", label: t("runePage.controls.colors.turquoise") },
-    { value: "lightblue", label: t("runePage.controls.colors.lightblue") },
-    { value: "pink", label: t("runePage.controls.colors.pink") },
-    { value: "purple", label: t("runePage.controls.colors.purple") },
-  ];
-
   const boxLimitersOptions = [
+    { value: "spaces", label: t("runePage.controls.boxLimitersTypes.spaces") },
     { value: "~", label: "~" },
     { value: "-", label: "-" },
     { value: "_", label: "_" },
@@ -386,58 +291,59 @@ const RuneCard: React.FC<RuneCardProps> = ({
 
   // Функция для получения структурированного превью руны
   const getPreviewData = React.useCallback(() => {
-    // Определяем локали для превью
-    let previewLocales = runeNames;
+    // Определяем локали для превью в зависимости от режима
+    let previewLocales;
+    let previewSettings;
 
-    if (isManual) {
-      // В ручном режиме извлекаем чистые базовые имена из финальных имен
-      const runeNumber = runeNumbers[rune];
-      previewLocales = { ...runeNames };
-
-      languageCodes.forEach((langCode) => {
-        const finalName = runeNames[langCode as keyof typeof runeNames];
-        previewLocales[langCode as keyof typeof previewLocales] =
-          extractBaseRuneName(finalName, runeNumber);
-      });
+    if (mode === "auto") {
+      // В автоматическом режиме используем захардкоженные локали
+      previewLocales = hardcodedLocales;
+      previewSettings = {
+        mode: "auto" as const,
+        isHighlighted,
+        autoSettings: autoSettings,
+        manualSettings: {
+          locales: previewLocales,
+        },
+      };
+    } else {
+      // В ручном режиме используем ручные локали
+      previewLocales = manualSettings.locales;
+      // В ручном режиме для превью используем дефолтные настройки
+      previewSettings = {
+        mode: "manual" as const,
+        isHighlighted,
+        autoSettings: {
+          numbering: {
+            show: false,
+            dividerType: "parentheses",
+            dividerColor: "white",
+            numberColor: "white",
+          },
+          boxSize: 0,
+          boxLimiters: "~",
+          boxLimitersColor: "white",
+          color: "white",
+        },
+        manualSettings: {
+          locales: previewLocales,
+        },
+      };
     }
-
-    // Всегда генерируем структурированное превью на основе настроек
-    const currentSettings: RuneSettings = {
-      isHighlighted,
-      numbering: {
-        show: showNumber,
-        dividerType,
-        dividerColor,
-        numberColor,
-      },
-      boxSize,
-      boxLimiters,
-      boxLimitersColor,
-      color,
-      isManual: false, // Для превью всегда используем false
-      locales: previewLocales,
-    };
 
     return generateStructuredPreview(
       rune,
-      currentSettings,
-      previewLocale as keyof RuneSettings["locales"]
+      previewSettings as RuneSettings,
+      previewLocale as keyof typeof previewLocales
     );
   }, [
-    runeNames,
-    previewLocale,
+    mode,
     rune,
     isHighlighted,
-    showNumber,
-    dividerType,
-    dividerColor,
-    numberColor,
-    boxSize,
-    boxLimiters,
-    boxLimitersColor,
-    color,
-    isManual,
-    languageCodes,
+    autoSettings,
+    manualSettings,
+    hardcodedLocales,
+    previewLocale,
   ]);
 
   return (
@@ -463,7 +369,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
           {/* Control Panel */}
           <div
             className={`
-                p-4 rounded-xl shadow-inner backdrop-blur-sm transition-all duration-300
+                p-6 rounded-xl shadow-inner backdrop-blur-sm transition-all duration-300
                 ${
                   isDarkTheme
                     ? "bg-gradient-to-br from-gray-800/90 to-gray-900/90 border border-gray-700/50 shadow-gray-900/50"
@@ -472,492 +378,411 @@ const RuneCard: React.FC<RuneCardProps> = ({
               `}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex gap-6">
-              {/* Левый столбец - превьюшка и основные настройки */}
-              <div className="flex-1 space-y-4">
-                {/* Preview */}
-                {highlightedBg &&
-                  unhighlightedBg &&
-                  getD2RColorStyle &&
-                  getFontSize &&
-                  getContainerWidth && (
-                    <div>
-                      <h3
-                        className={`
-                          text-lg font-semibold mb-4 text-center
-                          ${isDarkTheme ? "text-white" : "text-gray-900"}
-                        `}
-                      >
-                        {t("runePage.settings.preview")}
-                      </h3>
-                      <div className="relative rounded-lg bg-gray-900 min-h-[400px] overflow-visible border border-gray-700">
-                        {/* Обёртка для изображения с overflow-hidden */}
-                        <div className="absolute inset-0 rounded-lg overflow-hidden">
-                          {/* Фоновое изображение руны */}
-                          <img
-                            src={
-                              isHighlighted ? highlightedBg : unhighlightedBg
-                            }
-                            alt={`Rune ${
-                              isHighlighted ? "highlighted" : "unhighlighted"
-                            } background`}
-                            className="absolute inset-0 w-full h-[400px] pointer-events-none"
-                            style={{
-                              objectPosition: isHighlighted
-                                ? "57% 20%"
-                                : "45% 20%",
-                            }}
-                          />
-                        </div>
+            {/* Общий превью-блок сверху */}
+            {highlightedBg &&
+              unhighlightedBg &&
+              getD2RColorStyle &&
+              getFontSize &&
+              getContainerWidth && (
+                <div className="mb-6">
+                  <h4
+                    className={`text-sm font-semibold mb-3 text-center ${
+                      isDarkTheme ? "text-gray-300" : "text-gray-700"
+                    }`}
+                  >
+                    {t("runePage.settings.preview")}
+                  </h4>
+                  <div className="max-w-[560px] mx-auto">
+                    <div className={`relative rounded-lg bg-gray-900 border border-gray-700 min-h-[300px] overflow-visible`}>
+                    {/* Обёртка для изображения с overflow-hidden */}
+                    <div className="absolute inset-0 rounded-lg overflow-hidden">
+                      {/* Фоновое изображение руны */}
+                      <img
+                        src={isHighlighted ? highlightedBg : unhighlightedBg}
+                        alt={`Rune ${isHighlighted ? "highlighted" : "unhighlighted"} background`}
+                        className="absolute inset-0 w-full h-[300px] pointer-events-none"
+                        style={{
+                          objectPosition: isHighlighted ? "57% 20%" : "45% 20%",
+                        }}
+                      />
+                    </div>
 
-                        {/* Дропдаун выбора локали в правом верхнем углу */}
-                        <div className="absolute top-2 right-2 z-10">
-                          <div className="w-16">
-                            <Dropdown
-                              options={localeOptions}
-                              selectedValue={previewLocale}
-                              onSelect={setPreviewLocale}
-                              isDarkTheme={true}
-                              size="sm"
-                            />
-                          </div>
-                        </div>
-
-                        {/* Текст с полупрозрачным фоном */}
-                        <div
-                          key={previewKey}
-                          className="absolute px-1 bg-black/50 backdrop-blur-sm"
-                          style={{
-                            top: "87%",
-                            left: "50%",
-                            transform: "translate(-50%, -50%)",
-                            width: getContainerWidth(boxSize),
-                            textAlign: "center" as const,
-                          }}
-                        >
-                          {(() => {
-                            const previewData = getPreviewData();
-
-                            const baseStyle = {
-                              fontSize: getFontSize(previewData.boxSize),
-                              fontFamily: "Diablo, monospace",
-                              fontWeight: "bold",
-                              textShadow: "1px 1px 2px rgba(0,0,0,0.8)",
-                            };
-
-                            return (
-                              <div
-                                style={{
-                                  position: "relative",
-                                  width: "100%",
-                                  height: "100%",
-                                }}
-                              >
-                                {/* Левый ограничитель на левом краю контейнера */}
-                                {previewData.boxSize > 0 && (
-                                  <span
-                                    style={{
-                                      ...baseStyle,
-                                      color:
-                                        getD2RColorStyle?.(
-                                          previewData.boxLimitersColor
-                                        ) || "#FFFFFF",
-                                      position: "absolute",
-                                      left: "0",
-                                      top: "50%",
-                                      transform: "translateY(-50%)",
-                                    }}
-                                  >
-                                    {previewData.boxLimiters}
-                                  </span>
-                                )}
-
-                                {/* Основной контент по центру */}
-                                <span style={baseStyle}>
-                                  {/* Основное имя руны */}
-                                  <span
-                                    style={{
-                                      color:
-                                        getD2RColorStyle?.(
-                                          previewData.baseColor
-                                        ) || "#FFFFFF",
-                                    }}
-                                  >
-                                    {previewData.baseName}
-                                  </span>
-
-                                  {/* Нумерация (если включена) */}
-                                  {previewData.numbering && (
-                                    <>
-                                      {previewData.numbering.openDivider === "|"
-                                        ? " "
-                                        : " "}
-                                      <span
-                                        style={{
-                                          color:
-                                            getD2RColorStyle?.(
-                                              previewData.numbering.dividerColor
-                                            ) || "#FFFFFF",
-                                        }}
-                                      >
-                                        {previewData.numbering.openDivider}
-                                      </span>
-                                      {previewData.numbering.openDivider ===
-                                        "|" && " "}
-                                      <span
-                                        style={{
-                                          color:
-                                            getD2RColorStyle?.(
-                                              previewData.numbering.numberColor
-                                            ) || "#FFFFFF",
-                                        }}
-                                      >
-                                        {previewData.numbering.number}
-                                      </span>
-                                      {previewData.numbering.closeDivider ===
-                                        "|" && " "}
-                                      <span
-                                        style={{
-                                          color:
-                                            getD2RColorStyle?.(
-                                              previewData.numbering.dividerColor
-                                            ) || "#FFFFFF",
-                                        }}
-                                      >
-                                        {previewData.numbering.closeDivider}
-                                      </span>
-                                    </>
-                                  )}
-                                </span>
-
-                                {/* Правый ограничитель на правом краю контейнера */}
-                                {previewData.boxSize > 0 && (
-                                  <span
-                                    style={{
-                                      ...baseStyle,
-                                      color:
-                                        getD2RColorStyle?.(
-                                          previewData.boxLimitersColor
-                                        ) || "#FFFFFF",
-                                      position: "absolute",
-                                      right: "0",
-                                      top: "50%",
-                                      transform: "translateY(-50%)",
-                                    }}
-                                  >
-                                    {previewData.boxLimiters}
-                                  </span>
-                                )}
-                              </div>
-                            );
-                          })()}
-                        </div>
-
-                        {/* Блюр поверх превью в ручном режиме */}
-                        {isManual && (
-                          <div className="absolute inset-0 rounded-lg bg-black/30 backdrop-blur-sm flex items-center justify-center">
-                            <div className="text-white text-xl font-bold text-center px-4">
-                              {t("runePage.settings.previewUnavailable")}
-                            </div>
-                          </div>
-                        )}
+                    {/* Дропдаун выбора локали в правом верхнем углу */}
+                    <div className="absolute top-2 right-2 z-10">
+                      <div className="w-16">
+                        <Select
+                          options={localeOptions}
+                          value={previewLocale}
+                          onChange={(v) => setPreviewLocale(String(v))}
+                          size="small"
+                          style={{ width: "100%" }}
+                        />
                       </div>
                     </div>
-                  )}
-                {/* Controls row - Checkboxes and Dropdowns side by side */}
-                <div className="flex gap-6">
-                  {/* Левый столбец - Checkbox и основные Dropdowns */}
-                  <div className="flex-1 space-y-4">
-                    {/* Highlight Rune Checkbox - показываем всегда */}
+
+                    {/* Текст с полупрозрачным фоном */}
                     <div
-                      className={`
-                        p-2 rounded-lg transition-all duration-200
-                        ${
-                          isDarkTheme
-                            ? "hover:bg-gray-700/50"
-                            : "hover:bg-gray-100/50"
-                        }
-                      `}
+                      key={previewKey}
+                      className="absolute px-1 bg-black/50 backdrop-blur-sm"
+                      style={{
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        bottom: `${300 * 0.13 - (parseFloat(getFontSize(getPreviewData().boxSize)) * (mode === "manual" ? 1.4 : 1)) / 2}px`,
+                        width: getContainerWidth(getPreviewData().boxSize),
+                        minWidth: getContainerWidth(getPreviewData().boxSize),
+                        textAlign: "center" as const,
+                        whiteSpace: mode === "manual" ? "pre-wrap" : "nowrap",
+                        lineHeight: "1.4",
+                      }}
                     >
-                      <Checkbox
-                        checked={isHighlighted}
-                        onChange={handleHighlightChange}
-                        isDarkTheme={isDarkTheme}
-                        size="lg"
-                        label={t("runePage.controls.highlightRune")}
-                      />
-                    </div>
+                      {(() => {
+                        const previewData = getPreviewData();
 
-                    {/* Box Size Dropdown */}
-                    <div>
-                      <label
-                        className={`block text-sm font-semibold mb-2 ${
-                          isDarkTheme ? "text-gray-300" : "text-gray-700"
-                        } ${isManual ? "opacity-50" : ""}`}
-                      >
-                        {t("runePage.controls.boxSize")}
-                      </label>
-                      <Dropdown
-                        options={sizeOptions}
-                        selectedValue={boxSize.toString()}
-                        onSelect={handleBoxSizeChange}
-                        isDarkTheme={isDarkTheme}
-                        size="md"
-                        disabled={isManual}
-                      />
-                    </div>
+                        const baseStyle = {
+                          fontSize: getFontSize(previewData.boxSize),
+                          fontFamily: "Diablo, monospace",
+                          fontWeight: "bold",
+                          textShadow: "1px 1px 2px rgba(0,0,0,0.8)",
+                        };
 
-                    {/* Color Dropdown */}
-                    <div>
-                      <label
-                        className={`block text-sm font-semibold mb-2 ${
-                          isDarkTheme ? "text-gray-300" : "text-gray-700"
-                        } ${isManual ? "opacity-50" : ""}`}
-                      >
-                        {t("runePage.controls.color")}
-                      </label>
-                      <Dropdown
-                        options={colorOptions}
-                        selectedValue={color}
-                        onSelect={handleColorChange}
-                        isDarkTheme={isDarkTheme}
-                        size="md"
-                        disabled={isManual}
-                      />
-                    </div>
+                        return (
+                          <div
+                            style={{
+                              position: "relative",
+                              width: "100%",
+                              height: "100%",
+                            }}
+                          >
+                            {/* Левый ограничитель на левом краю контейнера */}
+                            {(mode === "auto"
+                              ? previewData.boxSize > 0 && previewData.boxLimiters !== "spaces"
+                              : previewData.hasBoxLimiters) && (
+                              <span
+                                style={{
+                                  ...baseStyle,
+                                  color: getD2RColorStyle?.(previewData.boxLimitersColor) || "#FFFFFF",
+                                  position: "absolute",
+                                  left: "0",
+                                  top: "50%",
+                                  transform: "translateY(-50%)",
+                                }}
+                              >
+                                {previewData.boxLimiters}
+                              </span>
+                            )}
 
-                    {/* Box Limiters Dropdown */}
-                    <div>
-                      <label
-                        className={`block text-sm font-semibold mb-2 ${
-                          isDarkTheme ? "text-gray-300" : "text-gray-700"
-                        } ${isManual || boxSize === 0 ? "opacity-50" : ""}`}
-                      >
-                        Box limiters
-                      </label>
-                      <Dropdown
-                        options={boxLimitersOptions}
-                        selectedValue={boxLimiters}
-                        onSelect={handleBoxLimitersChange}
-                        isDarkTheme={isDarkTheme}
-                        size="md"
-                        disabled={isManual || boxSize === 0}
-                      />
-                    </div>
+                            {/* Основной контент по центру */}
+                            <span
+                              style={{
+                                ...baseStyle,
+                                lineHeight: mode === "manual" ? "1" : "normal",
+                              }}
+                            >
+                              {/* Основное имя руны */}
+                              {mode === "manual" ? (
+                                (() => {
+                                  const lines = previewData.baseName.split("\n");
+                                  return lines.map((line, lineIdx) => (
+                                    <React.Fragment key={`line-${lineIdx}`}>
+                                      {line.length === 0 ? (
+                                        <span style={{ color: getD2RColorStyle?.("orange") || "#FFA500" }}>
+                                          {"\u00A0"}
+                                        </span>
+                                      ) : (
+                                        parseColoredText(line, getD2RColorStyle).map((segment, segIdx) => (
+                                          <span key={`seg-${lineIdx}-${segIdx}`} style={{ color: segment.color }}>
+                                            {segment.text || "\u00A0"}
+                                          </span>
+                                        ))
+                                      )}
+                                      {lineIdx < lines.length - 1 && <br />}
+                                    </React.Fragment>
+                                  ));
+                                })()
+                              ) : (
+                                <span style={{ color: getD2RColorStyle?.(previewData.baseColor) || "#FFFFFF" }}>
+                                  {previewData.baseName}
+                                </span>
+                              )}
 
-                    {/* Box Limiters Color Dropdown */}
-                    <div>
-                      <label
-                        className={`block text-sm font-semibold mb-2 ${
-                          isDarkTheme ? "text-gray-300" : "text-gray-700"
-                        } ${isManual || boxSize === 0 ? "opacity-50" : ""}`}
-                      >
-                        Box limiters color
-                      </label>
-                      <Dropdown
-                        options={colorOptions}
-                        selectedValue={boxLimitersColor}
-                        onSelect={handleBoxLimitersColorChange}
-                        isDarkTheme={isDarkTheme}
-                        size="md"
-                        disabled={isManual || boxSize === 0}
-                      />
+                              {/* Нумерация (если включена) */}
+                              {previewData.numbering && (
+                                <>
+                                  {previewData.numbering.openDivider === "|" ? " " : " "}
+                                  <span
+                                    style={{
+                                      color: getD2RColorStyle?.(previewData.numbering.dividerColor) || "#FFFFFF",
+                                    }}
+                                  >
+                                    {previewData.numbering.openDivider}
+                                  </span>
+                                  {previewData.numbering.openDivider === "|" && " "}
+                                  <span
+                                    style={{
+                                      color: getD2RColorStyle?.(previewData.numbering.numberColor) || "#FFFFFF",
+                                    }}
+                                  >
+                                    {previewData.numbering.number}
+                                  </span>
+                                  {previewData.numbering.openDivider === "|" && " "}
+                                  <span
+                                    style={{
+                                      color: getD2RColorStyle?.(previewData.numbering.dividerColor) || "#FFFFFF",
+                                    }}
+                                  >
+                                    {previewData.numbering.closeDivider}
+                                  </span>
+                                </>
+                              )}
+                            </span>
+
+                            {/* Правый ограничитель на правом краю контейнера */}
+                            {(mode === "auto"
+                              ? previewData.boxSize > 0 && previewData.boxLimiters !== "spaces"
+                              : previewData.hasBoxLimiters) && (
+                              <span
+                                style={{
+                                  ...baseStyle,
+                                  color: getD2RColorStyle?.(previewData.boxLimitersColor) || "#FFFFFF",
+                                  position: "absolute",
+                                  right: "0",
+                                  top: "50%",
+                                  transform: "translateY(-50%)",
+                                }}
+                              >
+                                {previewData.boxLimiters}
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })()}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Общая подсветка руны */}
+            <div className={`mb-4 flex justify-center`}>
+              <Checkbox
+                checked={isHighlighted}
+                onChange={handleHighlightChange}
+                isDarkTheme={isDarkTheme}
+                size="lg"
+                label={t("runePage.controls.highlightRune")}
+              />
+            </div>
+
+            {/* Переключатель режимов под превью (grid центрирование) */}
+            <div className="mb-6 grid grid-cols-[1fr_auto_1fr] items-center gap-x-6">
+              <span
+                className={`justify-self-end text-sm font-medium ${
+                  isDarkTheme ? "text-gray-300" : "text-gray-700"
+                } ${mode === "auto" ? "opacity-100" : "opacity-50"}`}
+              >
+                {t("runePage.controls.autoMode")}
+              </span>
+              <div className="justify-self-center">
+                <Switcher
+                  checked={mode === "manual"}
+                  onChange={(checked) => handleModeChange(checked ? "manual" : "auto")}
+                  isDarkTheme={isDarkTheme}
+                  size="md"
+                />
+              </div>
+              <span
+                className={`justify-self-start text-sm font-medium ${
+                  isDarkTheme ? "text-gray-300" : "text-gray-700"
+                } ${mode === "manual" ? "opacity-100" : "opacity-50"}`}
+              >
+                {t("runePage.controls.manualMode")}
+              </span>
+            </div>
+
+            <div className="flex gap-8">
+              {/* Левый блок - Автоматический режим */}
+              <div className={`flex-1 space-y-6 ${mode === "manual" ? "opacity-50 pointer-events-none" : ""}`}>
+                <h3
+                  className={`text-lg font-semibold text-center ${
+                    isDarkTheme ? "text-white" : "text-gray-900"
+                  }`}
+                >
+                  {t("runePage.controls.autoMode")}
+                </h3>
+                {/* Основные настройки автоматического режима */}
+                <div className="space-y-6">
+                  {/* General + Box (в одну строку) */}
+                  <div className="space-y-2">
+                    <h4 className={`text-sm font-semibold ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}>{t("runePage.controls.generalSection")}</h4>
+                    <div className="flex flex-wrap items-end gap-4">
+                      <div className="h-[52px] flex flex-col justify-end">
+                        <label className={`block text-xs font-semibold mb-1 ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}>
+                          {t("runePage.controls.color")}
+                        </label>
+                        <ColorPallet
+                          isDarkTheme={isDarkTheme}
+                          value={autoSettings.color}
+                          onChange={handleAutoColorChange}
+                          size="sm"
+                        />
+                      </div>
+                      <div>
+                        <label className={`block text-xs font-semibold mb-1 ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}>
+                          {t("runePage.controls.boxSize")}
+                        </label>
+                        <Select
+                          options={sizeOptions}
+                          value={autoSettings.boxSize.toString()}
+                          onChange={(v) => handleAutoBoxSizeChange(String(v))}
+                          size="middle"
+                          style={{ minWidth: 140 }}
+                        />
+                      </div>
+                      <div>
+                        <label className={`block text-xs font-semibold mb-1 ${isDarkTheme ? "text-gray-300" : "text-gray-700"} ${autoSettings.boxSize === 0 ? "opacity-50" : ""}`}>
+                          {t("runePage.controls.boxLimiters")}
+                        </label>
+                        <Select
+                          options={boxLimitersOptions}
+                          value={autoSettings.boxLimiters}
+                          onChange={(v) => handleAutoBoxLimitersChange(String(v))}
+                          size="middle"
+                          disabled={autoSettings.boxSize === 0}
+                          style={{ minWidth: 120 }}
+                        />
+                      </div>
+                      <div className="h-[52px] flex flex-col justify-end">
+                        <label className={`block text-xs font-semibold mb-1 ${isDarkTheme ? "text-gray-300" : "text-gray-700"} ${autoSettings.boxSize === 0 ? "opacity-50" : ""}`}>
+                          {t("runePage.controls.boxLimitersColor")}
+                        </label>
+                        <ColorPallet
+                          isDarkTheme={isDarkTheme}
+                          value={autoSettings.boxLimitersColor}
+                          onChange={handleAutoBoxLimitersColorChange}
+                          size="sm"
+                          disabled={autoSettings.boxSize === 0}
+                        />
+                      </div>
                     </div>
                   </div>
 
-                  {/* Правый столбец - настройки нумерации */}
-                  <div className="flex-1 space-y-4">
-                    {/* Show Rune Number Checkbox */}
-                    <div
-                      className={`
-                        p-2 rounded-lg transition-all duration-200
-                        ${
-                          isDarkTheme
-                            ? "hover:bg-gray-700/50"
-                            : "hover:bg-gray-100/50"
-                        }
-                      `}
-                    >
-                      <Checkbox
-                        checked={showNumber}
-                        onChange={handleShowNumberChange}
-                        isDarkTheme={isDarkTheme}
-                        size="lg"
-                        disabled={isManual}
-                        label={t("runePage.controls.showRuneNumber")}
-                      />
-                    </div>
-
-                    {/* Divider Type Dropdown */}
-                    <div>
-                      <label
-                        className={`block text-sm font-semibold mb-2 ${
-                          isDarkTheme ? "text-gray-300" : "text-gray-700"
-                        } ${isManual || !showNumber ? "opacity-50" : ""}`}
-                      >
-                        {t("runePage.controls.divider")}
-                      </label>
-                      <Dropdown
-                        options={dividerOptions}
-                        selectedValue={dividerType}
-                        onSelect={handleDividerTypeChange}
-                        isDarkTheme={isDarkTheme}
-                        size="md"
-                        disabled={isManual || !showNumber}
-                      />
-                    </div>
-
-                    {/* Divider Color Dropdown */}
-                    <div>
-                      <label
-                        className={`block text-sm font-semibold mb-2 ${
-                          isDarkTheme ? "text-gray-300" : "text-gray-700"
-                        } ${isManual || !showNumber ? "opacity-50" : ""}`}
-                      >
-                        {t("runePage.controls.dividerColor")}
-                      </label>
-                      <Dropdown
-                        options={colorOptions}
-                        selectedValue={dividerColor}
-                        onSelect={handleDividerColorChange}
-                        isDarkTheme={isDarkTheme}
-                        size="md"
-                        disabled={isManual || !showNumber}
-                      />
-                    </div>
-
-                    {/* Number Color Dropdown */}
-                    <div>
-                      <label
-                        className={`block text-sm font-semibold mb-2 ${
-                          isDarkTheme ? "text-gray-300" : "text-gray-700"
-                        } ${isManual || !showNumber ? "opacity-50" : ""}`}
-                      >
-                        {t("runePage.controls.numberColor")}
-                      </label>
-                      <Dropdown
-                        options={colorOptions}
-                        selectedValue={numberColor}
-                        onSelect={handleNumberColorChange}
-                        isDarkTheme={isDarkTheme}
-                        size="md"
-                        disabled={isManual || !showNumber}
-                      />
+                  {/* Rune Number (в одну строку) */}
+                  <div>
+                    <h4 className={`text-sm font-semibold ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}>{t("runePage.controls.runeNumberTitle")}</h4>
+                    <div className="flex flex-wrap items-end gap-4">
+                      <div className={`h-[32px] flex items-center px-2 rounded-lg ${isDarkTheme ? "bg-gray-700/20" : "bg-gray-100/40"}`}>
+                        <Checkbox
+                          checked={autoSettings.numbering.show}
+                          onChange={handleAutoShowNumberChange}
+                          isDarkTheme={isDarkTheme}
+                          size="md"
+                          label={t("runePage.controls.showRuneNumber")}
+                        />
+                      </div>
+                      <div className="h-[52px] flex flex-col justify-end">
+                        <label className={`block text-xs font-semibold mb-1 ${isDarkTheme ? "text-gray-300" : "text-gray-700"} ${!autoSettings.numbering.show ? "opacity-50" : ""}`}>
+                          {t("runePage.controls.numberColor")}
+                        </label>
+                        <ColorPallet
+                          isDarkTheme={isDarkTheme}
+                          value={autoSettings.numbering.numberColor}
+                          onChange={handleAutoNumberColorChange}
+                          size="sm"
+                          disabled={!autoSettings.numbering.show}
+                        />
+                      </div>
+                      <div className="h-[52px] flex flex-col justify-end">
+                        <label className={`block text-xs font-semibold mb-1 ${isDarkTheme ? "text-gray-300" : "text-gray-700"} ${!autoSettings.numbering.show ? "opacity-50" : ""}`}>
+                          {t("runePage.controls.divider")}
+                        </label>
+                        <Select
+                          options={dividerOptions}
+                          value={autoSettings.numbering.dividerType}
+                          onChange={(v) => handleAutoDividerTypeChange(String(v))}
+                          size="middle"
+                          disabled={!autoSettings.numbering.show}
+                          style={{ minWidth: 70 }}
+                        />
+                      </div>
+                      <div className="h-[52px] flex flex-col justify-end">
+                        <label className={`block text-xs font-semibold mb-1 ${isDarkTheme ? "text-gray-300" : "text-gray-700"} ${!autoSettings.numbering.show ? "opacity-50" : ""}`}>
+                          {t("runePage.controls.dividerColor")}
+                        </label>
+                        <ColorPallet
+                          isDarkTheme={isDarkTheme}
+                          value={autoSettings.numbering.dividerColor}
+                          onChange={handleAutoDividerColorChange}
+                          size="sm"
+                          disabled={!autoSettings.numbering.show}
+                        />
+                      </div>
+                      
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Вертикальный разделитель */}
-              <div
-                className={`w-px ${
-                  isDarkTheme ? "bg-gray-700" : "bg-gray-200"
-                }`}
-              ></div>
+              <div className={`w-px ${isDarkTheme ? "bg-gray-700" : "bg-gray-200"}`}></div>
 
-              {/* Правый столбец - настройки локализации */}
-              <div className="flex-1">
-                <div className="flex items-center justify-between mb-3">
+              {/* Правый блок - Ручной режим */}
+              <div className={`flex-1 space-y-6 ${mode === "auto" ? "opacity-50 pointer-events-none" : ""}`}>
+                <h3
+                  className={`text-lg font-semibold text-center ${
+                    isDarkTheme ? "text-white" : "text-gray-900"
+                  }`}
+                >
+                  {t("runePage.controls.manualMode")}
+                </h3>
+
+
+                {/* Language customization */}
+                <div>
                   <h4
-                    className={`text-sm font-semibold ${
+                    className={`text-sm font-semibold mb-3 ${
                       isDarkTheme ? "text-gray-300" : "text-gray-700"
                     }`}
                   >
                     {t("runePage.controls.languageCustomization")}
                   </h4>
-                  <Switcher
-                    checked={isManual}
-                    onChange={handleManualChange}
-                    label={t("runePage.controls.manualMode")}
-                    isDarkTheme={isDarkTheme}
-                    size="sm"
-                  />
-                </div>
-                <div
-                  className={`space-y-3 overflow-x-hidden overflow-y-auto ${
-                    "" // isManual ? "max-h-[338px]" : "max-h-60"
-                  }`}
-                >
-                  {languageCodes.map((langCode) => (
-                    <div key={langCode}>
-                      {isManual ? (
-                        // В ручном режиме - подпись сверху + textarea
-                        <div className="space-y-1 mx-2">
-                          <label
-                            className={`text-xs font-medium ${
-                              isDarkTheme ? "text-gray-400" : "text-gray-600"
-                            }`}
-                          >
-                            {t(`runePage.controls.languageLabels.${langCode}`)}{" "}
-                            ({langCode})
-                          </label>
-                          <div className="flex items-start space-x-2">
-                            <textarea
-                              value={
-                                runeNames[langCode as keyof typeof runeNames]
-                              }
-                              onChange={(e) =>
-                                handleLanguageNameChange(
-                                  langCode,
-                                  e.target.value
-                                )
-                              }
-                              placeholder={t(
-                                `runePage.controls.placeholders.${langCode}`
-                              )}
-                              rows={3}
-                              className={`
-                                  flex-1 px-3 py-2 text-sm rounded-lg border transition-all duration-200 resize-vertical
-                                  ${
-                                    isDarkTheme
-                                      ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
-                                      : "bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
-                                  }
-                                `}
-                            />
-                            <ColorHint isDarkTheme={isDarkTheme} />
-                          </div>
+                  <div className="space-y-3 max-h-[400px] overflow-y-auto">
+                    {languageCodes.map((langCode) => (
+                      <div key={langCode} className="space-y-1">
+                        <label
+                          className={`text-xs font-medium ${
+                            isDarkTheme ? "text-gray-400" : "text-gray-600"
+                          }`}
+                        >
+                          {t(`runePage.controls.languageLabels.${langCode}`)}{" "}
+                          ({langCode})
+                        </label>
+                        <div className="flex items-end space-x-2">
+                          <textarea
+                            value={manualSettings.locales[langCode as keyof typeof manualSettings.locales]}
+                            onChange={(e) =>
+                              handleLanguageNameChange(
+                                langCode,
+                                e.target.value
+                              )
+                            }
+                            placeholder={t(
+                              `runePage.controls.placeholders.${langCode}`
+                            )}
+                            rows={3}
+                            className={`
+                                flex-1 px-3 py-2 text-sm rounded-lg border transition-all duration-200 resize-vertical
+                                ${
+                                  isDarkTheme
+                                    ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
+                                    : "bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
+                                }
+                              `}
+                          />
+                          <ColorHint isDarkTheme={isDarkTheme} />
                         </div>
-                      ) : (
-                        // В обычном режиме - только input с подписью сбоку
-                        <div className="flex items-center space-x-3">
-                          <label
-                            className={`text-xs font-medium flex-shrink-0 w-8 ${
-                              isDarkTheme ? "text-gray-400" : "text-gray-600"
-                            }`}
-                          >
-                            {langCode}:
-                          </label>
-                          <div className="flex-1 flex items-center space-x-2">
-                            <input
-                              type="text"
-                              value={
-                                runeNames[langCode as keyof typeof runeNames]
-                              }
-                              onChange={(e) =>
-                                handleLanguageNameChange(
-                                  langCode,
-                                  e.target.value
-                                )
-                              }
-                              placeholder={t(
-                                `runePage.controls.placeholders.${langCode}`
-                              )}
-                              className={`
-                                  flex-1 px-3 py-2 text-sm rounded-lg border transition-all duration-200
-                                  ${
-                                    isDarkTheme
-                                      ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
-                                      : "bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
-                                  }
-                                `}
-                            />
-                            <ColorHint isDarkTheme={isDarkTheme} />
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  ))}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>

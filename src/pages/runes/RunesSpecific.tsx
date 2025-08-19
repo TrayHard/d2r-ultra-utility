@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { ERune, runes, runeNumbers } from "./constants/runes.ts";
+import { ERune, runes, runeNumbers, runeMinLvl } from "./constants/runes.ts";
 import RuneCard from "./RuneCard.tsx";
 import Icon from "@mdi/react";
 import {
@@ -152,7 +152,25 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
   const handleMassEditApply = (newSettings: Partial<RuneSettings>) => {
     selectedRunes.forEach((rune) => {
       const currentSettings = getRuneSettings(rune);
-      const mergedSettings = { ...currentSettings, ...newSettings };
+
+      const incomingAuto = newSettings.autoSettings;
+      const mergedAuto = {
+        ...currentSettings.autoSettings,
+        ...(incomingAuto ?? {}),
+        numbering: {
+          ...currentSettings.autoSettings.numbering,
+          ...(incomingAuto?.numbering ?? {}),
+        },
+      };
+
+      const mergedSettings: RuneSettings = {
+        ...currentSettings,
+        ...(newSettings.isHighlighted !== undefined
+          ? { isHighlighted: newSettings.isHighlighted }
+          : {}),
+        autoSettings: mergedAuto,
+      };
+
       updateRuneSettings(rune, mergedSettings);
     });
   };
@@ -399,7 +417,7 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
             <div className="p-2">
               {filteredAndSortedRunes.map((rune) => {
                 const runeName = rune.charAt(0).toUpperCase() + rune.slice(1);
-                const minLevel = runeNumbers[rune];
+                const minLevel = runeMinLvl[rune];
                 const runeImagePath = `/img/runes/${rune}_rune.webp`;
                 const isSelected = selectedRunes.has(rune);
                 const isSelectedForSettings = selectedRuneForSettings === rune;

@@ -102,8 +102,8 @@ const RelatedItemsBlock: React.FC<{
                     flex items-center gap-2 px-3 py-2 rounded-lg border transition-all duration-200
                     ${
                       isDarkTheme
-                        ? "bg-gray-700/50 border-gray-600 hover:bg-gray-700"
-                        : "bg-white/50 border-gray-300 hover:bg-white"
+                        ? "bg-gray-700/50 border-gray-600"
+                        : "bg-white/50 border-gray-300"
                     }
                   `}
                 >
@@ -150,8 +150,8 @@ const RelatedItemsBlock: React.FC<{
                     flex items-center gap-2 px-3 py-2 rounded-lg border transition-all duration-200
                     ${
                       isDarkTheme
-                        ? "bg-gray-700/50 border-gray-600 hover:bg-gray-700"
-                        : "bg-white/50 border-gray-300 hover:bg-white"
+                        ? "bg-gray-700/50 border-gray-600"
+                        : "bg-white/50 border-gray-300"
                     }
                   `}
                 >
@@ -498,24 +498,29 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
                 `}
               >
                 <div className="flex justify-between items-center gap-4">
-                  <Switcher
-                    checked={enabled}
-                    onChange={handleEnabledChange}
-                    label={t("itemsPage.settings.enableItem") || "Enable Item"}
-                    isDarkTheme={isDarkTheme}
-                    size="md"
-                  />
-                  <Switcher
-                    checked={showDifficultyClassMarker}
-                    onChange={handleShowDifficultyClassMarkerChange}
-                    label={
-                      t("itemsPage.settings.showDifficultyClassMarker") ||
-                      "Show difficulty class marker"
-                    }
-                    isDarkTheme={isDarkTheme}
-                    size="md"
-                    disabled={!enabled}
-                  />
+                  <Tooltip title={t("itemsPage.settings.tooltips.enableItem")} placement="top">
+                    <div>
+                      <Switcher
+                        checked={enabled}
+                        onChange={handleEnabledChange}
+                        label={t("itemsPage.settings.enableItem")}
+                        isDarkTheme={isDarkTheme}
+                        size="md"
+                      />
+                    </div>
+                  </Tooltip>
+                  <Tooltip title={<div style={{ textWrap: "pretty" }}>{t("itemsPage.settings.tooltips.showDifficultyClassMarkerSwitch")}</div>} placement="top">
+                    <div>
+                      <Switcher
+                        checked={showDifficultyClassMarker}
+                        onChange={handleShowDifficultyClassMarkerChange}
+                        label={t("itemsPage.settings.showDifficultyClassMarker")}
+                        isDarkTheme={isDarkTheme}
+                        size="md"
+                        disabled={!enabled}
+                      />
+                    </div>
+                  </Tooltip>
                 </div>
               </div>
 
