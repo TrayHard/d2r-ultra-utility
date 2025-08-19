@@ -403,7 +403,13 @@
     }
   },
   "itemsPage": {
-    "settings": { "title": "Ustawienia przedmiotów" },
+    "settings": { 
+      "title": "Ustawienia przedmiotów",
+      "tooltips": {
+        "enableItem": "Wyświetlaj w grze",
+        "showDifficultyClassMarkerSwitch": "Wyświetlaj klasę trudności (normalny, wyjątkowy, elitarny)"
+      }
+    },
     "sorting": {
       "byType": "Według typu",
       "byName": "Według nazwy",

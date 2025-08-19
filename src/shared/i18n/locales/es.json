@@ -393,7 +393,13 @@
     }
   },
   "itemsPage": {
-    "settings": { "title": "Ajustes de objetos" },
+    "settings": { 
+      "title": "Ajustes de objetos",
+      "tooltips": {
+        "enableItem": "Mostrar en el juego",
+        "showDifficultyClassMarkerSwitch": "Mostrar clase de dificultad (normal, excepcional, élite)"
+      }
+    },
     "sorting": {
       "byType": "Por tipo",
       "byName": "Por nombre",
