@@ -20,26 +20,26 @@ Desktop application to enhance your Diablo II Resurrected playing experience.
 <img src="https://i.imgur.com/k8Brnzv.png" width="450" />
 
 #### Runes
-<img src="https://i.imgur.com/0J0nJvV.png" height="500" />
+<img src="https://i.imgur.com/W46s3Iw.png" height="500" />
 
 - You can define how they should look like
 
 - You can highlight the runes you want
 
 - You can select and mass edit them
-<img src="https://i.imgur.com/oCHX84L.png" width="500" />
+<img src="https://i.imgur.com/rxVfdeE.png" width="600" />
 
 - You can edit them manually directly
-<img src="https://i.imgur.com/3MxTkwj.png" width="500" />
+<img src="https://i.imgur.com/CyAx17m.png" width="600" />
 
 #### Common items
-<img src="https://i.imgur.com/nrNPm91.png" height="500" />
+<img src="https://i.imgur.com/PN724uG.png" height="500" />
 
 #### Profiles
 Now you can store all your loot filter settings and switch between them very quickly. Different characters or different game stage (levelling\endgame farm)? You can change the profile for your needs. 
 And you can also export\import it to save it for yourself or to share with friends!
 
-<img src="https://i.imgur.com/iauOqA6.png" height="500" />
+<img src="https://i.imgur.com/fTPAeTC.png" height="500" />
 
 #### Localizations
 You can choose the game locales you are interested in
