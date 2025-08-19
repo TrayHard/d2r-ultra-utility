@@ -152,7 +152,25 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
   const handleMassEditApply = (newSettings: Partial<RuneSettings>) => {
     selectedRunes.forEach((rune) => {
       const currentSettings = getRuneSettings(rune);
-      const mergedSettings = { ...currentSettings, ...newSettings };
+
+      const incomingAuto = newSettings.autoSettings;
+      const mergedAuto = {
+        ...currentSettings.autoSettings,
+        ...(incomingAuto ?? {}),
+        numbering: {
+          ...currentSettings.autoSettings.numbering,
+          ...(incomingAuto?.numbering ?? {}),
+        },
+      };
+
+      const mergedSettings: RuneSettings = {
+        ...currentSettings,
+        ...(newSettings.isHighlighted !== undefined
+          ? { isHighlighted: newSettings.isHighlighted }
+          : {}),
+        autoSettings: mergedAuto,
+      };
+
       updateRuneSettings(rune, mergedSettings);
     });
   };
