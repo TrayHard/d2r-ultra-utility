@@ -102,8 +102,8 @@ const RelatedItemsBlock: React.FC<{
                     flex items-center gap-2 px-3 py-2 rounded-lg border transition-all duration-200
                     ${
                       isDarkTheme
-                        ? "bg-gray-700/50 border-gray-600 hover:bg-gray-700"
-                        : "bg-white/50 border-gray-300 hover:bg-white"
+                        ? "bg-gray-700/50 border-gray-600"
+                        : "bg-white/50 border-gray-300"
                     }
                   `}
                 >
@@ -150,8 +150,8 @@ const RelatedItemsBlock: React.FC<{
                     flex items-center gap-2 px-3 py-2 rounded-lg border transition-all duration-200
                     ${
                       isDarkTheme
-                        ? "bg-gray-700/50 border-gray-600 hover:bg-gray-700"
-                        : "bg-white/50 border-gray-300 hover:bg-white"
+                        ? "bg-gray-700/50 border-gray-600"
+                        : "bg-white/50 border-gray-300"
                     }
                   `}
                 >

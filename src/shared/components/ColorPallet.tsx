@@ -1,7 +1,5 @@
 import React, { useMemo } from "react";
 import { Tooltip } from "antd";
-import Icon from "@mdi/react";
-import { mdiPalette } from "@mdi/js";
 import { colorCodes } from "../constants";
 
 interface ColorPalletProps {
@@ -86,20 +84,14 @@ const ColorPallet: React.FC<ColorPalletProps> = ({
       <button
         type="button"
         disabled={disabled}
-        className={`inline-flex items-center justify-center gap-2 px-1 py-1 roundedborder transition-all 
+        className={`min-w-[32px] line-flex items-center justify-center gap-2 px-1 py-1 roundedborder transition-all 
           ${disabled ? "opacity-50 cursor-not-allowed hover:border-gray-600" : ""} 
           ${isDarkTheme
             ? "border-gray-600 hover:border-yellow-400"
             : "border-gray-300 hover:border-yellow-500"
           }`}
         style={{ backgroundColor: currentCss, height: buttonSize, display: "inline-block" }}
-      >
-        {/* <span
-          className="rounded"
-          style={{ width: buttonSize, height: buttonSize, backgroundColor: currentCss, display: "inline-block" }}
-        />
-        <Icon path={mdiPalette} size={0.7} /> */}
-      </button>
+      />
     </Tooltip>
   );
 };
