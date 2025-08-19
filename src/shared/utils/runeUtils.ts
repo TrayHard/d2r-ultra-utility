@@ -708,9 +708,15 @@ export const generateFinalRuneName = (
     return finalName;
   } else if (boxSize === 1) {
     // Medium - добавляем отступы из 4 пробелов
+    if (boxLimiters === "spaces") {
+      return `    ${finalName}    `;
+    }
     return `${boxLimitersColorCode}${boxLimiters}    ${finalName}    ${boxLimitersColorCode}${boxLimiters}`;
   } else if (boxSize === 2) {
     // Large - добавляем отступы из 8 пробелов
+    if (boxLimiters === "spaces") {
+      return `        ${finalName}        `;
+    }
     return `${boxLimitersColorCode}${boxLimiters}        ${finalName}        ${boxLimitersColorCode}${boxLimiters}`;
   }
 

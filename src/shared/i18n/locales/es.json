@@ -158,6 +158,9 @@
       "color": "Color",
       "boxLimiters": "Limitadores",
       "boxLimitersColor": "Color de limitadores",
+      "boxLimitersTypes": {
+        "spaces": "Solo espacios"
+      },
       "languageCustomization": "Personalización de idioma",
       "manualMode": "Modo manual",
       "preview": "Vista previa",

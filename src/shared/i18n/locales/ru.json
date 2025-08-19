@@ -180,6 +180,9 @@
       "color": "Цвет",
       "boxLimiters": "Ограничители",
       "boxLimitersColor": "Цвет ограничителей",
+      "boxLimitersTypes": {
+        "spaces": "Только пробелы"
+      },
       "languageCustomization": "Настройка языков",
       "manualMode": "Ручной режим",
       "autoMode": "Автоматический режим",

@@ -180,6 +180,9 @@
       "color": "Farbe",
       "boxLimiters": "Begrenzer",
       "boxLimitersColor": "Farbe der Begrenzer",
+      "boxLimitersTypes": {
+        "spaces": "Nur Leerzeichen"
+      },
       "languageCustomization": "Sprachanpassung",
       "manualMode": "Manueller Modus",
       "preview": "Vorschau",

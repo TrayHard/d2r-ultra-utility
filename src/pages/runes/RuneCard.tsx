@@ -273,6 +273,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
   ];
 
   const boxLimitersOptions = [
+    { value: "spaces", label: t("runePage.controls.boxLimitersTypes.spaces") },
     { value: "~", label: "~" },
     { value: "-", label: "-" },
     { value: "_", label: "_" },
@@ -424,9 +425,9 @@ const RuneCard: React.FC<RuneCardProps> = ({
                       key={previewKey}
                       className="absolute px-1 bg-black/50 backdrop-blur-sm"
                       style={{
-                        top: "87%",
                         left: "50%",
-                        transform: "translate(-50%, -50%)",
+                        transform: "translateX(-50%)",
+                        bottom: `${300 * 0.13 - (parseFloat(getFontSize(getPreviewData().boxSize)) * (mode === "manual" ? 1.4 : 1)) / 2}px`,
                         width: getContainerWidth(getPreviewData().boxSize),
                         minWidth: getContainerWidth(getPreviewData().boxSize),
                         textAlign: "center" as const,
@@ -453,7 +454,9 @@ const RuneCard: React.FC<RuneCardProps> = ({
                             }}
                           >
                             {/* Левый ограничитель на левом краю контейнера */}
-                            {(mode === "auto" ? previewData.boxSize > 0 : previewData.hasBoxLimiters) && (
+                            {(mode === "auto"
+                              ? previewData.boxSize > 0 && previewData.boxLimiters !== "spaces"
+                              : previewData.hasBoxLimiters) && (
                               <span
                                 style={{
                                   ...baseStyle,
@@ -534,7 +537,9 @@ const RuneCard: React.FC<RuneCardProps> = ({
                             </span>
 
                             {/* Правый ограничитель на правом краю контейнера */}
-                            {(mode === "auto" ? previewData.boxSize > 0 : previewData.hasBoxLimiters) && (
+                            {(mode === "auto"
+                              ? previewData.boxSize > 0 && previewData.boxLimiters !== "spaces"
+                              : previewData.hasBoxLimiters) && (
                               <span
                                 style={{
                                   ...baseStyle,

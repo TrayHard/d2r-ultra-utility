@@ -180,6 +180,9 @@
       "color": "Колір",
       "boxLimiters": "Обмежувачі",
       "boxLimitersColor": "Колір обмежувачів",
+      "boxLimitersTypes": {
+        "spaces": "Лише пробіли"
+      },
       "languageCustomization": "Налаштування мов",
       "manualMode": "Ручний режим",
       "preview": "Передперегляд",
