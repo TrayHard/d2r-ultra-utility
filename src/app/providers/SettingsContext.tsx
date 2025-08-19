@@ -97,9 +97,15 @@ export interface CommonSettings {
   smallCharms: CommonItemSettings;
   largeCharms: CommonItemSettings;
   grandCharms: CommonItemSettings;
+  gold: CommonItemSettings;
+  keys: CommonItemSettings;
   healthPotions: PotionGroupSettings;
   manaPotions: PotionGroupSettings;
   rejuvenationPotions: PotionGroupSettings;
+  identify: PotionGroupSettings; // Scroll/Tome of Identify
+  portal: PotionGroupSettings; // Scroll/Tome of Town Portal
+  uberKeys: PotionGroupSettings; // 3 keys
+  essences: PotionGroupSettings; // 4 essences + token
 }
 
 export interface GemSettings {
@@ -191,10 +197,10 @@ interface SettingsContextType {
   // Setter'ы для CommonTab
   getCommonSettings: () => CommonSettings;
   getCommonItemSettings: (
-    item: "arrows" | "bolts" | "staminaPotions" | "antidotes" | "thawingPotions" | "amulets" | "rings" | "jewels" | "smallCharms" | "largeCharms" | "grandCharms"
+    item: "arrows" | "bolts" | "staminaPotions" | "antidotes" | "thawingPotions" | "amulets" | "rings" | "jewels" | "smallCharms" | "largeCharms" | "grandCharms" | "gold" | "keys"
   ) => CommonItemSettings;
   getPotionGroupSettings: (
-    item: "healthPotions" | "manaPotions" | "rejuvenationPotions"
+    item: "healthPotions" | "manaPotions" | "rejuvenationPotions" | "identify" | "portal" | "uberKeys" | "essences"
   ) => PotionGroupSettings;
   updateCommonItemSettings: (
     item:
@@ -208,15 +214,17 @@ interface SettingsContextType {
       | "jewels"
       | "smallCharms"
       | "largeCharms"
-      | "grandCharms",
+      | "grandCharms"
+      | "gold"
+      | "keys",
     newSettings: Partial<CommonItemSettings>
   ) => void;
   updatePotionGroupSettings: (
-    item: "healthPotions" | "manaPotions" | "rejuvenationPotions",
+    item: "healthPotions" | "manaPotions" | "rejuvenationPotions" | "identify" | "portal" | "uberKeys" | "essences",
     newSettings: Partial<PotionGroupSettings>
   ) => void;
   updatePotionLevelSettings: (
-    item: "healthPotions" | "manaPotions" | "rejuvenationPotions",
+    item: "healthPotions" | "manaPotions" | "rejuvenationPotions" | "identify" | "portal" | "uberKeys" | "essences",
     level: number,
     newSettings: Partial<PotionLevelSettings>
   ) => void;
@@ -335,12 +343,20 @@ const cleanSettings = (oldCommon: any): CommonSettings => {
   });
 
   // Удаляем activeTab из групп зелий
-  ["healthPotions", "manaPotions", "rejuvenationPotions"].forEach(
+  ["healthPotions", "manaPotions", "rejuvenationPotions", "identify", "portal", "uberKeys", "essences"].forEach(
     (potionType) => {
       if (cleaned[potionType]) {
         cleaned[potionType] = {
           ...getDefaultPotionGroupSettings(
-            potionType === "rejuvenationPotions" ? 2 : 5
+            potionType === "rejuvenationPotions"
+              ? 2
+              : potionType === "identify" || potionType === "portal"
+              ? 2
+              : potionType === "uberKeys"
+              ? 3
+              : potionType === "essences"
+              ? 5
+              : 5
           ),
           ...cleaned[potionType],
         };
@@ -495,9 +511,15 @@ const getDefaultCommonSettings = (): CommonSettings => ({
   smallCharms: getDefaultCommonItemSettings(),
   largeCharms: getDefaultCommonItemSettings(),
   grandCharms: getDefaultCommonItemSettings(),
+  gold: getDefaultCommonItemSettings(),
+  keys: getDefaultCommonItemSettings(),
   healthPotions: getDefaultPotionGroupSettings(5), // 5 уровней для хп
   manaPotions: getDefaultPotionGroupSettings(5), // 5 уровней для маны
   rejuvenationPotions: getDefaultPotionGroupSettings(2), // 2 уровня для реджувок
+  identify: getDefaultPotionGroupSettings(2), // 2 уровня: scroll/tome identify
+  portal: getDefaultPotionGroupSettings(2), // 2 уровня: scroll/tome portal
+  uberKeys: getDefaultPotionGroupSettings(3), // 3 ключа
+  essences: getDefaultPotionGroupSettings(5), // 4 эссенции + токен
 });
 
 const getDefaultGemSettings = (): GemSettings => ({
@@ -1405,6 +1427,8 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         | "smallCharms"
         | "largeCharms"
         | "grandCharms"
+        | "gold"
+        | "keys"
     ) => {
       return settings.common[item];
     },
@@ -1412,7 +1436,16 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   );
 
   const getPotionGroupSettings = useCallback(
-    (item: "healthPotions" | "manaPotions" | "rejuvenationPotions") => {
+    (
+      item:
+        | "healthPotions"
+        | "manaPotions"
+        | "rejuvenationPotions"
+        | "identify"
+        | "portal"
+        | "uberKeys"
+        | "essences"
+    ) => {
       return settings.common[item];
     },
     [settings.common]
@@ -1431,7 +1464,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         | "jewels"
         | "smallCharms"
         | "largeCharms"
-        | "grandCharms",
+        | "grandCharms"
+        | "gold"
+        | "keys",
       newSettings: Partial<CommonItemSettings>
     ) => {
       setSettings((prevSettings) => ({
@@ -1450,7 +1485,14 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
 
   const updatePotionGroupSettings = useCallback(
     (
-      item: "healthPotions" | "manaPotions" | "rejuvenationPotions",
+      item:
+        | "healthPotions"
+        | "manaPotions"
+        | "rejuvenationPotions"
+        | "identify"
+        | "portal"
+        | "uberKeys"
+        | "essences",
       newSettings: Partial<PotionGroupSettings>
     ) => {
       setSettings((prevSettings) => ({
@@ -1469,7 +1511,14 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
 
   const updatePotionLevelSettings = useCallback(
     (
-      item: "healthPotions" | "manaPotions" | "rejuvenationPotions",
+      item:
+        | "healthPotions"
+        | "manaPotions"
+        | "rejuvenationPotions"
+        | "identify"
+        | "portal"
+        | "uberKeys"
+        | "essences",
       level: number,
       newSettings: Partial<PotionLevelSettings>
     ) => {
