@@ -180,6 +180,9 @@
       "color": "Color",
       "boxLimiters": "Limiters",
       "boxLimitersColor": "Limiters Color",
+      "boxLimitersTypes": {
+        "spaces": "Just spaces"
+      },
       "languageCustomization": "Language Customization",
       "manualMode": "Manual Mode",
       "autoMode": "Automatic Mode",

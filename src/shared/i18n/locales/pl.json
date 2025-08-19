@@ -158,6 +158,9 @@
       "color": "Kolor",
       "boxLimiters": "Ograniczniki",
       "boxLimitersColor": "Kolor ograniczników",
+      "boxLimitersTypes": {
+        "spaces": "Tylko spacje"
+      },
       "languageCustomization": "Dostosowanie języka",
       "manualMode": "Tryb ręczny",
       "preview": "Podgląd",

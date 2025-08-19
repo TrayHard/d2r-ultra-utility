@@ -158,6 +158,9 @@
       "color": "Couleur",
       "boxLimiters": "Délimiteurs",
       "boxLimitersColor": "Couleur des délimiteurs",
+      "boxLimitersTypes": {
+        "spaces": "Uniquement des espaces"
+      },
       "languageCustomization": "Personnalisation de la langue",
       "manualMode": "Mode manuel",
       "preview": "Aperçu",
