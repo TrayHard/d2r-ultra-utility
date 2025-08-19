@@ -1,4 +1,4 @@
-import { ERune, runeNumbers } from "../../pages/runes/constants/runes.ts";
+import { ERune, runeNumbers, runeHardcodedLocales } from "../../pages/runes/constants/runes.ts";
 import { RuneSettings } from "../../app/providers/SettingsContext.tsx";
 import { colorCodes, MOD_ROOT } from "../constants.ts";
 
@@ -337,8 +337,8 @@ export const parseColoredText = (text: string, getD2RColorStyle?: (colorCode: st
     charToNameMap[codeChar] = name;
   });
 
-  // Текущий активный код цвета (как в тексте), по умолчанию белый (white)
-  let currentCode = "white";
+  // Текущий активный код цвета (символ кода). По умолчанию для рун используется orange (ÿc@)
+  let currentCode: string | undefined = undefined;
   let match;
   
   while ((match = colorCodeRegex.exec(text)) !== null) {
@@ -346,8 +346,8 @@ export const parseColoredText = (text: string, getD2RColorStyle?: (colorCode: st
     if (match.index > lastIndex) {
       const textSegment = text.substring(lastIndex, match.index);
       if (textSegment) {
-        const colorName = charToNameMap[currentCode] ?? "white";
-        segments.push({ text: textSegment, color: getD2RColorStyle?.(colorName) || "#FFFFFF" });
+        const colorName = (currentCode ? charToNameMap[currentCode] : undefined) ?? "orange";
+        segments.push({ text: textSegment, color: getD2RColorStyle?.(colorName) || "#FFA500" });
       }
     }
     
@@ -360,17 +360,39 @@ export const parseColoredText = (text: string, getD2RColorStyle?: (colorCode: st
   if (lastIndex < text.length) {
     const textSegment = text.substring(lastIndex);
     if (textSegment) {
-      const colorName = charToNameMap[currentCode] ?? "white";
-      segments.push({ text: textSegment, color: getD2RColorStyle?.(colorName) || "#FFFFFF" });
+      const colorName = (currentCode ? charToNameMap[currentCode] : undefined) ?? "orange";
+      segments.push({ text: textSegment, color: getD2RColorStyle?.(colorName) || "#FFA500" });
     }
   }
   
   // Если нет цветовых кодов, возвращаем весь текст с дефолтным цветом
   if (segments.length === 0) {
-    segments.push({ text, color: getD2RColorStyle?.("white") || "#FFFFFF" });
+    segments.push({ text, color: getD2RColorStyle?.("orange") || "#FFA500" });
   }
-  
-  return segments;
+
+  // Сбрасываем цвет на начало каждой новой строки к дефолтному для рун (orange)
+  const finalSegments: Array<{ text: string; color: string }> = [];
+  for (const seg of segments) {
+    const parts = seg.text.split("\n");
+    for (let i = 0; i < parts.length; i++) {
+      if (i > 0) {
+        // Сохраняем сам перевод строки с предыдущим цветом, чтобы отрисовался разрыв
+        finalSegments.push({ text: "\n", color: seg.color });
+      }
+      const partText = parts[i];
+      if (partText.length === 0) {
+        // Пустой участок после перевода строки — считаем строкой с дефолтным цветом
+        // Добавим пустую строку, чтобы white-space: pre-wrap сохранил высоту
+        finalSegments.push({ text: "", color: getD2RColorStyle?.("orange") || "#FFA500" });
+      } else {
+        // На новой строке цвет сбрасывается к orange, пока не встретится следующий код
+        const colorForThisLine = i === 0 ? seg.color : getD2RColorStyle?.("orange") || "#FFA500";
+        finalSegments.push({ text: partText, color: colorForThisLine });
+      }
+    }
+  }
+
+  return finalSegments;
 };
 
 /**
@@ -623,9 +645,9 @@ export const generateFinalRuneName = (
     return settings.manualSettings.locales[locale] || settings.manualSettings.locales.enUS;
   }
 
-  // В автоматическом режиме генерируем финальное имя с учетом настроек
-  // В этом случае manualSettings.locales содержат захардкоженные локали
-  const rawBaseName = settings.manualSettings.locales[locale] || settings.manualSettings.locales.enUS;
+  // В автоматическом режиме генерируем финальное имя на основе захардкоженных локалей
+  const hardcoded = runeHardcodedLocales[rune];
+  const rawBaseName = (hardcoded && (hardcoded[locale] || hardcoded.enUS)) || "";
   const baseName = removeColorCodes(rawBaseName);
 
   // Применяем цвет к имени руны
@@ -705,6 +727,7 @@ export const generateStructuredPreview = (
 ): {
   baseName: string;
   baseColor: string;
+  hasBoxLimiters: boolean;
   numbering?: {
     openDivider: string;
     dividerColor: string;
@@ -722,11 +745,13 @@ export const generateStructuredPreview = (
   let boxSize: number;
   let boxLimiters: string;
   let boxLimitersColor: string;
+  let hasBoxLimiters = false;
   let numbering: typeof settings.autoSettings.numbering;
 
   if (settings.mode === "auto") {
-    // В автоматическом режиме используем автонастройки и locales из manualSettings (которые содержат захардкоженные локали)
-    rawBaseName = settings.manualSettings.locales[locale] || settings.manualSettings.locales.enUS;
+    // В автоматическом режиме используем автонастройки и захардкоженные локали
+    const hardcoded = runeHardcodedLocales[rune];
+    rawBaseName = (hardcoded && (hardcoded[locale] || hardcoded.enUS)) || "";
     baseColor = settings.autoSettings.color;
     boxSize = settings.autoSettings.boxSize;
     boxLimiters = settings.autoSettings.boxLimiters;
@@ -735,10 +760,13 @@ export const generateStructuredPreview = (
   } else {
     // В ручном режиме используем manualSettings для локалей и дефолтные настройки для остального
     rawBaseName = settings.manualSettings.locales[locale] || settings.manualSettings.locales.enUS;
-    baseColor = "white"; // В ручном режиме используем дефолтный цвет
-    boxSize = 0; // В ручном режиме boxSize всегда 0
-    boxLimiters = "~"; // В ручном режиме используем дефолтные значения
-    boxLimitersColor = "white";
+    baseColor = parseRuneTextColor(rawBaseName) || "white";
+    // Определяем параметры бокса по содержимому строки
+    const delimiterPattern = /^ÿc[0-9a-zA-Z@:;MNOPQRSTAU]([~\-_|.])\s*.*?\s*ÿc[0-9a-zA-Z@:;MNOPQRSTAU]\1$/;
+    hasBoxLimiters = delimiterPattern.test(rawBaseName);
+    boxSize = hasBoxLimiters ? parseRuneBoxSize(rawBaseName) : 0;
+    boxLimiters = hasBoxLimiters ? parseBoxLimiters(rawBaseName) : "~";
+    boxLimitersColor = hasBoxLimiters ? parseBoxLimitersColor(rawBaseName) : "white";
     numbering = { show: false, dividerType: "parentheses", dividerColor: "white", numberColor: "white" };
   }
 
@@ -748,6 +776,7 @@ export const generateStructuredPreview = (
   const result = {
     baseName,
     baseColor,
+    hasBoxLimiters,
     boxSize,
     boxLimiters,
     boxLimitersColor,
@@ -771,7 +800,7 @@ export const generateStructuredPreview = (
         break;
       case "pipe":
         openDivider = "|";
-        closeDivider = "|";
+        closeDivider = "";
         break;
       default:
         openDivider = "(";

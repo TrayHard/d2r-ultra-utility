@@ -351,6 +351,9 @@ export const useTextWorker = (
       // Обновляем данные
       const updatedData = [...currentData];
 
+      // Обновляем только выбранные локали из настроек приложения
+      const selectedLocales = (JSON.parse(localStorage.getItem(STORAGE_KEYS.APP_CONFIG) || '{}')?.selectedLocales) || ["enUS"]; 
+
       Object.entries(runeSettings).forEach(([rune, settings]) => {
         const runeEnum = rune as ERune;
         const runeId = runeToIdMapper[runeEnum];
@@ -360,7 +363,7 @@ export const useTextWorker = (
           const itemIndex = updatedData.findIndex((item) => item.id === runeId);
 
           if (itemIndex !== -1) {
-            // Генерируем финальные имена для всех локалей
+            // Генерируем финальные имена только для выбранных локалей, остальные не трогаем
             const updatedLocales: Partial<LocaleItem> = {};
 
             SUPPORTED_LOCALES.forEach((locale) => {
@@ -368,13 +371,18 @@ export const useTextWorker = (
 
               if (settings.mode === "manual") {
                 // В ручном режиме используем то, что пользователь ввел в инпуты
-                finalName = settings.manualSettings.locales[locale] || settings.manualSettings.locales.enUS;
+                const manualText = settings.manualSettings.locales[locale] || settings.manualSettings.locales.enUS;
+                // В игре строки отображаются в обратном порядке (нижняя выше), поэтому при записи реверсим порядок строк
+                const lines = manualText.split(/\r?\n/);
+                finalName = lines.reverse().join("\n");
               } else {
                 // В автоматическом режиме генерируем финальное имя автоматически
                 finalName = generateFinalRuneName(runeEnum, settings, locale);
               }
 
-              updatedLocales[locale] = finalName;
+              if (selectedLocales.includes(locale)) {
+                updatedLocales[locale] = finalName;
+              }
             });
 
             // Обновляем существующий элемент
@@ -394,13 +402,17 @@ export const useTextWorker = (
 
               if (settings.mode === "manual") {
                 // В ручном режиме используем то, что пользователь ввел в инпуты
-                finalName = settings.manualSettings.locales[locale] || settings.manualSettings.locales.enUS;
+                const manualText = settings.manualSettings.locales[locale] || settings.manualSettings.locales.enUS;
+                const lines = manualText.split(/\r?\n/);
+                finalName = lines.reverse().join("\n");
               } else {
                 // В автоматическом режиме генерируем финальное имя автоматически
                 finalName = generateFinalRuneName(runeEnum, settings, locale);
               }
 
-              newLocales[locale] = finalName;
+              if (selectedLocales.includes(locale)) {
+                newLocales[locale] = finalName;
+              }
             });
 
             updatedData.push(newLocales as LocaleItem);
