@@ -427,11 +427,11 @@ const RuneCard: React.FC<RuneCardProps> = ({
                         top: "87%",
                         left: "50%",
                         transform: "translate(-50%, -50%)",
-                        width: getContainerWidth(autoSettings.boxSize),
-                        minWidth: getContainerWidth(autoSettings.boxSize),
+                        width: getContainerWidth(getPreviewData().boxSize),
+                        minWidth: getContainerWidth(getPreviewData().boxSize),
                         textAlign: "center" as const,
                         whiteSpace: mode === "manual" ? "pre-wrap" : "nowrap",
-                        lineHeight: "1",
+                        lineHeight: "1.4",
                       }}
                     >
                       {(() => {
@@ -453,7 +453,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
                             }}
                           >
                             {/* Левый ограничитель на левом краю контейнера */}
-                            {previewData.boxSize > 0 && (
+                            {(mode === "auto" ? previewData.boxSize > 0 : previewData.hasBoxLimiters) && (
                               <span
                                 style={{
                                   ...baseStyle,
@@ -477,13 +477,25 @@ const RuneCard: React.FC<RuneCardProps> = ({
                             >
                               {/* Основное имя руны */}
                               {mode === "manual" ? (
-                                parseColoredText(previewData.baseName, getD2RColorStyle).map((segment, index) => (
-                                  <span key={index} style={{ color: segment.color }}>
-                                    {segment.text.split("\n").map((line, lineIndex) =>
-                                      lineIndex > 0 ? [<br key={`br-${lineIndex}`} />, line] : line
-                                    )}
-                                  </span>
-                                ))
+                                (() => {
+                                  const lines = previewData.baseName.split("\n");
+                                  return lines.map((line, lineIdx) => (
+                                    <React.Fragment key={`line-${lineIdx}`}>
+                                      {line.length === 0 ? (
+                                        <span style={{ color: getD2RColorStyle?.("orange") || "#FFA500" }}>
+                                          {"\u00A0"}
+                                        </span>
+                                      ) : (
+                                        parseColoredText(line, getD2RColorStyle).map((segment, segIdx) => (
+                                          <span key={`seg-${lineIdx}-${segIdx}`} style={{ color: segment.color }}>
+                                            {segment.text || "\u00A0"}
+                                          </span>
+                                        ))
+                                      )}
+                                      {lineIdx < lines.length - 1 && <br />}
+                                    </React.Fragment>
+                                  ));
+                                })()
                               ) : (
                                 <span style={{ color: getD2RColorStyle?.(previewData.baseColor) || "#FFFFFF" }}>
                                   {previewData.baseName}
@@ -509,7 +521,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
                                   >
                                     {previewData.numbering.number}
                                   </span>
-                                  {previewData.numbering.closeDivider === "|" && " "}
+                                  {previewData.numbering.openDivider === "|" && " "}
                                   <span
                                     style={{
                                       color: getD2RColorStyle?.(previewData.numbering.dividerColor) || "#FFFFFF",
@@ -522,7 +534,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
                             </span>
 
                             {/* Правый ограничитель на правом краю контейнера */}
-                            {previewData.boxSize > 0 && (
+                            {(mode === "auto" ? previewData.boxSize > 0 : previewData.hasBoxLimiters) && (
                               <span
                                 style={{
                                   ...baseStyle,
