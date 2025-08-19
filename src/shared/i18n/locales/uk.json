@@ -173,10 +173,16 @@
       "previewUnavailable": "Передперегляд недоступний у ручному режимі"
     },
     "controls": {
+      "generalSection": "Загальне",
       "highlightRune": "Підсвітка руни",
       "showRuneNumber": "Показувати номер руни",
       "boxSize": "Розмір боксу",
       "color": "Колір",
+      "boxLimiters": "Обмежувачі",
+      "boxLimitersColor": "Колір обмежувачів",
+      "boxLimitersTypes": {
+        "spaces": "Лише пробіли"
+      },
       "languageCustomization": "Налаштування мов",
       "manualMode": "Ручний режим",
       "preview": "Передперегляд",
@@ -454,7 +460,9 @@
         "qualityPrefixes": {
           "level1": "Усі префікси низької якості",
           "level2": "Покращений"
-        }
+        },
+        "enableItem": "Показувати в грі",
+        "showDifficultyClassMarkerSwitch": "Показувати клас складності (звичайний, покращений, елітний)"
       }
     },
     "filters": {

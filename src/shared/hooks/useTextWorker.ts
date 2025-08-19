@@ -4,7 +4,6 @@ import {
   idToRuneMapper,
   ERune,
   runes,
-  runeNumbers,
 } from "../../pages/runes/constants/runes.ts";
 import { itemRunesSchema } from "../types/common.ts";
 import { RuneSettings } from "../../app/providers/SettingsContext.tsx";
@@ -12,12 +11,6 @@ import { STORAGE_KEYS } from "../constants.ts";
 import {
   generateFinalRuneName,
   generateRuneHighlightData,
-  parseNumberingSettings,
-  parseRuneTextColor,
-  parseRuneBoxSize,
-  parseBoxLimiters,
-  parseBoxLimitersColor,
-  extractBaseRuneName,
   SUPPORTED_LOCALES,
   GAME_PATHS,
 } from "../utils/runeUtils.ts";
@@ -99,63 +92,29 @@ export const useTextWorker = (
       parsedData.forEach((item) => {
         const rune = idToRuneMapper[item.id];
         if (rune && updateRuneSettings) {
-          // Получаем номер руны для анализа нумерации
-          const runeNumber = runeNumbers[rune];
+          console.log(`Loading rune ${rune} from file as-is into manual mode`);
 
-          // Анализируем настройки из первой доступной локали (приоритет enUS)
-          const textForAnalysis = item.enUS || item.ruRU || "";
-
-          console.log(`Analyzing rune ${rune} with text: "${textForAnalysis}"`);
-
-          // Анализируем нумерацию
-          const numberingSettings = parseNumberingSettings(
-            textForAnalysis,
-            runeNumber
-          );
-
-          // Анализируем цвет основного текста
-          const textColor = parseRuneTextColor(textForAnalysis);
-
-          // Анализируем размер блока
-          const boxSize = parseRuneBoxSize(textForAnalysis);
-
-          // Анализируем тип ограничителей
-          const boxLimiters = parseBoxLimiters(textForAnalysis);
-
-          // Анализируем цвет ограничителей
-          const boxLimitersColor = parseBoxLimitersColor(textForAnalysis);
-
-          console.log(`Rune ${rune} analysis result:`, {
-            numbering: numberingSettings,
-            color: textColor,
-            boxSize: boxSize,
-            boxLimiters: boxLimiters,
-            boxLimitersColor: boxLimitersColor,
-            baseName: extractBaseRuneName(textForAnalysis, runeNumber),
-          });
-
-          // Обновляем настройки руны: локали (очищенные от кодов и номеров) + все остальные настройки
+          // Обновляем настройки руны - все содержимое из файлов идет в ручной режим как есть
           updateRuneSettings(rune, {
-            locales: {
-              enUS: extractBaseRuneName(item.enUS, runeNumber),
-              ruRU: extractBaseRuneName(item.ruRU, runeNumber),
-              zhTW: extractBaseRuneName(item.zhTW, runeNumber),
-              deDE: extractBaseRuneName(item.deDE, runeNumber),
-              esES: extractBaseRuneName(item.esES, runeNumber),
-              frFR: extractBaseRuneName(item.frFR, runeNumber),
-              itIT: extractBaseRuneName(item.itIT, runeNumber),
-              koKR: extractBaseRuneName(item.koKR, runeNumber),
-              plPL: extractBaseRuneName(item.plPL, runeNumber),
-              esMX: extractBaseRuneName(item.esMX, runeNumber),
-              jaJP: extractBaseRuneName(item.jaJP, runeNumber),
-              ptBR: extractBaseRuneName(item.ptBR, runeNumber),
-              zhCN: extractBaseRuneName(item.zhCN, runeNumber),
+            mode: "manual", // Файлы рун всегда загружаются в ручной режим
+            // autoSettings остаются неизменными - файлы не влияют на автоматический режим
+            manualSettings: {
+              locales: {
+                enUS: item.enUS || "",
+                ruRU: item.ruRU || "",
+                zhTW: item.zhTW || "",
+                deDE: item.deDE || "",
+                esES: item.esES || "",
+                frFR: item.frFR || "",
+                itIT: item.itIT || "",
+                koKR: item.koKR || "",
+                plPL: item.plPL || "",
+                esMX: item.esMX || "",
+                jaJP: item.jaJP || "",
+                ptBR: item.ptBR || "",
+                zhCN: item.zhCN || "",
+              },
             },
-            numbering: numberingSettings,
-            color: textColor,
-            boxSize: boxSize,
-            boxLimiters: boxLimiters,
-            boxLimitersColor: boxLimitersColor,
           });
           processedRunes++;
         }
@@ -171,13 +130,13 @@ export const useTextWorker = (
         const numberColors: Record<string, number> = {};
 
         Object.values(allSettings).forEach((runeSettings) => {
-          if (runeSettings.numbering.show) {
-            dividerTypes[runeSettings.numbering.dividerType] =
-              (dividerTypes[runeSettings.numbering.dividerType] || 0) + 1;
-            dividerColors[runeSettings.numbering.dividerColor] =
-              (dividerColors[runeSettings.numbering.dividerColor] || 0) + 1;
-            numberColors[runeSettings.numbering.numberColor] =
-              (numberColors[runeSettings.numbering.numberColor] || 0) + 1;
+          if (runeSettings.autoSettings?.numbering?.show) {
+            dividerTypes[runeSettings.autoSettings.numbering.dividerType] =
+              (dividerTypes[runeSettings.autoSettings.numbering.dividerType] || 0) + 1;
+            dividerColors[runeSettings.autoSettings.numbering.dividerColor] =
+              (dividerColors[runeSettings.autoSettings.numbering.dividerColor] || 0) + 1;
+            numberColors[runeSettings.autoSettings.numbering.numberColor] =
+              (numberColors[runeSettings.autoSettings.numbering.numberColor] || 0) + 1;
           }
         });
 
@@ -392,6 +351,9 @@ export const useTextWorker = (
       // Обновляем данные
       const updatedData = [...currentData];
 
+      // Обновляем только выбранные локали из настроек приложения
+      const selectedLocales = (JSON.parse(localStorage.getItem(STORAGE_KEYS.APP_CONFIG) || '{}')?.selectedLocales) || ["enUS"]; 
+
       Object.entries(runeSettings).forEach(([rune, settings]) => {
         const runeEnum = rune as ERune;
         const runeId = runeToIdMapper[runeEnum];
@@ -401,21 +363,26 @@ export const useTextWorker = (
           const itemIndex = updatedData.findIndex((item) => item.id === runeId);
 
           if (itemIndex !== -1) {
-            // Генерируем финальные имена для всех локалей
+            // Генерируем финальные имена только для выбранных локалей, остальные не трогаем
             const updatedLocales: Partial<LocaleItem> = {};
 
             SUPPORTED_LOCALES.forEach((locale) => {
               let finalName: string;
 
-              if (settings.isManual) {
+              if (settings.mode === "manual") {
                 // В ручном режиме используем то, что пользователь ввел в инпуты
-                finalName = settings.locales[locale] || settings.locales.enUS;
+                const manualText = settings.manualSettings.locales[locale] || settings.manualSettings.locales.enUS;
+                // В игре строки отображаются в обратном порядке (нижняя выше), поэтому при записи реверсим порядок строк
+                const lines = manualText.split(/\r?\n/);
+                finalName = lines.reverse().join("\n");
               } else {
-                // В обычном режиме генерируем финальное имя автоматически
+                // В автоматическом режиме генерируем финальное имя автоматически
                 finalName = generateFinalRuneName(runeEnum, settings, locale);
               }
 
-              updatedLocales[locale] = finalName;
+              if (selectedLocales.includes(locale)) {
+                updatedLocales[locale] = finalName;
+              }
             });
 
             // Обновляем существующий элемент
@@ -433,15 +400,19 @@ export const useTextWorker = (
             SUPPORTED_LOCALES.forEach((locale) => {
               let finalName: string;
 
-              if (settings.isManual) {
+              if (settings.mode === "manual") {
                 // В ручном режиме используем то, что пользователь ввел в инпуты
-                finalName = settings.locales[locale] || settings.locales.enUS;
+                const manualText = settings.manualSettings.locales[locale] || settings.manualSettings.locales.enUS;
+                const lines = manualText.split(/\r?\n/);
+                finalName = lines.reverse().join("\n");
               } else {
-                // В обычном режиме генерируем финальное имя автоматически
+                // В автоматическом режиме генерируем финальное имя автоматически
                 finalName = generateFinalRuneName(runeEnum, settings, locale);
               }
 
-              newLocales[locale] = finalName;
+              if (selectedLocales.includes(locale)) {
+                newLocales[locale] = finalName;
+              }
             });
 
             updatedData.push(newLocales as LocaleItem);

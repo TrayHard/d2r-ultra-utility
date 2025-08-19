@@ -173,12 +173,19 @@
       "previewUnavailable": "Предпросмотр недоступен в ручном режиме"
     },
     "controls": {
+      "generalSection": "Общее",
       "highlightRune": "Подсветка руны",
       "showRuneNumber": "Указание номера",
       "boxSize": "Размер бокса",
       "color": "Цвет",
+      "boxLimiters": "Ограничители",
+      "boxLimitersColor": "Цвет ограничителей",
+      "boxLimitersTypes": {
+        "spaces": "Только пробелы"
+      },
       "languageCustomization": "Настройка языков",
       "manualMode": "Ручной режим",
+      "autoMode": "Автоматический режим",
       "preview": "Предпросмотр",
       "previewTitle": "Предпросмотр текста",
       "howItLooks": "Как это будет выглядеть в игре:",
@@ -440,7 +447,9 @@
         "qualityPrefixes": {
           "level1": "Все префиксы низкого качества",
           "level2": "Превосходный"
-        }
+        },
+        "enableItem": "Показывать в игре",
+        "showDifficultyClassMarkerSwitch": "Показывать класс сложности (обычный, исключительный, элитный)"
       }
     },
     "filters": {

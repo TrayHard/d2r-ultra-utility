@@ -173,10 +173,16 @@
       "previewUnavailable": "Vorschau im manuellen Modus nicht verfügbar"
     },
     "controls": {
+      "generalSection": "Allgemein",
       "highlightRune": "Rune hervorheben",
       "showRuneNumber": "Runennummer anzeigen",
       "boxSize": "Boxgröße",
       "color": "Farbe",
+      "boxLimiters": "Begrenzer",
+      "boxLimitersColor": "Farbe der Begrenzer",
+      "boxLimitersTypes": {
+        "spaces": "Nur Leerzeichen"
+      },
       "languageCustomization": "Sprachanpassung",
       "manualMode": "Manueller Modus",
       "preview": "Vorschau",
@@ -444,7 +450,9 @@
         "qualityPrefixes": {
           "level1": "Alle Präfixe niedriger Qualität",
           "level2": "Überlegen"
-        }
+        },
+        "enableItem": "Im Spiel anzeigen",
+        "showDifficultyClassMarkerSwitch": "Schwierigkeitsklasse anzeigen (normal, außergewöhnlich, elite)"
       }
     },
     "filters": {

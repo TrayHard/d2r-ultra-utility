@@ -151,10 +151,16 @@
       "previewUnavailable": "Aperçu indisponible en mode manuel"
     },
     "controls": {
+      "generalSection": "Général",
       "highlightRune": "Surligner la rune",
       "showRuneNumber": "Afficher le numéro de rune",
       "boxSize": "Taille de la boîte",
       "color": "Couleur",
+      "boxLimiters": "Délimiteurs",
+      "boxLimitersColor": "Couleur des délimiteurs",
+      "boxLimitersTypes": {
+        "spaces": "Uniquement des espaces"
+      },
       "languageCustomization": "Personnalisation de la langue",
       "manualMode": "Mode manuel",
       "preview": "Aperçu",
@@ -397,7 +403,13 @@
     }
   },
   "itemsPage": {
-    "settings": { "title": "Paramètres des objets" },
+    "settings": { 
+      "title": "Paramètres des objets",
+      "tooltips": {
+        "enableItem": "Afficher dans le jeu",
+        "showDifficultyClassMarkerSwitch": "Afficher la classe de difficulté (normal, exceptionnel, élite)"
+      }
+    },
     "sorting": {
       "byType": "Par type",
       "byName": "Par nom",
