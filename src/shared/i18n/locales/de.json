@@ -450,7 +450,9 @@
         "qualityPrefixes": {
           "level1": "Alle Präfixe niedriger Qualität",
           "level2": "Überlegen"
-        }
+        },
+        "enableItem": "Im Spiel anzeigen",
+        "showDifficultyClassMarkerSwitch": "Schwierigkeitsklasse anzeigen (normal, außergewöhnlich, elite)"
       }
     },
     "filters": {

@@ -452,7 +452,9 @@
         "qualityPrefixes": {
           "level1": "All low quality prefixes",
           "level2": "Superior"
-        }
+        },
+        "enableItem": "Display in game",
+        "showDifficultyClassMarkerSwitch": "Display difficulty class (normal, exceptional, elite)"
       }
     },
     "filters": {

@@ -460,7 +460,9 @@
         "qualityPrefixes": {
           "level1": "Усі префікси низької якості",
           "level2": "Покращений"
-        }
+        },
+        "enableItem": "Показувати в грі",
+        "showDifficultyClassMarkerSwitch": "Показувати клас складності (звичайний, покращений, елітний)"
       }
     },
     "filters": {

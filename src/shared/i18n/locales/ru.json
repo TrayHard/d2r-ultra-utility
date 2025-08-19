@@ -447,7 +447,9 @@
         "qualityPrefixes": {
           "level1": "Все префиксы низкого качества",
           "level2": "Превосходный"
-        }
+        },
+        "enableItem": "Показывать в игре",
+        "showDifficultyClassMarkerSwitch": "Показывать класс сложности (обычный, исключительный, элитный)"
       }
     },
     "filters": {

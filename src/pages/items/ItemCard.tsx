@@ -498,24 +498,29 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
                 `}
               >
                 <div className="flex justify-between items-center gap-4">
-                  <Switcher
-                    checked={enabled}
-                    onChange={handleEnabledChange}
-                    label={t("itemsPage.settings.enableItem") || "Enable Item"}
-                    isDarkTheme={isDarkTheme}
-                    size="md"
-                  />
-                  <Switcher
-                    checked={showDifficultyClassMarker}
-                    onChange={handleShowDifficultyClassMarkerChange}
-                    label={
-                      t("itemsPage.settings.showDifficultyClassMarker") ||
-                      "Show difficulty class marker"
-                    }
-                    isDarkTheme={isDarkTheme}
-                    size="md"
-                    disabled={!enabled}
-                  />
+                  <Tooltip title={t("itemsPage.settings.tooltips.enableItem")} placement="top">
+                    <div>
+                      <Switcher
+                        checked={enabled}
+                        onChange={handleEnabledChange}
+                        label={t("itemsPage.settings.enableItem")}
+                        isDarkTheme={isDarkTheme}
+                        size="md"
+                      />
+                    </div>
+                  </Tooltip>
+                  <Tooltip title={<div style={{ textWrap: "pretty" }}>{t("itemsPage.settings.tooltips.showDifficultyClassMarkerSwitch")}</div>} placement="top">
+                    <div>
+                      <Switcher
+                        checked={showDifficultyClassMarker}
+                        onChange={handleShowDifficultyClassMarkerChange}
+                        label={t("itemsPage.settings.showDifficultyClassMarker")}
+                        isDarkTheme={isDarkTheme}
+                        size="md"
+                        disabled={!enabled}
+                      />
+                    </div>
+                  </Tooltip>
                 </div>
               </div>
 
