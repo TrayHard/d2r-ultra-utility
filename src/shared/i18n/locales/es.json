@@ -42,6 +42,8 @@
     "portal": "Portal de ciudad",
     "uberKeys": "Llaves Uber",
     "essences": "Esencias y token",
+    "poisonPotions": "Pociones de veneno",
+    "firePotions": "Pociones de fuego",
     "searchPlaceholder": "Buscar bloques...",
     "enableCustomization": "Habilitar personalización",
     "localeSettings": "Ajustes de localización",
@@ -82,6 +84,16 @@
       "level3": "Esencia del terror",
       "level4": "Esencia de la destrucción",
       "level5": "Token de absolución"
+    },
+    "poisonPotionsLevels": {
+      "level1": "Poción gaseosa estrangulante",
+      "level2": "Poción gaseosa asfixiante",
+      "level3": "Poción gaseosa rancia"
+    },
+    "firePotionsLevels": {
+      "level1": "Poción fulminante",
+      "level2": "Poción explosiva",
+      "level3": "Poción de aceite"
     }
   },
   "gemsPage": {

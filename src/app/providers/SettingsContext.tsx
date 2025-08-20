@@ -106,6 +106,8 @@ export interface CommonSettings {
   portal: PotionGroupSettings; // Scroll/Tome of Town Portal
   uberKeys: PotionGroupSettings; // 3 keys
   essences: PotionGroupSettings; // 4 essences + token
+  poisonPotions: PotionGroupSettings; // 3 poison potions
+  firePotions: PotionGroupSettings; // 3 fire potions
 }
 
 export interface GemSettings {
@@ -200,7 +202,7 @@ interface SettingsContextType {
     item: "arrows" | "bolts" | "staminaPotions" | "antidotes" | "thawingPotions" | "amulets" | "rings" | "jewels" | "smallCharms" | "largeCharms" | "grandCharms" | "gold" | "keys"
   ) => CommonItemSettings;
   getPotionGroupSettings: (
-    item: "healthPotions" | "manaPotions" | "rejuvenationPotions" | "identify" | "portal" | "uberKeys" | "essences"
+    item: "healthPotions" | "manaPotions" | "rejuvenationPotions" | "identify" | "portal" | "uberKeys" | "essences" | "poisonPotions" | "firePotions"
   ) => PotionGroupSettings;
   updateCommonItemSettings: (
     item:
@@ -220,11 +222,11 @@ interface SettingsContextType {
     newSettings: Partial<CommonItemSettings>
   ) => void;
   updatePotionGroupSettings: (
-    item: "healthPotions" | "manaPotions" | "rejuvenationPotions" | "identify" | "portal" | "uberKeys" | "essences",
+    item: "healthPotions" | "manaPotions" | "rejuvenationPotions" | "identify" | "portal" | "uberKeys" | "essences" | "poisonPotions" | "firePotions",
     newSettings: Partial<PotionGroupSettings>
   ) => void;
   updatePotionLevelSettings: (
-    item: "healthPotions" | "manaPotions" | "rejuvenationPotions" | "identify" | "portal" | "uberKeys" | "essences",
+    item: "healthPotions" | "manaPotions" | "rejuvenationPotions" | "identify" | "portal" | "uberKeys" | "essences" | "poisonPotions" | "firePotions",
     level: number,
     newSettings: Partial<PotionLevelSettings>
   ) => void;
@@ -343,7 +345,7 @@ const cleanSettings = (oldCommon: any): CommonSettings => {
   });
 
   // Удаляем activeTab из групп зелий
-  ["healthPotions", "manaPotions", "rejuvenationPotions", "identify", "portal", "uberKeys", "essences"].forEach(
+  ["healthPotions", "manaPotions", "rejuvenationPotions", "identify", "portal", "uberKeys", "essences", "poisonPotions", "firePotions"].forEach(
     (potionType) => {
       if (cleaned[potionType]) {
         cleaned[potionType] = {
@@ -353,6 +355,8 @@ const cleanSettings = (oldCommon: any): CommonSettings => {
               : potionType === "identify" || potionType === "portal"
               ? 2
               : potionType === "uberKeys"
+              ? 3
+              : potionType === "poisonPotions" || potionType === "firePotions"
               ? 3
               : potionType === "essences"
               ? 5
@@ -520,6 +524,8 @@ const getDefaultCommonSettings = (): CommonSettings => ({
   portal: getDefaultPotionGroupSettings(2), // 2 уровня: scroll/tome portal
   uberKeys: getDefaultPotionGroupSettings(3), // 3 ключа
   essences: getDefaultPotionGroupSettings(5), // 4 эссенции + токен
+  poisonPotions: getDefaultPotionGroupSettings(3), // 3 уровня: Strangling/Choking/Rancid
+  firePotions: getDefaultPotionGroupSettings(3), // 3 уровня: Fulminating/Exploding/Oil
 });
 
 const getDefaultGemSettings = (): GemSettings => ({
@@ -1445,6 +1451,8 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         | "portal"
         | "uberKeys"
         | "essences"
+        | "poisonPotions"
+        | "firePotions"
     ) => {
       return settings.common[item];
     },
@@ -1492,7 +1500,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         | "identify"
         | "portal"
         | "uberKeys"
-        | "essences",
+        | "essences"
+        | "poisonPotions"
+        | "firePotions",
       newSettings: Partial<PotionGroupSettings>
     ) => {
       setSettings((prevSettings) => ({
@@ -1518,7 +1528,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         | "identify"
         | "portal"
         | "uberKeys"
-        | "essences",
+        | "essences"
+        | "poisonPotions"
+        | "firePotions",
       level: number,
       newSettings: Partial<PotionLevelSettings>
     ) => {

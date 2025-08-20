@@ -37,6 +37,12 @@ export enum ECommonItem {
   "essenceTerror" = "essenceTerror",
   "essenceDestruction" = "essenceDestruction",
   "tokenAbsolution" = "tokenAbsolution",
+  "pPoison1" = "pPoison1", // Strangling Gas Potion
+  "pPoison2" = "pPoison2", // Choking Gas Potion
+  "pPoison3" = "pPoison3", // Rancid Gas Potion
+  "pFire1" = "pFire1", // Fulminating Potion
+  "pFire2" = "pFire2", // Exploding Potion
+  "pFire3" = "pFire3", // Oil Potion
 }
 
 // Маппинг ID к предметам
@@ -78,6 +84,12 @@ export const idToCommonItemMapper: Record<number, ECommonItem> = {
   11166: ECommonItem.essenceTerror,
   11167: ECommonItem.essenceDestruction,
   11163: ECommonItem.tokenAbsolution,
+  2182: ECommonItem.pPoison1,
+  2184: ECommonItem.pPoison2,
+  2186: ECommonItem.pPoison3,
+  2183: ECommonItem.pFire1,
+  2185: ECommonItem.pFire2,
+  2187: ECommonItem.pFire3,
 };
 
 // Обратный маппинг для записи
@@ -119,6 +131,12 @@ export const commonItemToIdMapper: Record<ECommonItem, number> = {
   [ECommonItem.essenceTerror]: 11166,
   [ECommonItem.essenceDestruction]: 11167,
   [ECommonItem.tokenAbsolution]: 11163,
+  [ECommonItem.pPoison1]: 2182,
+  [ECommonItem.pPoison2]: 2184,
+  [ECommonItem.pPoison3]: 2186,
+  [ECommonItem.pFire1]: 2183,
+  [ECommonItem.pFire2]: 2185,
+  [ECommonItem.pFire3]: 2187,
 };
 
 // Группировка предметов по типам
@@ -167,6 +185,16 @@ export const commonItemGroups = {
     ECommonItem.essenceDestruction,
     ECommonItem.tokenAbsolution,
   ],
+  poisonPotions: [
+    ECommonItem.pPoison1,
+    ECommonItem.pPoison2,
+    ECommonItem.pPoison3,
+  ],
+  firePotions: [
+    ECommonItem.pFire1,
+    ECommonItem.pFire2,
+    ECommonItem.pFire3,
+  ],
 };
 
 // Маппинг для получения ECommonItem из настроек
@@ -191,6 +219,8 @@ export const settingsKeyToCommonItemMapper = {
   portal: commonItemGroups.portal,
   uberKeys: commonItemGroups.uberKeys,
   essences: commonItemGroups.essences,
+  poisonPotions: commonItemGroups.poisonPotions,
+  firePotions: commonItemGroups.firePotions,
 };
 
 // В каком файле хранится локализация конкретного предмета
@@ -235,4 +265,10 @@ export const commonItemFileMapper: Record<
   [ECommonItem.essenceTerror]: "item-names",
   [ECommonItem.essenceDestruction]: "item-names",
   [ECommonItem.tokenAbsolution]: "item-modifiers",
+  [ECommonItem.pPoison1]: "item-names",
+  [ECommonItem.pPoison2]: "item-names",
+  [ECommonItem.pPoison3]: "item-names",
+  [ECommonItem.pFire1]: "item-names",
+  [ECommonItem.pFire2]: "item-names",
+  [ECommonItem.pFire3]: "item-names",
 };

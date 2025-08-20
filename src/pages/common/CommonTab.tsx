@@ -54,6 +54,8 @@ const CommonTab: React.FC<CommonTabProps> = ({
     portal: false,
     uberKeys: false,
     essences: false,
+    poisonPotions: false,
+    firePotions: false,
     gold: false,
     keys: false,
   });
@@ -81,6 +83,8 @@ const CommonTab: React.FC<CommonTabProps> = ({
   const portal = getPotionGroupSettings("portal");
   const uberKeys = getPotionGroupSettings("uberKeys");
   const essences = getPotionGroupSettings("essences");
+  const poisonPotions = getPotionGroupSettings("poisonPotions");
+  const firePotions = getPotionGroupSettings("firePotions");
 
   // Проверяем что все настройки загружены
   if (
@@ -103,7 +107,9 @@ const CommonTab: React.FC<CommonTabProps> = ({
     !identify ||
     !portal ||
     !uberKeys ||
-    !essences
+    !essences ||
+    !poisonPotions ||
+    !firePotions
   ) {
     return <div className="p-8 max-w-4xl mx-auto">Loading...</div>;
   }
@@ -246,7 +252,7 @@ const CommonTab: React.FC<CommonTabProps> = ({
 
   // Обработчики для зелий
   const handlePotionLevelToggle = (
-    itemType: "healthPotions" | "manaPotions" | "rejuvenationPotions",
+    itemType: "healthPotions" | "manaPotions" | "rejuvenationPotions" | "poisonPotions" | "firePotions",
     level: number,
     enabled: boolean
   ) => {
@@ -254,7 +260,7 @@ const CommonTab: React.FC<CommonTabProps> = ({
   };
 
   const handlePotionTabChange = (
-    itemType: "healthPotions" | "manaPotions" | "rejuvenationPotions",
+    itemType: "healthPotions" | "manaPotions" | "rejuvenationPotions" | "poisonPotions" | "firePotions",
     tabIndex: number
   ) => {
     updatePotionGroupSettings(itemType, { activeTab: tabIndex });
@@ -453,7 +459,7 @@ const CommonTab: React.FC<CommonTabProps> = ({
 
   // Получаем путь к изображению для зелья по уровню
   const getPotionImagePath = (
-    itemType: "healthPotions" | "manaPotions" | "rejuvenationPotions",
+    itemType: "healthPotions" | "manaPotions" | "rejuvenationPotions" | "poisonPotions" | "firePotions",
     level: number
   ): string => {
     const imagePaths = {
@@ -472,6 +478,16 @@ const CommonTab: React.FC<CommonTabProps> = ({
         "/img/potions/mp5.png",
       ],
       rejuvenationPotions: ["/img/potions/rej1.png", "/img/potions/rej2.png"],
+      poisonPotions: [
+        "/img/common/strangling_gas_potion.png",
+        "/img/common/choking_gas_potion.png",
+        "/img/common/rancid_gas_potion.png",
+      ],
+      firePotions: [
+        "/img/common/fulminating_potion.png",
+        "/img/common/exploding_potion.png",
+        "/img/common/oil_potion.png",
+      ],
     };
     return imagePaths[itemType][level];
   };
@@ -509,11 +525,11 @@ const CommonTab: React.FC<CommonTabProps> = ({
 
   // Компонент для рендеринга блока зелий с табами
   const renderPotionBlock = (
-    itemType: "healthPotions" | "manaPotions" | "rejuvenationPotions",
+    itemType: "healthPotions" | "manaPotions" | "rejuvenationPotions" | "poisonPotions" | "firePotions",
     potionSettings: PotionGroupSettings
   ) => {
     // Получаем иконку для заголовка: для HP/MP - 5-й уровень (индекс 4), для реджувенации - 2-й уровень (индекс 1)
-    const headerIconIndex = itemType === "rejuvenationPotions" ? 1 : 4;
+    const headerIconIndex = itemType === "rejuvenationPotions" ? 1 : (itemType === "poisonPotions" || itemType === "firePotions" ? 0 : 4);
     const headerIcon = getPotionImagePath(itemType, headerIconIndex);
 
     return (
@@ -594,6 +610,12 @@ const CommonTab: React.FC<CommonTabProps> = ({
         {shouldShow(t("commonPage.manaPotions")) && renderPotionBlock("manaPotions", manaPotions)}
 
         {shouldShow(t("commonPage.rejuvenationPotions")) && renderPotionBlock("rejuvenationPotions", rejuvenationPotions)}
+
+        {/* Ядовитые зелья */}
+        {shouldShow(t("commonPage.poisonPotions")) && renderPotionBlock("poisonPotions", poisonPotions)}
+
+        {/* Огненные зелья */}
+        {shouldShow(t("commonPage.firePotions")) && renderPotionBlock("firePotions", firePotions)}
 
         {/* Идентификация (свиток/том) */}
         {shouldShow(t("commonPage.identify")) &&

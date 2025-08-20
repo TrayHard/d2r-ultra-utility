@@ -42,6 +42,8 @@
     "portal": "Portal miejski",
     "uberKeys": "Klucze Uber",
     "essences": "Esencje i token",
+    "poisonPotions": "Mikstury trucizny",
+    "firePotions": "Mikstury ognia",
     "searchPlaceholder": "Szukaj bloków...",
     "enableCustomization": "Włącz dostosowanie",
     "localeSettings": "Ustawienia lokalizacji",
@@ -82,6 +84,16 @@
       "level3": "Esencja Grozy",
       "level4": "Esencja Zniszczenia",
       "level5": "Token Odpuszczenia"
+    },
+    "poisonPotionsLevels": {
+      "level1": "Duszaca mikstura gazu",
+      "level2": "Uduszająca mikstura gazu",
+      "level3": "Zgniła mikstura gazu"
+    },
+    "firePotionsLevels": {
+      "level1": "Mikstura piorunująca",
+      "level2": "Mikstura wybuchowa",
+      "level3": "Mikstura olejowa"
     }
   },
   "gemsPage": {
