@@ -9,16 +9,38 @@ export const colorCodes = {
   orange: "ÿc@",
   lightgold: "ÿc7",
   yellow: "ÿc9",
-  lightyellow: "ÿcR",
   green: "ÿc2",
   dimgreen: "ÿcA",
-  darkgreen: "ÿc:",
   indigo: "ÿc3",
   lightindigo: "ÿcP",
   turquoise: "ÿcN",
   lightblue: "ÿcT",
   pink: "ÿcO",
   purple: "ÿc;",
+};
+
+// Маппинг игровых цветовых кодов в HEX для предпросмотра
+export const colorCodeToHex: Record<string, string> = {
+  "ÿc0": "#FFFFFF", // white
+  "ÿc5": "#A0A0A0", // gray
+  "ÿc6": "#000000", // black
+  "ÿcM": "#f0da95", // beige
+  "ÿc1": "#ff5757", // lightred
+  "ÿcU": "#ff0000", // red
+  "ÿcS": "#d44848", // dimred
+  "ÿc@": "#ffaf00", // orange
+  "ÿc7": "#d4c786", // lightgold
+  "ÿc9": "#ffff6e", // yellow
+  "ÿcR": "#ffff7f", // lightyellow
+  "ÿc2": "#00FF00", // green
+  "ÿcA": "#008900", // dimgreen
+  "ÿc:": "#008900", // darkgreen
+  "ÿc3": "#7878ff", // indigo
+  "ÿcP": "#b1b1ff", // lightindigo
+  "ÿcN": "#0aace0", // turquoise
+  "ÿcT": "#8bcaff", // lightblue
+  "ÿcO": "#ff89ff", // pink
+  "ÿc;": "#b500ff", // purple
 };
 
 export const localeOptions = [

@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { Tooltip } from "antd";
-import { colorCodes } from "../constants";
+import { colorCodes, colorCodeToHex } from "../constants";
 
 interface ColorPalletProps {
   isDarkTheme: boolean;
@@ -10,31 +10,7 @@ interface ColorPalletProps {
   disabled?: boolean;
 }
 
-const getCssColorForCode = (code: string): string => {
-  const map: Record<string, string> = {
-    "ÿc0": "#FFFFFF",
-    "ÿc5": "#A0A0A0",
-    "ÿc6": "#000000",
-    "ÿcM": "#C8B37E",
-    "ÿc1": "#FF5757",
-    "ÿcU": "#FF0000",
-    "ÿcS": "#D44848",
-    "ÿc@": "#FFAF00",
-    "ÿc7": "#D4C786",
-    "ÿc9": "#FFFF6E",
-    "ÿcR": "#FFFF99",
-    "ÿc2": "#00FF00",
-    "ÿcA": "#00CD00",
-    "ÿc:": "#008900",
-    "ÿc3": "#7878FF",
-    "ÿcP": "#B1B1FF",
-    "ÿcN": "#0AACE0",
-    "ÿcT": "#8BCAFF",
-    "ÿcO": "#FF89FF",
-    "ÿc;": "#B500FF",
-  };
-  return map[code] || "#FFFFFF";
-};
+const getCssColorForCode = (code: string): string => colorCodeToHex[code] || "#FFFFFF";
 
 const ColorPallet: React.FC<ColorPalletProps> = ({
   isDarkTheme,

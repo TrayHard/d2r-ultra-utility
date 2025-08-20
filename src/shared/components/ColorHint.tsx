@@ -3,7 +3,7 @@ import Icon from "@mdi/react";
 import { mdiPalette } from "@mdi/js";
 import { useTranslation } from "react-i18next";
 import { Tooltip, message } from "antd";
-import { colorCodes } from "../constants";
+import { colorCodes, colorCodeToHex } from "../constants";
 import "./ColorHint.css";
 
 interface ColorHintProps {
@@ -15,33 +15,7 @@ const ColorHint: React.FC<ColorHintProps> = ({ isDarkTheme }) => {
 
   const colorEntries = Object.entries(colorCodes);
 
-  const getColorStyle = (colorCode: string) => {
-    // Мапим цветовые коды на CSS цвета для предварительного просмотра
-    const colorMap: Record<string, string> = {
-      "ÿc0": "#FFFFFF", // white
-      "ÿc5": "#A0A0A0", // gray
-      "ÿc6": "#000000", // black
-      "ÿcM": "#C8B37E", // beige
-      "ÿc1": "#ff5757", // lightred
-      "ÿcU": "#ff0000", // red
-      "ÿcS": "#d44848", // dimred
-      "ÿc@": "#ffaf00", // orange
-      "ÿc7": "#d4c786", // lightgold
-      "ÿc9": "#ffff6e", // yellow
-      "ÿcR": "#FFFF99", // lightyellow
-      "ÿc2": "#00FF00", // green
-      "ÿcA": "#008000", // dimgreen
-      "ÿc:": "#006400", // darkgreen
-      "ÿc3": "#4B0082", // indigo
-      "ÿcP": "#9370DB", // lightindigo
-      "ÿcN": "#40E0D0", // turquoise
-      "ÿcT": "#87CEEB", // lightblue
-      "ÿcO": "#FFC0CB", // pink
-      "ÿc;": "#800080", // purple
-    };
-
-    return colorMap[colorCode] || "#FFFFFF";
-  };
+  const getColorStyle = (colorCode: string) => colorCodeToHex[colorCode] || "#FFFFFF";
 
   const tooltipContent = (
     <div className="w-full p-2 overflow-x-hidden">

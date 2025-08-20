@@ -767,10 +767,10 @@ export const generateStructuredPreview = (
     // В ручном режиме используем manualSettings для локалей и дефолтные настройки для остального
     rawBaseName = settings.manualSettings.locales[locale] || settings.manualSettings.locales.enUS;
     baseColor = parseRuneTextColor(rawBaseName) || "white";
-    // Определяем параметры бокса по содержимому строки
+    // Определяем параметры бокса по содержимому строки (всегда парсим размер, даже без ограничителей)
     const delimiterPattern = /^ÿc[0-9a-zA-Z@:;MNOPQRSTAU]([~\-_|.])\s*.*?\s*ÿc[0-9a-zA-Z@:;MNOPQRSTAU]\1$/;
     hasBoxLimiters = delimiterPattern.test(rawBaseName);
-    boxSize = hasBoxLimiters ? parseRuneBoxSize(rawBaseName) : 0;
+    boxSize = parseRuneBoxSize(rawBaseName);
     boxLimiters = hasBoxLimiters ? parseBoxLimiters(rawBaseName) : "~";
     boxLimitersColor = hasBoxLimiters ? parseBoxLimitersColor(rawBaseName) : "white";
     numbering = { show: false, dividerType: "parentheses", dividerColor: "white", numberColor: "white" };

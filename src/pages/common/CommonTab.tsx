@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSettings } from "../../app/providers/SettingsContext";
-import { localeOptions } from "../../shared/constants";
+import { localeOptions, colorCodeToHex } from "../../shared/constants";
 import Collapse from "../../shared/components/Collapse";
 import { Tooltip } from "antd";
 import Switch from "../../shared/components/Switch";
@@ -50,6 +50,14 @@ const CommonTab: React.FC<CommonTabProps> = ({
     healthPotions: false,
     manaPotions: false,
     rejuvenationPotions: false,
+    identify: false,
+    portal: false,
+    uberKeys: false,
+    essences: false,
+    poisonPotions: false,
+    firePotions: false,
+    gold: false,
+    keys: false,
   });
 
   // Получаем настройки простых элементов из контекста
@@ -64,11 +72,19 @@ const CommonTab: React.FC<CommonTabProps> = ({
   const smallCharms = getCommonItemSettings("smallCharms");
   const largeCharms = getCommonItemSettings("largeCharms");
   const grandCharms = getCommonItemSettings("grandCharms");
+  const gold = getCommonItemSettings("gold");
+  const keys = getCommonItemSettings("keys");
 
   // Получаем настройки зелий с уровнями
   const healthPotions = getPotionGroupSettings("healthPotions");
   const manaPotions = getPotionGroupSettings("manaPotions");
   const rejuvenationPotions = getPotionGroupSettings("rejuvenationPotions");
+  const identify = getPotionGroupSettings("identify");
+  const portal = getPotionGroupSettings("portal");
+  const uberKeys = getPotionGroupSettings("uberKeys");
+  const essences = getPotionGroupSettings("essences");
+  const poisonPotions = getPotionGroupSettings("poisonPotions");
+  const firePotions = getPotionGroupSettings("firePotions");
 
   // Проверяем что все настройки загружены
   if (
@@ -83,9 +99,17 @@ const CommonTab: React.FC<CommonTabProps> = ({
     !smallCharms ||
     !largeCharms ||
     !grandCharms ||
+    !gold ||
+    !keys ||
     !healthPotions ||
     !manaPotions ||
-    !rejuvenationPotions
+    !rejuvenationPotions ||
+    !identify ||
+    !portal ||
+    !uberKeys ||
+    !essences ||
+    !poisonPotions ||
+    !firePotions
   ) {
     return <div className="p-8 max-w-4xl mx-auto">Loading...</div>;
   }
@@ -135,6 +159,14 @@ const CommonTab: React.FC<CommonTabProps> = ({
     updateCommonItemSettings("grandCharms", { enabled });
   };
 
+  const handleGoldToggle = (enabled: boolean) => {
+    updateCommonItemSettings("gold", { enabled });
+  };
+
+  const handleKeysToggle = (enabled: boolean) => {
+    updateCommonItemSettings("keys", { enabled });
+  };
+
   // Обработчики для коллапсов
   const handleCollapseToggle = (
     key: keyof typeof collapseStates,
@@ -156,7 +188,9 @@ const CommonTab: React.FC<CommonTabProps> = ({
       | "jewels"
       | "smallCharms"
       | "largeCharms"
-      | "grandCharms",
+      | "grandCharms"
+      | "gold"
+      | "keys",
     locale: string,
     value: string
   ) => {
@@ -167,30 +201,6 @@ const CommonTab: React.FC<CommonTabProps> = ({
         [locale as keyof typeof currentSettings.locales]: value,
       },
     });
-  };
-
-  // Маппинг игровых цветовых кодов в HEX для предпросмотра
-  const colorCodeToHex: Record<string, string> = {
-    "ÿc0": "#FFFFFF", // white
-    "ÿc5": "#A0A0A0", // gray
-    "ÿc6": "#000000", // black
-    "ÿcM": "#C8B37E", // beige
-    "ÿc1": "#ff5757", // lightred
-    "ÿcU": "#ff0000", // red
-    "ÿcS": "#d44848", // dimred
-    "ÿc@": "#ffaf00", // orange
-    "ÿc7": "#d4c786", // lightgold
-    "ÿc9": "#ffff6e", // yellow
-    "ÿcR": "#FFFF99", // lightyellow
-    "ÿc2": "#00FF00", // green
-    "ÿcA": "#008000", // dimgreen
-    "ÿc:": "#006400", // darkgreen
-    "ÿc3": "#4B0082", // indigo
-    "ÿcP": "#9370DB", // lightindigo
-    "ÿcN": "#40E0D0", // turquoise
-    "ÿcT": "#87CEEB", // lightblue
-    "ÿcO": "#FFC0CB", // pink
-    "ÿc;": "#800080", // purple
   };
 
   // Рендер строки с учетом цветовых кодов ÿcX
@@ -218,7 +228,7 @@ const CommonTab: React.FC<CommonTabProps> = ({
 
   // Обработчики для зелий
   const handlePotionLevelToggle = (
-    itemType: "healthPotions" | "manaPotions" | "rejuvenationPotions",
+    itemType: "healthPotions" | "manaPotions" | "rejuvenationPotions" | "poisonPotions" | "firePotions",
     level: number,
     enabled: boolean
   ) => {
@@ -226,14 +236,23 @@ const CommonTab: React.FC<CommonTabProps> = ({
   };
 
   const handlePotionTabChange = (
-    itemType: "healthPotions" | "manaPotions" | "rejuvenationPotions",
+    itemType: "healthPotions" | "manaPotions" | "rejuvenationPotions" | "poisonPotions" | "firePotions",
     tabIndex: number
   ) => {
     updatePotionGroupSettings(itemType, { activeTab: tabIndex });
   };
 
   const handlePotionLocaleChange = (
-    itemType: "healthPotions" | "manaPotions" | "rejuvenationPotions",
+    itemType:
+      | "healthPotions"
+      | "manaPotions"
+      | "rejuvenationPotions"
+      | "poisonPotions"
+      | "firePotions"
+      | "identify"
+      | "portal"
+      | "uberKeys"
+      | "essences",
     level: number,
     locale: string,
     value: string
@@ -262,7 +281,9 @@ const CommonTab: React.FC<CommonTabProps> = ({
       | "jewels"
       | "smallCharms"
       | "largeCharms"
-      | "grandCharms",
+      | "grandCharms"
+      | "gold"
+      | "keys",
     toggleHandler: (enabled: boolean) => void
   ) => {
     return (
@@ -286,10 +307,9 @@ const CommonTab: React.FC<CommonTabProps> = ({
             <div
               className={`
                 h-9 px-3 rounded-md border flex items-center overflow-hidden text-sm font-mono whitespace-pre w-full
-                ${
-                  isDarkTheme
-                    ? "bg-gray-800 border-gray-600 text-white"
-                    : "bg-white border-gray-300 text-gray-900"
+                ${isDarkTheme
+                  ? "bg-gray-800 border-gray-600 text-white"
+                  : "bg-white border-gray-300 text-gray-900"
                 }
               `}
             >
@@ -303,7 +323,7 @@ const CommonTab: React.FC<CommonTabProps> = ({
                 if (focusedLocale) {
                   const text =
                     itemSettings.locales[
-                      focusedLocale as keyof typeof itemSettings.locales
+                    focusedLocale as keyof typeof itemSettings.locales
                     ] || "";
                   return renderColoredText(text);
                 }
@@ -315,8 +335,8 @@ const CommonTab: React.FC<CommonTabProps> = ({
                 const firstSelected = selectedLocales[0];
                 const fallbackText = firstSelected
                   ? itemSettings.locales[
-                      firstSelected as keyof typeof itemSettings.locales
-                    ] || ""
+                  firstSelected as keyof typeof itemSettings.locales
+                  ] || ""
                   : "";
                 return renderColoredText(fallbackText);
               })()}
@@ -343,7 +363,7 @@ const CommonTab: React.FC<CommonTabProps> = ({
                     type="text"
                     value={
                       itemSettings.locales[
-                        locale.value as keyof typeof itemSettings.locales
+                      locale.value as keyof typeof itemSettings.locales
                       ] ?? ""
                     }
                     onChange={(e) =>
@@ -357,15 +377,13 @@ const CommonTab: React.FC<CommonTabProps> = ({
                     )}
                     className={`
                       flex-1 px-3 py-2 rounded-md border transition-colors
-                      ${
-                        isDarkTheme
-                          ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                          : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
+                      ${isDarkTheme
+                        ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                        : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
                       }
-                      ${
-                        !itemSettings.enabled
-                          ? "opacity-50 cursor-not-allowed"
-                          : isDarkTheme
+                      ${!itemSettings.enabled
+                        ? "opacity-50 cursor-not-allowed"
+                        : isDarkTheme
                           ? "focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
                           : "focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
                       }
@@ -396,6 +414,8 @@ const CommonTab: React.FC<CommonTabProps> = ({
       | "smallCharms"
       | "largeCharms"
       | "grandCharms"
+      | "gold"
+      | "keys"
   ): string => {
     const imagePaths = {
       arrows: "/img/common/arrows.png",
@@ -409,13 +429,15 @@ const CommonTab: React.FC<CommonTabProps> = ({
       smallCharms: "/img/common/small_charm.png",
       largeCharms: "/img/common/large_charm.png",
       grandCharms: "/img/common/grand_charm.png",
+      gold: "/img/common/gold.png",
+      keys: "/img/common/key.png",
     };
     return imagePaths[titleKey];
   };
 
   // Получаем путь к изображению для зелья по уровню
   const getPotionImagePath = (
-    itemType: "healthPotions" | "manaPotions" | "rejuvenationPotions",
+    itemType: "healthPotions" | "manaPotions" | "rejuvenationPotions" | "poisonPotions" | "firePotions",
     level: number
   ): string => {
     const imagePaths = {
@@ -434,6 +456,16 @@ const CommonTab: React.FC<CommonTabProps> = ({
         "/img/potions/mp5.png",
       ],
       rejuvenationPotions: ["/img/potions/rej1.png", "/img/potions/rej2.png"],
+      poisonPotions: [
+        "/img/common/strangling_gas_potion.png",
+        "/img/common/choking_gas_potion.png",
+        "/img/common/rancid_gas_potion.png",
+      ],
+      firePotions: [
+        "/img/common/fulminating_potion.png",
+        "/img/common/exploding_potion.png",
+        "/img/common/oil_potion.png",
+      ],
     };
     return imagePaths[itemType][level];
   };
@@ -451,7 +483,9 @@ const CommonTab: React.FC<CommonTabProps> = ({
       | "jewels"
       | "smallCharms"
       | "largeCharms"
-      | "grandCharms",
+      | "grandCharms"
+      | "gold"
+      | "keys",
     itemSettings: CommonItemSettings,
     toggleHandler: (enabled: boolean) => void
   ) => (
@@ -469,11 +503,11 @@ const CommonTab: React.FC<CommonTabProps> = ({
 
   // Компонент для рендеринга блока зелий с табами
   const renderPotionBlock = (
-    itemType: "healthPotions" | "manaPotions" | "rejuvenationPotions",
+    itemType: "healthPotions" | "manaPotions" | "rejuvenationPotions" | "poisonPotions" | "firePotions",
     potionSettings: PotionGroupSettings
   ) => {
     // Получаем иконку для заголовка: для HP/MP - 5-й уровень (индекс 4), для реджувенации - 2-й уровень (индекс 1)
-    const headerIconIndex = itemType === "rejuvenationPotions" ? 1 : 4;
+    const headerIconIndex = itemType === "rejuvenationPotions" ? 1 : (itemType === "poisonPotions" || itemType === "firePotions" ? 0 : 4);
     const headerIcon = getPotionImagePath(itemType, headerIconIndex);
 
     return (
@@ -500,56 +534,165 @@ const CommonTab: React.FC<CommonTabProps> = ({
     );
   };
 
+  // Универсальный блок с уровнями (идентификация, порталы, убер-ключи, эссенции)
+  const renderMultiBlock = (
+    itemType: "identify" | "portal" | "uberKeys" | "essences",
+    potionSettings: PotionGroupSettings,
+    imagePaths: string[],
+    headerIcon: string
+  ) => {
+    return (
+      <MultipleLeveledLocales
+        title={t(`commonPage.${itemType}`)}
+        itemType={`commonPage.${itemType}`}
+        settings={potionSettings}
+        selectedLocales={selectedLocales}
+        isDarkTheme={isDarkTheme}
+        imagePaths={imagePaths}
+        headerIcon={headerIcon}
+        isOpen={collapseStates[itemType]}
+        onToggle={(isOpen) => handleCollapseToggle(itemType, isOpen)}
+        onTabChange={(tabIndex) => updatePotionGroupSettings(itemType, { activeTab: tabIndex })}
+        onLevelToggle={(level, enabled) => updatePotionLevelSettings(itemType, level, { enabled })}
+        onLocaleChange={(level, locale, value) =>
+          handlePotionLocaleChange(itemType, level, locale, value)
+        }
+      />
+    );
+  };
+
+  // Поиск по заголовкам блоков
+  const [searchQuery, setSearchQuery] = useState("");
+  const shouldShow = (title: string) =>
+    title.toLowerCase().includes(searchQuery.trim().toLowerCase());
+
   return (
     <div className="p-8 max-w-4xl mx-auto">
+      {/* Поисковая строка */}
+      <div className="mb-6">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder={t("commonPage.searchPlaceholder") || "Search blocks..."}
+          className={`w-full px-3 py-2 rounded-md border text-sm ${isDarkTheme
+              ? "bg-gray-800 border-gray-600 text-white placeholder-gray-400"
+              : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
+            }`}
+        />
+      </div>
       <div className="space-y-6">
-        {/* Стрелы */}
-        {renderItemSection("arrows", arrows, handleArrowsToggle)}
+        {/* Блоки зелий с табами */}
+        {shouldShow(t("commonPage.healthPotions")) && renderPotionBlock("healthPotions", healthPotions)}
 
-        {/* Болты */}
-        {renderItemSection("bolts", bolts, handleBoltsToggle)}
+        {shouldShow(t("commonPage.manaPotions")) && renderPotionBlock("manaPotions", manaPotions)}
+
+        {shouldShow(t("commonPage.rejuvenationPotions")) && renderPotionBlock("rejuvenationPotions", rejuvenationPotions)}
+
+        {/* Ядовитые зелья */}
+        {shouldShow(t("commonPage.poisonPotions")) && renderPotionBlock("poisonPotions", poisonPotions)}
+
+        {/* Огненные зелья */}
+        {shouldShow(t("commonPage.firePotions")) && renderPotionBlock("firePotions", firePotions)}
+
+        {/* Идентификация (свиток/том) */}
+        {shouldShow(t("commonPage.identify")) &&
+          renderMultiBlock(
+            "identify",
+            identify,
+            [
+              "/img/common/scroll_identify.png",
+              "/img/common/book_identify.png",
+            ],
+            "/img/common/book_identify.png"
+          )}
+
+        {/* Порталы (свиток/том) */}
+        {shouldShow(t("commonPage.portal")) &&
+          renderMultiBlock(
+            "portal",
+            portal,
+            [
+              "/img/common/scroll_portal.png",
+              "/img/common/book_portal.png",
+            ],
+            "/img/common/book_portal.png"
+          )}
 
         {/* Зелья выносливости */}
-        {renderItemSection(
+        {shouldShow(t("commonPage.staminaPotions")) && renderItemSection(
           "staminaPotions",
           staminaPotions,
           handleStaminaPotionsToggle
         )}
 
         {/* Противоядия */}
-        {renderItemSection("antidotes", antidotes, handleAntidotesToggle)}
+        {shouldShow(t("commonPage.antidotes")) && renderItemSection("antidotes", antidotes, handleAntidotesToggle)}
 
         {/* Зелья оттаивания */}
-        {renderItemSection(
+        {shouldShow(t("commonPage.thawingPotions")) && renderItemSection(
           "thawingPotions",
           thawingPotions,
           handleThawingPotionsToggle
         )}
 
+        {/* Золото */}
+        {shouldShow(t("commonPage.gold")) && renderItemSection("gold", gold, handleGoldToggle)}
+
+        {/* Обычные ключи */}
+        {shouldShow(t("commonPage.keys")) && renderItemSection("keys", keys, handleKeysToggle)}
+
+        {/* Стрелы */}
+        {shouldShow(t("commonPage.arrows")) && renderItemSection("arrows", arrows, handleArrowsToggle)}
+
+        {/* Болты */}
+        {shouldShow(t("commonPage.bolts")) && renderItemSection("bolts", bolts, handleBoltsToggle)}
+
         {/* Амулеты */}
-        {renderItemSection("amulets", amulets, handleAmuletsToggle)}
+        {shouldShow(t("commonPage.amulets")) && renderItemSection("amulets", amulets, handleAmuletsToggle)}
 
         {/* Кольца */}
-        {renderItemSection("rings", rings, handleRingsToggle)}
+        {shouldShow(t("commonPage.rings")) && renderItemSection("rings", rings, handleRingsToggle)}
 
         {/* Самоцветы */}
-        {renderItemSection("jewels", jewels, handleJewelsToggle)}
+        {shouldShow(t("commonPage.jewels")) && renderItemSection("jewels", jewels, handleJewelsToggle)}
 
         {/* Маленькие обереги */}
-        {renderItemSection("smallCharms", smallCharms, handleSmallCharmsToggle)}
+        {shouldShow(t("commonPage.smallCharms")) && renderItemSection("smallCharms", smallCharms, handleSmallCharmsToggle)}
 
         {/* Большие обереги */}
-        {renderItemSection("largeCharms", largeCharms, handleLargeCharmsToggle)}
+        {shouldShow(t("commonPage.largeCharms")) && renderItemSection("largeCharms", largeCharms, handleLargeCharmsToggle)}
 
         {/* Великие обереги */}
-        {renderItemSection("grandCharms", grandCharms, handleGrandCharmsToggle)}
+        {shouldShow(t("commonPage.grandCharms")) && renderItemSection("grandCharms", grandCharms, handleGrandCharmsToggle)}
 
-        {/* Блоки зелий с табами */}
-        {renderPotionBlock("healthPotions", healthPotions)}
+        {/* Убер-ключи */}
+        {shouldShow(t("commonPage.uberKeys")) &&
+          renderMultiBlock(
+            "uberKeys",
+            uberKeys,
+            [
+              "/img/common/key_of_terror.png",
+              "/img/common/key_of_hate.png",
+              "/img/common/key_of_destruction.png",
+            ],
+            "/img/common/key_of_terror.png"
+          )}
 
-        {renderPotionBlock("manaPotions", manaPotions)}
-
-        {renderPotionBlock("rejuvenationPotions", rejuvenationPotions)}
+        {/* Эссенции и токен */}
+        {shouldShow(t("commonPage.essences")) &&
+          renderMultiBlock(
+            "essences",
+            essences,
+            [
+              "/img/common/essence_hatred.png",
+              "/img/common/essence_suffering.png",
+              "/img/common/essence_terror.png",
+              "/img/common/essence_destruction.png",
+              "/img/common/token.png",
+            ],
+            "/img/common/token.png"
+          )}
       </div>
     </div>
   );
