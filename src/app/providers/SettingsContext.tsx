@@ -8,6 +8,8 @@ import React, {
 import { ERune, runeHardcodedLocales } from "../../pages/runes/constants/runes.ts";
 import i18n from "../../shared/i18n";
 import { STORAGE_KEYS } from "../../shared/constants";
+import defaultProfileDefaultRaw from "../../shared/assets/profiles/d2r-profile-Default.json";
+import defaultProfileMinimalisticRaw from "../../shared/assets/profiles/d2r-profile-Minimalistic.json";
 
 // Типы для локализации
 interface Locales {
@@ -824,6 +826,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     const savedSettings = localStorage.getItem(STORAGE_KEYS.SETTINGS);
     const savedProfiles = localStorage.getItem(STORAGE_KEYS.PROFILES);
     const savedActiveProfileId = localStorage.getItem(STORAGE_KEYS.ACTIVE_PROFILE);
+    const isFirstRun = !localStorage.getItem(STORAGE_KEYS.FIRST_RUN);
 
     // Миграция: удаляем старый ключ языка если он есть
     const oldLanguageKey = localStorage.getItem(STORAGE_KEYS.LEGACY_LANGUAGE);
@@ -882,6 +885,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     }
 
     // Загружаем профили
+    let hadProfiles = false;
     if (savedProfiles) {
       try {
         const parsedProfiles = JSON.parse(savedProfiles);
@@ -908,6 +912,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
           },
         }));
         setProfiles(migratedProfiles);
+        hadProfiles = Array.isArray(migratedProfiles) && migratedProfiles.length > 0;
 
         // Если есть активный профиль, загружаем его настройки
         if (
@@ -925,6 +930,64 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       } catch (error) {
         console.error("Error loading profiles from localStorage:", error);
       }
+    }
+
+    // Если первый запуск и профилей нет — добавляем дефолтные профили из ассетов
+    if (isFirstRun && !hadProfiles) {
+      try {
+        const sources = [defaultProfileDefaultRaw, defaultProfileMinimalisticRaw];
+        const now = Date.now();
+        const seeded: Profile[] = sources.map((src, index) => {
+          const data = src as unknown as { name?: string; settings?: unknown };
+          const name = data.name || (index === 0 ? "Default" : "Minimalistic");
+          const settingsSource = data.settings as unknown;
+
+          const settingsObj = (typeof settingsSource === "object" && settingsSource !== null)
+            ? (settingsSource as Record<string, unknown>)
+            : {};
+
+          const runesObj = (typeof settingsObj["runes"] === "object" && settingsObj["runes"] !== null)
+            ? (settingsObj["runes"] as Record<string, unknown>)
+            : {};
+
+          const migratedSettings: AppSettings = {
+            runes: Object.fromEntries(
+              Object.entries(runesObj).map(([key, value]) => [
+                key,
+                migrateRuneSettings(value),
+              ])
+            ) as Record<ERune, RuneSettings>,
+            generalRunes: getDefaultGeneralRuneSettings(),
+            common: settingsObj["common"]
+              ? cleanSettings(settingsObj["common"])
+              : getDefaultCommonSettings(),
+            gems: settingsObj["gems"]
+              ? (settingsObj["gems"] as GemSettings)
+              : getDefaultGemSettings(),
+            items: settingsObj["items"]
+              ? migrateItemsSettings(settingsObj["items"])
+              : getDefaultItemsSettings(),
+          };
+
+          return {
+            id: (now + index).toString(),
+            name,
+            settings: migratedSettings,
+            createdAt: new Date(now + index).toISOString(),
+            modifiedAt: new Date(now + index).toISOString(),
+          };
+        });
+
+        setProfiles(seeded);
+        localStorage.setItem(STORAGE_KEYS.PROFILES, JSON.stringify(seeded));
+      } catch (error) {
+        console.error("Error seeding default profiles:", error);
+      }
+    }
+
+    // Отмечаем, что первый запуск обработан
+    if (isFirstRun) {
+      localStorage.setItem(STORAGE_KEYS.FIRST_RUN, "1");
     }
 
     // Завершаем загрузку
