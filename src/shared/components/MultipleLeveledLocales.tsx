@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Tooltip } from "antd";
-import { localeOptions } from "../constants";
+import { localeOptions, colorCodeToHex } from "../constants";
 import Collapse from "./Collapse";
 import Switch from "./Switch";
 import ColorHint from "./ColorHint";
@@ -113,29 +113,6 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
     );
   };
 
-  // Маппинг игровых цветовых кодов в HEX для предпросмотра
-  const colorCodeToHex: Record<string, string> = {
-    "ÿc0": "#FFFFFF", // white
-    "ÿc5": "#A0A0A0", // gray
-    "ÿc6": "#000000", // black
-    "ÿcM": "#C8B37E", // beige
-    "ÿc1": "#ff5757", // lightred
-    "ÿcU": "#ff0000", // red
-    "ÿcS": "#d44848", // dimred
-    "ÿc@": "#ffaf00", // orange
-    "ÿc7": "#d4c786", // lightgold
-    "ÿc9": "#ffff6e", // yellow
-    "ÿcR": "#FFFF99", // lightyellow
-    "ÿc2": "#00FF00", // green
-    "ÿcA": "#008000", // dimgreen
-    "ÿc:": "#006400", // darkgreen
-    "ÿc3": "#4B0082", // indigo
-    "ÿcP": "#9370DB", // lightindigo
-    "ÿcN": "#40E0D0", // turquoise
-    "ÿcT": "#87CEEB", // lightblue
-    "ÿcO": "#FFC0CB", // pink
-    "ÿc;": "#800080", // purple
-  };
 
   // Рендер строки с учетом цветовых кодов ÿcX
   const renderColoredText = (text: string) => {
