@@ -88,6 +88,8 @@
     "portal": "Stadtportal",
     "uberKeys": "Über-Schlüssel",
     "essences": "Essenzen und Token",
+    "poisonPotions": "Gifttränke",
+    "firePotions": "Feuertränke",
     "searchPlaceholder": "Blöcke suchen...",
     "enableCustomization": "Anpassung aktivieren",
     "localeSettings": "Locale-Einstellungen",
@@ -128,6 +130,16 @@
       "level3": "Essenz des Schreckens",
       "level4": "Essenz der Zerstörung",
       "level5": "Zeichen der Absolution"
+    },
+    "poisonPotionsLevels": {
+      "level1": "Würgender Gastrank",
+      "level2": "Erstickender Gastrank",
+      "level3": "Ranziger Gastrank"
+    },
+    "firePotionsLevels": {
+      "level1": "Detonations-Trank",
+      "level2": "Explosions-Trank",
+      "level3": "Öltrank"
     }
   },
   "gemsPage": {

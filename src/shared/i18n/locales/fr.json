@@ -42,6 +42,8 @@
     "portal": "Portail de ville",
     "uberKeys": "Clés Uber",
     "essences": "Essences et jeton",
+    "poisonPotions": "Potions de poison",
+    "firePotions": "Potions de feu",
     "searchPlaceholder": "Rechercher des blocs...",
     "enableCustomization": "Activer la personnalisation",
     "localeSettings": "Paramètres de langue",
@@ -82,6 +84,16 @@
       "level3": "Essence de la terreur",
       "level4": "Essence de la destruction",
       "level5": "Jeton d'absolution"
+    },
+    "poisonPotionsLevels": {
+      "level1": "Potion de gaz étranglant",
+      "level2": "Potion de gaz asphyxiant",
+      "level3": "Potion de gaz rance"
+    },
+    "firePotionsLevels": {
+      "level1": "Potion fulminante",
+      "level2": "Potion explosive",
+      "level3": "Potion d'huile"
     }
   },
   "gemsPage": {

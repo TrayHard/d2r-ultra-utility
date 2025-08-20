@@ -42,6 +42,8 @@
     "portal": "Town Portal",
     "uberKeys": "Uber Keys",
     "essences": "Essences and Tokens",
+    "poisonPotions": "Poison Potions",
+    "firePotions": "Fire Potions",
     "searchPlaceholder": "Search blocks...",
     "enableCustomization": "Enable customization",
     "localeSettings": "Locale Settings",
@@ -82,6 +84,16 @@
       "level3": "Essence of Terror",
       "level4": "Essence of Destruction",
       "level5": "Token of Absolution"
+    },
+    "poisonPotionsLevels": {
+      "level1": "Strangling Gas Potion",
+      "level2": "Choking Gas Potion",
+      "level3": "Rancid Gas Potion"
+    },
+    "firePotionsLevels": {
+      "level1": "Fulminating Potion",
+      "level2": "Exploding Potion",
+      "level3": "Oil Potion"
     }
   },
   "gemsPage": {

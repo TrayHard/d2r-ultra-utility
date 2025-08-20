@@ -49,7 +49,9 @@ type UpdatePotionLevelSettingsFunction = (
     | "identify"
     | "portal"
     | "uberKeys"
-    | "essences",
+    | "essences"
+    | "poisonPotions"
+    | "firePotions",
   level: number,
   settings: Partial<PotionLevelSettings>
 ) => void;
@@ -256,6 +258,22 @@ export const useCommonItemsWorker = (
                 locales: itemLocales,
               });
             }
+          } else if (commonItemGroups.poisonPotions.includes(commonItem)) {
+            const level = commonItemGroups.poisonPotions.indexOf(commonItem);
+            if (updatePotionLevelSettings) {
+              updatePotionLevelSettings("poisonPotions", level, {
+                enabled: isEnabled,
+                locales: itemLocales,
+              });
+            }
+          } else if (commonItemGroups.firePotions.includes(commonItem)) {
+            const level = commonItemGroups.firePotions.indexOf(commonItem);
+            if (updatePotionLevelSettings) {
+              updatePotionLevelSettings("firePotions", level, {
+                enabled: isEnabled,
+                locales: itemLocales,
+              });
+            }
           }
 
           processedItems++;
@@ -327,7 +345,9 @@ export const useCommonItemsWorker = (
               | "identify"
               | "portal"
               | "uberKeys"
-              | "essences";
+              | "essences"
+              | "poisonPotions"
+              | "firePotions";
             const potionGroup = commonSettings[
               potionType
             ] as PotionGroupSettings;

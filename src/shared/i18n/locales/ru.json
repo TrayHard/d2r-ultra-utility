@@ -42,6 +42,8 @@
     "portal": "Городской портал",
     "uberKeys": "Убер-ключи",
     "essences": "Эссенции и токен",
+    "poisonPotions": "Ядовитые зелья",
+    "firePotions": "Огненные зелья",
     "searchPlaceholder": "Поиск блоков...",
     "enableCustomization": "Включить настройку",
     "localeSettings": "Настройки локалей",
@@ -82,6 +84,16 @@
       "level3": "Эссенция Ужаса",
       "level4": "Эссенция Разрушения",
       "level5": "Токен Отпущения грехов"
+    },
+    "poisonPotionsLevels": {
+      "level1": "Задушливое зелье газа",
+      "level2": "Удушливое зелье газа",
+      "level3": "Зловонное зелье газа"
+    },
+    "firePotionsLevels": {
+      "level1": "Громовое зелье",
+      "level2": "Взрывающееся зелье",
+      "level3": "Масляное зелье"
     }
   },
   "gemsPage": {
