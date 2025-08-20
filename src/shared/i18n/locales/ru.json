@@ -33,9 +33,18 @@
     "smallCharms": "Маленькие обереги",
     "largeCharms": "Большие обереги",
     "grandCharms": "Великие обереги",
+    "gold": "Золото",
+    "keys": "Ключи",
     "healthPotions": "Зелья здоровья",
     "manaPotions": "Зелья маны",
     "rejuvenationPotions": "Зелья восстановления",
+    "identify": "Идентификация",
+    "portal": "Городской портал",
+    "uberKeys": "Убер-ключи",
+    "essences": "Эссенции и токен",
+    "poisonPotions": "Ядовитые зелья",
+    "firePotions": "Огненные зелья",
+    "searchPlaceholder": "Поиск",
     "enableCustomization": "Включить настройку",
     "localeSettings": "Настройки локалей",
     "healthPotionsLevels": {
@@ -55,6 +64,36 @@
     "rejuvenationPotionsLevels": {
       "level1": "Зелье восстановления",
       "level2": "Полное зелье восстановления"
+    },
+    "identifyLevels": {
+      "level1": "Свиток идентификации",
+      "level2": "Том идентификации"
+    },
+    "portalLevels": {
+      "level1": "Свиток портала",
+      "level2": "Том портала"
+    },
+    "uberKeysLevels": {
+      "level1": "Ключ Ужаса",
+      "level2": "Ключ Ненависти",
+      "level3": "Ключ Разрушения"
+    },
+    "essencesLevels": {
+      "level1": "Эссенция Ненависти",
+      "level2": "Эссенция Страданий",
+      "level3": "Эссенция Ужаса",
+      "level4": "Эссенция Разрушения",
+      "level5": "Токен Отпущения грехов"
+    },
+    "poisonPotionsLevels": {
+      "level1": "Задушливое зелье газа",
+      "level2": "Удушливое зелье газа",
+      "level3": "Зловонное зелье газа"
+    },
+    "firePotionsLevels": {
+      "level1": "Громовое зелье",
+      "level2": "Взрывающееся зелье",
+      "level3": "Масляное зелье"
     }
   },
   "gemsPage": {
@@ -256,10 +295,8 @@
         "orange": "Оранжевый",
         "lightgold": "Светло-золотой",
         "yellow": "Желтый",
-        "lightyellow": "Светло-желтый",
         "green": "Зеленый",
         "dimgreen": "Тусклый зеленый",
-        "darkgreen": "Темно-зеленый",
         "indigo": "Индиго",
         "lightindigo": "Светло-индиго",
         "turquoise": "Бирюзовый",

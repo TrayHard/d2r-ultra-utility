@@ -24,4 +24,8 @@ dist-ssr
 *.sw?
 .env
 .tauri_key
+.tauri_key_password
 .cursor/*
+src-tauri/target/
+scripts/*
+scripts/

@@ -36,6 +36,15 @@
     "healthPotions": "Еліксири здоров'я",
     "manaPotions": "Еліксири мани",
     "rejuvenationPotions": "Еліксири відновлення",
+    "gold": "Золото",
+    "keys": "Ключі",
+    "identify": "Ідентифікація",
+    "portal": "Міський портал",
+    "uberKeys": "Убер-ключі",
+    "essences": "Есенції та токен",
+    "poisonPotions": "Отруйні еліксири",
+    "firePotions": "Вогняні еліксири",
+    "searchPlaceholder": "Пошук",
     "enableCustomization": "Увімкнути налаштування",
     "localeSettings": "Налаштування локалей",
     "healthPotionsLevels": {
@@ -55,6 +64,36 @@
     "rejuvenationPotionsLevels": {
       "level1": "Еліксир відновлення",
       "level2": "Повний еліксир відновлення"
+    },
+    "identifyLevels": {
+      "level1": "Сувій ідентифікації",
+      "level2": "Том ідентифікації"
+    },
+    "portalLevels": {
+      "level1": "Сувій міського порталу",
+      "level2": "Том міського порталу"
+    },
+    "uberKeysLevels": {
+      "level1": "Ключ Жаху",
+      "level2": "Ключ Ненависті",
+      "level3": "Ключ Руйнування"
+    },
+    "essencesLevels": {
+      "level1": "Есенція Ненависті",
+      "level2": "Есенція Страждання",
+      "level3": "Есенція Жаху",
+      "level4": "Есенція Руйнування",
+      "level5": "Токен Розгрішення"
+    },
+    "poisonPotionsLevels": {
+      "level1": "Задушливий газовий еліксир",
+      "level2": "Удушливий газовий еліксир",
+      "level3": "Смородний газовий еліксир"
+    },
+    "firePotionsLevels": {
+      "level1": "Громовий еліксир",
+      "level2": "Вибуховий еліксир",
+      "level3": "Масляний еліксир"
     }
   },
   "gemsPage": {
@@ -260,10 +299,8 @@
         "orange": "Помаранчевий",
         "lightgold": "Світло-золотий",
         "yellow": "Жовтий",
-        "lightyellow": "Світло-жовтий",
         "green": "Зелений",
         "dimgreen": "Тьмяно-зелений",
-        "darkgreen": "Темно-зелений",
         "indigo": "Індіго",
         "lightindigo": "Світло-індіго",
         "turquoise": "Бірюзовий",

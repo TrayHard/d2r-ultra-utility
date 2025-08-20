@@ -428,10 +428,10 @@ const RuneCard: React.FC<RuneCardProps> = ({
                         left: "50%",
                         transform: "translateX(-50%)",
                         bottom: `${300 * 0.13 - (parseFloat(getFontSize(getPreviewData().boxSize)) * (mode === "manual" ? 1.4 : 1)) / 2}px`,
-                        width: getContainerWidth(getPreviewData().boxSize),
-                        minWidth: getContainerWidth(getPreviewData().boxSize),
+                        width: mode === "manual" ? "max-content" : getContainerWidth(getPreviewData().boxSize),
+                        minWidth: mode === "manual" ? undefined : getContainerWidth(getPreviewData().boxSize),
                         textAlign: "center" as const,
-                        whiteSpace: mode === "manual" ? "pre-wrap" : "nowrap",
+                        whiteSpace: mode === "manual" ? "pre" : "nowrap",
                         lineHeight: "1.4",
                       }}
                     >
@@ -453,10 +453,10 @@ const RuneCard: React.FC<RuneCardProps> = ({
                               height: "100%",
                             }}
                           >
-                            {/* Левый ограничитель на левом краю контейнера */}
-                            {(mode === "auto"
-                              ? previewData.boxSize > 0 && previewData.boxLimiters !== "spaces"
-                              : previewData.hasBoxLimiters) && (
+                            {/* Левый ограничитель на левом краю контейнера (только авто-режим) */}
+                            {mode === "auto" &&
+                              previewData.boxSize > 0 &&
+                              previewData.boxLimiters !== "spaces" && (
                               <span
                                 style={{
                                   ...baseStyle,
@@ -536,10 +536,10 @@ const RuneCard: React.FC<RuneCardProps> = ({
                               )}
                             </span>
 
-                            {/* Правый ограничитель на правом краю контейнера */}
-                            {(mode === "auto"
-                              ? previewData.boxSize > 0 && previewData.boxLimiters !== "spaces"
-                              : previewData.hasBoxLimiters) && (
+                            {/* Правый ограничитель на правом краю контейнера (только авто-режим) */}
+                            {mode === "auto" &&
+                              previewData.boxSize > 0 &&
+                              previewData.boxLimiters !== "spaces" && (
                               <span
                                 style={{
                                   ...baseStyle,

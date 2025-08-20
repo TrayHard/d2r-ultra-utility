@@ -36,6 +36,15 @@
     "healthPotions": "Mikstury zdrowia",
     "manaPotions": "Mikstury many",
     "rejuvenationPotions": "Mikstury odnowy",
+    "gold": "Złoto",
+    "keys": "Klucze",
+    "identify": "Identyfikacja",
+    "portal": "Portal miejski",
+    "uberKeys": "Klucze Uber",
+    "essences": "Esencje i token",
+    "poisonPotions": "Mikstury trucizny",
+    "firePotions": "Mikstury ognia",
+    "searchPlaceholder": "Szukaj",
     "enableCustomization": "Włącz dostosowanie",
     "localeSettings": "Ustawienia lokalizacji",
     "healthPotionsLevels": {
@@ -55,6 +64,36 @@
     "rejuvenationPotionsLevels": {
       "level1": "Mikstura odnowy",
       "level2": "Pełna mikstura odnowy"
+    },
+    "identifyLevels": {
+      "level1": "Zwoj identyfikacji",
+      "level2": "Tom identyfikacji"
+    },
+    "portalLevels": {
+      "level1": "Zwoj portalu miejskiego",
+      "level2": "Tom portalu miejskiego"
+    },
+    "uberKeysLevels": {
+      "level1": "Klucz Grozy",
+      "level2": "Klucz Nienawiści",
+      "level3": "Klucz Zniszczenia"
+    },
+    "essencesLevels": {
+      "level1": "Esencja Nienawiści",
+      "level2": "Esencja Cierpienia",
+      "level3": "Esencja Grozy",
+      "level4": "Esencja Zniszczenia",
+      "level5": "Token Odpuszczenia"
+    },
+    "poisonPotionsLevels": {
+      "level1": "Duszaca mikstura gazu",
+      "level2": "Uduszająca mikstura gazu",
+      "level3": "Zgniła mikstura gazu"
+    },
+    "firePotionsLevels": {
+      "level1": "Mikstura piorunująca",
+      "level2": "Mikstura wybuchowa",
+      "level3": "Mikstura olejowa"
     }
   },
   "gemsPage": {
@@ -238,10 +277,8 @@
         "orange": "Pomarańczowy",
         "lightgold": "Jasnozłoty",
         "yellow": "Żółty",
-        "lightyellow": "Jasnożółty",
         "green": "Zielony",
         "dimgreen": "Ciemnozielony",
-        "darkgreen": "Ciemnozielony",
         "indigo": "Indygo",
         "lightindigo": "Jasne indygo",
         "turquoise": "Turkusowy",

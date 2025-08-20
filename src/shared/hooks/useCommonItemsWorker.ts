@@ -5,6 +5,8 @@ import {
   commonItemToIdMapper,
   commonItemGroups,
   settingsKeyToCommonItemMapper,
+  commonItemFileMapper,
+  ECommonItem,
 } from "../../pages/common/constants/commonItems";
 import type {
   CommonItemSettings,
@@ -22,12 +24,34 @@ import {
 } from "../utils/commonUtils";
 
 type UpdateCommonItemSettingsFunction = (
-  item: "arrows" | "bolts" | "staminaPotions" | "antidotes" | "thawingPotions",
+  item:
+    | "arrows"
+    | "bolts"
+    | "staminaPotions"
+    | "antidotes"
+    | "thawingPotions"
+    | "amulets"
+    | "rings"
+    | "jewels"
+    | "smallCharms"
+    | "largeCharms"
+    | "grandCharms"
+    | "gold"
+    | "keys",
   settings: Partial<CommonItemSettings>
 ) => void;
 
 type UpdatePotionLevelSettingsFunction = (
-  item: "healthPotions" | "manaPotions" | "rejuvenationPotions",
+  item:
+    | "healthPotions"
+    | "manaPotions"
+    | "rejuvenationPotions"
+    | "identify"
+    | "portal"
+    | "uberKeys"
+    | "essences"
+    | "poisonPotions"
+    | "firePotions",
   level: number,
   settings: Partial<PotionLevelSettings>
 ) => void;
@@ -68,24 +92,54 @@ export const useCommonItemsWorker = (
       console.log("Game paths locales:", GAME_PATHS.LOCALES);
       console.log("Game paths items file:", GAME_PATHS.ITEMS_FILE);
 
-      const fullPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.ITEMS_FILE}`;
+      const namesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.ITEMS_FILE}`;
+      const affixesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.NAMEAFFIXES_FILE}`;
+      const modifiersPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\item-modifiers.json`;
 
-      console.log("Reading common items from path:", fullPath);
+      console.log("Reading common items from paths:", {
+        namesPath,
+        affixesPath,
+        modifiersPath,
+      });
 
-      // Читаем файл через Tauri API
-      let fileContent;
+      // Читаем файлы через Tauri API
+      let namesContent: string = "[]";
+      let affixesContent: string = "[]";
+      let modifiersContent: string = "[]";
       try {
-        fileContent = await readTextFile(fullPath);
+        namesContent = await readTextFile(namesPath);
       } catch (fileError) {
-        console.error("Error reading file:", fileError);
-        const errorMsg = `Не удалось прочитать файл по пути: ${fullPath}`;
+        console.error("Error reading item-names:", fileError);
+        const errorMsg = `Не удалось прочитать файл: ${namesPath}`;
         throw new Error(errorMsg);
       }
+      try {
+        affixesContent = await readTextFile(affixesPath);
+      } catch (fileError) {
+        console.warn("item-nameaffixes.json not read, continuing:", fileError);
+      }
+      try {
+        modifiersContent = await readTextFile(modifiersPath);
+      } catch (fileError) {
+        console.warn("item-modifiers.json not read, continuing:", fileError);
+      }
 
-      const localeData: LocaleItem[] = JSON.parse(fileContent);
+      const namesData: LocaleItem[] = JSON.parse(namesContent);
+      const nameAffixesData: LocaleItem[] = affixesContent ? JSON.parse(affixesContent) : [];
+      const modifiersData: LocaleItem[] = modifiersContent ? JSON.parse(modifiersContent) : [];
 
-      console.log("Loaded common items locale data:", localeData);
-      console.log(`Найдено ${localeData.length} элементов локализации`);
+      const localeData: LocaleItem[] = [
+        ...namesData,
+        ...nameAffixesData,
+        ...modifiersData,
+      ];
+
+      console.log("Loaded common items locale data (merged)", {
+        names: namesData.length,
+        nameAffixes: nameAffixesData.length,
+        modifiers: modifiersData.length,
+        total: localeData.length,
+      });
 
       let processedItems = 0;
 
@@ -128,7 +182,15 @@ export const useCommonItemsWorker = (
               | "bolts"
               | "staminaPotions"
               | "antidotes"
-              | "thawingPotions";
+              | "thawingPotions"
+              | "amulets"
+              | "rings"
+              | "jewels"
+              | "smallCharms"
+              | "largeCharms"
+              | "grandCharms"
+              | "gold"
+              | "keys";
 
             if (settingsKey && updateCommonItemSettings) {
               updateCommonItemSettings(settingsKey, {
@@ -154,14 +216,60 @@ export const useCommonItemsWorker = (
                 locales: itemLocales,
               });
             }
-          } else if (
-            commonItemGroups.rejuvenationPotions.includes(commonItem)
-          ) {
+          } else if (commonItemGroups.rejuvenationPotions.includes(commonItem)) {
             // Зелья восстановления
             const level =
               commonItemGroups.rejuvenationPotions.indexOf(commonItem);
             if (updatePotionLevelSettings) {
               updatePotionLevelSettings("rejuvenationPotions", level, {
+                enabled: isEnabled,
+                locales: itemLocales,
+              });
+            }
+          } else if (commonItemGroups.identify.includes(commonItem)) {
+            const level = commonItemGroups.identify.indexOf(commonItem);
+            if (updatePotionLevelSettings) {
+              updatePotionLevelSettings("identify", level, {
+                enabled: isEnabled,
+                locales: itemLocales,
+              });
+            }
+          } else if (commonItemGroups.portal.includes(commonItem)) {
+            const level = commonItemGroups.portal.indexOf(commonItem);
+            if (updatePotionLevelSettings) {
+              updatePotionLevelSettings("portal", level, {
+                enabled: isEnabled,
+                locales: itemLocales,
+              });
+            }
+          } else if (commonItemGroups.uberKeys.includes(commonItem)) {
+            const level = commonItemGroups.uberKeys.indexOf(commonItem);
+            if (updatePotionLevelSettings) {
+              updatePotionLevelSettings("uberKeys", level, {
+                enabled: isEnabled,
+                locales: itemLocales,
+              });
+            }
+          } else if (commonItemGroups.essences.includes(commonItem)) {
+            const level = commonItemGroups.essences.indexOf(commonItem);
+            if (updatePotionLevelSettings) {
+              updatePotionLevelSettings("essences", level, {
+                enabled: isEnabled,
+                locales: itemLocales,
+              });
+            }
+          } else if (commonItemGroups.poisonPotions.includes(commonItem)) {
+            const level = commonItemGroups.poisonPotions.indexOf(commonItem);
+            if (updatePotionLevelSettings) {
+              updatePotionLevelSettings("poisonPotions", level, {
+                enabled: isEnabled,
+                locales: itemLocales,
+              });
+            }
+          } else if (commonItemGroups.firePotions.includes(commonItem)) {
+            const level = commonItemGroups.firePotions.indexOf(commonItem);
+            if (updatePotionLevelSettings) {
+              updatePotionLevelSettings("firePotions", level, {
                 enabled: isEnabled,
                 locales: itemLocales,
               });
@@ -205,16 +313,25 @@ export const useCommonItemsWorker = (
 
   const applyChanges = useCallback(
     async (homeDir: string, commonSettings: CommonSettings) => {
-      const localizationPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.ITEMS_FILE}`;
+      const namesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.ITEMS_FILE}`;
+      const affixesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.NAMEAFFIXES_FILE}`;
+      const modifiersPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\item-modifiers.json`;
 
-      console.log("Applying common items changes to:", localizationPath);
+      console.log("Applying common items changes to:", namesPath);
 
       // Читаем текущий файл
-      const fileContent = await readTextFile(localizationPath);
-      const currentData: LocaleItem[] = JSON.parse(fileContent);
+      const namesContent = await readTextFile(namesPath);
+      const nameAffixesContent = await readTextFile(affixesPath);
+      const modifiersContent = await readTextFile(modifiersPath);
+
+      const namesData: LocaleItem[] = JSON.parse(namesContent);
+      const nameAffixesData: LocaleItem[] = JSON.parse(nameAffixesContent);
+      const modifiersData: LocaleItem[] = JSON.parse(modifiersContent);
 
       // Создаем обновленные данные
-      const updatedData = [...currentData];
+      const updatedNames = [...namesData];
+      const updatedAffixes = [...nameAffixesData];
+      const updatedModifiers = [...modifiersData];
 
       // Обновляем простые предметы
       Object.entries(settingsKeyToCommonItemMapper).forEach(
@@ -224,7 +341,13 @@ export const useCommonItemsWorker = (
             const potionType = settingsKey as
               | "healthPotions"
               | "manaPotions"
-              | "rejuvenationPotions";
+              | "rejuvenationPotions"
+              | "identify"
+              | "portal"
+              | "uberKeys"
+              | "essences"
+              | "poisonPotions"
+              | "firePotions";
             const potionGroup = commonSettings[
               potionType
             ] as PotionGroupSettings;
@@ -232,10 +355,17 @@ export const useCommonItemsWorker = (
             item.forEach((potionItem, level) => {
               const potionId = commonItemToIdMapper[potionItem];
               const levelSettings = potionGroup.levels[level];
+              const targetFile = commonItemFileMapper[potionItem as ECommonItem];
+              const targetArray =
+                targetFile === "item-nameaffixes"
+                  ? updatedAffixes
+                  : targetFile === "item-modifiers"
+                  ? updatedModifiers
+                  : updatedNames;
 
               if (potionId && levelSettings) {
                 // Находим или создаем элемент в данных
-                const itemIndex = updatedData.findIndex(
+                const itemIndex = targetArray.findIndex(
                   (dataItem) => dataItem.id === potionId
                 );
 
@@ -247,10 +377,10 @@ export const useCommonItemsWorker = (
                         levelSettings,
                         locale
                       );
-                      updatedData[itemIndex][locale] = finalName;
+                      targetArray[itemIndex][locale] = finalName;
                     } else {
                       // Если элемент отключен, очищаем все локальные поля
-                      updatedData[itemIndex][locale] = "";
+                      targetArray[itemIndex][locale] = "";
                     }
                   });
                 } else {
@@ -286,7 +416,7 @@ export const useCommonItemsWorker = (
                     }
                   });
 
-                  updatedData.push(newItem);
+                  targetArray.push(newItem);
                 }
               }
             });
@@ -296,10 +426,17 @@ export const useCommonItemsWorker = (
             const itemSettings = commonSettings[
               settingsKey as keyof CommonSettings
             ] as CommonItemSettings;
+            const targetFile = commonItemFileMapper[item as ECommonItem];
+            const targetArray =
+              targetFile === "item-nameaffixes"
+                ? updatedAffixes
+                : targetFile === "item-modifiers"
+                ? updatedModifiers
+                : updatedNames;
 
             if (itemId && itemSettings) {
               // Находим или создаем элемент в данных
-              const itemIndex = updatedData.findIndex(
+              const itemIndex = targetArray.findIndex(
                 (dataItem) => dataItem.id === itemId
               );
 
@@ -311,10 +448,10 @@ export const useCommonItemsWorker = (
                       itemSettings,
                       locale
                     );
-                    updatedData[itemIndex][locale] = finalName;
+                    targetArray[itemIndex][locale] = finalName;
                   } else {
                     // Если элемент отключен, очищаем все локальные поля
-                    updatedData[itemIndex][locale] = "";
+                    targetArray[itemIndex][locale] = "";
                   }
                 });
               } else {
@@ -350,16 +487,17 @@ export const useCommonItemsWorker = (
                   }
                 });
 
-                updatedData.push(newItem);
+                targetArray.push(newItem);
               }
             }
           }
         }
       );
 
-      // Записываем обновленные данные обратно в файл
-      const updatedContent = JSON.stringify(updatedData, null, 2);
-      await writeTextFile(localizationPath, updatedContent);
+      // Записываем обновленные данные обратно в соответствующие файлы
+      await writeTextFile(namesPath, JSON.stringify(updatedNames, null, 2));
+      await writeTextFile(affixesPath, JSON.stringify(updatedAffixes, null, 2));
+      await writeTextFile(modifiersPath, JSON.stringify(updatedModifiers, null, 2));
 
       console.log("Common items localization changes applied successfully");
     },

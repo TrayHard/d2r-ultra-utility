@@ -8,6 +8,8 @@ import React, {
 import { ERune, runeHardcodedLocales } from "../../pages/runes/constants/runes.ts";
 import i18n from "../../shared/i18n";
 import { STORAGE_KEYS } from "../../shared/constants";
+import defaultProfileDefaultRaw from "../../shared/assets/profiles/d2r-profile-Default.json";
+import defaultProfileMinimalisticRaw from "../../shared/assets/profiles/d2r-profile-Minimalistic.json";
 
 // Типы для локализации
 interface Locales {
@@ -97,9 +99,17 @@ export interface CommonSettings {
   smallCharms: CommonItemSettings;
   largeCharms: CommonItemSettings;
   grandCharms: CommonItemSettings;
+  gold: CommonItemSettings;
+  keys: CommonItemSettings;
   healthPotions: PotionGroupSettings;
   manaPotions: PotionGroupSettings;
   rejuvenationPotions: PotionGroupSettings;
+  identify: PotionGroupSettings; // Scroll/Tome of Identify
+  portal: PotionGroupSettings; // Scroll/Tome of Town Portal
+  uberKeys: PotionGroupSettings; // 3 keys
+  essences: PotionGroupSettings; // 4 essences + token
+  poisonPotions: PotionGroupSettings; // 3 poison potions
+  firePotions: PotionGroupSettings; // 3 fire potions
 }
 
 export interface GemSettings {
@@ -191,10 +201,10 @@ interface SettingsContextType {
   // Setter'ы для CommonTab
   getCommonSettings: () => CommonSettings;
   getCommonItemSettings: (
-    item: "arrows" | "bolts" | "staminaPotions" | "antidotes" | "thawingPotions" | "amulets" | "rings" | "jewels" | "smallCharms" | "largeCharms" | "grandCharms"
+    item: "arrows" | "bolts" | "staminaPotions" | "antidotes" | "thawingPotions" | "amulets" | "rings" | "jewels" | "smallCharms" | "largeCharms" | "grandCharms" | "gold" | "keys"
   ) => CommonItemSettings;
   getPotionGroupSettings: (
-    item: "healthPotions" | "manaPotions" | "rejuvenationPotions"
+    item: "healthPotions" | "manaPotions" | "rejuvenationPotions" | "identify" | "portal" | "uberKeys" | "essences" | "poisonPotions" | "firePotions"
   ) => PotionGroupSettings;
   updateCommonItemSettings: (
     item:
@@ -208,15 +218,17 @@ interface SettingsContextType {
       | "jewels"
       | "smallCharms"
       | "largeCharms"
-      | "grandCharms",
+      | "grandCharms"
+      | "gold"
+      | "keys",
     newSettings: Partial<CommonItemSettings>
   ) => void;
   updatePotionGroupSettings: (
-    item: "healthPotions" | "manaPotions" | "rejuvenationPotions",
+    item: "healthPotions" | "manaPotions" | "rejuvenationPotions" | "identify" | "portal" | "uberKeys" | "essences" | "poisonPotions" | "firePotions",
     newSettings: Partial<PotionGroupSettings>
   ) => void;
   updatePotionLevelSettings: (
-    item: "healthPotions" | "manaPotions" | "rejuvenationPotions",
+    item: "healthPotions" | "manaPotions" | "rejuvenationPotions" | "identify" | "portal" | "uberKeys" | "essences" | "poisonPotions" | "firePotions",
     level: number,
     newSettings: Partial<PotionLevelSettings>
   ) => void;
@@ -335,12 +347,22 @@ const cleanSettings = (oldCommon: any): CommonSettings => {
   });
 
   // Удаляем activeTab из групп зелий
-  ["healthPotions", "manaPotions", "rejuvenationPotions"].forEach(
+  ["healthPotions", "manaPotions", "rejuvenationPotions", "identify", "portal", "uberKeys", "essences", "poisonPotions", "firePotions"].forEach(
     (potionType) => {
       if (cleaned[potionType]) {
         cleaned[potionType] = {
           ...getDefaultPotionGroupSettings(
-            potionType === "rejuvenationPotions" ? 2 : 5
+            potionType === "rejuvenationPotions"
+              ? 2
+              : potionType === "identify" || potionType === "portal"
+              ? 2
+              : potionType === "uberKeys"
+              ? 3
+              : potionType === "poisonPotions" || potionType === "firePotions"
+              ? 3
+              : potionType === "essences"
+              ? 5
+              : 5
           ),
           ...cleaned[potionType],
         };
@@ -495,9 +517,17 @@ const getDefaultCommonSettings = (): CommonSettings => ({
   smallCharms: getDefaultCommonItemSettings(),
   largeCharms: getDefaultCommonItemSettings(),
   grandCharms: getDefaultCommonItemSettings(),
+  gold: getDefaultCommonItemSettings(),
+  keys: getDefaultCommonItemSettings(),
   healthPotions: getDefaultPotionGroupSettings(5), // 5 уровней для хп
   manaPotions: getDefaultPotionGroupSettings(5), // 5 уровней для маны
   rejuvenationPotions: getDefaultPotionGroupSettings(2), // 2 уровня для реджувок
+  identify: getDefaultPotionGroupSettings(2), // 2 уровня: scroll/tome identify
+  portal: getDefaultPotionGroupSettings(2), // 2 уровня: scroll/tome portal
+  uberKeys: getDefaultPotionGroupSettings(3), // 3 ключа
+  essences: getDefaultPotionGroupSettings(5), // 4 эссенции + токен
+  poisonPotions: getDefaultPotionGroupSettings(3), // 3 уровня: Strangling/Choking/Rancid
+  firePotions: getDefaultPotionGroupSettings(3), // 3 уровня: Fulminating/Exploding/Oil
 });
 
 const getDefaultGemSettings = (): GemSettings => ({
@@ -796,6 +826,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     const savedSettings = localStorage.getItem(STORAGE_KEYS.SETTINGS);
     const savedProfiles = localStorage.getItem(STORAGE_KEYS.PROFILES);
     const savedActiveProfileId = localStorage.getItem(STORAGE_KEYS.ACTIVE_PROFILE);
+    const isFirstRun = !localStorage.getItem(STORAGE_KEYS.FIRST_RUN);
 
     // Миграция: удаляем старый ключ языка если он есть
     const oldLanguageKey = localStorage.getItem(STORAGE_KEYS.LEGACY_LANGUAGE);
@@ -854,6 +885,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     }
 
     // Загружаем профили
+    let hadProfiles = false;
     if (savedProfiles) {
       try {
         const parsedProfiles = JSON.parse(savedProfiles);
@@ -880,6 +912,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
           },
         }));
         setProfiles(migratedProfiles);
+        hadProfiles = Array.isArray(migratedProfiles) && migratedProfiles.length > 0;
 
         // Если есть активный профиль, загружаем его настройки
         if (
@@ -897,6 +930,64 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       } catch (error) {
         console.error("Error loading profiles from localStorage:", error);
       }
+    }
+
+    // Если первый запуск и профилей нет — добавляем дефолтные профили из ассетов
+    if (isFirstRun && !hadProfiles) {
+      try {
+        const sources = [defaultProfileDefaultRaw, defaultProfileMinimalisticRaw];
+        const now = Date.now();
+        const seeded: Profile[] = sources.map((src, index) => {
+          const data = src as unknown as { name?: string; settings?: unknown };
+          const name = data.name || (index === 0 ? "Default" : "Minimalistic");
+          const settingsSource = data.settings as unknown;
+
+          const settingsObj = (typeof settingsSource === "object" && settingsSource !== null)
+            ? (settingsSource as Record<string, unknown>)
+            : {};
+
+          const runesObj = (typeof settingsObj["runes"] === "object" && settingsObj["runes"] !== null)
+            ? (settingsObj["runes"] as Record<string, unknown>)
+            : {};
+
+          const migratedSettings: AppSettings = {
+            runes: Object.fromEntries(
+              Object.entries(runesObj).map(([key, value]) => [
+                key,
+                migrateRuneSettings(value),
+              ])
+            ) as Record<ERune, RuneSettings>,
+            generalRunes: getDefaultGeneralRuneSettings(),
+            common: settingsObj["common"]
+              ? cleanSettings(settingsObj["common"])
+              : getDefaultCommonSettings(),
+            gems: settingsObj["gems"]
+              ? (settingsObj["gems"] as GemSettings)
+              : getDefaultGemSettings(),
+            items: settingsObj["items"]
+              ? migrateItemsSettings(settingsObj["items"])
+              : getDefaultItemsSettings(),
+          };
+
+          return {
+            id: (now + index).toString(),
+            name,
+            settings: migratedSettings,
+            createdAt: new Date(now + index).toISOString(),
+            modifiedAt: new Date(now + index).toISOString(),
+          };
+        });
+
+        setProfiles(seeded);
+        localStorage.setItem(STORAGE_KEYS.PROFILES, JSON.stringify(seeded));
+      } catch (error) {
+        console.error("Error seeding default profiles:", error);
+      }
+    }
+
+    // Отмечаем, что первый запуск обработан
+    if (isFirstRun) {
+      localStorage.setItem(STORAGE_KEYS.FIRST_RUN, "1");
     }
 
     // Завершаем загрузку
@@ -1405,6 +1496,8 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         | "smallCharms"
         | "largeCharms"
         | "grandCharms"
+        | "gold"
+        | "keys"
     ) => {
       return settings.common[item];
     },
@@ -1412,7 +1505,18 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   );
 
   const getPotionGroupSettings = useCallback(
-    (item: "healthPotions" | "manaPotions" | "rejuvenationPotions") => {
+    (
+      item:
+        | "healthPotions"
+        | "manaPotions"
+        | "rejuvenationPotions"
+        | "identify"
+        | "portal"
+        | "uberKeys"
+        | "essences"
+        | "poisonPotions"
+        | "firePotions"
+    ) => {
       return settings.common[item];
     },
     [settings.common]
@@ -1431,7 +1535,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         | "jewels"
         | "smallCharms"
         | "largeCharms"
-        | "grandCharms",
+        | "grandCharms"
+        | "gold"
+        | "keys",
       newSettings: Partial<CommonItemSettings>
     ) => {
       setSettings((prevSettings) => ({
@@ -1450,7 +1556,16 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
 
   const updatePotionGroupSettings = useCallback(
     (
-      item: "healthPotions" | "manaPotions" | "rejuvenationPotions",
+      item:
+        | "healthPotions"
+        | "manaPotions"
+        | "rejuvenationPotions"
+        | "identify"
+        | "portal"
+        | "uberKeys"
+        | "essences"
+        | "poisonPotions"
+        | "firePotions",
       newSettings: Partial<PotionGroupSettings>
     ) => {
       setSettings((prevSettings) => ({
@@ -1469,7 +1584,16 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
 
   const updatePotionLevelSettings = useCallback(
     (
-      item: "healthPotions" | "manaPotions" | "rejuvenationPotions",
+      item:
+        | "healthPotions"
+        | "manaPotions"
+        | "rejuvenationPotions"
+        | "identify"
+        | "portal"
+        | "uberKeys"
+        | "essences"
+        | "poisonPotions"
+        | "firePotions",
       level: number,
       newSettings: Partial<PotionLevelSettings>
     ) => {
