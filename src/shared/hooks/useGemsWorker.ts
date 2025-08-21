@@ -17,6 +17,9 @@ import {
   loadSavedSettings,
   generateFinalGemName,
 } from "../utils/commonUtils";
+import { STORAGE_KEYS } from "../constants";
+import type { LocaleItem as ItemLocaleItem } from "../utils/commonUtils";
+type SupportedLocaleKey = Exclude<keyof ItemLocaleItem, "id" | "Key">;
 
 type UpdateGemGroupSettingsFunction = (
   gem:
@@ -219,6 +222,12 @@ export const useGemsWorker = (
       const updatedItemNamesData = [...itemNamesData];
       const updatedNameAffixesData = [...nameAffixesData];
 
+      // Обновляем только выбранные локали из настроек приложения
+      const selectedLocales =
+        ((JSON.parse(localStorage.getItem(STORAGE_KEYS.APP_CONFIG) || "{}")?.
+          selectedLocales) as SupportedLocaleKey[]) ||
+        (["enUS"] as SupportedLocaleKey[]);
+
       // Обрабатываем каждую группу драгоценных камней
       Object.entries(settingsKeyToGemMapper).forEach(([settingsKey, gems]) => {
         const gemGroupSettings = gemSettings[settingsKey as keyof GemSettings];
@@ -242,8 +251,8 @@ export const useGemsWorker = (
               );
 
               if (itemIndex !== -1) {
-                // Обновляем существующий элемент
-                SUPPORTED_LOCALES.forEach((locale) => {
+                // Обновляем существующий элемент только для выбранных локалей
+                selectedLocales.forEach((locale: SupportedLocaleKey) => {
                   if (levelSettings.enabled) {
                     const finalName = generateFinalGemName(
                       levelSettings,
@@ -251,7 +260,7 @@ export const useGemsWorker = (
                     );
                     targetData[itemIndex][locale] = finalName;
                   } else {
-                    // Если элемент отключен, очищаем все локальные поля
+                    // Если элемент отключен, очищаем только выбранные локали
                     targetData[itemIndex][locale] = "";
                   }
                 });
@@ -275,7 +284,8 @@ export const useGemsWorker = (
                   zhCN: "",
                 };
 
-                SUPPORTED_LOCALES.forEach((locale) => {
+                // Заполняем только выбранные локали
+                selectedLocales.forEach((locale: SupportedLocaleKey) => {
                   if (levelSettings.enabled) {
                     const finalName = generateFinalGemName(
                       levelSettings,
@@ -283,7 +293,6 @@ export const useGemsWorker = (
                     );
                     newItem[locale] = finalName;
                   } else {
-                    // Если элемент отключен, устанавливаем пустую строку
                     newItem[locale] = "";
                   }
                 });
