@@ -376,9 +376,9 @@ export const useItemsWorker = (
         );
         if (!itemLocale) continue;
 
-        // Если предмет выключен — очищаем ВСЕ поддерживаемые локали в файле и идем дальше
+        // Если предмет выключен — очищаем только выбранные локали и идем дальше
         if (!itemSettings?.enabled) {
-          for (const locale of SUPPORTED_LOCALES) {
+          for (const locale of selectedLocales) {
             const localeKey = locale as keyof LocaleItem;
             (itemLocale as any)[localeKey] = "";
           }

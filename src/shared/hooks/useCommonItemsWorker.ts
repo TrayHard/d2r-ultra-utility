@@ -22,6 +22,7 @@ import {
   generateFinalItemName,
   generateFinalPotionName,
 } from "../utils/commonUtils";
+import { STORAGE_KEYS } from "../constants";
 
 type UpdateCommonItemSettingsFunction = (
   item:
@@ -333,6 +334,12 @@ export const useCommonItemsWorker = (
       const updatedAffixes = [...nameAffixesData];
       const updatedModifiers = [...modifiersData];
 
+      // Обновляем только выбранные локали из настроек приложения
+      const selectedLocales = (
+        JSON.parse(localStorage.getItem(STORAGE_KEYS.APP_CONFIG) || "{}")?.
+          selectedLocales
+      ) || ["enUS"];
+
       // Обновляем простые предметы
       Object.entries(settingsKeyToCommonItemMapper).forEach(
         ([settingsKey, item]) => {
@@ -370,8 +377,8 @@ export const useCommonItemsWorker = (
                 );
 
                 if (itemIndex !== -1) {
-                  // Обновляем существующий элемент
-                  SUPPORTED_LOCALES.forEach((locale) => {
+                  // Обновляем существующий элемент только для выбранных локалей
+                  selectedLocales.forEach((locale) => {
                     if (levelSettings.enabled) {
                       const finalName = generateFinalPotionName(
                         levelSettings,
@@ -379,7 +386,7 @@ export const useCommonItemsWorker = (
                       );
                       targetArray[itemIndex][locale] = finalName;
                     } else {
-                      // Если элемент отключен, очищаем все локальные поля
+                      // Если элемент отключен, очищаем только выбранные локали
                       targetArray[itemIndex][locale] = "";
                     }
                   });
@@ -403,7 +410,8 @@ export const useCommonItemsWorker = (
                     zhCN: "",
                   };
 
-                  SUPPORTED_LOCALES.forEach((locale) => {
+                  // Заполняем только выбранные локали
+                  selectedLocales.forEach((locale) => {
                     if (levelSettings.enabled) {
                       const finalName = generateFinalPotionName(
                         levelSettings,
@@ -411,7 +419,6 @@ export const useCommonItemsWorker = (
                       );
                       newItem[locale] = finalName;
                     } else {
-                      // Если элемент отключен, устанавливаем пустую строку
                       newItem[locale] = "";
                     }
                   });
@@ -441,8 +448,8 @@ export const useCommonItemsWorker = (
               );
 
               if (itemIndex !== -1) {
-                // Обновляем существующий элемент
-                SUPPORTED_LOCALES.forEach((locale) => {
+                // Обновляем существующий элемент только для выбранных локалей
+                selectedLocales.forEach((locale) => {
                   if (itemSettings.enabled) {
                     const finalName = generateFinalItemName(
                       itemSettings,
@@ -450,7 +457,7 @@ export const useCommonItemsWorker = (
                     );
                     targetArray[itemIndex][locale] = finalName;
                   } else {
-                    // Если элемент отключен, очищаем все локальные поля
+                    // Если элемент отключен, очищаем только выбранные локали
                     targetArray[itemIndex][locale] = "";
                   }
                 });
@@ -474,7 +481,8 @@ export const useCommonItemsWorker = (
                   zhCN: "",
                 };
 
-                SUPPORTED_LOCALES.forEach((locale) => {
+                // Заполняем только выбранные локали
+                selectedLocales.forEach((locale) => {
                   if (itemSettings.enabled) {
                     const finalName = generateFinalItemName(
                       itemSettings,
@@ -482,7 +490,6 @@ export const useCommonItemsWorker = (
                     );
                     newItem[locale] = finalName;
                   } else {
-                    // Если элемент отключен, устанавливаем пустую строку
                     newItem[locale] = "";
                   }
                 });
