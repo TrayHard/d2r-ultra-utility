@@ -503,6 +503,7 @@
       "reqStrength": "Req Str",
       "reqDexterity": "Req Dex",
       "weight": "Weight",
+      "relatedItems": "Related Items",
       "baseTypes": "Base Types",
       "normal": "Normal",
       "exceptional": "Exceptional",

@@ -452,6 +452,10 @@
       "byName": "Par nom",
       "byLevel": "Par niveau"
     },
+    "relatedItems": {
+      "uniques": "Objets uniques",
+      "setItems": "Objets d'ensemble"
+    },
     "massEdit": {
       "selectAll": "Tout sélectionner",
       "deselectAll": "Tout désélectionner",
@@ -460,7 +464,8 @@
     "filters": {
       "reqLevelTooltip": "Indiquez votre niveau pour n'afficher que les objets appropriés",
       "reqStrengthTooltip": "Indiquez votre force pour n'afficher que les objets appropriés",
-      "reqDexterityTooltip": "Indiquez votre dextérité pour n'afficher que les objets appropriés"
+      "reqDexterityTooltip": "Indiquez votre dextérité pour n'afficher que les objets appropriés",
+      "relatedItems": "Objets associés"
     }
   },
   "window": {

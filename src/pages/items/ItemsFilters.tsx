@@ -15,6 +15,7 @@ interface ItemsFiltersProps {
   reqStrengthFilter: number;
   reqDexterityFilter: number;
   selectedWeights: Set<string>;
+  selectedRelatedKinds: Set<string>;
   selectedBaseTypes: Set<EBaseType>;
   onResetFilters: () => void;
   onToggleDifficultyClass: (difficultyClass: string) => void;
@@ -23,6 +24,7 @@ interface ItemsFiltersProps {
   onSetReqStrengthFilter: (strength: number) => void;
   onSetReqDexterityFilter: (dexterity: number) => void;
   onToggleWeight: (weight: string) => void;
+  onToggleRelatedKind: (kind: string) => void;
   onToggleBaseType: (baseType: EBaseType) => void;
   filtersRef: React.RefObject<HTMLDivElement>;
 }
@@ -37,6 +39,7 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
   reqStrengthFilter,
   reqDexterityFilter,
   selectedWeights,
+  selectedRelatedKinds,
   selectedBaseTypes,
   onResetFilters,
   onToggleDifficultyClass,
@@ -45,6 +48,7 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
   onSetReqStrengthFilter,
   onSetReqDexterityFilter,
   onToggleWeight,
+  onToggleRelatedKind,
   onToggleBaseType,
   filtersRef,
 }) => {
@@ -224,6 +228,15 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
           (item: string) => t(`itemsPage.filters.${item}`),
           t("itemsPage.filters.weight"),
           "w-32"
+        )}
+
+        {renderTagSelect(
+          selectedRelatedKinds,
+          ["uniques", "setItems"],
+          onToggleRelatedKind,
+          (item: string) => t(`itemsPage.relatedItems.${item}`) as string,
+          t("itemsPage.filters.relatedItems"),
+          "w-48"
         )}
       </div>
 
