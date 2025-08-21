@@ -504,6 +504,7 @@
       "reqStrengthTooltip": "Gib deine Stärke ein, um nur passende Gegenstände anzuzeigen",
       "reqDexterityTooltip": "Gib deine Geschicklichkeit ein, um nur passende Gegenstände anzuzeigen",
       "weight": "Gewicht",
+      "relatedItems": "Verwandte Gegenstände",
       "baseTypes": "Basistypen",
       "normal": "Normal",
       "exceptional": "Außergewöhnlich",
