@@ -418,62 +418,61 @@ export const useItemsWorker = (
         }
       }
 
-      // Обрабатываем Quality Prefixes
+      // Обрабатываем Quality Prefixes (по уровням)
       const qualityPrefixes = itemsSettings.qualityPrefixes;
-      if (qualityPrefixes.enabled) {
-        // Superior level (1) - записываем только в ID 1727
-        const superiorLevel = qualityPrefixes.levels[1];
-        if (superiorLevel) {
-          const superiorLocale = updatedNameAffixesData.find(
-            (locale) => locale.id === 1727
-          );
-          if (superiorLocale) {
-            for (const locale of selectedLocales) {
-              const localeKey = locale as keyof LocaleItem;
-              const settingsLocaleKey =
-                locale as keyof typeof superiorLevel.locales;
-              const prefixName = superiorLevel.locales[settingsLocaleKey];
 
-              if (prefixName && prefixName.trim()) {
-                (superiorLocale as any)[localeKey] = prefixName;
-              }
+      // Superior level (1) - записываем только в ID 1727, если уровень включен
+      const superiorLevel = qualityPrefixes.levels[1];
+      if (superiorLevel?.enabled) {
+        const superiorLocale = updatedNameAffixesData.find(
+          (locale) => locale.id === 1727
+        );
+        if (superiorLocale) {
+          for (const locale of selectedLocales) {
+            const localeKey = locale as keyof LocaleItem;
+            const settingsLocaleKey =
+              locale as keyof typeof superiorLevel.locales;
+            const prefixName = superiorLevel.locales[settingsLocaleKey];
+
+            if (prefixName && prefixName.trim()) {
+              (superiorLocale as any)[localeKey] = prefixName;
             }
           }
         }
+      }
 
-        // Low Quality level (0) - записываем в ID 1723, 1724, 1725, 20910
-        const lowQualityLevel = qualityPrefixes.levels[0];
-        if (lowQualityLevel) {
-          const lowQualityIds = [1723, 1724, 1725, 20910];
+      // Low Quality level (0) - записываем в ID 1723, 1724, 1725, 20910, если уровень включен
+      const lowQualityLevel = qualityPrefixes.levels[0];
+      if (lowQualityLevel?.enabled) {
+        const lowQualityIds = [1723, 1724, 1725, 20910];
 
-          // Проверяем, есть ли хотя бы одно непустое значение
-          const hasNonEmptyValues = selectedLocales.some((locale) => {
-            const settingsLocaleKey =
-              locale as keyof typeof lowQualityLevel.locales;
-            const prefixName = lowQualityLevel.locales[settingsLocaleKey];
-            return prefixName && prefixName.trim();
-          });
+        // Проверяем, есть ли хотя бы одно непустое значение среди выбранных локалей
+        const hasNonEmptyValues = selectedLocales.some((locale) => {
+          const settingsLocaleKey =
+            locale as keyof typeof lowQualityLevel.locales;
+          const prefixName = lowQualityLevel.locales[settingsLocaleKey];
+          return prefixName && prefixName.trim();
+        });
 
-          // Записываем только если есть непустые значения
-          if (hasNonEmptyValues) {
-            lowQualityIds.forEach((id) => {
-              const prefixLocale = updatedNameAffixesData.find(
-                (locale) => locale.id === id
-              );
-              if (prefixLocale) {
-                for (const locale of selectedLocales) {
-                  const localeKey = locale as keyof LocaleItem;
-                  const settingsLocaleKey =
-                    locale as keyof typeof lowQualityLevel.locales;
-                  const prefixName = lowQualityLevel.locales[settingsLocaleKey];
+        // Записываем только если есть непустые значения
+        if (hasNonEmptyValues) {
+          lowQualityIds.forEach((id) => {
+            const prefixLocale = updatedNameAffixesData.find(
+              (locale) => locale.id === id
+            );
+            if (prefixLocale) {
+              for (const locale of selectedLocales) {
+                const localeKey = locale as keyof LocaleItem;
+                const settingsLocaleKey =
+                  locale as keyof typeof lowQualityLevel.locales;
+                const prefixName = lowQualityLevel.locales[settingsLocaleKey];
 
-                  if (prefixName && prefixName.trim()) {
-                    (prefixLocale as any)[localeKey] = prefixName;
-                  }
+                if (prefixName && prefixName.trim()) {
+                  (prefixLocale as any)[localeKey] = prefixName;
                 }
               }
-            });
-          }
+            }
+          });
         }
       }
 
