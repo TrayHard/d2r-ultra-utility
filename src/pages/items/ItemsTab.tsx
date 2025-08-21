@@ -79,6 +79,9 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
   const [selectedWeights, setSelectedWeights] = useState<Set<string>>(
     new Set()
   );
+  const [selectedRelatedKinds, setSelectedRelatedKinds] = useState<Set<string>>(
+    new Set()
+  );
   const [selectedBaseTypes, setSelectedBaseTypes] = useState<Set<EBaseType>>(
     new Set()
   );
@@ -194,6 +197,19 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
         }
       }
 
+      // Фильтр по связанным предметам (если выбран хотя бы один вид)
+      if (selectedRelatedKinds.size > 0) {
+        const needUniques = selectedRelatedKinds.has("uniques");
+        const needSetItems = selectedRelatedKinds.has("setItems");
+        const hasUniques = (item.uniques?.length ?? 0) > 0;
+        const hasSetItems = (item.setItems?.length ?? 0) > 0;
+
+        // Требуем наличие всех выбранных видов
+        if ((needUniques && !hasUniques) || (needSetItems && !hasSetItems)) {
+          return false;
+        }
+      }
+
       return true;
     });
 
@@ -221,6 +237,7 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
     reqStrengthFilter,
     reqDexterityFilter,
     selectedWeights,
+    selectedRelatedKinds,
     selectedBaseTypes,
     sortType,
     sortOrder,
@@ -303,6 +320,7 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
     setReqStrengthFilter(0);
     setReqDexterityFilter(0);
     setSelectedWeights(new Set());
+    setSelectedRelatedKinds(new Set());
     setSelectedBaseTypes(new Set());
   };
 
@@ -360,6 +378,16 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
     setSelectedWeights(newSet);
   };
 
+  const toggleRelatedKind = (kind: string) => {
+    const newSet = new Set(selectedRelatedKinds);
+    if (newSet.has(kind)) {
+      newSet.delete(kind);
+    } else {
+      newSet.add(kind);
+    }
+    setSelectedRelatedKinds(newSet);
+  };
+
   const toggleBaseType = (baseType: EBaseType) => {
     const newSet = new Set(selectedBaseTypes);
     if (newSet.has(baseType)) {
@@ -387,6 +415,7 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
         reqStrengthFilter={reqStrengthFilter}
         reqDexterityFilter={reqDexterityFilter}
         selectedWeights={selectedWeights}
+        selectedRelatedKinds={selectedRelatedKinds}
         selectedBaseTypes={selectedBaseTypes}
         onResetFilters={handleResetFilters}
         onToggleDifficultyClass={toggleDifficultyClass}
@@ -395,6 +424,7 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
         onSetReqStrengthFilter={setReqStrengthFilter}
         onSetReqDexterityFilter={setReqDexterityFilter}
         onToggleWeight={toggleWeight}
+        onToggleRelatedKind={toggleRelatedKind}
         onToggleBaseType={toggleBaseType}
         filtersRef={filtersRef}
       />

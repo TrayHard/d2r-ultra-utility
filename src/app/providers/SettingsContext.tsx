@@ -8,8 +8,9 @@ import React, {
 import { ERune, runeHardcodedLocales } from "../../pages/runes/constants/runes.ts";
 import i18n from "../../shared/i18n";
 import { STORAGE_KEYS } from "../../shared/constants";
-import defaultProfileDefaultRaw from "../../shared/assets/profiles/d2r-profile-Default.json";
-import defaultProfileMinimalisticRaw from "../../shared/assets/profiles/d2r-profile-Minimalistic.json";
+// Загружаем ВСЕ профили из ассетов (eager, чтобы были доступны синхронно)
+const defaultProfilesModules: Record<string, { default: unknown }> =
+  import.meta.glob("../../shared/assets/profiles/*.json", { eager: true });
 
 // Типы для локализации
 interface Locales {
@@ -932,51 +933,58 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       }
     }
 
-    // Если первый запуск и профилей нет — добавляем дефолтные профили из ассетов
+    // Если первый запуск и профилей нет — добавляем все дефолтные профили из папки @profiles
     if (isFirstRun && !hadProfiles) {
       try {
-        const sources = [defaultProfileDefaultRaw, defaultProfileMinimalisticRaw];
+        const modules = defaultProfilesModules;
+        const sources = Object.values(modules).map((m) => m.default);
         const now = Date.now();
-        const seeded: Profile[] = sources.map((src, index) => {
-          const data = src as unknown as { name?: string; settings?: unknown };
-          const name = data.name || (index === 0 ? "Default" : "Minimalistic");
-          const settingsSource = data.settings as unknown;
 
-          const settingsObj = (typeof settingsSource === "object" && settingsSource !== null)
-            ? (settingsSource as Record<string, unknown>)
-            : {};
+        const seeded: Profile[] = sources
+          .map((src, index) => {
+            const data = src as unknown as { name?: string; settings?: unknown };
+            const name = data?.name || `Profile ${index + 1}`;
+            const settingsSource = data?.settings as unknown;
 
-          const runesObj = (typeof settingsObj["runes"] === "object" && settingsObj["runes"] !== null)
-            ? (settingsObj["runes"] as Record<string, unknown>)
-            : {};
+            const settingsObj =
+              typeof settingsSource === "object" && settingsSource !== null
+                ? (settingsSource as Record<string, unknown>)
+                : {};
 
-          const migratedSettings: AppSettings = {
-            runes: Object.fromEntries(
-              Object.entries(runesObj).map(([key, value]) => [
-                key,
-                migrateRuneSettings(value),
-              ])
-            ) as Record<ERune, RuneSettings>,
-            generalRunes: getDefaultGeneralRuneSettings(),
-            common: settingsObj["common"]
-              ? cleanSettings(settingsObj["common"])
-              : getDefaultCommonSettings(),
-            gems: settingsObj["gems"]
-              ? (settingsObj["gems"] as GemSettings)
-              : getDefaultGemSettings(),
-            items: settingsObj["items"]
-              ? migrateItemsSettings(settingsObj["items"])
-              : getDefaultItemsSettings(),
-          };
+            const runesObj =
+              typeof settingsObj["runes"] === "object" && settingsObj["runes"] !== null
+                ? (settingsObj["runes"] as Record<string, unknown>)
+                : {};
 
-          return {
-            id: (now + index).toString(),
-            name,
-            settings: migratedSettings,
-            createdAt: new Date(now + index).toISOString(),
-            modifiedAt: new Date(now + index).toISOString(),
-          };
-        });
+            const migratedSettings: AppSettings = {
+              runes: Object.fromEntries(
+                Object.entries(runesObj).map(([key, value]) => [
+                  key,
+                  migrateRuneSettings(value),
+                ])
+              ) as Record<ERune, RuneSettings>,
+              generalRunes: getDefaultGeneralRuneSettings(),
+              common: settingsObj["common"]
+                ? cleanSettings(settingsObj["common"]) 
+                : getDefaultCommonSettings(),
+              gems: settingsObj["gems"]
+                ? (settingsObj["gems"] as GemSettings)
+                : getDefaultGemSettings(),
+              items: settingsObj["items"]
+                ? migrateItemsSettings(settingsObj["items"]) 
+                : getDefaultItemsSettings(),
+            };
+
+            return {
+              id: (now + index).toString(),
+              name,
+              settings: migratedSettings,
+              createdAt: new Date(now + index).toISOString(),
+              modifiedAt: new Date(now + index).toISOString(),
+            };
+          })
+          // Фильтруем на случай пустых/некорректных
+          .filter((p): p is Profile => Boolean(p && p.name && p.settings));
 
         setProfiles(seeded);
         localStorage.setItem(STORAGE_KEYS.PROFILES, JSON.stringify(seeded));
