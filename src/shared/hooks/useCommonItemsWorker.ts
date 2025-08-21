@@ -16,13 +16,13 @@ import type {
 } from "../../app/providers/SettingsContext";
 import {
   LocaleItem,
-  SUPPORTED_LOCALES,
   GAME_PATHS,
   loadSavedSettings,
   generateFinalItemName,
   generateFinalPotionName,
 } from "../utils/commonUtils";
 import { STORAGE_KEYS } from "../constants";
+type SupportedLocaleKey = Exclude<keyof LocaleItem, "id" | "Key">;
 
 type UpdateCommonItemSettingsFunction = (
   item:
@@ -335,10 +335,10 @@ export const useCommonItemsWorker = (
       const updatedModifiers = [...modifiersData];
 
       // Обновляем только выбранные локали из настроек приложения
-      const selectedLocales = (
-        JSON.parse(localStorage.getItem(STORAGE_KEYS.APP_CONFIG) || "{}")?.
-          selectedLocales
-      ) || ["enUS"];
+      const selectedLocales =
+        ((JSON.parse(localStorage.getItem(STORAGE_KEYS.APP_CONFIG) || "{}")?.
+          selectedLocales) as SupportedLocaleKey[]) ||
+        (["enUS"] as SupportedLocaleKey[]);
 
       // Обновляем простые предметы
       Object.entries(settingsKeyToCommonItemMapper).forEach(
@@ -378,7 +378,7 @@ export const useCommonItemsWorker = (
 
                 if (itemIndex !== -1) {
                   // Обновляем существующий элемент только для выбранных локалей
-                  selectedLocales.forEach((locale) => {
+                  selectedLocales.forEach((locale: SupportedLocaleKey) => {
                     if (levelSettings.enabled) {
                       const finalName = generateFinalPotionName(
                         levelSettings,
@@ -411,7 +411,7 @@ export const useCommonItemsWorker = (
                   };
 
                   // Заполняем только выбранные локали
-                  selectedLocales.forEach((locale) => {
+                  selectedLocales.forEach((locale: SupportedLocaleKey) => {
                     if (levelSettings.enabled) {
                       const finalName = generateFinalPotionName(
                         levelSettings,
@@ -449,7 +449,7 @@ export const useCommonItemsWorker = (
 
               if (itemIndex !== -1) {
                 // Обновляем существующий элемент только для выбранных локалей
-                selectedLocales.forEach((locale) => {
+                selectedLocales.forEach((locale: SupportedLocaleKey) => {
                   if (itemSettings.enabled) {
                     const finalName = generateFinalItemName(
                       itemSettings,
@@ -482,7 +482,7 @@ export const useCommonItemsWorker = (
                 };
 
                 // Заполняем только выбранные локали
-                selectedLocales.forEach((locale) => {
+                selectedLocales.forEach((locale: SupportedLocaleKey) => {
                   if (itemSettings.enabled) {
                     const finalName = generateFinalItemName(
                       itemSettings,

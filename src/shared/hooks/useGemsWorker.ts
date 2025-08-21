@@ -18,6 +18,8 @@ import {
   generateFinalGemName,
 } from "../utils/commonUtils";
 import { STORAGE_KEYS } from "../constants";
+import type { LocaleItem as ItemLocaleItem } from "../utils/commonUtils";
+type SupportedLocaleKey = Exclude<keyof ItemLocaleItem, "id" | "Key">;
 
 type UpdateGemGroupSettingsFunction = (
   gem:
@@ -221,10 +223,10 @@ export const useGemsWorker = (
       const updatedNameAffixesData = [...nameAffixesData];
 
       // Обновляем только выбранные локали из настроек приложения
-      const selectedLocales = (
-        JSON.parse(localStorage.getItem(STORAGE_KEYS.APP_CONFIG) || "{}")?.
-          selectedLocales
-      ) || ["enUS"];
+      const selectedLocales =
+        ((JSON.parse(localStorage.getItem(STORAGE_KEYS.APP_CONFIG) || "{}")?.
+          selectedLocales) as SupportedLocaleKey[]) ||
+        (["enUS"] as SupportedLocaleKey[]);
 
       // Обрабатываем каждую группу драгоценных камней
       Object.entries(settingsKeyToGemMapper).forEach(([settingsKey, gems]) => {
@@ -250,7 +252,7 @@ export const useGemsWorker = (
 
               if (itemIndex !== -1) {
                 // Обновляем существующий элемент только для выбранных локалей
-                selectedLocales.forEach((locale) => {
+                selectedLocales.forEach((locale: SupportedLocaleKey) => {
                   if (levelSettings.enabled) {
                     const finalName = generateFinalGemName(
                       levelSettings,
@@ -283,7 +285,7 @@ export const useGemsWorker = (
                 };
 
                 // Заполняем только выбранные локали
-                selectedLocales.forEach((locale) => {
+                selectedLocales.forEach((locale: SupportedLocaleKey) => {
                   if (levelSettings.enabled) {
                     const finalName = generateFinalGemName(
                       levelSettings,
