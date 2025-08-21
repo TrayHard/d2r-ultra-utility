@@ -421,13 +421,14 @@ export const useItemsWorker = (
       // Обрабатываем Quality Prefixes (по уровням)
       const qualityPrefixes = itemsSettings.qualityPrefixes;
 
-      // Superior level (1) - записываем только в ID 1727, если уровень включен
+      // Superior level (1) - записываем только в ID 1727, если уровень включен.
+      // Если уровень отключен — очищаем выбранные локали.
       const superiorLevel = qualityPrefixes.levels[1];
-      if (superiorLevel?.enabled) {
-        const superiorLocale = updatedNameAffixesData.find(
-          (locale) => locale.id === 1727
-        );
-        if (superiorLocale) {
+      const superiorLocale = updatedNameAffixesData.find(
+        (locale) => locale.id === 1727
+      );
+      if (superiorLocale) {
+        if (superiorLevel?.enabled) {
           for (const locale of selectedLocales) {
             const localeKey = locale as keyof LocaleItem;
             const settingsLocaleKey =
@@ -438,14 +439,20 @@ export const useItemsWorker = (
               (superiorLocale as any)[localeKey] = prefixName;
             }
           }
+        } else {
+          // Отключено — пишем пустые строки для выбранных локалей
+          for (const locale of selectedLocales) {
+            const localeKey = locale as keyof LocaleItem;
+            (superiorLocale as any)[localeKey] = "";
+          }
         }
       }
 
-      // Low Quality level (0) - записываем в ID 1723, 1724, 1725, 20910, если уровень включен
+      // Low Quality level (0) - ID 1723, 1724, 1725, 20910.
+      // Если уровень включен — записываем значения; если отключен — очищаем выбранные локали.
       const lowQualityLevel = qualityPrefixes.levels[0];
+      const lowQualityIds = [1723, 1724, 1725, 20910];
       if (lowQualityLevel?.enabled) {
-        const lowQualityIds = [1723, 1724, 1725, 20910];
-
         // Проверяем, есть ли хотя бы одно непустое значение среди выбранных локалей
         const hasNonEmptyValues = selectedLocales.some((locale) => {
           const settingsLocaleKey =
@@ -474,6 +481,19 @@ export const useItemsWorker = (
             }
           });
         }
+      } else {
+        // Отключено — пишем пустые строки для выбранных локалей во все связанные ID
+        lowQualityIds.forEach((id) => {
+          const prefixLocale = updatedNameAffixesData.find(
+            (locale) => locale.id === id
+          );
+          if (prefixLocale) {
+            for (const locale of selectedLocales) {
+              const localeKey = locale as keyof LocaleItem;
+              (prefixLocale as any)[localeKey] = "";
+            }
+          }
+        });
       }
 
       // Записываем обновленные данные обратно в файлы
