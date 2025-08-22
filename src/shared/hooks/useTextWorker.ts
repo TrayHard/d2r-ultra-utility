@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
+import { useLogger } from "../utils/logger";
 import {
   idToRuneMapper,
   ERune,
@@ -56,18 +57,23 @@ export const useTextWorker = (
 ) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const logger = useLogger('TextWorker');
 
   const readLocales = useCallback(async () => {
+    logger.info('Starting to read runes locales', undefined, 'readLocales');
     setIsLoading(true);
     setError(null);
 
     try {
       // Получаем домашнюю директорию из настроек
       const settings = loadSavedSettings();
+      logger.debug('Loaded settings for runes', { settings }, 'readLocales');
+      
       if (!settings?.homeDirectory) {
         const errorMsg =
           t?.("messages.error.pathNotFound") ??
           "Путь к игре не найден в настройках";
+        logger.error('Home directory not found for runes', new Error(errorMsg), { settings }, 'readLocales');
         throw new Error(errorMsg);
       }
 
@@ -76,17 +82,18 @@ export const useTextWorker = (
       const homeDir = settings.homeDirectory.replace(/[\/\\]+$/, ""); // убираем завершающие слеши
       const fullPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.RUNES_FILE}`;
 
-      console.log("Reading from path:", fullPath);
+      logger.info('Reading runes file', { path: fullPath }, 'readLocales');
 
       // Читаем файл через Tauri API
       const fileContent = await readTextFile(fullPath);
+      logger.debug('Successfully read runes file', { contentLength: fileContent.length }, 'readLocales');
 
       // Парсим JSON
       const localeData: LocaleItem[] = JSON.parse(fileContent);
+      logger.debug('Parsed runes locale data', { itemCount: localeData.length }, 'readLocales');
 
-      console.log("Loaded locale data:", localeData);
-      console.log(`Найдено ${localeData.length} элементов локализации`);
       const parsedData = itemRunesSchema.parse(localeData);
+      logger.debug('Validated runes data schema', { validItemCount: parsedData.length }, 'readLocales');
 
       let processedRunes = 0;
       parsedData.forEach((item) => {
@@ -157,12 +164,12 @@ export const useTextWorker = (
 
       return localeData;
     } catch (err) {
+      logger.error('Failed to read runes locales', err as Error, { error: err instanceof Error ? err.message : String(err) }, 'readLocales');
       const defaultErrorMsg =
         t?.("messages.error.unknownError") ??
         "Неизвестная ошибка при чтении файлов";
       const errorMessage = err instanceof Error ? err.message : defaultErrorMsg;
       setError(errorMessage);
-      console.error("Error reading locales:", err);
 
       // Отправляем сообщение об ошибке
       const errorTitle =
@@ -172,6 +179,7 @@ export const useTextWorker = (
       throw err;
     } finally {
       setIsLoading(false);
+      logger.info('Finished reading runes locales', { hasError: !!error }, 'readLocales');
     }
   }, []);
 
@@ -276,16 +284,20 @@ export const useTextWorker = (
   }, [readLocales, checkHighlightings]);
 
   const applyChanges = useCallback(async () => {
+    logger.info('Starting to apply runes changes', undefined, 'applyChanges');
     setIsLoading(true);
     setError(null);
 
     try {
       // Получаем домашнюю директорию из настроек
       const savedSettings = loadSavedSettings();
+      logger.debug('Loaded settings for applying runes changes', { settings: savedSettings }, 'applyChanges');
+      
       if (!savedSettings?.homeDirectory) {
         const errorMsg =
           t?.("messages.error.pathNotFound") ??
           "Путь к игре не найден в настройках";
+        logger.error('Home directory not found for applying runes changes', new Error(errorMsg), { settings: savedSettings }, 'applyChanges');
         throw new Error(errorMsg);
       }
 
@@ -298,12 +310,14 @@ export const useTextWorker = (
       const homeDir = savedSettings.homeDirectory.replace(/[\/\\]+$/, "");
 
       // 1. Применяем настройки к файлу локализации
+      logger.info('Applying localization changes', { homeDir }, 'applyChanges');
       await applyLocalizationChanges(homeDir, runeSettings);
 
       // 2. Применяем настройки к файлам подсветки рун
+      logger.info('Applying highlight changes', { homeDir }, 'applyChanges');
       await applyHighlightChanges(homeDir, runeSettings);
 
-      console.log("All changes applied successfully");
+      logger.info('All runes changes applied successfully', undefined, 'applyChanges');
 
       // Отправляем сообщение об успехе
       const successTitle =
@@ -314,12 +328,12 @@ export const useTextWorker = (
 
       sendMessage?.(successMessage, "success", successTitle);
     } catch (err) {
+      logger.error('Failed to apply runes changes', err as Error, { error: err instanceof Error ? err.message : String(err) }, 'applyChanges');
       const defaultErrorMsg =
         t?.("messages.error.unknownError") ??
         "Неизвестная ошибка при сохранении изменений";
       const errorMessage = err instanceof Error ? err.message : defaultErrorMsg;
       setError(errorMessage);
-      console.error("Error applying changes:", err);
 
       // Отправляем сообщение об ошибке
       const errorTitle = t?.("messages.error.saveError") ?? "Ошибка сохранения";
@@ -328,6 +342,7 @@ export const useTextWorker = (
       throw err;
     } finally {
       setIsLoading(false);
+      logger.info('Finished applying runes changes', { hasError: !!error }, 'applyChanges');
     }
   }, [t, sendMessage, getAllRuneSettings]);
 

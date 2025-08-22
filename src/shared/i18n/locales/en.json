@@ -189,8 +189,26 @@
     "pathSettingsDescription": "Manage the path to your D2R game directory (specifically to D2R.exe).",
     "currentPath": "Current path",
     "pathNotSet": "Path is not set",
+    "debugMode": "Debug Mode",
+    "debugModeDescription": "Enable debug mode to collect detailed logs for troubleshooting. These logs can be exported and sent to developers for support.",
+    "debugModeEnabled": "Debug mode is enabled",
+    "debugModeDisabled": "Debug mode is disabled",
+    "debugModeWarning": "Debug mode will collect detailed information about application usage. Only enable if needed for troubleshooting.",
     "about": "About",
     "appVersion": "App Version"
+  },
+  "logs": {
+    "title": "Debug Logs",
+    "total": "Total",
+    "errors": "Errors",
+    "warnings": "Warnings",
+    "info": "Info",
+    "exportJson": "Export JSON",
+    "exportText": "Export Text",
+    "exporting": "Exporting...",
+    "clearLogs": "Clear Logs",
+    "confirmClear": "Are you sure you want to clear all logs? This action cannot be undone.",
+    "exportDescription": "Export logs to share with developers for troubleshooting. JSON format is better for analysis, text format is more readable."
   },
   "search": {
     "placeholder": "Search runes...",

@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { useLogger } from "../../../shared/utils/logger";
 import MainSpaceBody, { TabType } from "./MainSpaceBody.tsx";
 import Tabs, { TabItem } from "../../../shared/components/Tabs.tsx";
 import AppToolbar from "../../../shared/components/AppToolbar.tsx";
@@ -20,6 +21,7 @@ interface MainSpaceProps {
 
 const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
   const { t } = useTranslation();
+  const logger = useLogger('MainSpace');
   const [activeTab, setActiveTab] = useState<TabType>("common");
   const [confirmAction, setConfirmAction] = useState<
     null | "readAll" | "applyAll" | "readCurrent" | "applyCurrent"
@@ -193,6 +195,7 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       : () => {};
 
   const executeReadAll = useCallback(async () => {
+    logger.info('Starting bulk read operation for all file types', undefined, 'executeReadAll');
     setIsBulkLoading(true);
     muteTypes(["success"]);
     const results = await Promise.allSettled([
@@ -204,6 +207,9 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     setIsBulkLoading(false);
     unmute();
     const hasError = results.some((r) => r.status === "rejected");
+    
+    logger.info('Completed bulk read operation', { hasError, resultCount: results.length }, 'executeReadAll');
+    
     if (!hasError) {
       sendMessage(
         t("messages.success.allLoaded") || "All settings loaded successfully",
@@ -222,6 +228,7 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
   ]);
 
   const executeApplyAll = useCallback(async () => {
+    logger.info('Starting bulk apply operation for all file types', undefined, 'executeApplyAll');
     const results = await Promise.allSettled([
       applyCommonItemsChanges(),
       applyItemsChanges(),
@@ -229,13 +236,16 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       applyGemsChanges(),
     ]);
     const hasError = results.some((r) => r.status === "rejected");
+    
+    logger.info('Completed bulk apply operation', { hasError, resultCount: results.length }, 'executeApplyAll');
+    
     if (!hasError) {
       sendMessage(
         t("messages.success.changesSaved") || "Changes saved",
         { type: "success", title: t("messages.success.changesSaved") }
       );
     }
-  }, [applyCommonItemsChanges, applyItemsChanges, applyRunesChanges, applyGemsChanges, sendMessage, t]);
+  }, [applyCommonItemsChanges, applyItemsChanges, applyRunesChanges, applyGemsChanges, sendMessage, t, logger]);
 
   const handleConfirm = () => {
     const action = confirmAction;

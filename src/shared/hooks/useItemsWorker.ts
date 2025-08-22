@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
+import { useLogger } from "../utils/logger";
 import {
   GAME_PATHS,
   SUPPORTED_LOCALES,
@@ -38,6 +39,7 @@ export const useItemsWorker = (
 ) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const logger = useLogger('ItemsWorker');
 
   // Функция для чтения настроек из файлов
   const readFromFiles = useCallback(async () => {
@@ -46,17 +48,28 @@ export const useItemsWorker = (
       !updateItemSettings ||
       !getSelectedLocales
     ) {
-      throw new Error("Required functions not provided");
+      const errorMsg = "Required functions not provided";
+      logger.error('Missing required dependencies for readFromFiles', new Error(errorMsg), {
+        hasUpdateItemsLevelSettings: !!updateItemsLevelSettings,
+        hasUpdateItemSettings: !!updateItemSettings,
+        hasGetSelectedLocales: !!getSelectedLocales
+      }, 'readFromFiles');
+      throw new Error(errorMsg);
     }
 
+    logger.info('Starting to read items from files', undefined, 'readFromFiles');
     setIsLoading(true);
     setError(null);
 
     try {
       // Загружаем сохраненные настройки
       const savedSettings = loadSavedSettings();
+      logger.debug('Loaded settings for items', { settings: savedSettings }, 'readFromFiles');
+      
       if (!savedSettings?.homeDirectory) {
-        throw new Error("Game path not found in settings");
+        const errorMsg = "Game path not found in settings";
+        logger.error('Home directory not found for items', new Error(errorMsg), { settings: savedSettings }, 'readFromFiles');
+        throw new Error(errorMsg);
       }
 
       // Убираем .exe из пути если он есть и нормализуем путь
@@ -324,17 +337,29 @@ export const useItemsWorker = (
       !getSelectedLocales ||
       !items
     ) {
+      logger.warn('Missing required dependencies for applyChanges', {
+        hasSendMessage: !!sendMessage,
+        hasT: !!t,
+        hasGetItemsSettings: !!getItemsSettings,
+        hasGetSelectedLocales: !!getSelectedLocales,
+        hasItems: !!items
+      }, 'applyChanges');
       return;
     }
 
+    logger.info('Starting to apply items changes', undefined, 'applyChanges');
     setIsLoading(true);
     setError(null);
 
     try {
       // Загружаем сохраненные настройки
       const savedSettings = loadSavedSettings();
+      logger.debug('Loaded settings for applying items changes', { settings: savedSettings }, 'applyChanges');
+      
       if (!savedSettings?.homeDirectory) {
-        throw new Error("Game path not found in settings");
+        const errorMsg = "Game path not found in settings";
+        logger.error('Home directory not found for applying items changes', new Error(errorMsg), { settings: savedSettings }, 'applyChanges');
+        throw new Error(errorMsg);
       }
 
       // Убираем .exe из пути если он есть и нормализуем путь
@@ -346,9 +371,16 @@ export const useItemsWorker = (
       const itemNamesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.ITEMS_FILE}`;
       const nameAffixesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.NAMEAFFIXES_FILE}`;
 
+      logger.info('Reading items files', { itemNamesPath, nameAffixesPath }, 'readFromFiles');
+
       // Читаем файлы
       const itemNamesContent = await readTextFile(itemNamesPath);
       const nameAffixesContent = await readTextFile(nameAffixesPath);
+      
+      logger.debug('Successfully read items files', { 
+        itemNamesLength: itemNamesContent.length, 
+        nameAffixesLength: nameAffixesContent.length 
+      }, 'readFromFiles');
 
       const itemNamesData: LocaleItem[] = JSON.parse(itemNamesContent);
       const nameAffixesData: LocaleItem[] = JSON.parse(nameAffixesContent);
@@ -497,6 +529,9 @@ export const useItemsWorker = (
       }
 
       // Записываем обновленные данные обратно в файлы
+      // Записываем обновленные файлы
+      logger.info('Writing updated items files', { itemNamesPath, nameAffixesPath }, 'applyChanges');
+      
       await writeTextFile(
         itemNamesPath,
         JSON.stringify(updatedItemNamesData, null, 2)
@@ -506,13 +541,15 @@ export const useItemsWorker = (
         JSON.stringify(updatedNameAffixesData, null, 2)
       );
 
+      logger.info('Successfully wrote items files', undefined, 'applyChanges');
+
       sendMessage(
         t("messages.success.itemsApplied") ||
           "Items settings applied successfully",
         "success"
       );
     } catch (error) {
-      console.error("Error applying items changes:", error);
+      logger.error('Failed to apply items changes', error as Error, { error: error instanceof Error ? error.message : String(error) }, 'applyChanges');
       setError(
         error instanceof Error ? error.message : "Unknown error occurred"
       );
@@ -524,6 +561,7 @@ export const useItemsWorker = (
       throw error;
     } finally {
       setIsLoading(false);
+      logger.info('Finished applying items changes', { hasError: !!error }, 'applyChanges');
     }
   }, [
     sendMessage,
