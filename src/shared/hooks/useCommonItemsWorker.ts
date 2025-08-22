@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
+import { useLogger } from "../utils/logger";
 import {
   idToCommonItemMapper,
   commonItemToIdMapper,
@@ -70,20 +71,23 @@ export const useCommonItemsWorker = (
 ) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const logger = useLogger('CommonItemsWorker');
 
   const readLocales = useCallback(async () => {
+    logger.info('Starting to read locales for common items', undefined, 'readLocales');
     setIsLoading(true);
     setError(null);
 
     try {
       // Получаем домашнюю директорию из настроек
       const settings = loadSavedSettings();
-      console.log("Loaded settings:", settings);
+      logger.debug('Loaded settings from storage', { settings }, 'readLocales');
 
       if (!settings?.homeDirectory) {
         const errorMsg =
           t?.("messages.error.pathNotFound") ??
           "Путь к игре не найден в настройках";
+        logger.error('Home directory not found in settings', new Error(errorMsg), { settings }, 'readLocales');
         throw new Error(errorMsg);
       }
 
@@ -318,9 +322,10 @@ export const useCommonItemsWorker = (
       const affixesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.NAMEAFFIXES_FILE}`;
       const modifiersPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\item-modifiers.json`;
 
-      console.log("Applying common items changes to:", namesPath);
+      logger.info("Applying common items changes", { namesPath, affixesPath, modifiersPath }, 'applyChanges');
 
       // Читаем текущий файл
+      logger.debug('Reading common items files for applying changes', { namesPath, affixesPath, modifiersPath }, 'applyChanges');
       const namesContent = await readTextFile(namesPath);
       const nameAffixesContent = await readTextFile(affixesPath);
       const modifiersContent = await readTextFile(modifiersPath);
@@ -328,6 +333,12 @@ export const useCommonItemsWorker = (
       const namesData: LocaleItem[] = JSON.parse(namesContent);
       const nameAffixesData: LocaleItem[] = JSON.parse(nameAffixesContent);
       const modifiersData: LocaleItem[] = JSON.parse(modifiersContent);
+      
+      logger.debug('Parsed common items data for changes', { 
+        namesCount: namesData.length, 
+        affixesCount: nameAffixesData.length,
+        modifiersCount: modifiersData.length 
+      }, 'applyChanges');
 
       // Создаем обновленные данные
       const updatedNames = [...namesData];
@@ -502,11 +513,12 @@ export const useCommonItemsWorker = (
       );
 
       // Записываем обновленные данные обратно в соответствующие файлы
+      logger.info('Writing updated common items files', { namesPath, affixesPath, modifiersPath }, 'applyChanges');
       await writeTextFile(namesPath, JSON.stringify(updatedNames, null, 2));
       await writeTextFile(affixesPath, JSON.stringify(updatedAffixes, null, 2));
       await writeTextFile(modifiersPath, JSON.stringify(updatedModifiers, null, 2));
 
-      console.log("Common items localization changes applied successfully");
+      logger.info("Common items localization changes applied successfully", undefined, 'applyChanges');
     },
     []
   );

@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
+import { useLogger } from "../../shared/utils/logger";
 import ProgressBar from "../../shared/components/ProgressBar.tsx";
 import CustomTitleBar from "../../widgets/CustomTitleBar.tsx";
 import { STORAGE_KEYS } from "../../shared/constants.ts";
@@ -62,7 +63,16 @@ const savePath = (filePath: string) => {
 type AppState = 'loading' | 'saved-path' | 'searching' | 'path-selection' | 'manual-input';
 
 function App() {
+  const logger = useLogger('App');
   const [appState, setAppState] = useState<AppState>('loading');
+  
+  // Тестовое логирование при инициализации
+  React.useEffect(() => {
+    logger.info('D2R Ultra Utility application initialized', { 
+      timestamp: new Date().toISOString(),
+      userAgent: navigator.userAgent 
+    }, 'init');
+  }, [logger]);
   const [savedPath, setSavedPath] = useState<string | null>(null);
   const [homeDirectory, setHomeDirectory] = useState<string | null>(null);
   const [foundPaths, setFoundPaths] = useState<string[]>([]);
@@ -80,10 +90,12 @@ function App() {
   // Проверяем сохраненные настройки при загрузке
   useEffect(() => {
     const checkSavedPath = async () => {
+      logger.info('App starting up', { appState }, 'checkSavedPath');
       const savedFilePath = loadSavedPath();
       const savedHomeDir = loadSavedHomeDirectory();
 
       if (savedFilePath && savedHomeDir) {
+        logger.info('Found saved path, using existing configuration', { savedFilePath, savedHomeDir }, 'checkSavedPath');
         // Для Tauri приложения просто проверяем что путь есть в настройках
         // Полную проверку существования файла делать не будем, чтобы не усложнять
         setSavedPath(savedFilePath);
@@ -92,6 +104,7 @@ function App() {
         return;
       }
 
+      logger.info('No saved path found, starting auto search', undefined, 'checkSavedPath');
       // Нет сохраненного пути, запускаем автопоиск
       startAutoSearch();
     };

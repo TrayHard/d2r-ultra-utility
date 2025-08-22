@@ -8,6 +8,7 @@ import React, {
 import { ERune, runeHardcodedLocales } from "../../pages/runes/constants/runes.ts";
 import i18n from "../../shared/i18n";
 import { STORAGE_KEYS } from "../../shared/constants";
+import { logger } from "../../shared/utils/logger";
 // Загружаем ВСЕ профили из ассетов (eager, чтобы были доступны синхронно)
 const defaultProfilesModules: Record<string, { default: unknown }> =
   import.meta.glob("../../shared/assets/profiles/*.json", { eager: true });
@@ -35,6 +36,7 @@ interface AppConfig {
   appLanguage: string; // Язык интерфейса приложения
   gamePath: string; // Путь к игре
   theme: "light" | "dark"; // Тема приложения
+  debugMode: boolean; // Режим отладки для логирования
   // В будущем добавим другие глобальные настройки
 }
 
@@ -167,6 +169,7 @@ interface SettingsContextType {
   getGamePath: () => string;
   getTheme: () => "light" | "dark";
   getIsDarkTheme: () => boolean;
+  getDebugMode: () => boolean;
   isThemeChanging: boolean;
 
   // Setter'ы для настроек приложения
@@ -176,6 +179,8 @@ interface SettingsContextType {
   updateGamePath: (path: string) => void;
   updateTheme: (theme: "light" | "dark") => void;
   toggleTheme: () => void;
+  updateDebugMode: (enabled: boolean) => void;
+  toggleDebugMode: () => void;
   resetAppConfig: () => void;
 
   // Getter'ы для настроек профиля
@@ -324,6 +329,7 @@ const getDefaultAppConfig = (): AppConfig => ({
   appLanguage: "enUS", // По умолчанию язык интерфейса - английский
   gamePath: "", // По умолчанию путь к игре не задан
   theme: "dark", // По умолчанию темная тема
+  debugMode: false, // По умолчанию отладочный режим выключен
 });
 
 // Дефолтные общие настройки для рун
@@ -845,6 +851,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         };
         setAppConfig(newAppConfig, true); // skipSave = true
 
+        // Инициализируем логгер с режимом отладки
+        logger.setDebugMode(newAppConfig.debugMode || false);
+
         // Инициализируем язык в i18n
         i18n.changeLanguage(mapAppLanguageToI18n(newAppConfig.appLanguage));
       } catch (error) {
@@ -1055,6 +1064,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     () => appConfig.theme === "dark",
     [appConfig.theme]
   );
+  const getDebugMode = useCallback(() => appConfig.debugMode, [appConfig.debugMode]);
 
   const updateAppConfig = useCallback(
     (config: Partial<AppConfig>) => {
@@ -1117,10 +1127,55 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       setIsThemeChanging(false);
     }, 0);
     setIsThemeChanging(true);
-    setAppConfig((prev) => ({
-      ...prev,
-      theme: prev.theme === "light" ? "dark" : "light",
-    }));
+    setAppConfig((prev) => {
+      const newTheme = prev.theme === "light" ? "dark" : "light";
+      logger.info(
+        `Theme changed from ${prev.theme} to ${newTheme}`,
+        { oldTheme: prev.theme, newTheme },
+        'SettingsContext',
+        'toggleTheme'
+      );
+      return {
+        ...prev,
+        theme: newTheme,
+      };
+    });
+  }, [setAppConfig]);
+
+  const updateDebugMode = useCallback(
+    (enabled: boolean) => {
+      setAppConfig((prev) => ({
+        ...prev,
+        debugMode: enabled,
+      }));
+      // Обновляем режим отладки в логгере
+      logger.setDebugMode(enabled);
+      logger.info(
+        `Debug mode ${enabled ? 'enabled' : 'disabled'}`,
+        { debugMode: enabled },
+        'SettingsContext',
+        'updateDebugMode'
+      );
+    },
+    [setAppConfig]
+  );
+
+  const toggleDebugMode = useCallback(() => {
+    setAppConfig((prev) => {
+      const newDebugMode = !prev.debugMode;
+      // Обновляем режим отладки в логгере
+      logger.setDebugMode(newDebugMode);
+      logger.info(
+        `Debug mode toggled to ${newDebugMode ? 'enabled' : 'disabled'}`,
+        { debugMode: newDebugMode },
+        'SettingsContext',
+        'toggleDebugMode'
+      );
+      return {
+        ...prev,
+        debugMode: newDebugMode,
+      };
+    });
   }, [setAppConfig]);
 
   const resetAppConfig = useCallback(() => {
@@ -1890,6 +1945,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     getGamePath,
     getTheme,
     getIsDarkTheme,
+    getDebugMode,
     isThemeChanging,
     updateAppConfig,
     updateSelectedLocales,
@@ -1897,6 +1953,8 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     updateGamePath,
     updateTheme,
     toggleTheme,
+    updateDebugMode,
+    toggleDebugMode,
     resetAppConfig,
 
     // Методы для настроек профиля

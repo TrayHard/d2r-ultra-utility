@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
+import { useLogger } from "../utils/logger";
 import {
   idToGemMapper,
   gemToIdMapper,
@@ -59,42 +60,44 @@ export const useGemsWorker = (
 ) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const logger = useLogger('GemsWorker');
 
   const readLocales = useCallback(async () => {
+    logger.info('Starting to read gems locales', undefined, 'readLocales');
     setIsLoading(true);
     setError(null);
 
     try {
       // Получаем домашнюю директорию из настроек
       const settings = loadSavedSettings();
-      console.log("Loaded settings:", settings);
+      logger.debug('Loaded settings for gems', { settings }, 'readLocales');
 
       if (!settings?.homeDirectory) {
         const errorMsg =
           t?.("messages.error.pathNotFound") ??
           "Путь к игре не найден в настройках";
+        logger.error('Home directory not found for gems', new Error(errorMsg), { settings }, 'readLocales');
         throw new Error(errorMsg);
       }
 
       // Строим полные пути к файлам
       const homeDir = settings.homeDirectory.replace(/[\/\\]+$/, "");
-      console.log("Home directory:", homeDir);
-
       const itemNamesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.ITEMS_FILE}`;
       const nameAffixesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.NAMEAFFIXES_FILE}`;
 
-      console.log("Reading gems from paths:", {
-        itemNamesPath,
-        nameAffixesPath,
-      });
+      logger.info('Reading gems from paths', { itemNamesPath, nameAffixesPath }, 'readLocales');
 
       // Читаем оба файла
       let itemNamesContent, nameAffixesContent;
       try {
         itemNamesContent = await readTextFile(itemNamesPath);
         nameAffixesContent = await readTextFile(nameAffixesPath);
+        logger.debug('Successfully read gems files', { 
+          itemNamesLength: itemNamesContent.length, 
+          nameAffixesLength: nameAffixesContent.length 
+        }, 'readLocales');
       } catch (fileError) {
-        console.error("Error reading gem files:", fileError);
+        logger.error('Error reading gem files', fileError as Error, { itemNamesPath, nameAffixesPath }, 'readLocales');
         const errorMsg = `Не удалось прочитать файлы драгоценных камней`;
         throw new Error(errorMsg);
       }
