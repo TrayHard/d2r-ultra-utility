@@ -204,6 +204,7 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
           isDarkTheme={isDarkTheme}
           icon={mdiPlus}
           size="sm"
+          className="h-[38px]"
           title={t("profiles.createProfile")}
         />
         {/* Profile Selector */}
@@ -252,6 +253,7 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
               isDarkTheme={isDarkTheme}
               icon={mdiContentSave}
               size="sm"
+              className="h-[38px]"
             />
           </Tooltip>
         </div>
@@ -268,6 +270,7 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
             isDarkTheme={isDarkTheme}
             icon={mdiFileImport}
             size="sm"
+            className="h-[38px]"
           />
         </Tooltip>
 
@@ -284,6 +287,7 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
             isDarkTheme={isDarkTheme}
             icon={mdiFileExport}
             size="sm"
+            className="h-[38px]"
           />
         </Tooltip>
 

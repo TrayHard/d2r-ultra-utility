@@ -40,12 +40,11 @@ const MainSpaceToolbar: React.FC<ToolbarProps> = ({
               ⚙️
             </button>
           </Tooltip>
+          {/* Update Button */}
+          <UpdateButton isDarkTheme={isDarkTheme} />
         </div>
 
         <div className="flex items-center space-x-4">
-          {/* Update Button */}
-          <UpdateButton isDarkTheme={isDarkTheme} />
-
           {/* Theme Toggle */}
           <Tooltip
             title={
