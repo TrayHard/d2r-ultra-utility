@@ -9,9 +9,11 @@ import { ERune, runeHardcodedLocales } from "../../pages/runes/constants/runes.t
 import i18n from "../../shared/i18n";
 import { STORAGE_KEYS } from "../../shared/constants";
 import { logger } from "../../shared/utils/logger";
-// Загружаем ВСЕ профили из ассетов (eager, чтобы были доступны синхронно)
-const defaultProfilesModules: Record<string, { default: unknown }> =
-  import.meta.glob("../../shared/assets/profiles/*.json", { eager: true });
+// Загружаем профили из ассетов (eager, чтобы были доступны синхронно)
+const baseProfilesModules: Record<string, { default: unknown }> =
+  import.meta.glob("../../shared/assets/profiles/baseProfiles/*.json", { eager: true });
+const userProfilesModules: Record<string, { default: unknown }> =
+  import.meta.glob("../../shared/assets/profiles/userProfiles/*.json", { eager: true });
 
 // Типы для локализации
 interface Locales {
@@ -158,6 +160,7 @@ interface Profile {
   settings: AppSettings;
   createdAt: string;
   modifiedAt: string;
+  isImmutable?: boolean; // Флаг для неизменяемых (встроенных) профилей
 }
 
 // Интерфейс для контекста
@@ -318,6 +321,10 @@ interface SettingsContextType {
   deleteProfile: (profileId: string) => void;
   exportProfile: (profileId: string) => void;
   importProfile: (profileData: any) => void;
+  
+  // Неизменяемые профили
+  immutableProfiles: Profile[];
+  getImmutableProfiles: () => Profile[];
 
   // Deprecated (для обратной совместимости)
   resetSelectedLocales: () => void;
@@ -776,6 +783,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     return getDefaultAppConfig();
   });
   const [profiles, setProfiles] = useState<Profile[]>([]);
+  const [immutableProfiles, setImmutableProfiles] = useState<Profile[]>([]);
   const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isThemeChanging, setIsThemeChanging] = useState(false);
@@ -826,6 +834,74 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     },
     [isLoading]
   );
+
+  // Загрузка неизменяемых профилей из ассетов
+  const loadImmutableProfiles = useCallback(() => {
+    try {
+      // Загружаем все профили из папки baseProfiles
+      const modules = baseProfilesModules;
+      const sources = Object.values(modules).map((m) => m.default);
+      const now = Date.now();
+
+      const immutableProfilesData: Profile[] = sources
+        .map((src, index) => {
+          const data = src as unknown as { id?: string; name?: string; settings?: unknown };
+          const name = data?.name || `Immutable Profile ${index + 1}`;
+          const profileId = data?.id || `immutable_${now + index}`;
+          const settingsSource = data?.settings as unknown;
+
+          const settingsObj =
+            typeof settingsSource === "object" && settingsSource !== null
+              ? (settingsSource as Record<string, unknown>)
+              : {};
+
+          const runesObj =
+            typeof settingsObj["runes"] === "object" && settingsObj["runes"] !== null
+              ? (settingsObj["runes"] as Record<string, unknown>)
+              : {};
+
+          const migratedSettings: AppSettings = {
+            runes: Object.fromEntries(
+              Object.entries(runesObj).map(([key, value]) => [
+                key,
+                migrateRuneSettings(value),
+              ])
+            ) as Record<ERune, RuneSettings>,
+            generalRunes: getDefaultGeneralRuneSettings(),
+            common: settingsObj["common"]
+              ? cleanSettings(settingsObj["common"]) 
+              : getDefaultCommonSettings(),
+            gems: settingsObj["gems"]
+              ? (settingsObj["gems"] as GemSettings)
+              : getDefaultGemSettings(),
+            items: settingsObj["items"]
+              ? migrateItemsSettings(settingsObj["items"]) 
+              : getDefaultItemsSettings(),
+          };
+
+          return {
+            id: profileId,
+            name,
+            settings: migratedSettings,
+            createdAt: new Date().toISOString(),
+            modifiedAt: new Date().toISOString(),
+            isImmutable: true,
+          };
+        })
+        .filter((profile) => profile !== null);
+
+      setImmutableProfiles(immutableProfilesData);
+      logger.info("Загружены неизменяемые профили", { count: immutableProfilesData.length });
+    } catch (error) {
+      logger.error("Ошибка загрузки неизменяемых профилей", error as Error);
+      setImmutableProfiles([]);
+    }
+  }, []);
+
+  // Получить неизменяемые профили
+  const getImmutableProfiles = useCallback(() => {
+    return immutableProfiles;
+  }, [immutableProfiles]);
 
   // Загрузка настроек из localStorage при инициализации
   useEffect(() => {
@@ -942,10 +1018,10 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       }
     }
 
-    // Если первый запуск и профилей нет — добавляем все дефолтные профили из папки @profiles
+    // Если первый запуск и профилей нет — добавляем все профили из папки userProfiles
     if (isFirstRun && !hadProfiles) {
       try {
-        const modules = defaultProfilesModules;
+        const modules = userProfilesModules;
         const sources = Object.values(modules).map((m) => m.default);
         const now = Date.now();
 
@@ -1007,9 +1083,47 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       localStorage.setItem(STORAGE_KEYS.FIRST_RUN, "1");
     }
 
+    // Загружаем неизменяемые профили
+    loadImmutableProfiles();
+
     // Завершаем загрузку
     setIsLoading(false);
-  }, [setAppConfig]);
+  }, [setAppConfig, loadImmutableProfiles]);
+
+  // Функция для переименования дублирующихся профилей
+  const renameDuplicateProfiles = useCallback((userProfiles: Profile[], baseProfiles: Profile[]) => {
+    const baseProfileNames = new Set(baseProfiles.map(p => p.name));
+    let renamedCount = 0;
+    
+    const processedProfiles = userProfiles.map(profile => {
+      if (baseProfileNames.has(profile.name)) {
+        renamedCount++;
+        const newName = `${profile.name} (Custom)`;
+        logger.info("Переименован дублирующийся пользовательский профиль", { 
+          oldName: profile.name, 
+          newName 
+        });
+        return {
+          ...profile,
+          name: newName,
+          modifiedAt: new Date().toISOString(),
+        };
+      }
+      return profile;
+    });
+    
+    if (renamedCount > 0) {
+      logger.info("Переименованы дублирующиеся пользовательские профили", { 
+        renamed: renamedCount 
+      });
+    }
+    
+    return processedProfiles;
+  }, []);
+
+
+
+
 
   // Убираем старый useEffect для сохранения, так как теперь сохраняем в setAppConfig
 
@@ -1040,6 +1154,22 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     },
     []
   );
+
+  // Эффект для переименования дублирующихся профилей после загрузки неизменяемых
+  useEffect(() => {
+    if (immutableProfiles.length > 0 && profiles.length > 0) {
+      const processedProfiles = renameDuplicateProfiles(profiles, immutableProfiles);
+      // Проверяем, были ли изменения (сравниваем по именам)
+      const hasChanges = processedProfiles.some((profile, index) => 
+        profile.name !== profiles[index]?.name
+      );
+      
+      if (hasChanges) {
+        setProfiles(processedProfiles);
+        saveProfilesToLocalStorage(processedProfiles);
+      }
+    }
+  }, [immutableProfiles, profiles, renameDuplicateProfiles, saveProfilesToLocalStorage]);
 
   // Методы для работы с настройками приложения
   const getAppConfig = useCallback(() => appConfig, [appConfig]);
@@ -1345,9 +1475,21 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   // Создать новый профиль
   const createProfile = useCallback(
     (name: string, settings: AppSettings) => {
+      // Проверяем, что имя не совпадает с базовыми профилями
+      const baseProfileNames = immutableProfiles.map(p => p.name);
+      let finalName = name;
+      
+      if (baseProfileNames.includes(name)) {
+        finalName = `${name} (Custom)`;
+        logger.info("Автоматически переименован профиль для избежания конфликта с базовым профилем", { 
+          originalName: name, 
+          newName: finalName 
+        });
+      }
+
       const newProfile: Profile = {
         id: Date.now().toString(),
-        name,
+        name: finalName,
         settings,
         createdAt: new Date().toISOString(),
         modifiedAt: new Date().toISOString(),
@@ -1361,12 +1503,19 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       // Удаляем автономные настройки профиля при создании профиля
       localStorage.removeItem(STORAGE_KEYS.SETTINGS);
     },
-    [profiles, saveProfilesToLocalStorage, saveActiveProfileToLocalStorage]
+    [profiles, immutableProfiles, saveProfilesToLocalStorage, saveActiveProfileToLocalStorage]
   );
 
   // Сохранить профиль
   const saveProfile = useCallback(
     (profileId: string, settings: AppSettings) => {
+      // Проверяем, что это не неизменяемый профиль
+      const profileToSave = profiles.find(p => p.id === profileId);
+      if (profileToSave?.isImmutable) {
+        logger.warn("Попытка сохранить неизменяемый профиль", { profileId });
+        return;
+      }
+
       const updatedProfiles = profiles.map((profile) =>
         profile.id === profileId
           ? { ...profile, settings, modifiedAt: new Date().toISOString() }
@@ -1386,7 +1535,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   // Загрузить профиль
   const loadProfile = useCallback(
     (profileId: string) => {
-      const profile = profiles.find((p) => p.id === profileId);
+      // Ищем профиль в обычных и неизменяемых профилях
+      const profile = profiles.find((p) => p.id === profileId) || 
+                     immutableProfiles.find((p) => p.id === profileId);
       if (profile) {
         setSettings(profile.settings);
         setActiveProfileId(profileId);
@@ -1395,12 +1546,19 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         localStorage.removeItem(STORAGE_KEYS.SETTINGS);
       }
     },
-    [profiles, saveActiveProfileToLocalStorage]
+    [profiles, immutableProfiles, saveActiveProfileToLocalStorage]
   );
 
   // Переименовать профиль
   const renameProfile = useCallback(
     (profileId: string, newName: string) => {
+      // Проверяем, что это не неизменяемый профиль
+      const profileToRename = profiles.find(p => p.id === profileId);
+      if (profileToRename?.isImmutable) {
+        logger.warn("Попытка переименовать неизменяемый профиль", { profileId });
+        return;
+      }
+
       const updatedProfiles = profiles.map((profile) =>
         profile.id === profileId
           ? { ...profile, name: newName, modifiedAt: new Date().toISOString() }
@@ -1415,6 +1573,13 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   // Удалить профиль
   const deleteProfile = useCallback(
     (profileId: string) => {
+      // Проверяем, что это не неизменяемый профиль
+      const profileToDelete = profiles.find(p => p.id === profileId);
+      if (profileToDelete?.isImmutable) {
+        logger.warn("Попытка удалить неизменяемый профиль", { profileId });
+        return;
+      }
+
       const updatedProfiles = profiles.filter(
         (profile) => profile.id !== profileId
       );
@@ -1473,7 +1638,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   // Экспортировать профиль
   const exportProfile = useCallback(
     (profileId: string) => {
-      const profile = profiles.find((p) => p.id === profileId);
+      // Ищем профиль в обычных и неизменяемых профилях
+      const profile = profiles.find((p) => p.id === profileId) || 
+                     immutableProfiles.find((p) => p.id === profileId);
       if (profile) {
         const cleanProfile = prepareForExport(profile);
         const dataStr = JSON.stringify(cleanProfile, null, 2);
@@ -1488,7 +1655,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         linkElement.click();
       }
     },
-    [profiles]
+    [profiles, immutableProfiles]
   );
 
   // Импортировать профиль
@@ -1498,6 +1665,18 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         // Валидация данных профиля
         if (!profileData.name || !profileData.settings) {
           throw new Error("Invalid profile data");
+        }
+
+        // Проверяем, что имя не совпадает с базовыми профилями
+        const baseProfileNames = immutableProfiles.map(p => p.name);
+        let finalName = profileData.name;
+        
+        if (baseProfileNames.includes(profileData.name)) {
+          finalName = `${profileData.name} (Custom)`;
+          logger.info("Автоматически переименован импортируемый профиль для избежания конфликта с базовым профилем", { 
+            originalName: profileData.name, 
+            newName: finalName 
+          });
         }
 
         // Мигрируем настройки рун в импортируемом профиле и добавляем common и gems если их нет
@@ -1522,7 +1701,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
 
         const newProfile: Profile = {
           id: Date.now().toString(),
-          name: profileData.name + " (imported)",
+          name: finalName + " (imported)",
           settings: migratedSettings,
           createdAt: new Date().toISOString(),
           modifiedAt: new Date().toISOString(),
@@ -1536,7 +1715,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         throw error;
       }
     },
-    [profiles, saveProfilesToLocalStorage]
+    [profiles, immutableProfiles, saveProfilesToLocalStorage]
   );
 
   // Методы для работы с CommonSettings
@@ -2012,6 +2191,10 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     deleteProfile,
     exportProfile,
     importProfile,
+
+    // Неизменяемые профили
+    immutableProfiles,
+    getImmutableProfiles,
 
     // Deprecated
     resetSelectedLocales,

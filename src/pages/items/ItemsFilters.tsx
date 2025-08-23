@@ -136,7 +136,7 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
     <div
       ref={filtersRef}
       className={`py-4 px-3 border-b ${
-        isDarkTheme ? "border-gray-700 dark-theme" : "border-gray-200"
+        isDarkTheme ? "border-gray-700 dark-theme" : "border-gray-200 dark-theme"
       }`}
     >
       {/* Первая строка фильтров */}
@@ -145,7 +145,6 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
           icon={<ReloadOutlined />}
           onClick={onResetFilters}
           type="default"
-          className="items-filters-button"
         >
           {t("itemsPage.filters.reset")}
         </AntButton>
@@ -158,7 +157,6 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
             onChange={(e) => setSearchQuery(e.target.value)}
             allowClear
             style={{ width: "100%" }}
-            className="items-filters-input"
           />
         </div>
 
@@ -192,7 +190,6 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
               style={{ width: "80px" }}
               size="middle"
               min={0}
-              className="items-filters-input-number"
             />
           </Tooltip>
 
@@ -204,7 +201,6 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
               style={{ width: "90px" }}
               size="middle"
               min={0}
-              className="items-filters-input-number"
             />
           </Tooltip>
 
@@ -216,7 +212,6 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
               style={{ width: "90px" }}
               size="middle"
               min={0}
-              className="items-filters-input-number"
             />
           </Tooltip>
         </div>

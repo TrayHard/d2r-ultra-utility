@@ -8,6 +8,7 @@ interface AppToolbarProps {
   isDarkTheme: boolean;
   settings: any;
   profiles: any;
+  immutableProfiles: any;
   activeProfileId: string | null;
   isLoading: boolean;
   activeTab: "common" | "items" | "runes" | "gems";
@@ -28,6 +29,7 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
   isDarkTheme,
   settings,
   profiles,
+  immutableProfiles,
   activeProfileId,
   isLoading,
   activeTab,
@@ -72,6 +74,7 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
           isDarkTheme={isDarkTheme}
           currentSettings={settings}
           profiles={profiles}
+          immutableProfiles={immutableProfiles}
           activeProfileId={activeProfileId}
           onProfileSelect={onProfileSelect}
           onProfileCreate={handleProfileCreate}

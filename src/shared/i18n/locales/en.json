@@ -404,6 +404,8 @@
   "profiles": {
     "sectionTitle": "Profiles",
     "filesSectionTitle": "File Operations in game",
+    "baseProfiles": "Base Profiles",
+    "userProfiles": "User Profiles",
     "selectProfile": "Select Profile",
     "createProfile": "Create Profile",
     "saveProfile": "Save Profile",
@@ -426,6 +428,7 @@
       "profileSaved": "Profile \"{{name}}\" saved",
       "saveError": "Error saving profile",
       "profileCreated": "Profile \"{{name}}\" created",
+      "createError": "Error creating profile",
       "profileRenamed": "Profile renamed to \"{{name}}\"",
       "profileDeleted": "Profile \"{{name}}\" deleted",
       "profileExported": "Profile exported",

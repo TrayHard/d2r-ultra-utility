@@ -43,6 +43,7 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     getSelectedLocales,
     settings,
     profiles,
+    immutableProfiles,
     activeProfileId,
     createProfile,
     saveProfile,
@@ -207,6 +208,15 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     setIsBulkLoading(false);
     unmute();
     const hasError = results.some((r) => r.status === "rejected");
+    if (hasError) {
+      const details = results.map((r, idx) => {
+        if (r.status === 'rejected') {
+          return { index: idx, error: r.reason instanceof Error ? r.reason.message : String(r.reason) };
+        }
+        return { index: idx, value: 'ok' };
+      });
+      logger.error('One or more read operations failed', new Error('Bulk read failure'), { details }, 'executeReadAll');
+    }
     
     logger.info('Completed bulk read operation', { hasError, resultCount: results.length }, 'executeReadAll');
     
@@ -236,6 +246,15 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       applyGemsChanges(),
     ]);
     const hasError = results.some((r) => r.status === "rejected");
+    if (hasError) {
+      const details = results.map((r, idx) => {
+        if (r.status === 'rejected') {
+          return { index: idx, error: r.reason instanceof Error ? r.reason.message : String(r.reason) };
+        }
+        return { index: idx, value: 'ok' };
+      });
+      logger.error('One or more apply operations failed', new Error('Bulk apply failure'), { details }, 'executeApplyAll');
+    }
     
     logger.info('Completed bulk apply operation', { hasError, resultCount: results.length }, 'executeApplyAll');
     
@@ -276,6 +295,7 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
         isDarkTheme={isDarkTheme}
         settings={settings}
         profiles={profiles}
+        immutableProfiles={immutableProfiles}
         activeProfileId={activeProfileId}
         isLoading={isLoading}
         activeTab={activeTab}

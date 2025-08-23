@@ -27,8 +27,7 @@ html:not(.dark) {
 }
 
 /* Select dropdown для темной темы */
-html.dark .ant-select-dropdown,
-html.dark .dark-theme {
+html.dark .ant-select-dropdown {
   background-color: var(--ant-color-bg-container) !important;
   border-color: var(--ant-color-border) !important;
 }
@@ -63,7 +62,7 @@ html.dark .ant-tooltip .ant-tooltip-arrow::before {
 }
 
 /* Select сам элемент в темной теме */
-html.dark .ant-select {
+html.dark {
   background-color: var(--ant-color-bg-container) !important;
   border-color: var(--ant-color-border) !important;
   color: var(--ant-color-text) !important;
@@ -91,14 +90,21 @@ html.dark .ant-select.ant-select-disabled .ant-select-selector {
 }
 
 /* Input компоненты */
-html.dark .ant-input {
+html.dark .ant-input,
+html.dark .ant-input-affix-wrapper,
+html.dark .ant-input-number-input-wrap input {
   background-color: var(--ant-color-bg-container) !important;
   border-color: var(--ant-color-border) !important;
   color: var(--ant-color-text) !important;
 }
 
-html.dark .ant-input::placeholder {
+html.dark .ant-input::placeholder,
+html.dark .ant-input-affix-wrapper input::placeholder,
+html.dark .ant-input-number-input::placeholder,
+html.dark .ant-input-number-input-wrap input::placeholder,
+html.dark .ant-input-textarea textarea::placeholder {
   color: var(--ant-color-text-secondary) !important;
+  font-weight: normal !important;
 }
 
 /* Button компоненты */
@@ -109,7 +115,6 @@ html.dark .ant-btn-default {
 }
 
 html.dark .ant-btn-default:hover {
-  background-color: var(--ant-color-fill) !important;
   border-color: var(--ant-color-primary) !important;
   color: var(--ant-color-primary) !important;
 }

@@ -85,7 +85,7 @@ const FileOperationsBlock: React.FC<FileOperationsBlockProps> = ({
             {t("files.groups.all")}
           </div>
           <div className="flex items-center gap-2">
-            <Tooltip title={t("files.read")} placement="top">
+            <Tooltip title={t("files.readAll")} placement="top">
               <div>
                 <Button
                   variant="info"
@@ -95,11 +95,11 @@ const FileOperationsBlock: React.FC<FileOperationsBlockProps> = ({
                   isDarkTheme={isDarkTheme}
                   icon={mdiFileDocumentMultiple}
                 >
-                  {t("files.read")}
+                  {t("files.readAll")}
                 </Button>
               </div>
             </Tooltip>
-            <Tooltip title={t("files.apply")} placement="top">
+            <Tooltip title={t("files.applyAll")} placement="top">
               <div>
                 <Button
                   variant="success"
@@ -109,7 +109,7 @@ const FileOperationsBlock: React.FC<FileOperationsBlockProps> = ({
                   isDarkTheme={isDarkTheme}
                   icon={mdiCheckAll}
                 >
-                  {t("files.apply")}
+                  {t("files.applyAll")}
                 </Button>
               </div>
             </Tooltip>

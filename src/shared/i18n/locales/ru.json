@@ -399,6 +399,8 @@
   "profiles": {
     "sectionTitle": "Профили",
     "filesSectionTitle": "Работа с файлами в игре",
+    "baseProfiles": "Базовые профили",
+    "userProfiles": "Пользовательские профили",
     "selectProfile": "Выберите профиль",
     "createProfile": "Создать профиль",
     "saveProfile": "Сохранить профиль",
@@ -421,6 +423,7 @@
       "profileSaved": "Профиль \"{{name}}\" сохранен",
       "saveError": "Ошибка при сохранении профиля",
       "profileCreated": "Профиль \"{{name}}\" создан",
+      "createError": "Ошибка при создании профиля",
       "profileRenamed": "Профиль переименован в \"{{name}}\"",
       "profileDeleted": "Профиль \"{{name}}\" удален",
       "profileExported": "Профиль экспортирован",
@@ -429,8 +432,8 @@
     }
   },
   "files": {
-    "readAll": "Считать из файлов (всё)",
-    "applyAll": "Применить в файлах (всё)",
+    "readAll": "Считать всё",
+    "applyAll": "Применить всё",
     "read": "Считать",
     "apply": "Применить",
     "groups": {
