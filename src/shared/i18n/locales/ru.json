@@ -374,7 +374,13 @@
       "numberingSettings": "Настройки нумерации",
       "noChange": "Не изменять",
       "cancel": "Отменить",
-      "applyToRunes": "Применить к {{count}} рунам"
+      "applyToRunes": "Применить к {{count}} рунам",
+      "runeMode": "Режим",
+      "runeModeTooltips": {
+        "auto": "Автоматический режим",
+        "noChange": "Не изменять режим",
+        "manual": "Ручной режим"
+      }
     },
     "textWorker": {
       "readFromFiles": "Считать из файлов",

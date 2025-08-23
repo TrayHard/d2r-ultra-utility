@@ -360,7 +360,13 @@
       "numberingSettings": "Nummerierungs-Einstellungen",
       "noChange": "Ohne Änderung",
       "cancel": "Abbrechen",
-      "applyToRunes": "Auf {{count}} Runen anwenden"
+      "applyToRunes": "Auf {{count}} Runen anwenden",
+      "runeMode": "Modus",
+      "runeModeTooltips": {
+        "auto": "Automatischer Modus",
+        "noChange": "Modus nicht ändern",
+        "manual": "Manueller Modus"
+      }
     },
     "textWorker": {
       "readFromFiles": "Aus Dateien lesen",

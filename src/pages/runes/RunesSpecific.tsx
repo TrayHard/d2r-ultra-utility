@@ -165,6 +165,7 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
 
       const mergedSettings: RuneSettings = {
         ...currentSettings,
+        ...(newSettings.mode !== undefined ? { mode: newSettings.mode } : {}),
         ...(newSettings.isHighlighted !== undefined
           ? { isHighlighted: newSettings.isHighlighted }
           : {}),

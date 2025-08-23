@@ -338,7 +338,13 @@
       "numberingSettings": "Ustawienia numeracji",
       "noChange": "Bez zmian",
       "cancel": "Anuluj",
-      "applyToRunes": "Zastosuj do {{count}} run"
+      "applyToRunes": "Zastosuj do {{count}} run",
+      "runeMode": "Tryb",
+      "runeModeTooltips": {
+        "auto": "Tryb automatyczny",
+        "noChange": "Nie zmieniaj trybu",
+        "manual": "Tryb ręczny"
+      }
     },
     "textWorker": {
       "readFromFiles": "Czytaj z plików",

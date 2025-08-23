@@ -360,7 +360,13 @@
       "numberingSettings": "Налаштування нумерації",
       "noChange": "Без змін",
       "cancel": "Скасувати",
-      "applyToRunes": "Застосувати до {{count}} рун"
+      "applyToRunes": "Застосувати до {{count}} рун",
+      "runeMode": "Режим",
+      "runeModeTooltips": {
+        "auto": "Автоматичний режим",
+        "noChange": "Не змінювати режим",
+        "manual": "Ручний режим"
+      }
     },
     "textWorker": {
       "readFromFiles": "Зчитати з файлів",
@@ -589,16 +595,6 @@
       "druid": "Друїд",
       "assassin": "Асасин"
     }
-  },
-  "window": {
-    "minimize": "Згорнути",
-    "maximize": "Розгорнути",
-    "close": "Закрити"
-  },
-  "triState": {
-    "off": "Вимкнено",
-    "noChange": "Без змін",
-    "on": "Увімкнено"
   }
 }
 
