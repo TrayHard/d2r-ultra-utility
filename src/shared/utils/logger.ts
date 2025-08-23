@@ -14,6 +14,7 @@ class Logger {
   private logs: LogEntry[] = [];
   private maxLogs = 1000; // Максимальное количество логов в памяти
   private debugModeEnabled = false;
+  private listeners: Set<() => void> = new Set();
 
   constructor() {
     // Проверяем localStorage при создании логгера
@@ -59,6 +60,9 @@ class Logger {
     if (this.debugModeEnabled) {
       this.outputToConsole(logEntry);
     }
+
+    // Уведомляем слушателей об изменениях
+    this.notifyListeners();
   }
 
   private outputToConsole(entry: LogEntry) {
@@ -160,10 +164,26 @@ class Logger {
 
   // Очистить логи
   clearLogs() {
+    const prevCount = this.logs.length;
     this.logs = [];
     if (this.debugModeEnabled) {
-      console.info('[Logger] Logs cleared');
+      console.info(`[Logger] ${prevCount} logs cleared`);
     }
+    // Уведомляем слушателей об очистке
+    this.notifyListeners();
+  }
+
+  // Добавляем методы для подписки на изменения
+  addListener(listener: () => void) {
+    this.listeners.add(listener);
+  }
+
+  removeListener(listener: () => void) {
+    this.listeners.delete(listener);
+  }
+
+  private notifyListeners() {
+    this.listeners.forEach(listener => listener());
   }
 
   // Получить статистику логов

@@ -208,7 +208,7 @@
     "exporting": "Exporting...",
     "clearLogs": "Clear Logs",
     "confirmClear": "Are you sure you want to clear all logs? This action cannot be undone.",
-    "exportDescription": "Export logs to share with developers for troubleshooting. JSON format is better for analysis, text format is more readable."
+    "exportDescription": "Export logs to share with developers for troubleshooting."
   },
   "search": {
     "placeholder": "Search runes...",
