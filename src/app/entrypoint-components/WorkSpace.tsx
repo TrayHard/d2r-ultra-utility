@@ -5,6 +5,7 @@ import MainSpace from "./workspace/MainSpace";
 import { MessageProvider } from "../../shared/components/Message/MessageProvider";
 import AppSettingsPage from "../../pages/settings/AppSettingsPage";
 import { ConfigProvider, theme } from "antd";
+import "../../shared/assets/antd-theme.css";
 
 interface WorkSpaceProps {
   onChangeClick: () => void;
@@ -15,6 +16,16 @@ const WorkSpaceContent: React.FC<WorkSpaceProps> = ({ onChangeClick }) => {
   const [showSettings, setShowSettings] = useState(false);
 
   const isDarkTheme = getIsDarkTheme();
+
+  // Синхронизируем глобальный класс для Tailwind и любых глобальных стилей
+  React.useEffect(() => {
+    const root = document.documentElement;
+    if (isDarkTheme) {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
+  }, [isDarkTheme]);
 
   const handleLanguageChange = () => {
     // Язык теперь управляется через SettingsContext в LanguageSwitch
@@ -38,7 +49,7 @@ const WorkSpaceContent: React.FC<WorkSpaceProps> = ({ onChangeClick }) => {
       theme={{
         algorithm: isDarkTheme ? theme.darkAlgorithm : theme.defaultAlgorithm,
         token: {
-          colorPrimary: "#eab308", // Yellow color used in the app
+          colorPrimary: "#eab308",
           colorInfo: "#eab308",
           colorSuccess: "#22c55e",
           colorWarning: "#f59e0b",

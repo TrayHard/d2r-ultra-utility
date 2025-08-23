@@ -379,7 +379,13 @@
       "numberingSettings": "Numbering Settings",
       "noChange": "No change",
       "cancel": "Cancel",
-      "applyToRunes": "Apply to {{count}} runes"
+      "applyToRunes": "Apply to {{count}} runes",
+      "runeMode": "Mode",
+      "runeModeTooltips": {
+        "auto": "Automatic mode",
+        "noChange": "Don't change mode",
+        "manual": "Manual mode"
+      }
     },
     "textWorker": {
       "readFromFiles": "Read from files",

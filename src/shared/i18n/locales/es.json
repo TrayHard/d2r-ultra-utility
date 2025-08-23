@@ -338,7 +338,13 @@
       "numberingSettings": "Ajustes de numeración",
       "noChange": "Sin cambios",
       "cancel": "Cancelar",
-      "applyToRunes": "Aplicar a {{count}} runas"
+      "applyToRunes": "Aplicar a {{count}} runas",
+      "runeMode": "Modo",
+      "runeModeTooltips": {
+        "auto": "Modo automático",
+        "noChange": "No cambiar modo",
+        "manual": "Modo manual"
+      }
     },
     "textWorker": {
       "readFromFiles": "Leer de archivos",
