@@ -125,21 +125,27 @@ class Logger {
 
   // Экспорт логов в JSON
   exportLogs(): string {
+    const logsToExport = this.debugModeEnabled
+      ? this.logs.filter(l => l.level === 'error')
+      : this.logs;
     const exportData = {
       exportedAt: new Date().toISOString(),
-      totalLogs: this.logs.length,
-      logs: this.logs
+      totalLogs: logsToExport.length,
+      logs: logsToExport
     };
     return JSON.stringify(exportData, null, 2);
   }
 
   // Экспорт логов в текстовом формате
   exportLogsAsText(): string {
+    const logsToExport = this.debugModeEnabled
+      ? this.logs.filter(l => l.level === 'error')
+      : this.logs;
     let output = `=== Debug Logs Export ===\n`;
     output += `Exported at: ${new Date().toISOString()}\n`;
-    output += `Total logs: ${this.logs.length}\n\n`;
+    output += `Total logs: ${logsToExport.length}\n\n`;
 
-    this.logs.forEach(log => {
+    logsToExport.forEach(log => {
       output += `[${log.timestamp}] [${log.level.toUpperCase()}]`;
       if (log.component) output += ` [${log.component}]`;
       if (log.action) output += ` [${log.action}]`;

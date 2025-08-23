@@ -9,6 +9,8 @@ interface ToolbarProps {
   onSettingsClick: () => void;
   isDarkTheme: boolean;
   onThemeChange: () => void;
+  appMode: "basic" | "advanced";
+  onModeToggle: () => void;
 }
 
 const MainSpaceToolbar: React.FC<ToolbarProps> = ({
@@ -16,6 +18,8 @@ const MainSpaceToolbar: React.FC<ToolbarProps> = ({
   onSettingsClick,
   isDarkTheme,
   onThemeChange,
+  appMode,
+  onModeToggle,
 }) => {
   const { t } = useTranslation();
 
@@ -42,6 +46,28 @@ const MainSpaceToolbar: React.FC<ToolbarProps> = ({
           </Tooltip>
           {/* Update Button */}
           <UpdateButton isDarkTheme={isDarkTheme} />
+          {/* Mode Toggle Button */}
+          <Tooltip
+            title={
+              appMode === "advanced"
+                ? (t("mode.switchToBasic", "Переключить в базовый режим") as string)
+                : (t("mode.switchToAdvanced", "Переключить в режим редактирования") as string)
+            }
+            placement="bottom"
+          >
+            <button
+              onClick={onModeToggle}
+              className={`px-2 py-1 rounded text-xs transition-all duration-200 ${
+                isDarkTheme
+                  ? "bg-gray-700 hover:bg-gray-600 text-gray-200"
+                  : "bg-gray-100 hover:bg-gray-200 text-gray-800"
+              }`}
+            >
+              {appMode === "advanced"
+                ? (t("mode.basicButton", "Базовый режим") as string)
+                : (t("mode.advancedButton", "Режим редактирования") as string)}
+            </button>
+          </Tooltip>
         </div>
 
         <div className="flex items-center space-x-4">

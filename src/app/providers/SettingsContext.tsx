@@ -10,8 +10,16 @@ import i18n from "../../shared/i18n";
 import { STORAGE_KEYS } from "../../shared/constants";
 import { logger } from "../../shared/utils/logger";
 // Загружаем профили из ассетов (eager, чтобы были доступны синхронно)
-const baseProfilesModules: Record<string, { default: unknown }> =
-  import.meta.glob("../../shared/assets/profiles/baseProfiles/*.json", { eager: true });
+// Новый формат: recommendedProfiles + корневой d2r-profile-Default.json
+// Для обратной совместимости поддерживаем старые пути (baseProfiles)
+const recommendedProfilesModules: Record<string, { default: unknown }> = {
+  ...import.meta.glob("../../shared/assets/profiles/recommendedProfiles/*.json", { eager: true }),
+  ...import.meta.glob("../../shared/assets/profiles/baseProfiles/*.json", { eager: true }),
+};
+const defaultProfileModule: Record<string, { default: unknown }> = {
+  ...import.meta.glob("../../shared/assets/profiles/d2r-profile-Default.json", { eager: true }),
+  ...import.meta.glob("../../shared/assets/profiles/baseProfiles/d2r-profile-Default.json", { eager: true }),
+};
 const userProfilesModules: Record<string, { default: unknown }> =
   import.meta.glob("../../shared/assets/profiles/userProfiles/*.json", { eager: true });
 
@@ -39,6 +47,7 @@ interface AppConfig {
   gamePath: string; // Путь к игре
   theme: "light" | "dark"; // Тема приложения
   debugMode: boolean; // Режим отладки для логирования
+  appMode: "basic" | "advanced"; // Режим приложения
   // В будущем добавим другие глобальные настройки
 }
 
@@ -161,12 +170,14 @@ interface Profile {
   createdAt: string;
   modifiedAt: string;
   isImmutable?: boolean; // Флаг для неизменяемых (встроенных) профилей
+  isDefault?: boolean; // Флаг для Default профиля в корне
 }
 
 // Интерфейс для контекста
 interface SettingsContextType {
   // Getter'ы для настроек приложения
   getAppConfig: () => AppConfig;
+  getAppMode: () => "basic" | "advanced";
   getSelectedLocales: () => string[];
   getAppLanguage: () => string;
   getGamePath: () => string;
@@ -177,11 +188,13 @@ interface SettingsContextType {
 
   // Setter'ы для настроек приложения
   updateAppConfig: (config: Partial<AppConfig>) => void;
+  updateAppMode: (mode: "basic" | "advanced") => void;
   updateSelectedLocales: (locales: string[]) => void;
   updateAppLanguage: (language: string) => void;
   updateGamePath: (path: string) => void;
   updateTheme: (theme: "light" | "dark") => void;
   toggleTheme: () => void;
+  toggleAppMode: () => void;
   updateDebugMode: (enabled: boolean) => void;
   toggleDebugMode: () => void;
   resetAppConfig: () => void;
@@ -337,6 +350,7 @@ const getDefaultAppConfig = (): AppConfig => ({
   gamePath: "", // По умолчанию путь к игре не задан
   theme: "dark", // По умолчанию темная тема
   debugMode: false, // По умолчанию отладочный режим выключен
+  appMode: "advanced", // По умолчанию расширенный режим (текущая логика)
 });
 
 // Дефолтные общие настройки для рун
@@ -838,16 +852,17 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   // Загрузка неизменяемых профилей из ассетов
   const loadImmutableProfiles = useCallback(() => {
     try {
-      // Загружаем все профили из папки baseProfiles
-      const modules = baseProfilesModules;
+      // Загружаем все рекомендованные профили и отдельный Default
+      const modules = recommendedProfilesModules;
       const sources = Object.values(modules).map((m) => m.default);
+      const defaultSources = Object.values(defaultProfileModule).map((m) => m.default);
       const now = Date.now();
 
       const immutableProfilesData: Profile[] = sources
         .map((src, index) => {
           const data = src as unknown as { id?: string; name?: string; settings?: unknown };
-          const name = data?.name || `Immutable Profile ${index + 1}`;
-          const profileId = data?.id || `immutable_${now + index}`;
+          const name = data?.name || `Recommended Profile ${index + 1}`;
+          const profileId = data?.id || `recommended_${now + index}`;
           const settingsSource = data?.settings as unknown;
 
           const settingsObj =
@@ -890,7 +905,56 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         })
         .filter((profile) => profile !== null);
 
-      setImmutableProfiles(immutableProfilesData);
+      // Добавляем Default профиль (если найден) как отдельный, неизменяемый и помеченный isDefault
+      const defaultProfiles: Profile[] = defaultSources
+        .map((src) => {
+          const data = src as unknown as { id?: string; name?: string; settings?: unknown };
+          const name = data?.name || "Default";
+          const profileId = data?.id || `default_${now}`;
+          const settingsSource = data?.settings as unknown;
+
+          const settingsObj =
+            typeof settingsSource === "object" && settingsSource !== null
+              ? (settingsSource as Record<string, unknown>)
+              : {};
+
+          const runesObj =
+            typeof settingsObj["runes"] === "object" && settingsObj["runes"] !== null
+              ? (settingsObj["runes"] as Record<string, unknown>)
+              : {};
+
+          const migratedSettings: AppSettings = {
+            runes: Object.fromEntries(
+              Object.entries(runesObj).map(([key, value]) => [
+                key,
+                migrateRuneSettings(value),
+              ])
+            ) as Record<ERune, RuneSettings>,
+            generalRunes: getDefaultGeneralRuneSettings(),
+            common: settingsObj["common"]
+              ? cleanSettings(settingsObj["common"]) 
+              : getDefaultCommonSettings(),
+            gems: settingsObj["gems"]
+              ? (settingsObj["gems"] as GemSettings)
+              : getDefaultGemSettings(),
+            items: settingsObj["items"]
+              ? migrateItemsSettings(settingsObj["items"]) 
+              : getDefaultItemsSettings(),
+          };
+
+          return {
+            id: profileId,
+            name,
+            settings: migratedSettings,
+            createdAt: new Date().toISOString(),
+            modifiedAt: new Date().toISOString(),
+            isImmutable: true,
+            isDefault: true,
+          } as Profile;
+        })
+        .filter(Boolean);
+
+      setImmutableProfiles([...defaultProfiles, ...immutableProfilesData]);
       logger.info("Загружены неизменяемые профили", { count: immutableProfilesData.length });
     } catch (error) {
       logger.error("Ошибка загрузки неизменяемых профилей", error as Error);
@@ -1213,6 +1277,11 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     [appConfig.selectedLocales]
   );
 
+  const getAppMode = useCallback(
+    () => appConfig.appMode,
+    [appConfig.appMode]
+  );
+
   const getAppLanguage = useCallback(
     () => appConfig.appLanguage,
     [appConfig.appLanguage]
@@ -1286,6 +1355,16 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     [setAppConfig]
   );
 
+  const updateAppMode = useCallback(
+    (mode: "basic" | "advanced") => {
+      setAppConfig((prev) => ({
+        ...prev,
+        appMode: mode,
+      }));
+    },
+    [setAppConfig]
+  );
+
   const toggleTheme = useCallback(() => {
     setTimeout(() => {
       setIsThemeChanging(false);
@@ -1302,6 +1381,22 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       return {
         ...prev,
         theme: newTheme,
+      };
+    });
+  }, [setAppConfig]);
+
+  const toggleAppMode = useCallback(() => {
+    setAppConfig((prev) => {
+      const newMode = prev.appMode === "advanced" ? "basic" : "advanced";
+      logger.info(
+        `App mode changed from ${prev.appMode} to ${newMode}`,
+        { oldMode: prev.appMode, newMode },
+        'SettingsContext',
+        'toggleAppMode'
+      );
+    return {
+        ...prev,
+        appMode: newMode,
       };
     });
   }, [setAppConfig]);
@@ -2153,6 +2248,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   const contextValue: SettingsContextType = {
     // Методы для настроек приложения
     getAppConfig,
+    getAppMode,
     getSelectedLocales,
     getAppLanguage,
     getGamePath,
@@ -2161,11 +2257,13 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     getDebugMode,
     isThemeChanging,
     updateAppConfig,
+    updateAppMode,
     updateSelectedLocales,
     updateAppLanguage,
     updateGamePath,
     updateTheme,
     toggleTheme,
+    toggleAppMode,
     updateDebugMode,
     toggleDebugMode,
     resetAppConfig,
