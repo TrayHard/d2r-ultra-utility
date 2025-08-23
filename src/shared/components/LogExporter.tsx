@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { logger } from '../utils/logger';
 import Button from './Button';
@@ -12,9 +12,21 @@ const LogExporter: React.FC<LogExporterProps> = ({ isDarkTheme }) => {
   const { t } = useTranslation();
   const { getDebugMode } = useSettings();
   const [isExporting, setIsExporting] = useState(false);
+  const [logStats, setLogStats] = useState(() => logger.getLogStats());
 
   const isDebugMode = getDebugMode();
-  const logStats = logger.getLogStats();
+
+  // Подписываемся на изменения логов
+  const updateStats = useCallback(() => {
+    setLogStats(logger.getLogStats());
+  }, []);
+
+  useEffect(() => {
+    logger.addListener(updateStats);
+    return () => {
+      logger.removeListener(updateStats);
+    };
+  }, [updateStats]);
 
   const exportLogsAsJson = () => {
     setIsExporting(true);
