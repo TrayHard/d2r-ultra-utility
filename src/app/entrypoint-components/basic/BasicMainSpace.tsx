@@ -207,7 +207,7 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
             </div>
           </div>
         )}
-        <div className="max-w-3xl mx-auto px-4 py-8">
+        <div className="max-w-xl mx-auto px-4 py-8">
           <h1 className={`text-2xl font-bold text-center ${isDarkTheme ? "text-white" : "text-gray-900"}`}>Лутфильтры</h1>
           <div className="mt-4">
             <input
