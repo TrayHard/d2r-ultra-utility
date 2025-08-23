@@ -298,7 +298,6 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
         immutableProfiles={immutableProfiles}
         activeProfileId={activeProfileId}
         isLoading={isLoading}
-        activeTab={activeTab}
         onProfileSelect={loadProfile}
         onProfileCreate={createProfile}
         onProfileSave={saveProfile}
@@ -308,8 +307,6 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
         onProfileImport={importProfile}
         onReadAll={() => setConfirmAction("readAll")}
         onApplyAll={() => setConfirmAction("applyAll")}
-        onReadCurrent={() => setConfirmAction("readCurrent")}
-        onApplyCurrent={() => setConfirmAction("applyCurrent")}
       />
 
       {/* Error Display для всех табов */}

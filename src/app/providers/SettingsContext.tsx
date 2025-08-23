@@ -1171,6 +1171,40 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     }
   }, [immutableProfiles, profiles, renameDuplicateProfiles, saveProfilesToLocalStorage]);
 
+  // Восстановление активного профиля из localStorage для неизменяемых профилей
+  useEffect(() => {
+    if (!activeProfileId && immutableProfiles.length > 0) {
+      const savedActiveProfileId = localStorage.getItem(STORAGE_KEYS.ACTIVE_PROFILE);
+      if (savedActiveProfileId) {
+        const immutable = immutableProfiles.find((p) => p.id === savedActiveProfileId);
+        if (immutable) {
+          setSettings(immutable.settings);
+          setActiveProfileId(savedActiveProfileId);
+        }
+      }
+    }
+  }, [immutableProfiles, activeProfileId]);
+
+  // Автовыбор дефолтного профиля при первом запуске (если активный не задан)
+  useEffect(() => {
+    if (isLoading) return;
+    if (activeProfileId) return;
+    const savedActiveProfileId = localStorage.getItem(STORAGE_KEYS.ACTIVE_PROFILE);
+    if (savedActiveProfileId) return;
+
+    const all = [...immutableProfiles, ...profiles];
+    if (all.length === 0) return;
+
+    const defaultByName = all.find((p) => (p.name || "").trim().toLowerCase() === "default");
+    const toActivate = defaultByName || all[0];
+    if (!toActivate) return;
+
+    setSettings(toActivate.settings);
+    setActiveProfileId(toActivate.id);
+    saveActiveProfileToLocalStorage(toActivate.id);
+    localStorage.removeItem(STORAGE_KEYS.SETTINGS);
+  }, [isLoading, activeProfileId, immutableProfiles, profiles, saveActiveProfileToLocalStorage]);
+
   // Методы для работы с настройками приложения
   const getAppConfig = useCallback(() => appConfig, [appConfig]);
 

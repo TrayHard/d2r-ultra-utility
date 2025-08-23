@@ -1,5 +1,4 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
 // icons are used inside FileOperationsBlock; keep i18n import only here
 import ProfileManager from "./ProfileManager.tsx";
 import FileOperationsBlock from "./FileOperationsBlock";
@@ -11,7 +10,6 @@ interface AppToolbarProps {
   immutableProfiles: any;
   activeProfileId: string | null;
   isLoading: boolean;
-  activeTab: "common" | "items" | "runes" | "gems";
   onProfileSelect: (id: string) => void;
   onProfileCreate: (name: string, settings: any) => void;
   onProfileSave: (profileId: string, settings: any) => void;
@@ -21,8 +19,6 @@ interface AppToolbarProps {
   onProfileImport: (data: any) => void;
   onReadAll: () => void;
   onApplyAll: () => void;
-  onReadCurrent: () => void;
-  onApplyCurrent: () => void;
 }
 
 const AppToolbar: React.FC<AppToolbarProps> = ({
@@ -32,7 +28,6 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
   immutableProfiles,
   activeProfileId,
   isLoading,
-  activeTab,
   onProfileSelect,
   onProfileCreate,
   onProfileSave,
@@ -42,11 +37,8 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
   onProfileImport,
   onReadAll,
   onApplyAll,
-  onReadCurrent,
-  onApplyCurrent,
 }) => {
-  const { t } = useTranslation();
-  const tabLabel = t(`tabs.${activeTab}`);
+  
 
   // Обертки для функций, которые ожидает ProfileManager
   const handleProfileCreate = (name: string) => {
@@ -89,11 +81,8 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
         <FileOperationsBlock
           isDarkTheme={isDarkTheme}
           isLoading={isLoading}
-          tabLabel={tabLabel}
           onReadAll={onReadAll}
           onApplyAll={onApplyAll}
-          onReadCurrent={onReadCurrent}
-          onApplyCurrent={onApplyCurrent}
         />
       </div>
     </div>
