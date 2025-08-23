@@ -528,18 +528,31 @@ export const useItemsWorker = (
         });
       }
 
-      // Записываем обновленные данные обратно в файлы
-      // Записываем обновленные файлы
+      // Записываем обновленные данные обратно в файлы (с повторами для Windows lock)
+      const writeFileWithRetry = async (path: string, content: string) => {
+        const maxAttempts = 10;
+        for (let attempt = 0; attempt < maxAttempts; attempt++) {
+          try {
+            await writeTextFile(path, content);
+            return;
+          } catch (err) {
+            const isLast = attempt === maxAttempts - 1;
+            logger.warn('Write attempt failed, retrying', {
+              path,
+              attempt: attempt + 1,
+              maxAttempts,
+              error: err instanceof Error ? err.message : String(err),
+            }, 'applyChanges');
+            if (isLast) throw err;
+            const backoffMs = Math.min(1000, 100 * Math.pow(2, attempt));
+            await new Promise((r) => setTimeout(r, backoffMs));
+          }
+        }
+      };
+
       logger.info('Writing updated items files', { itemNamesPath, nameAffixesPath }, 'applyChanges');
-      
-      await writeTextFile(
-        itemNamesPath,
-        JSON.stringify(updatedItemNamesData, null, 2)
-      );
-      await writeTextFile(
-        nameAffixesPath,
-        JSON.stringify(updatedNameAffixesData, null, 2)
-      );
+      await writeFileWithRetry(itemNamesPath, JSON.stringify(updatedItemNamesData, null, 2));
+      await writeFileWithRetry(nameAffixesPath, JSON.stringify(updatedNameAffixesData, null, 2));
 
       logger.info('Successfully wrote items files', undefined, 'applyChanges');
 

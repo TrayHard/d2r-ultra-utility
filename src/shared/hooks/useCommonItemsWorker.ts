@@ -523,11 +523,33 @@ export const useCommonItemsWorker = (
         }
       );
 
+      // Хелпер: запись с повторами (фикс Windows Error 1224: user-mapped section)
+      const writeFileWithRetry = async (path: string, content: string) => {
+        const maxAttempts = 10;
+        for (let attempt = 0; attempt < maxAttempts; attempt++) {
+          try {
+            await writeTextFile(path, content);
+            return;
+          } catch (err) {
+            const isLast = attempt === maxAttempts - 1;
+            logger.warn('Write attempt failed, will retry', {
+              path,
+              attempt: attempt + 1,
+              maxAttempts,
+              error: err instanceof Error ? err.message : String(err),
+            }, 'applyChanges');
+            if (isLast) throw err;
+            const backoffMs = Math.min(1000, 100 * Math.pow(2, attempt));
+            await new Promise((r) => setTimeout(r, backoffMs));
+          }
+        }
+      };
+
       // Записываем обновленные данные обратно в соответствующие файлы
       logger.info('Writing updated common items files', { namesPath, affixesPath, modifiersPath }, 'applyChanges');
-      await writeTextFile(namesPath, JSON.stringify(updatedNames, null, 2));
-      await writeTextFile(affixesPath, JSON.stringify(updatedAffixes, null, 2));
-      await writeTextFile(modifiersPath, JSON.stringify(updatedModifiers, null, 2));
+      await writeFileWithRetry(namesPath, JSON.stringify(updatedNames, null, 2));
+      await writeFileWithRetry(affixesPath, JSON.stringify(updatedAffixes, null, 2));
+      await writeFileWithRetry(modifiersPath, JSON.stringify(updatedModifiers, null, 2));
 
       logger.info("Common items localization changes applied successfully", undefined, 'applyChanges');
     },

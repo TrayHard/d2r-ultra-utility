@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useSettings, SettingsProvider } from "../providers/SettingsContext";
 import MainSpaceToolbar from "../../widgets/Toolbar/MainSpaceToolbar";
-import MainSpace from "./workspace/MainSpace";
+import AdvancedMainSpace from "./advanced/AdvancedMainSpace";
+import BasicMainSpace from "./basic/BasicMainSpace";
 import { MessageProvider } from "../../shared/components/Message/MessageProvider";
 import AppSettingsPage from "../../pages/settings/AppSettingsPage";
 import { ConfigProvider, theme } from "antd";
@@ -12,10 +13,11 @@ interface WorkSpaceProps {
 }
 
 const WorkSpaceContent: React.FC<WorkSpaceProps> = ({ onChangeClick }) => {
-  const { getIsDarkTheme, toggleTheme, isThemeChanging } = useSettings();
+  const { getIsDarkTheme, toggleTheme, isThemeChanging, getAppMode, toggleAppMode } = useSettings();
   const [showSettings, setShowSettings] = useState(false);
 
   const isDarkTheme = getIsDarkTheme();
+  const appMode = getAppMode();
 
   // Синхронизируем глобальный класс для Tailwind и любых глобальных стилей
   React.useEffect(() => {
@@ -97,8 +99,14 @@ const WorkSpaceContent: React.FC<WorkSpaceProps> = ({ onChangeClick }) => {
                 onSettingsClick={handleSettingsClick}
                 isDarkTheme={isDarkTheme}
                 onThemeChange={toggleTheme}
+                appMode={appMode}
+                onModeToggle={toggleAppMode}
               />
-              <MainSpace isDarkTheme={isDarkTheme} />
+              {appMode === "advanced" ? (
+                <AdvancedMainSpace isDarkTheme={isDarkTheme} />
+              ) : (
+                <BasicMainSpace isDarkTheme={isDarkTheme} />
+              )}
             </>
           )}
         </div>

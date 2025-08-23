@@ -437,7 +437,23 @@ export const useTextWorker = (
 
       // Записываем обновленные данные обратно в файл
       const updatedContent = JSON.stringify(updatedData, null, 2);
-      await writeTextFile(localizationPath, updatedContent);
+      // Запись с повторами для Windows lock
+      const writeFileWithRetry = async (path: string, content: string) => {
+        const maxAttempts = 10;
+        for (let attempt = 0; attempt < maxAttempts; attempt++) {
+          try {
+            await writeTextFile(path, content);
+            return;
+          } catch (err) {
+            const isLast = attempt === maxAttempts - 1;
+            console.warn('Runes write attempt failed, retrying', path, attempt + 1, err);
+            if (isLast) throw err;
+            const backoffMs = Math.min(1000, 100 * Math.pow(2, attempt));
+            await new Promise((r) => setTimeout(r, backoffMs));
+          }
+        }
+      };
+      await writeFileWithRetry(localizationPath, updatedContent);
 
       console.log("Localization changes applied successfully");
     },
@@ -465,7 +481,23 @@ export const useTextWorker = (
 
           // Записываем данные в файл
           const highlightContent = JSON.stringify(highlightData, null, 2);
-          await writeTextFile(runeFilePath, highlightContent);
+          // Запись с повторами
+          const writeFileWithRetry = async (path: string, content: string) => {
+            const maxAttempts = 10;
+            for (let attempt = 0; attempt < maxAttempts; attempt++) {
+              try {
+                await writeTextFile(path, content);
+                return;
+              } catch (err) {
+                const isLast = attempt === maxAttempts - 1;
+                console.warn('Highlight write attempt failed, retrying', path, attempt + 1, err);
+                if (isLast) throw err;
+                const backoffMs = Math.min(1000, 100 * Math.pow(2, attempt));
+                await new Promise((r) => setTimeout(r, backoffMs));
+              }
+            }
+          };
+          await writeFileWithRetry(runeFilePath, highlightContent);
 
           console.log(`Highlight settings applied for ${runeEnum} rune`);
         } catch (err) {

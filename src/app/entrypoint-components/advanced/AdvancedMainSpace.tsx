@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { useLogger } from "../../../shared/utils/logger";
-import MainSpaceBody, { TabType } from "./MainSpaceBody.tsx";
+import { useLogger } from "../../../shared/utils/logger.ts";
+import AdvancedMainSpaceBody, { TabType } from "./AdvancedMainSpaceBody.tsx";
 import Tabs, { TabItem } from "../../../shared/components/Tabs.tsx";
 import AppToolbar from "../../../shared/components/AppToolbar.tsx";
 import Modal from "../../../shared/components/Modal.tsx";
@@ -19,7 +19,7 @@ interface MainSpaceProps {
   isDarkTheme: boolean;
 }
 
-const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
+const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
   const { t } = useTranslation();
   const logger = useLogger('MainSpace');
   const [activeTab, setActiveTab] = useState<TabType>("common");
@@ -336,7 +336,7 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       {/* Tab Content */}
       <div className="flex-1">
         <div className={`h-full ${isDarkTheme ? "bg-gray-800" : "bg-white"}`}>
-          <MainSpaceBody
+          <AdvancedMainSpaceBody
             activeTab={activeTab}
             isDarkTheme={isDarkTheme}
             onReadFromFiles={readFromFiles}
@@ -394,4 +394,4 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
   );
 };
 
-export default MainSpace;
+export default AdvancedMainSpace;
