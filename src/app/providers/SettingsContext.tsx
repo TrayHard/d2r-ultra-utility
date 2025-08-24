@@ -473,11 +473,11 @@ const createFilledLocales = (value: string): Locales => ({
 
 // Дефолтные настройки для маркеров класса сложности (Normal/Exceptional/Elite)
 const getDefaultDifficultyClassMarkersSettings = (): PotionGroupSettings => ({
-  enabled: false,
+  enabled: true,
   levels: [
-    { enabled: false, locales: createFilledLocales("[n]") }, // Normal
-    { enabled: false, locales: createFilledLocales("[x]") }, // Exceptional
-    { enabled: false, locales: createFilledLocales("[e]") }, // Elite
+    { enabled: true, locales: createFilledLocales("[n]") }, // Normal
+    { enabled: true, locales: createFilledLocales("[x]") }, // Exceptional
+    { enabled: true, locales: createFilledLocales("[e]") }, // Elite
   ],
   activeTab: 0,
 });
@@ -494,7 +494,7 @@ const migrateItemsSettings = (oldItems: any): ItemsSettings => {
   const defaultDifficulty = getDefaultDifficultyClassMarkersSettings();
 
   const migratedDifficulty: PotionGroupSettings = {
-    enabled: oldDifficulty?.enabled ?? defaultDifficulty.enabled,
+    enabled: true, // Маркеры класса сложности всегда включены
     activeTab: oldDifficulty?.activeTab ?? 0,
     levels: [0, 1, 2].map((index) => {
       const oldLevel = oldDifficulty?.levels?.[index];
@@ -505,7 +505,7 @@ const migrateItemsSettings = (oldItems: any): ItemsSettings => {
           : oldLevel.locales
         : defaultLevel.locales;
       return {
-        enabled: oldLevel?.enabled ?? false,
+        enabled: true, // Маркеры класса сложности всегда включены
         locales,
       } as PotionLevelSettings;
     }),

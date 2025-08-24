@@ -26,6 +26,7 @@ interface MultipleLeveledLocalesProps {
   onLevelToggle: (level: number, enabled: boolean) => void;
   onLocaleChange: (level: number, locale: string, value: string) => void;
   headerIcon?: string; // Путь к изображению для иконки в заголовке
+  hideToggle?: boolean; // Скрыть переключатель вкл/выкл
 }
 
 const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
@@ -42,6 +43,7 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
   onLevelToggle,
   onLocaleChange,
   headerIcon,
+  hideToggle = false,
 }) => {
   const { t } = useTranslation();
 
@@ -87,7 +89,7 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
                   }
                   onFocus={() => setFocusedLocale(locale.value)}
                   onBlur={() => setFocusedLocale(null)}
-                  disabled={!levelSettings.enabled}
+                  disabled={!hideToggle && !levelSettings.enabled}
                   placeholder={t(
                     `runePage.controls.placeholders.${locale.value}`
                   )}
@@ -97,7 +99,7 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
                       ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
                       : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
                     }
-                    ${!levelSettings.enabled
+                    ${!hideToggle && !levelSettings.enabled
                       ? "opacity-50 cursor-not-allowed"
                       : isDarkTheme
                         ? "focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
@@ -168,7 +170,7 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
               <img
                 src={imagePaths[index]}
                 alt={t(`${itemType}Levels.level${index + 1}`)}
-                className={`w-12 h-12 object-contain ${level.enabled ? "opacity-100" : "opacity-25"}`}
+                className={`w-12 h-12 object-contain ${hideToggle || level.enabled ? "opacity-100" : "opacity-25"}`}
                 draggable={false}
               />
             </button>
@@ -200,19 +202,21 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
       {/* Контент активного таба */}
       <div className="space-y-4 mt-8">
         <div className="flex items-center space-x-3">
-          <div className="w-20">
-            <Tooltip title={t("runePage.controls.toggleItemVisibilityTooltip")} placement="top">
-              <div>
-                <Switch
-                  enabled={activeLevel.enabled}
-                  onChange={(enabled) => onLevelToggle(activeTabIndex, enabled)}
-                  isDarkTheme={isDarkTheme}
-                  onIcon={<Icon path={mdiEyeOutline} size={0.55} color="#16A34A" />}
-                  offIcon={<Icon path={mdiEyeOffOutline} size={0.55} color={isDarkTheme ? "#111827" : "#6B7280"} />}
-                />
-              </div>
-            </Tooltip>
-          </div>
+          {!hideToggle && (
+            <div className="w-20">
+              <Tooltip title={t("runePage.controls.toggleItemVisibilityTooltip")} placement="top">
+                <div>
+                  <Switch
+                    enabled={activeLevel.enabled}
+                    onChange={(enabled) => onLevelToggle(activeTabIndex, enabled)}
+                    isDarkTheme={isDarkTheme}
+                    onIcon={<Icon path={mdiEyeOutline} size={0.55} color="#16A34A" />}
+                    offIcon={<Icon path={mdiEyeOffOutline} size={0.55} color={isDarkTheme ? "#111827" : "#6B7280"} />}
+                  />
+                </div>
+              </Tooltip>
+            </div>
+          )}
           {/* Предпросмотр текущей локали */}
           <div className="flex-1 flex grow w-full">
             {/* Пустой спейсер под ширину метки локали, чтобы выровнять блок по инпутам */}
