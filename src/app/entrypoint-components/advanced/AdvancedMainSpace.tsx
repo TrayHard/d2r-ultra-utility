@@ -50,6 +50,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     loadProfile,
     renameProfile,
     deleteProfile,
+    duplicateProfile,
     exportProfile,
     importProfile,
   } = useSettings();
@@ -303,6 +304,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
         onProfileSave={saveProfile}
         onProfileRename={renameProfile}
         onProfileDelete={deleteProfile}
+        onProfileDuplicate={duplicateProfile}
         onProfileExport={exportProfile}
         onProfileImport={importProfile}
         onReadAll={() => setConfirmAction("readAll")}

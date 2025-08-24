@@ -15,6 +15,7 @@ interface AppToolbarProps {
   onProfileSave: (profileId: string, settings: any) => void;
   onProfileRename: (id: string, name: string) => void;
   onProfileDelete: (id: string) => void;
+  onProfileDuplicate: (id: string) => void;
   onProfileExport: (id: string) => void;
   onProfileImport: (data: any) => void;
   onReadAll: () => void;
@@ -33,6 +34,7 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
   onProfileSave,
   onProfileRename,
   onProfileDelete,
+  onProfileDuplicate,
   onProfileExport,
   onProfileImport,
   onReadAll,
@@ -73,6 +75,7 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
           onProfileSave={handleProfileSave}
           onProfileRename={onProfileRename}
           onProfileDelete={onProfileDelete}
+          onProfileDuplicate={onProfileDuplicate}
           onProfileExport={onProfileExport}
           onProfileImport={onProfileImport}
         />

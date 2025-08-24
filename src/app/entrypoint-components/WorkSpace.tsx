@@ -39,12 +39,10 @@ const WorkSpaceContent: React.FC<WorkSpaceProps> = ({ onChangeClick }) => {
         
         if (appMode === "basic") {
           // Базовый режим: 600x700, фиксированный размер
-          console.log("Setting basic mode: 600x700, not resizable");
           await window.setResizable(false);
-          await window.setSize(new LogicalSize(600, 700));
+          await window.setSize(new LogicalSize(600, 751));
         } else {
           // Продвинутый режим: 1200x900, можно ресайзить
-          console.log("Setting advanced mode: 1200x900, resizable");
           await window.setResizable(true);
           await window.setSize(new LogicalSize(1200, 900));
         }
