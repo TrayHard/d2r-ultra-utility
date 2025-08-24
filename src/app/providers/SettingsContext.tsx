@@ -1796,16 +1796,23 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
           throw new Error("Invalid profile data");
         }
 
-        // Проверяем, что имя не совпадает с базовыми профилями
-        const baseProfileNames = immutableProfiles.map(p => p.name);
-        let finalName = profileData.name;
-        
-        if (baseProfileNames.includes(profileData.name)) {
-          finalName = `${profileData.name} (Custom)`;
-          logger.info("Автоматически переименован импортируемый профиль для избежания конфликта с базовым профилем", { 
-            originalName: profileData.name, 
-            newName: finalName 
-          });
+        // Генерируем уникальное имя среди всех профилей (пользовательских и неизменяемых)
+        const allExistingNames = new Set(
+          [...profiles, ...immutableProfiles]
+            .map((p) => (p.name || "").trim().toLowerCase())
+        );
+        const baseName = (profileData.name as string).trim();
+        let finalName = baseName || "Безымянный профиль";
+        if (allExistingNames.has(finalName.toLowerCase())) {
+          let counter = 2;
+          while (true) {
+            const candidate = `${baseName} (${counter})`;
+            if (!allExistingNames.has(candidate.toLowerCase())) {
+              finalName = candidate;
+              break;
+            }
+            counter++;
+          }
         }
 
         // Мигрируем настройки рун в импортируемом профиле и добавляем common и gems если их нет
@@ -1830,7 +1837,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
 
         const newProfile: Profile = {
           id: Date.now().toString(),
-          name: finalName + " (imported)",
+          name: finalName,
           settings: migratedSettings,
           createdAt: new Date().toISOString(),
           modifiedAt: new Date().toISOString(),

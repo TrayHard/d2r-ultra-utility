@@ -8,6 +8,12 @@ import { useGemsWorker } from "../../../shared/hooks/useGemsWorker.ts";
 import { useItemsWorker } from "../../../shared/hooks/useItemsWorker.ts";
 import basesData from "../../../pages/items/bases.json";
 import type { AppSettings } from "../../providers/SettingsContext.tsx";
+import Icon from "@mdi/react";
+import { mdiDelete } from "@mdi/js";
+import Modal from "../../../shared/components/Modal.tsx";
+import Button from "../../../shared/components/Button.tsx";
+import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
+import { readTextFile as tauriReadTextFile } from "@tauri-apps/plugin-fs";
 
 interface BasicMainSpaceProps {
   isDarkTheme: boolean;
@@ -20,6 +26,7 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
     immutableProfiles,
     loadProfile,
     deleteProfile,
+    importProfile,
     getAllSettings,
     activeProfileId,
     // workers deps
@@ -38,6 +45,33 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
   } = useSettings();
 
   const { sendMessage, muteTypes, unmute } = useGlobalMessage();
+
+  // Helper: check duplicate profile name
+  const isDuplicateProfileName = useCallback((name?: string) => {
+    if (!name) return false;
+    const target = name.trim().toLowerCase();
+    const allNames = [...profiles, ...immutableProfiles]
+      .map((p) => (p.name || "").trim().toLowerCase());
+    return allNames.includes(target);
+  }, [profiles, immutableProfiles]);
+
+  // Генерация уникального имени: "Имя (n)"
+  const getUniqueProfileName = useCallback((originalName?: string) => {
+    const baseName = (originalName && originalName.trim()) || "Безымянный профиль";
+    const allNames = new Set(
+      [...profiles, ...immutableProfiles].map((p) => (p.name || "").trim().toLowerCase())
+    );
+    if (!allNames.has(baseName.toLowerCase())) return baseName;
+    let counter = 2; // если уже есть точное совпадение, начинаем с (2)
+    // Ищем свободный суффикс
+    // пример: "Имя (2)", "Имя (3)" и т.д.
+    // Останавливаемся, когда найдём первый свободный
+    while (true) {
+      const candidate = `${baseName} (${counter})`;
+      if (!allNames.has(candidate.toLowerCase())) return candidate;
+      counter++;
+    }
+  }, [profiles, immutableProfiles]);
 
   // workers
   const {
@@ -103,6 +137,8 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
 
   const [query, setQuery] = useState("");
   const [isApplying, setIsApplying] = useState(false);
+  const [isDragOver, setIsDragOver] = useState(false);
+  const [profileToDelete, setProfileToDelete] = useState<string | null>(null);
 
   const defaultProfile = useMemo(
     () => immutableProfiles.find((p) => p.isDefault),
@@ -189,21 +225,174 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
     }
   }, [defaultProfile, activeProfileId, getAllSettings, loadProfile, waitForProfileLoaded, executeApplyAll]);
 
+    // Refs для стабильных функций в useEffect
+  const importProfileRef = useRef(importProfile);
+  const sendMessageRef = useRef(sendMessage);
+  const isDuplicateProfileNameRef = useRef(isDuplicateProfileName);
+  const getUniqueProfileNameRef = useRef(getUniqueProfileName);
+  
+  // Защита от дублирования импорта
+  const isImportingRef = useRef(false);
+  
+  useEffect(() => {
+    importProfileRef.current = importProfile;
+  }, [importProfile]);
+  
+  useEffect(() => {
+    sendMessageRef.current = sendMessage;
+  }, [sendMessage]);
+  
+  useEffect(() => {
+    isDuplicateProfileNameRef.current = isDuplicateProfileName;
+  }, [isDuplicateProfileName]);
+
+  useEffect(() => {
+    getUniqueProfileNameRef.current = getUniqueProfileName;
+  }, [getUniqueProfileName]);
+
+  // Подписка на drag & drop события через Tauri (глобально по окну)
+  useEffect(() => {
+    let unlisten: (() => void) | null = null;
+    const setup = async () => {
+      try {
+        const win = getCurrentWebviewWindow();
+        const disposer = await win.onDragDropEvent(async (e) => {
+          const type = e.payload.type;
+          if (type === "enter" || type === "over") {
+            setIsDragOver(true);
+            return;
+          }
+          if (type === "leave") {
+            setIsDragOver(false);
+            return;
+          }
+          if (type === "drop") {
+            setIsDragOver(false);
+            
+            // Защита от дублирования импорта
+            if (isImportingRef.current) {
+              console.log("Import already in progress, skipping...");
+              return;
+            }
+            isImportingRef.current = true;
+            
+            try {
+              // В Tauri событии приходят пути к файлам (Windows: C:\\...)
+              const paths: string[] = (e.payload as any)?.paths || (e.payload as any)?.files || [];
+              if (!paths || paths.length === 0) return;
+              const jsonPath = paths.find((p) => p.toLowerCase().endsWith(".json"));
+              if (!jsonPath) {
+                sendMessageRef.current("Пожалуйста, перетащите файл профиля (.json)", { type: "warning" });
+                return;
+              }
+              
+              const content = await tauriReadTextFile(jsonPath);
+              const data = JSON.parse(content);
+              
+              // Автогенерация уникального имени
+              const uniqueName = getUniqueProfileNameRef.current(data?.name);
+              const dataWithName = { ...data, name: uniqueName };
+              
+              importProfileRef.current(dataWithName);
+              sendMessageRef.current("Профиль успешно импортирован", { type: "success" });
+            } catch (err) {
+              console.error("Error importing profile via Tauri DnD:", err);
+              sendMessageRef.current("Ошибка при импорте профиля", { type: "error" });
+            } finally {
+              // Сбрасываем флаг после небольшой задержки
+              setTimeout(() => {
+                isImportingRef.current = false;
+              }, 100);
+            }
+          }
+        });
+        unlisten = disposer;
+      } catch (err) {
+        console.warn("Failed to initialize Tauri drag & drop listener", err);
+      }
+    };
+    setup();
+    return () => {
+      if (unlisten) {
+        unlisten();
+        unlisten = null;
+      }
+    };
+  }, []); // Пустой массив зависимостей - эффект выполняется только один раз
+
+  const handleDeleteProfile = useCallback((profileId: string) => {
+    setProfileToDelete(profileId);
+  }, []);
+
+  const confirmDeleteProfile = useCallback(() => {
+    if (profileToDelete) {
+      deleteProfile(profileToDelete);
+      setProfileToDelete(null);
+    }
+  }, [profileToDelete, deleteProfile]);
+
+  const cancelDeleteProfile = useCallback(() => {
+    setProfileToDelete(null);
+  }, []);
+
+  const handleImportProfile = useCallback(() => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) {
+        try {
+          const fileContent = await file.text();
+          const profileData = JSON.parse(fileContent);
+          
+          // Автогенерация уникального имени
+          const uniqueName = getUniqueProfileName(profileData?.name);
+          const dataWithName = { ...profileData, name: uniqueName };
+          
+          importProfile(dataWithName);
+          sendMessage("Профиль успешно импортирован", { type: "success" });
+        } catch (error) {
+          console.error("Error importing profile:", error);
+          sendMessage("Ошибка при импорте профиля", { type: "error" });
+        }
+      }
+    };
+    input.click();
+  }, [importProfile, sendMessage, getUniqueProfileName]);
+
   const listContainerClasses = `mt-4 border rounded-lg ${isDarkTheme ? "border-gray-700 bg-gray-800" : "border-gray-200 bg-white"} h-96 overflow-y-auto`;
   const sectionTitleClasses = `px-3 pt-3 text-xs uppercase tracking-wide ${isDarkTheme ? "text-gray-400" : "text-gray-500"}`;
   const itemClasses = `flex items-center justify-between px-3 py-2 ${isDarkTheme ? "hover:bg-gray-700" : "hover:bg-gray-50"}`;
-  const nameClasses = `truncate max-w-[60%] ${isDarkTheme ? "text-gray-200" : "text-gray-800"}`;
-  const applyBtnClasses = `px-2 py-1 text-xs rounded ${isDarkTheme ? "bg-yellow-600 hover:bg-yellow-500 text-white" : "bg-yellow-500 hover:bg-yellow-400 text-white"}`;
-  const deleteBtnClasses = `ml-2 px-2 py-1 text-xs rounded ${isDarkTheme ? "bg-red-700 hover:bg-red-600 text-white" : "bg-red-600 hover:bg-red-500 text-white"}`;
+  const nameClasses = `truncate flex-1 ${isDarkTheme ? "text-gray-200" : "text-gray-800"}`;
+  const applyBtnClasses = `px-2 py-1 text-xs rounded flex items-center gap-1 ${isDarkTheme ? "bg-green-600 hover:bg-green-500 text-white" : "bg-green-500 hover:bg-green-400 text-white"}`;
+  const deleteBtnClasses = `mr-2 px-2 py-1 text-xs rounded ${isDarkTheme ? "bg-red-700 hover:bg-red-600 text-white" : "bg-red-600 hover:bg-red-500 text-white"}`;
 
   return (
-    <div className={`flex-1 ${isDarkTheme ? "bg-gray-900" : "bg-gray-50"}`}>
+    <div 
+      className={`flex-1 ${isDarkTheme ? "bg-gray-900" : "bg-gray-50"} relative`}
+      onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+      onDrop={(e) => { e.preventDefault(); e.stopPropagation(); }}
+    >
       <div className={`h-full ${isDarkTheme ? "bg-gray-800" : "bg-white"}`}>
         {isApplying && (
           <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm" style={{ backgroundColor: isDarkTheme ? "rgba(17,24,39,0.6)" : "rgba(243,244,246,0.6)" }}>
             <div className="flex flex-col items-center gap-4">
               <div className="w-12 h-12 border-4 border-gray-300 border-t-yellow-500 rounded-full animate-spin"></div>
               <div className={`text-lg font-medium ${isDarkTheme ? "text-white" : "text-gray-900"}`}>Применяем...</div>
+            </div>
+          </div>
+        )}
+        {isDragOver && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md" style={{ backgroundColor: isDarkTheme ? "rgba(17,24,39,0.85)" : "rgba(243,244,246,0.85)" }}>
+            <div className={`border-2 border-dashed rounded-xl p-10 text-center max-w-md mx-4 ${isDarkTheme ? "border-blue-400 bg-blue-900/20" : "border-blue-500 bg-blue-50"}`}>
+              <div className={`text-4xl mb-3 ${isDarkTheme ? "text-blue-400" : "text-blue-600"}`}>📁</div>
+              <div className={`text-xl font-semibold mb-1 ${isDarkTheme ? "text-blue-300" : "text-blue-700"}`}>
+                Импорт профиля
+              </div>
+              <div className={`${isDarkTheme ? "text-blue-200" : "text-blue-600"}`}>
+                Отпустите файл (.json) чтобы импортировать лутфильтр
+              </div>
             </div>
           </div>
         )}
@@ -232,7 +421,9 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
                     <li key={p.id} className={itemClasses}>
                       <span className={nameClasses} title={p.name}>{p.name}</span>
                       <div className="flex items-center">
-                        <button className={applyBtnClasses} onClick={() => handleApplyProfile(p.id)}>Применить</button>
+                        <button className={applyBtnClasses} onClick={() => handleApplyProfile(p.id)}>
+                          ✓ Применить
+                        </button>
                       </div>
                     </li>
                   ))}
@@ -244,17 +435,29 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
             <ul>
               {filteredUserProfiles.map((p) => (
                 <li key={p.id} className={itemClasses}>
+                  <button className={deleteBtnClasses} onClick={() => handleDeleteProfile(p.id)} aria-label="Удалить профиль">
+                    <Icon path={mdiDelete} size={0.6} />
+                  </button>
                   <span className={nameClasses} title={p.name}>{p.name}</span>
                   <div className="flex items-center">
-                    <button className={applyBtnClasses} onClick={() => handleApplyProfile(p.id)}>Применить</button>
-                    <button className={deleteBtnClasses} onClick={() => deleteProfile(p.id)} aria-label="Удалить профиль">🗑️</button>
+                    <button className={applyBtnClasses} onClick={() => handleApplyProfile(p.id)}>
+                      ✓ Применить
+                    </button>
                   </div>
                 </li>
               ))}
             </ul>
           </div>
 
-          <div className="mt-4 flex justify-center">
+          <div className="mt-4 flex justify-center gap-2">
+            <button
+              className={`px-4 py-2 rounded font-medium ${
+                isDarkTheme ? "bg-blue-600 hover:bg-blue-500 text-white" : "bg-blue-500 hover:bg-blue-400 text-white"
+              }`}
+              onClick={handleImportProfile}
+            >
+              Добавить лутфильтр
+            </button>
             <button
               className={`px-4 py-2 rounded font-medium ${
                 isDarkTheme ? "bg-gray-700 hover:bg-gray-600 text-gray-100" : "bg-gray-200 hover:bg-gray-300 text-gray-800"
@@ -267,6 +470,39 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
           </div>
         </div>
       </div>
+
+      {/* Модалка подтверждения удаления */}
+      <Modal
+        isOpen={!!profileToDelete}
+        onClose={cancelDeleteProfile}
+        title="Подтверждение удаления"
+        isDarkTheme={isDarkTheme}
+        size="sm"
+      >
+        <div className="space-y-4">
+          <p className={`text-sm ${isDarkTheme ? "text-gray-300" : "text-gray-600"}`}>
+            Вы уверены, что хотите удалить этот профиль? Это действие нельзя отменить.
+          </p>
+          <div className="flex justify-end gap-2">
+            <Button
+              variant="secondary"
+              onClick={cancelDeleteProfile}
+              isDarkTheme={isDarkTheme}
+              size="sm"
+            >
+              Отмена
+            </Button>
+            <Button
+              variant="danger"
+              onClick={confirmDeleteProfile}
+              isDarkTheme={isDarkTheme}
+              size="sm"
+            >
+              Удалить
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
