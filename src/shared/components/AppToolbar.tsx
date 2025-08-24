@@ -1,5 +1,4 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
 // icons are used inside FileOperationsBlock; keep i18n import only here
 import ProfileManager from "./ProfileManager.tsx";
 import FileOperationsBlock from "./FileOperationsBlock";
@@ -8,43 +7,40 @@ interface AppToolbarProps {
   isDarkTheme: boolean;
   settings: any;
   profiles: any;
+  immutableProfiles: any;
   activeProfileId: string | null;
   isLoading: boolean;
-  activeTab: "common" | "items" | "runes" | "gems";
   onProfileSelect: (id: string) => void;
   onProfileCreate: (name: string, settings: any) => void;
   onProfileSave: (profileId: string, settings: any) => void;
   onProfileRename: (id: string, name: string) => void;
   onProfileDelete: (id: string) => void;
+  onProfileDuplicate: (id: string) => void;
   onProfileExport: (id: string) => void;
   onProfileImport: (data: any) => void;
   onReadAll: () => void;
   onApplyAll: () => void;
-  onReadCurrent: () => void;
-  onApplyCurrent: () => void;
 }
 
 const AppToolbar: React.FC<AppToolbarProps> = ({
   isDarkTheme,
   settings,
   profiles,
+  immutableProfiles,
   activeProfileId,
   isLoading,
-  activeTab,
   onProfileSelect,
   onProfileCreate,
   onProfileSave,
   onProfileRename,
   onProfileDelete,
+  onProfileDuplicate,
   onProfileExport,
   onProfileImport,
   onReadAll,
   onApplyAll,
-  onReadCurrent,
-  onApplyCurrent,
 }) => {
-  const { t } = useTranslation();
-  const tabLabel = t(`tabs.${activeTab}`);
+  
 
   // Обертки для функций, которые ожидает ProfileManager
   const handleProfileCreate = (name: string) => {
@@ -72,12 +68,14 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
           isDarkTheme={isDarkTheme}
           currentSettings={settings}
           profiles={profiles}
+          immutableProfiles={immutableProfiles}
           activeProfileId={activeProfileId}
           onProfileSelect={onProfileSelect}
           onProfileCreate={handleProfileCreate}
           onProfileSave={handleProfileSave}
           onProfileRename={onProfileRename}
           onProfileDelete={onProfileDelete}
+          onProfileDuplicate={onProfileDuplicate}
           onProfileExport={onProfileExport}
           onProfileImport={onProfileImport}
         />
@@ -86,11 +84,8 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
         <FileOperationsBlock
           isDarkTheme={isDarkTheme}
           isLoading={isLoading}
-          tabLabel={tabLabel}
           onReadAll={onReadAll}
           onApplyAll={onApplyAll}
-          onReadCurrent={onReadCurrent}
-          onApplyCurrent={onApplyCurrent}
         />
       </div>
     </div>

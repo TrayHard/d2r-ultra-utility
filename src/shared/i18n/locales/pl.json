@@ -46,7 +46,6 @@
     "firePotions": "Mikstury ognia",
     "searchPlaceholder": "Szukaj",
     "enableCustomization": "Włącz dostosowanie",
-    "localeSettings": "Ustawienia lokalizacji",
     "healthPotionsLevels": {
       "level1": "Mała mikstura zdrowia",
       "level2": "Lekka mikstura zdrowia",
@@ -338,7 +337,13 @@
       "numberingSettings": "Ustawienia numeracji",
       "noChange": "Bez zmian",
       "cancel": "Anuluj",
-      "applyToRunes": "Zastosuj do {{count}} run"
+      "applyToRunes": "Zastosuj do {{count}} run",
+      "runeMode": "Tryb",
+      "runeModeTooltips": {
+        "auto": "Tryb automatyczny",
+        "noChange": "Nie zmieniaj trybu",
+        "manual": "Tryb ręczny"
+      }
     },
     "textWorker": {
       "readFromFiles": "Czytaj z plików",
@@ -477,6 +482,56 @@
     "off": "Wyłączone",
     "noChange": "Bez zmian",
     "on": "Włączone"
+  },
+  "mode": {
+    "switchToBasic": "Przełącz na tryb podstawowy",
+    "switchToAdvanced": "Przełącz na tryb edycji",
+    "basicButton": "Tryb Podstawowy",
+    "advancedButton": "Tryb Edycji"
+  },
+  "basicMainSpace": {
+    "title": "Filtry Łupów",
+    "searchPlaceholder": "Szukaj profili...",
+    "applying": "Zastosowanie...",
+    "importProfile": "Importuj Profil",
+    "dragAndDropHint": "Upuść plik (.json), aby zaimportować filtr łupów",
+    "sections": {
+      "recommended": "Rekomendowane",
+      "userProfiles": "Profile Użytkownika"
+    },
+    "buttons": {
+      "apply": "Zastosuj",
+      "addLootFilter": "Dodaj Filtr Łupów",
+      "disableLootFilters": "Wyłącz Filtry Łupów",
+      "howToUse": "Jak używać"
+    },
+    "tooltips": {
+      "clickToRename": "Kliknij, aby zmienić nazwę",
+      "duplicate": "Duplikuj"
+    },
+    "messages": {
+      "profileExists": "Profil o tej nazwie już istnieje",
+      "cannotRename": "Nie można zmienić nazwy tego profilu",
+      "profileRenamed": "Profil został przemianowany",
+      "profileImported": "Profil pomyślnie zaimportowany",
+      "importError": "Błąd podczas importowania profilu",
+      "dragFileHint": "Przeciągnij plik profilu (.json)"
+    },
+    "confirmDelete": {
+      "title": "Potwierdź Usunięcie",
+      "message": "Czy na pewno chcesz usunąć ten profil? Tej akcji nie można cofnąć.",
+      "cancel": "Anuluj",
+      "delete": "Usuń"
+    },
+    "helpModal": {
+      "title": "Jak używać",
+      "content": {
+        "line1": "Wybierz filtr łupów z listy. Kliknij Zastosuj, a następnie zrestartuj grę.",
+        "line2": "Możesz dodać własne filtry łupów (przeciągnij plik na ekran) i edytować istniejące w Trybie Edycji (przycisk na górze).",
+        "line3": "Możesz także wyłączyć filtry łupów w dowolnym momencie (przycisk na dole)."
+      },
+      "close": "Zamknij"
+    }
   }
 }
 

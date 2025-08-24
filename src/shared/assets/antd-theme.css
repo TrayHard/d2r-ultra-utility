@@ -1,0 +1,135 @@
+/* Антd тема синхронизация с приложением */
+
+/* Глобальные переменные для темной темы */
+html.dark {
+  --ant-color-primary: #eab308;
+  --ant-color-bg-container: #111827;
+  --ant-color-bg-elevated: #111827;
+  --ant-color-text: #e5e7eb;
+  --ant-color-text-secondary: #9ca3af;
+  --ant-color-border: #374151;
+  --ant-color-border-secondary: #4b5563;
+  --ant-color-fill: #1f2937;
+  --ant-color-fill-secondary: #374151;
+}
+
+/* Светлая тема */
+html:not(.dark) {
+  --ant-color-primary: #eab308;
+  --ant-color-bg-container: #ffffff;
+  --ant-color-bg-elevated: #ffffff;
+  --ant-color-text: #111827;
+  --ant-color-text-secondary: #6b7280;
+  --ant-color-border: #d1d5db;
+  --ant-color-border-secondary: #e5e7eb;
+  --ant-color-fill: #f3f4f6;
+  --ant-color-fill-secondary: #e5e7eb;
+}
+
+/* Select dropdown для темной темы */
+html.dark .ant-select-dropdown {
+  background-color: var(--ant-color-bg-container) !important;
+  border-color: var(--ant-color-border) !important;
+}
+
+html.dark .ant-select-dropdown .ant-select-item {
+  color: var(--ant-color-text) !important;
+}
+
+html.dark .ant-select-dropdown .ant-select-item-option-selected {
+  background-color: #fbbf24 !important;
+  color: #111827 !important;
+}
+
+html.dark .ant-select-dropdown .ant-select-item-option-active {
+  background-color: var(--ant-color-fill) !important;
+}
+
+html.dark .ant-select-dropdown .ant-select-item:hover {
+  background-color: var(--ant-color-fill-secondary) !important;
+}
+
+/* Tooltip темная тема */
+html.dark .ant-tooltip .ant-tooltip-inner {
+  background-color: #111827 !important;
+  color: #e5e7eb !important;
+  border: 1px solid var(--ant-color-border) !important;
+}
+
+html.dark .ant-tooltip .ant-tooltip-arrow::before {
+  background-color: #111827 !important;
+  border-color: var(--ant-color-border) !important;
+}
+
+/* Select сам элемент в темной теме */
+html.dark {
+  background-color: var(--ant-color-bg-container) !important;
+  border-color: var(--ant-color-border) !important;
+  color: var(--ant-color-text) !important;
+}
+
+html.dark .ant-select .ant-select-selector {
+  background-color: var(--ant-color-bg-container) !important;
+  border-color: var(--ant-color-border) !important;
+  color: var(--ant-color-text) !important;
+}
+
+html.dark .ant-select .ant-select-selection-item {
+  color: var(--ant-color-text) !important;
+}
+
+html.dark .ant-select .ant-select-selection-placeholder {
+  color: var(--ant-color-text-secondary) !important;
+}
+
+/* Disabled состояния */
+html.dark .ant-select.ant-select-disabled .ant-select-selector {
+  background-color: var(--ant-color-fill) !important;
+  color: var(--ant-color-text-secondary) !important;
+  border-color: var(--ant-color-border-secondary) !important;
+}
+
+/* Input компоненты */
+html.dark .ant-input,
+html.dark .ant-input-affix-wrapper,
+html.dark .ant-input-number-input-wrap input {
+  background-color: var(--ant-color-bg-container) !important;
+  border-color: var(--ant-color-border) !important;
+  color: var(--ant-color-text) !important;
+}
+
+html.dark .ant-input::placeholder,
+html.dark .ant-input-affix-wrapper input::placeholder,
+html.dark .ant-input-number-input::placeholder,
+html.dark .ant-input-number-input-wrap input::placeholder,
+html.dark .ant-input-textarea textarea::placeholder {
+  color: var(--ant-color-text-secondary) !important;
+  font-weight: normal !important;
+}
+
+/* Button компоненты */
+html.dark .ant-btn-default {
+  background-color: var(--ant-color-bg-container) !important;
+  border-color: var(--ant-color-border) !important;
+  color: var(--ant-color-text) !important;
+}
+
+html.dark .ant-btn-default:hover {
+  border-color: var(--ant-color-primary) !important;
+  color: var(--ant-color-primary) !important;
+}
+
+/* Модальные окна */
+html.dark .ant-modal .ant-modal-content {
+  background-color: var(--ant-color-bg-container) !important;
+  color: var(--ant-color-text) !important;
+}
+
+html.dark .ant-modal .ant-modal-header {
+  background-color: var(--ant-color-bg-container) !important;
+  border-bottom-color: var(--ant-color-border) !important;
+}
+
+html.dark .ant-modal .ant-modal-title {
+  color: var(--ant-color-text) !important;
+}

@@ -46,7 +46,6 @@
     "firePotions": "Potions de feu",
     "searchPlaceholder": "Rechercher",
     "enableCustomization": "Activer la personnalisation",
-    "localeSettings": "Paramètres de langue",
     "healthPotionsLevels": {
       "level1": "Petite potion de vie",
       "level2": "Potion légère de vie",
@@ -338,7 +337,13 @@
       "numberingSettings": "Paramètres de numérotation",
       "noChange": "Sans changement",
       "cancel": "Annuler",
-      "applyToRunes": "Appliquer à {{count}} runes"
+      "applyToRunes": "Appliquer à {{count}} runes",
+      "runeMode": "Mode",
+      "runeModeTooltips": {
+        "auto": "Mode automatique",
+        "noChange": "Ne pas changer le mode",
+        "manual": "Mode manuel"
+      }
     },
     "textWorker": {
       "readFromFiles": "Lire à partir des fichiers",
@@ -477,6 +482,56 @@
     "off": "Désactivé",
     "noChange": "Sans changement",
     "on": "Activé"
+  },
+  "mode": {
+    "switchToBasic": "Basculer en mode basique",
+    "switchToAdvanced": "Basculer en mode édition",
+    "basicButton": "Mode Basique",
+    "advancedButton": "Mode Édition"
+  },
+  "basicMainSpace": {
+    "title": "Filtres de Butin",
+    "searchPlaceholder": "Rechercher des profils...",
+    "applying": "Application...",
+    "importProfile": "Importer un Profil",
+    "dragAndDropHint": "Déposez le fichier (.json) pour importer le filtre de butin",
+    "sections": {
+      "recommended": "Recommandés",
+      "userProfiles": "Profils Utilisateur"
+    },
+    "buttons": {
+      "apply": "Appliquer",
+      "addLootFilter": "Ajouter un Filtre de Butin",
+      "disableLootFilters": "Désactiver les Filtres de Butin",
+      "howToUse": "Comment utiliser"
+    },
+    "tooltips": {
+      "clickToRename": "Cliquez pour renommer",
+      "duplicate": "Dupliquer"
+    },
+    "messages": {
+      "profileExists": "Un profil avec ce nom existe déjà",
+      "cannotRename": "Impossible de renommer ce profil",
+      "profileRenamed": "Profil renommé",
+      "profileImported": "Profil importé avec succès",
+      "importError": "Erreur lors de l'importation du profil",
+      "dragFileHint": "Veuillez glisser un fichier de profil (.json)"
+    },
+    "confirmDelete": {
+      "title": "Confirmer la Suppression",
+      "message": "Êtes-vous sûr de vouloir supprimer ce profil? Cette action ne peut pas être annulée.",
+      "cancel": "Annuler",
+      "delete": "Supprimer"
+    },
+    "helpModal": {
+      "title": "Comment utiliser",
+      "content": {
+        "line1": "Sélectionnez un filtre de butin dans la liste. Cliquez sur Appliquer puis redémarrez le jeu.",
+        "line2": "Vous pouvez ajouter vos propres filtres de butin (glissez le fichier à l'écran) et modifier ceux existants en Mode d'Édition (bouton en haut).",
+        "line3": "Vous pouvez aussi désactiver les filtres de butin à tout moment (bouton en bas)."
+      },
+      "close": "Fermer"
+    }
   }
 }
 

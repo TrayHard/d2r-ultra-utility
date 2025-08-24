@@ -7,6 +7,7 @@ import {
   mdiFileImport,
   mdiFileExport,
   mdiCheck,
+  mdiContentDuplicate,
 } from "@mdi/js";
 import Button from "./Button";
 import Dropdown from "./Dropdown";
@@ -19,12 +20,14 @@ interface ProfileManagerProps {
   isDarkTheme: boolean;
   currentSettings: any;
   profiles: Profile[];
+  immutableProfiles: Profile[];
   activeProfileId: string | null;
   onProfileSelect: (profileId: string) => void;
   onProfileCreate: (name: string, settings: any) => void;
   onProfileSave: (profileId: string, settings: any) => void;
   onProfileRename: (profileId: string, newName: string) => void;
   onProfileDelete: (profileId: string) => void;
+  onProfileDuplicate: (profileId: string) => void;
   onProfileExport: (profileId: string) => void;
   onProfileImport: (profileData: any) => void;
 }
@@ -33,12 +36,14 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
   isDarkTheme,
   currentSettings,
   profiles,
+  immutableProfiles,
   activeProfileId,
   onProfileSelect,
   onProfileCreate,
   onProfileSave,
   onProfileRename,
   onProfileDelete,
+  onProfileDuplicate,
   onProfileExport,
   onProfileImport,
 }) => {
@@ -54,7 +59,9 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
   const [renameProfileId, setRenameProfileId] = useState<string | null>(null);
   const [deleteProfileId, setDeleteProfileId] = useState<string | null>(null);
 
-  const activeProfile = profiles.find((p) => p.id === activeProfileId);
+  // Объединяем все профили (обычные и неизменяемые)
+  const allProfiles = [...immutableProfiles, ...profiles];
+  const activeProfile = allProfiles.find((p) => p.id === activeProfileId);
 
   const handleCreateProfile = () => {
     if (newProfileName.trim()) {
@@ -89,7 +96,7 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
 
   const handleDeleteProfile = () => {
     if (deleteProfileId) {
-      const profile = profiles.find((p) => p.id === deleteProfileId);
+      const profile = allProfiles.find((p) => p.id === deleteProfileId);
       onProfileDelete(deleteProfileId);
       setDeleteProfileId(null);
       setShowDeleteModal(false);
@@ -140,10 +147,42 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
     }
   };
 
-  const profileOptions = profiles.map((profile) => ({
-    value: profile.id,
-    label: profile.name,
-  }));
+  // Создаем опции для dropdown с заголовками секций
+  const profileOptions = [];
+  
+  // Добавляем секцию базовых профилей
+  if (immutableProfiles.length > 0) {
+    profileOptions.push({
+      value: 'baseProfilesHeader',
+      label: t("profiles.baseProfiles"),
+      isSectionHeader: true,
+    });
+    
+    immutableProfiles.forEach((profile) => {
+      profileOptions.push({
+        value: profile.id,
+        label: `🔒 ${profile.name}`,
+        readonly: true,
+      });
+    });
+  }
+  
+  // Добавляем секцию пользовательских профилей
+  if (profiles.length > 0) {
+    profileOptions.push({
+      value: 'userProfilesHeader',
+      label: t("profiles.userProfiles"),
+      isSectionHeader: true,
+    });
+    
+    profiles.forEach((profile) => {
+      profileOptions.push({
+        value: profile.id,
+        label: profile.name,
+        readonly: false,
+      });
+    });
+  }
 
   return (
     <div className="flex flex-col items-start justify-start gap-1">
@@ -168,27 +207,33 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
           isDarkTheme={isDarkTheme}
           icon={mdiPlus}
           size="sm"
+          className="h-[38px]"
           title={t("profiles.createProfile")}
         />
         {/* Profile Selector */}
         <Dropdown
           selectedValue={activeProfileId ?? ""}
-          onSelect={(value) => onProfileSelect(value)}
+          onSelect={(value) => {
+            if (value === 'baseProfilesHeader' || value === 'userProfilesHeader') return;
+            onProfileSelect(value);
+          }}
           options={profileOptions}
           placeholder={t("profiles.selectProfile")}
           isDarkTheme={isDarkTheme}
           className="min-w-[250px]"
           onOptionRename={(value) => {
-            const profile = profiles.find((p) => p.id === value);
-            if (profile) {
+            if (value === 'baseProfilesHeader' || value === 'userProfilesHeader') return;
+            const profile = allProfiles.find((p) => p.id === value);
+            if (profile && !profile.isImmutable) {
               setRenameProfileId(profile.id);
               setNewProfileName(profile.name);
               setShowRenameModal(true);
             }
           }}
           onOptionDelete={(value) => {
-            const profile = profiles.find((p) => p.id === value);
-            if (profile) {
+            if (value === 'baseProfilesHeader' || value === 'userProfilesHeader') return;
+            const profile = allProfiles.find((p) => p.id === value);
+            if (profile && !profile.isImmutable) {
               setDeleteProfileId(profile.id);
               setShowDeleteModal(true);
             }
@@ -207,10 +252,28 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
             <Button
               variant="info"
               onClick={() => activeProfileId && setShowSaveConfirm(true)}
-              disabled={!activeProfileId}
+              disabled={!activeProfileId || activeProfile?.isImmutable}
               isDarkTheme={isDarkTheme}
               icon={mdiContentSave}
               size="sm"
+              className="h-[38px]"
+            />
+          </Tooltip>
+
+          {/* Duplicate Profile Button */}
+          <Tooltip
+            title={t("basicMainSpace.tooltips.duplicate")}
+            placement="top"
+            mouseEnterDelay={0.3}
+          >
+            <Button
+              variant="secondary"
+              onClick={() => activeProfileId && onProfileDuplicate(activeProfileId)}
+              disabled={!activeProfileId}
+              isDarkTheme={isDarkTheme}
+              icon={mdiContentDuplicate}
+              size="sm"
+              className="h-[38px]"
             />
           </Tooltip>
         </div>
@@ -227,6 +290,7 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
             isDarkTheme={isDarkTheme}
             icon={mdiFileImport}
             size="sm"
+            className="h-[38px]"
           />
         </Tooltip>
 
@@ -243,6 +307,7 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
             isDarkTheme={isDarkTheme}
             icon={mdiFileExport}
             size="sm"
+            className="h-[38px]"
           />
         </Tooltip>
 
@@ -278,6 +343,7 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
               value={newProfileName}
               onChange={(e) => setNewProfileName(e.target.value)}
               placeholder={t("profiles.enterProfileName")}
+              maxLength={30}
               className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                 isDarkTheme
                   ? "bg-gray-700 border-gray-600 text-white"
@@ -331,6 +397,7 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
               value={newProfileName}
               onChange={(e) => setNewProfileName(e.target.value)}
               placeholder={t("profiles.enterProfileName")}
+              maxLength={25}
               className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                 isDarkTheme
                   ? "bg-gray-700 border-gray-600 text-white"
@@ -377,7 +444,7 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
             }`}
           >
             {t("profiles.deleteConfirmation", {
-              name: profiles.find((p) => p.id === deleteProfileId)?.name,
+              name: allProfiles.find((p) => p.id === deleteProfileId)?.name,
             })}
           </p>
           <div className="flex justify-end gap-2">

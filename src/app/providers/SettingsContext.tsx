@@ -8,9 +8,20 @@ import React, {
 import { ERune, runeHardcodedLocales } from "../../pages/runes/constants/runes.ts";
 import i18n from "../../shared/i18n";
 import { STORAGE_KEYS } from "../../shared/constants";
-// Загружаем ВСЕ профили из ассетов (eager, чтобы были доступны синхронно)
-const defaultProfilesModules: Record<string, { default: unknown }> =
-  import.meta.glob("../../shared/assets/profiles/*.json", { eager: true });
+import { logger } from "../../shared/utils/logger";
+// Загружаем профили из ассетов (eager, чтобы были доступны синхронно)
+// Новый формат: recommendedProfiles + корневой d2r-profile-Default.json
+// Для обратной совместимости поддерживаем старые пути (baseProfiles)
+const recommendedProfilesModules: Record<string, { default: unknown }> = {
+  ...import.meta.glob("../../shared/assets/profiles/recommendedProfiles/*.json", { eager: true }),
+  ...import.meta.glob("../../shared/assets/profiles/baseProfiles/*.json", { eager: true }),
+};
+const defaultProfileModule: Record<string, { default: unknown }> = {
+  ...import.meta.glob("../../shared/assets/profiles/d2r-profile-Default.json", { eager: true }),
+  ...import.meta.glob("../../shared/assets/profiles/baseProfiles/d2r-profile-Default.json", { eager: true }),
+};
+const userProfilesModules: Record<string, { default: unknown }> =
+  import.meta.glob("../../shared/assets/profiles/userProfiles/*.json", { eager: true });
 
 // Типы для локализации
 interface Locales {
@@ -35,6 +46,8 @@ interface AppConfig {
   appLanguage: string; // Язык интерфейса приложения
   gamePath: string; // Путь к игре
   theme: "light" | "dark"; // Тема приложения
+  debugMode: boolean; // Режим отладки для логирования
+  appMode: "basic" | "advanced"; // Режим приложения
   // В будущем добавим другие глобальные настройки
 }
 
@@ -156,26 +169,34 @@ interface Profile {
   settings: AppSettings;
   createdAt: string;
   modifiedAt: string;
+  isImmutable?: boolean; // Флаг для неизменяемых (встроенных) профилей
+  isDefault?: boolean; // Флаг для Default профиля в корне
 }
 
 // Интерфейс для контекста
 interface SettingsContextType {
   // Getter'ы для настроек приложения
   getAppConfig: () => AppConfig;
+  getAppMode: () => "basic" | "advanced";
   getSelectedLocales: () => string[];
   getAppLanguage: () => string;
   getGamePath: () => string;
   getTheme: () => "light" | "dark";
   getIsDarkTheme: () => boolean;
+  getDebugMode: () => boolean;
   isThemeChanging: boolean;
 
   // Setter'ы для настроек приложения
   updateAppConfig: (config: Partial<AppConfig>) => void;
+  updateAppMode: (mode: "basic" | "advanced") => void;
   updateSelectedLocales: (locales: string[]) => void;
   updateAppLanguage: (language: string) => void;
   updateGamePath: (path: string) => void;
   updateTheme: (theme: "light" | "dark") => void;
   toggleTheme: () => void;
+  toggleAppMode: () => void;
+  updateDebugMode: (enabled: boolean) => void;
+  toggleDebugMode: () => void;
   resetAppConfig: () => void;
 
   // Getter'ы для настроек профиля
@@ -310,9 +331,15 @@ interface SettingsContextType {
   saveProfile: (profileId: string, settings: AppSettings) => void;
   loadProfile: (profileId: string) => void;
   renameProfile: (profileId: string, newName: string) => void;
+  reorderUserProfiles: (profileIds: string[]) => void;
+  duplicateProfile: (profileId: string) => void;
   deleteProfile: (profileId: string) => void;
   exportProfile: (profileId: string) => void;
   importProfile: (profileData: any) => void;
+  
+  // Неизменяемые профили
+  immutableProfiles: Profile[];
+  getImmutableProfiles: () => Profile[];
 
   // Deprecated (для обратной совместимости)
   resetSelectedLocales: () => void;
@@ -324,6 +351,8 @@ const getDefaultAppConfig = (): AppConfig => ({
   appLanguage: "enUS", // По умолчанию язык интерфейса - английский
   gamePath: "", // По умолчанию путь к игре не задан
   theme: "dark", // По умолчанию темная тема
+  debugMode: false, // По умолчанию отладочный режим выключен
+  appMode: "advanced", // По умолчанию расширенный режим (текущая логика)
 });
 
 // Дефолтные общие настройки для рун
@@ -770,6 +799,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     return getDefaultAppConfig();
   });
   const [profiles, setProfiles] = useState<Profile[]>([]);
+  const [immutableProfiles, setImmutableProfiles] = useState<Profile[]>([]);
   const [activeProfileId, setActiveProfileId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isThemeChanging, setIsThemeChanging] = useState(false);
@@ -821,6 +851,124 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     [isLoading]
   );
 
+  // Загрузка неизменяемых профилей из ассетов
+  const loadImmutableProfiles = useCallback(() => {
+    try {
+      // Загружаем все рекомендованные профили и отдельный Default
+      const modules = recommendedProfilesModules;
+      const sources = Object.values(modules).map((m) => m.default);
+      const defaultSources = Object.values(defaultProfileModule).map((m) => m.default);
+      const now = Date.now();
+
+      const immutableProfilesData: Profile[] = sources
+        .map((src, index) => {
+          const data = src as unknown as { id?: string; name?: string; settings?: unknown };
+          const name = data?.name || `Recommended Profile ${index + 1}`;
+          const profileId = data?.id || `recommended_${now + index}`;
+          const settingsSource = data?.settings as unknown;
+
+          const settingsObj =
+            typeof settingsSource === "object" && settingsSource !== null
+              ? (settingsSource as Record<string, unknown>)
+              : {};
+
+          const runesObj =
+            typeof settingsObj["runes"] === "object" && settingsObj["runes"] !== null
+              ? (settingsObj["runes"] as Record<string, unknown>)
+              : {};
+
+          const migratedSettings: AppSettings = {
+            runes: Object.fromEntries(
+              Object.entries(runesObj).map(([key, value]) => [
+                key,
+                migrateRuneSettings(value),
+              ])
+            ) as Record<ERune, RuneSettings>,
+            generalRunes: getDefaultGeneralRuneSettings(),
+            common: settingsObj["common"]
+              ? cleanSettings(settingsObj["common"]) 
+              : getDefaultCommonSettings(),
+            gems: settingsObj["gems"]
+              ? (settingsObj["gems"] as GemSettings)
+              : getDefaultGemSettings(),
+            items: settingsObj["items"]
+              ? migrateItemsSettings(settingsObj["items"]) 
+              : getDefaultItemsSettings(),
+          };
+
+          return {
+            id: profileId,
+            name,
+            settings: migratedSettings,
+            createdAt: new Date().toISOString(),
+            modifiedAt: new Date().toISOString(),
+            isImmutable: true,
+          };
+        })
+        .filter((profile) => profile !== null);
+
+      // Добавляем Default профиль (если найден) как отдельный, неизменяемый и помеченный isDefault
+      const defaultProfiles: Profile[] = defaultSources
+        .map((src) => {
+          const data = src as unknown as { id?: string; name?: string; settings?: unknown };
+          const name = data?.name || "Default";
+          const profileId = data?.id || `default_${now}`;
+          const settingsSource = data?.settings as unknown;
+
+          const settingsObj =
+            typeof settingsSource === "object" && settingsSource !== null
+              ? (settingsSource as Record<string, unknown>)
+              : {};
+
+          const runesObj =
+            typeof settingsObj["runes"] === "object" && settingsObj["runes"] !== null
+              ? (settingsObj["runes"] as Record<string, unknown>)
+              : {};
+
+          const migratedSettings: AppSettings = {
+            runes: Object.fromEntries(
+              Object.entries(runesObj).map(([key, value]) => [
+                key,
+                migrateRuneSettings(value),
+              ])
+            ) as Record<ERune, RuneSettings>,
+            generalRunes: getDefaultGeneralRuneSettings(),
+            common: settingsObj["common"]
+              ? cleanSettings(settingsObj["common"]) 
+              : getDefaultCommonSettings(),
+            gems: settingsObj["gems"]
+              ? (settingsObj["gems"] as GemSettings)
+              : getDefaultGemSettings(),
+            items: settingsObj["items"]
+              ? migrateItemsSettings(settingsObj["items"]) 
+              : getDefaultItemsSettings(),
+          };
+
+          return {
+            id: profileId,
+            name,
+            settings: migratedSettings,
+            createdAt: new Date().toISOString(),
+            modifiedAt: new Date().toISOString(),
+            isImmutable: true,
+            isDefault: true,
+          } as Profile;
+        })
+        .filter(Boolean);
+
+      setImmutableProfiles([...defaultProfiles, ...immutableProfilesData]);
+      logger.info("Загружены неизменяемые профили", { count: immutableProfilesData.length });
+    } catch (error) {
+      logger.error("Ошибка загрузки неизменяемых профилей", error as Error);
+      setImmutableProfiles([]);
+    }
+  }, []);
+
+  // Получить неизменяемые профили
+  const getImmutableProfiles = useCallback(() => {
+    return immutableProfiles;
+  }, [immutableProfiles]);
+
   // Загрузка настроек из localStorage при инициализации
   useEffect(() => {
     const savedAppConfig = localStorage.getItem(STORAGE_KEYS.APP_CONFIG);
@@ -844,6 +992,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
           ...parsedAppConfig,
         };
         setAppConfig(newAppConfig, true); // skipSave = true
+
+        // Инициализируем логгер с режимом отладки
+        logger.setDebugMode(newAppConfig.debugMode || false);
 
         // Инициализируем язык в i18n
         i18n.changeLanguage(mapAppLanguageToI18n(newAppConfig.appLanguage));
@@ -933,10 +1084,10 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       }
     }
 
-    // Если первый запуск и профилей нет — добавляем все дефолтные профили из папки @profiles
+    // Если первый запуск и профилей нет — добавляем все профили из папки userProfiles
     if (isFirstRun && !hadProfiles) {
       try {
-        const modules = defaultProfilesModules;
+        const modules = userProfilesModules;
         const sources = Object.values(modules).map((m) => m.default);
         const now = Date.now();
 
@@ -998,9 +1149,47 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       localStorage.setItem(STORAGE_KEYS.FIRST_RUN, "1");
     }
 
+    // Загружаем неизменяемые профили
+    loadImmutableProfiles();
+
     // Завершаем загрузку
     setIsLoading(false);
-  }, [setAppConfig]);
+  }, [setAppConfig, loadImmutableProfiles]);
+
+  // Функция для переименования дублирующихся профилей
+  const renameDuplicateProfiles = useCallback((userProfiles: Profile[], baseProfiles: Profile[]) => {
+    const baseProfileNames = new Set(baseProfiles.map(p => p.name));
+    let renamedCount = 0;
+    
+    const processedProfiles = userProfiles.map(profile => {
+      if (baseProfileNames.has(profile.name)) {
+        renamedCount++;
+        const newName = `${profile.name} (Custom)`;
+        logger.info("Переименован дублирующийся пользовательский профиль", { 
+          oldName: profile.name, 
+          newName 
+        });
+        return {
+          ...profile,
+          name: newName,
+          modifiedAt: new Date().toISOString(),
+        };
+      }
+      return profile;
+    });
+    
+    if (renamedCount > 0) {
+      logger.info("Переименованы дублирующиеся пользовательские профили", { 
+        renamed: renamedCount 
+      });
+    }
+    
+    return processedProfiles;
+  }, []);
+
+
+
+
 
   // Убираем старый useEffect для сохранения, так как теперь сохраняем в setAppConfig
 
@@ -1032,12 +1221,67 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     []
   );
 
+  // Эффект для переименования дублирующихся профилей после загрузки неизменяемых
+  useEffect(() => {
+    if (immutableProfiles.length > 0 && profiles.length > 0) {
+      const processedProfiles = renameDuplicateProfiles(profiles, immutableProfiles);
+      // Проверяем, были ли изменения (сравниваем по именам)
+      const hasChanges = processedProfiles.some((profile, index) => 
+        profile.name !== profiles[index]?.name
+      );
+      
+      if (hasChanges) {
+        setProfiles(processedProfiles);
+        saveProfilesToLocalStorage(processedProfiles);
+      }
+    }
+  }, [immutableProfiles, profiles, renameDuplicateProfiles, saveProfilesToLocalStorage]);
+
+  // Восстановление активного профиля из localStorage для неизменяемых профилей
+  useEffect(() => {
+    if (!activeProfileId && immutableProfiles.length > 0) {
+      const savedActiveProfileId = localStorage.getItem(STORAGE_KEYS.ACTIVE_PROFILE);
+      if (savedActiveProfileId) {
+        const immutable = immutableProfiles.find((p) => p.id === savedActiveProfileId);
+        if (immutable) {
+          setSettings(immutable.settings);
+          setActiveProfileId(savedActiveProfileId);
+        }
+      }
+    }
+  }, [immutableProfiles, activeProfileId]);
+
+  // Автовыбор дефолтного профиля при первом запуске (если активный не задан)
+  useEffect(() => {
+    if (isLoading) return;
+    if (activeProfileId) return;
+    const savedActiveProfileId = localStorage.getItem(STORAGE_KEYS.ACTIVE_PROFILE);
+    if (savedActiveProfileId) return;
+
+    const all = [...immutableProfiles, ...profiles];
+    if (all.length === 0) return;
+
+    const defaultByName = all.find((p) => (p.name || "").trim().toLowerCase() === "default");
+    const toActivate = defaultByName || all[0];
+    if (!toActivate) return;
+
+    setSettings(toActivate.settings);
+    setActiveProfileId(toActivate.id);
+    saveActiveProfileToLocalStorage(toActivate.id);
+    localStorage.removeItem(STORAGE_KEYS.SETTINGS);
+  }, [isLoading, activeProfileId, immutableProfiles, profiles, saveActiveProfileToLocalStorage]);
+
   // Методы для работы с настройками приложения
   const getAppConfig = useCallback(() => appConfig, [appConfig]);
 
   const getSelectedLocales = useCallback(
     () => appConfig.selectedLocales,
     [appConfig.selectedLocales]
+  );
+
+  const getAppMode = useCallback(
+    () => appConfig.appMode,
+    [appConfig.appMode]
   );
 
   const getAppLanguage = useCallback(
@@ -1055,6 +1299,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     () => appConfig.theme === "dark",
     [appConfig.theme]
   );
+  const getDebugMode = useCallback(() => appConfig.debugMode, [appConfig.debugMode]);
 
   const updateAppConfig = useCallback(
     (config: Partial<AppConfig>) => {
@@ -1112,15 +1357,86 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     [setAppConfig]
   );
 
+  const updateAppMode = useCallback(
+    (mode: "basic" | "advanced") => {
+      setAppConfig((prev) => ({
+        ...prev,
+        appMode: mode,
+      }));
+    },
+    [setAppConfig]
+  );
+
   const toggleTheme = useCallback(() => {
     setTimeout(() => {
       setIsThemeChanging(false);
     }, 0);
     setIsThemeChanging(true);
-    setAppConfig((prev) => ({
-      ...prev,
-      theme: prev.theme === "light" ? "dark" : "light",
-    }));
+    setAppConfig((prev) => {
+      const newTheme = prev.theme === "light" ? "dark" : "light";
+      logger.info(
+        `Theme changed from ${prev.theme} to ${newTheme}`,
+        { oldTheme: prev.theme, newTheme },
+        'SettingsContext',
+        'toggleTheme'
+      );
+      return {
+        ...prev,
+        theme: newTheme,
+      };
+    });
+  }, [setAppConfig]);
+
+  const toggleAppMode = useCallback(() => {
+    setAppConfig((prev) => {
+      const newMode = prev.appMode === "advanced" ? "basic" : "advanced";
+      logger.info(
+        `App mode changed from ${prev.appMode} to ${newMode}`,
+        { oldMode: prev.appMode, newMode },
+        'SettingsContext',
+        'toggleAppMode'
+      );
+    return {
+        ...prev,
+        appMode: newMode,
+      };
+    });
+  }, [setAppConfig]);
+
+  const updateDebugMode = useCallback(
+    (enabled: boolean) => {
+      setAppConfig((prev) => ({
+        ...prev,
+        debugMode: enabled,
+      }));
+      // Обновляем режим отладки в логгере
+      logger.setDebugMode(enabled);
+      logger.info(
+        `Debug mode ${enabled ? 'enabled' : 'disabled'}`,
+        { debugMode: enabled },
+        'SettingsContext',
+        'updateDebugMode'
+      );
+    },
+    [setAppConfig]
+  );
+
+  const toggleDebugMode = useCallback(() => {
+    setAppConfig((prev) => {
+      const newDebugMode = !prev.debugMode;
+      // Обновляем режим отладки в логгере
+      logger.setDebugMode(newDebugMode);
+      logger.info(
+        `Debug mode toggled to ${newDebugMode ? 'enabled' : 'disabled'}`,
+        { debugMode: newDebugMode },
+        'SettingsContext',
+        'toggleDebugMode'
+      );
+      return {
+        ...prev,
+        debugMode: newDebugMode,
+      };
+    });
   }, [setAppConfig]);
 
   const resetAppConfig = useCallback(() => {
@@ -1290,9 +1606,21 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   // Создать новый профиль
   const createProfile = useCallback(
     (name: string, settings: AppSettings) => {
+      // Проверяем, что имя не совпадает с базовыми профилями
+      const baseProfileNames = immutableProfiles.map(p => p.name);
+      let finalName = name;
+      
+      if (baseProfileNames.includes(name)) {
+        finalName = `${name} (Custom)`;
+        logger.info("Автоматически переименован профиль для избежания конфликта с базовым профилем", { 
+          originalName: name, 
+          newName: finalName 
+        });
+      }
+
       const newProfile: Profile = {
         id: Date.now().toString(),
-        name,
+        name: finalName,
         settings,
         createdAt: new Date().toISOString(),
         modifiedAt: new Date().toISOString(),
@@ -1306,12 +1634,19 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       // Удаляем автономные настройки профиля при создании профиля
       localStorage.removeItem(STORAGE_KEYS.SETTINGS);
     },
-    [profiles, saveProfilesToLocalStorage, saveActiveProfileToLocalStorage]
+    [profiles, immutableProfiles, saveProfilesToLocalStorage, saveActiveProfileToLocalStorage]
   );
 
   // Сохранить профиль
   const saveProfile = useCallback(
     (profileId: string, settings: AppSettings) => {
+      // Проверяем, что это не неизменяемый профиль
+      const profileToSave = profiles.find(p => p.id === profileId);
+      if (profileToSave?.isImmutable) {
+        logger.warn("Попытка сохранить неизменяемый профиль", { profileId });
+        return;
+      }
+
       const updatedProfiles = profiles.map((profile) =>
         profile.id === profileId
           ? { ...profile, settings, modifiedAt: new Date().toISOString() }
@@ -1331,7 +1666,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   // Загрузить профиль
   const loadProfile = useCallback(
     (profileId: string) => {
-      const profile = profiles.find((p) => p.id === profileId);
+      // Ищем профиль в обычных и неизменяемых профилях
+      const profile = profiles.find((p) => p.id === profileId) || 
+                     immutableProfiles.find((p) => p.id === profileId);
       if (profile) {
         setSettings(profile.settings);
         setActiveProfileId(profileId);
@@ -1340,12 +1677,19 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         localStorage.removeItem(STORAGE_KEYS.SETTINGS);
       }
     },
-    [profiles, saveActiveProfileToLocalStorage]
+    [profiles, immutableProfiles, saveActiveProfileToLocalStorage]
   );
 
   // Переименовать профиль
   const renameProfile = useCallback(
     (profileId: string, newName: string) => {
+      // Проверяем, что это не неизменяемый профиль
+      const profileToRename = profiles.find(p => p.id === profileId);
+      if (profileToRename?.isImmutable) {
+        logger.warn("Попытка переименовать неизменяемый профиль", { profileId });
+        return;
+      }
+
       const updatedProfiles = profiles.map((profile) =>
         profile.id === profileId
           ? { ...profile, name: newName, modifiedAt: new Date().toISOString() }
@@ -1357,9 +1701,84 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     [profiles, saveProfilesToLocalStorage]
   );
 
+  // Изменить порядок пользовательских профилей
+  const reorderUserProfiles = useCallback(
+    (profileIds: string[]) => {
+      // Создаём новый массив профилей в указанном порядке
+      const reorderedProfiles = profileIds
+        .map(id => profiles.find(p => p.id === id))
+        .filter((p): p is Profile => p !== undefined);
+      
+      // Добавляем профили, которые не были в списке (на случай рассинхронизации)
+      const includedIds = new Set(profileIds);
+      const missingProfiles = profiles.filter(p => !includedIds.has(p.id));
+      
+      const updatedProfiles = [...reorderedProfiles, ...missingProfiles];
+      setProfiles(updatedProfiles);
+      saveProfilesToLocalStorage(updatedProfiles);
+      
+      logger.info("Изменён порядок пользовательских профилей", { 
+        newOrder: profileIds 
+      });
+    },
+    [profiles, saveProfilesToLocalStorage]
+  );
+
+  // Дублировать профиль
+  const duplicateProfile = useCallback(
+    (profileId: string) => {
+      // Найти профиль для дублирования (может быть как пользовательский, так и неизменяемый)
+      const allProfiles = [...profiles, ...immutableProfiles];
+      const profileToDuplicate = allProfiles.find(p => p.id === profileId);
+      
+      if (!profileToDuplicate) {
+        logger.error(`Профиль для дублирования не найден: ${profileId}`);
+        return;
+      }
+
+      // Генерируем уникальное имя для дубликата
+      const allExistingNames = new Set(
+        [...profiles, ...immutableProfiles]
+          .map((p) => (p.name || "").trim().toLowerCase())
+      );
+      
+      let duplicateName = `${profileToDuplicate.name} (Copy)`;
+      let counter = 1;
+      
+      while (allExistingNames.has(duplicateName.toLowerCase())) {
+        counter++;
+        duplicateName = `${profileToDuplicate.name} (Copy ${counter})`;
+      }
+
+      // Создаём новый профиль (всегда пользовательский, даже если оригинал был неизменяемым)
+      const newProfile: Profile = {
+        id: `profile-${Date.now()}`,
+        name: duplicateName,
+        settings: profileToDuplicate.settings,
+        createdAt: new Date().toISOString(),
+        modifiedAt: new Date().toISOString(),
+        isImmutable: false, // Дубликат всегда пользовательский
+      };
+
+      const updatedProfiles = [...profiles, newProfile];
+      setProfiles(updatedProfiles);
+      saveProfilesToLocalStorage(updatedProfiles);
+      
+      logger.debug(`Профиль продублирован: ${profileToDuplicate.name} -> ${newProfile.name}`);
+    },
+    [profiles, immutableProfiles, saveProfilesToLocalStorage, logger]
+  );
+
   // Удалить профиль
   const deleteProfile = useCallback(
     (profileId: string) => {
+      // Проверяем, что это не неизменяемый профиль
+      const profileToDelete = profiles.find(p => p.id === profileId);
+      if (profileToDelete?.isImmutable) {
+        logger.warn("Попытка удалить неизменяемый профиль", { profileId });
+        return;
+      }
+
       const updatedProfiles = profiles.filter(
         (profile) => profile.id !== profileId
       );
@@ -1418,7 +1837,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   // Экспортировать профиль
   const exportProfile = useCallback(
     (profileId: string) => {
-      const profile = profiles.find((p) => p.id === profileId);
+      // Ищем профиль в обычных и неизменяемых профилях
+      const profile = profiles.find((p) => p.id === profileId) || 
+                     immutableProfiles.find((p) => p.id === profileId);
       if (profile) {
         const cleanProfile = prepareForExport(profile);
         const dataStr = JSON.stringify(cleanProfile, null, 2);
@@ -1433,7 +1854,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         linkElement.click();
       }
     },
-    [profiles]
+    [profiles, immutableProfiles]
   );
 
   // Импортировать профиль
@@ -1443,6 +1864,25 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         // Валидация данных профиля
         if (!profileData.name || !profileData.settings) {
           throw new Error("Invalid profile data");
+        }
+
+        // Генерируем уникальное имя среди всех профилей (пользовательских и неизменяемых)
+        const allExistingNames = new Set(
+          [...profiles, ...immutableProfiles]
+            .map((p) => (p.name || "").trim().toLowerCase())
+        );
+        const baseName = (profileData.name as string).trim();
+        let finalName = baseName || "Безымянный профиль";
+        if (allExistingNames.has(finalName.toLowerCase())) {
+          let counter = 2;
+          while (true) {
+            const candidate = `${baseName} (${counter})`;
+            if (!allExistingNames.has(candidate.toLowerCase())) {
+              finalName = candidate;
+              break;
+            }
+            counter++;
+          }
         }
 
         // Мигрируем настройки рун в импортируемом профиле и добавляем common и gems если их нет
@@ -1467,7 +1907,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
 
         const newProfile: Profile = {
           id: Date.now().toString(),
-          name: profileData.name + " (imported)",
+          name: finalName,
           settings: migratedSettings,
           createdAt: new Date().toISOString(),
           modifiedAt: new Date().toISOString(),
@@ -1481,7 +1921,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         throw error;
       }
     },
-    [profiles, saveProfilesToLocalStorage]
+    [profiles, immutableProfiles, saveProfilesToLocalStorage]
   );
 
   // Методы для работы с CommonSettings
@@ -1885,18 +2325,24 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   const contextValue: SettingsContextType = {
     // Методы для настроек приложения
     getAppConfig,
+    getAppMode,
     getSelectedLocales,
     getAppLanguage,
     getGamePath,
     getTheme,
     getIsDarkTheme,
+    getDebugMode,
     isThemeChanging,
     updateAppConfig,
+    updateAppMode,
     updateSelectedLocales,
     updateAppLanguage,
     updateGamePath,
     updateTheme,
     toggleTheme,
+    toggleAppMode,
+    updateDebugMode,
+    toggleDebugMode,
     resetAppConfig,
 
     // Методы для настроек профиля
@@ -1951,9 +2397,15 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     saveProfile,
     loadProfile,
     renameProfile,
+    reorderUserProfiles,
+    duplicateProfile,
     deleteProfile,
     exportProfile,
     importProfile,
+
+    // Неизменяемые профили
+    immutableProfiles,
+    getImmutableProfiles,
 
     // Deprecated
     resetSelectedLocales,

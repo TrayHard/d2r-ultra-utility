@@ -46,7 +46,6 @@
     "firePotions": "Fire Potions",
     "searchPlaceholder": "Search",
     "enableCustomization": "Enable customization",
-    "localeSettings": "Locale Settings",
     "healthPotionsLevels": {
       "level1": "Minor Health Potion",
       "level2": "Light Health Potion",
@@ -189,8 +188,26 @@
     "pathSettingsDescription": "Manage the path to your D2R game directory (specifically to D2R.exe).",
     "currentPath": "Current path",
     "pathNotSet": "Path is not set",
+    "debugMode": "Debug Mode",
+    "debugModeDescription": "Enable debug mode to collect detailed logs for troubleshooting. These logs can be exported and sent to developers for support.",
+    "debugModeEnabled": "Debug mode is enabled",
+    "debugModeDisabled": "Debug mode is disabled",
+    "debugModeWarning": "Debug mode will collect detailed information about application usage. Only enable if needed for troubleshooting.",
     "about": "About",
     "appVersion": "App Version"
+  },
+  "logs": {
+    "title": "Debug Logs",
+    "total": "Total",
+    "errors": "Errors",
+    "warnings": "Warnings",
+    "info": "Info",
+    "exportJson": "Export JSON",
+    "exportText": "Export Text",
+    "exporting": "Exporting...",
+    "clearLogs": "Clear Logs",
+    "confirmClear": "Are you sure you want to clear all logs? This action cannot be undone.",
+    "exportDescription": "Export logs to share with developers for troubleshooting."
   },
   "search": {
     "placeholder": "Search runes...",
@@ -361,7 +378,13 @@
       "numberingSettings": "Numbering Settings",
       "noChange": "No change",
       "cancel": "Cancel",
-      "applyToRunes": "Apply to {{count}} runes"
+      "applyToRunes": "Apply to {{count}} runes",
+      "runeMode": "Mode",
+      "runeModeTooltips": {
+        "auto": "Automatic mode",
+        "noChange": "Don't change mode",
+        "manual": "Manual mode"
+      }
     },
     "textWorker": {
       "readFromFiles": "Read from files",
@@ -380,6 +403,8 @@
   "profiles": {
     "sectionTitle": "Profiles",
     "filesSectionTitle": "File Operations in game",
+    "baseProfiles": "Base Profiles",
+    "userProfiles": "User Profiles",
     "selectProfile": "Select Profile",
     "createProfile": "Create Profile",
     "saveProfile": "Save Profile",
@@ -402,6 +427,7 @@
       "profileSaved": "Profile \"{{name}}\" saved",
       "saveError": "Error saving profile",
       "profileCreated": "Profile \"{{name}}\" created",
+      "createError": "Error creating profile",
       "profileRenamed": "Profile renamed to \"{{name}}\"",
       "profileDeleted": "Profile \"{{name}}\" deleted",
       "profileExported": "Profile exported",
@@ -1602,5 +1628,55 @@
     "off": "Off",
     "noChange": "No change",
     "on": "On"
+  },
+  "mode": {
+    "switchToBasic": "Switch to basic mode",
+    "switchToAdvanced": "Switch to editing mode",
+    "basicButton": "Basic Mode",
+    "advancedButton": "Editing Mode"
+  },
+  "basicMainSpace": {
+    "title": "Loot Filters",
+    "searchPlaceholder": "Search profiles...",
+    "applying": "Applying...",
+    "importProfile": "Import Profile",
+    "dragAndDropHint": "Drop file (.json) to import loot filter",
+    "sections": {
+      "recommended": "Recommended",
+      "userProfiles": "User Profiles"
+    },
+    "buttons": {
+      "apply": "Apply",
+      "addLootFilter": "Add Loot Filter",
+      "disableLootFilters": "Disable Loot Filters",
+      "howToUse": "How to Use"
+    },
+    "tooltips": {
+      "clickToRename": "Click to rename",
+      "duplicate": "Duplicate"
+    },
+    "messages": {
+      "profileExists": "Profile with this name already exists",
+      "cannotRename": "Cannot rename this profile",
+      "profileRenamed": "Profile renamed",
+      "profileImported": "Profile imported successfully",
+      "importError": "Error importing profile",
+      "dragFileHint": "Please drag a profile file (.json)"
+    },
+    "confirmDelete": {
+      "title": "Confirm Delete",
+      "message": "Are you sure you want to delete this profile? This action cannot be undone.",
+      "cancel": "Cancel",
+      "delete": "Delete"
+    },
+    "helpModal": {
+      "title": "How to Use",
+      "content": {
+        "line1": "Select a loot filter from the list. Click the Apply button, then restart the game.",
+        "line2": "You can add your own loot filters (drag file to screen), and edit existing ones in Edit Mode (button at the top).",
+        "line3": "You can also disable loot filters at any time (button at the bottom)."
+      },
+      "close": "Close"
+    }
   }
 }

@@ -92,7 +92,6 @@
     "firePotions": "Feuertränke",
     "searchPlaceholder": "Suchen",
     "enableCustomization": "Anpassung aktivieren",
-    "localeSettings": "Locale-Einstellungen",
     "healthPotionsLevels": {
       "level1": "Kleiner Heiltrank",
       "level2": "Leichter Heiltrank",
@@ -360,7 +359,13 @@
       "numberingSettings": "Nummerierungs-Einstellungen",
       "noChange": "Ohne Änderung",
       "cancel": "Abbrechen",
-      "applyToRunes": "Auf {{count}} Runen anwenden"
+      "applyToRunes": "Auf {{count}} Runen anwenden",
+      "runeMode": "Modus",
+      "runeModeTooltips": {
+        "auto": "Automatischer Modus",
+        "noChange": "Modus nicht ändern",
+        "manual": "Manueller Modus"
+      }
     },
     "textWorker": {
       "readFromFiles": "Aus Dateien lesen",
@@ -589,6 +594,56 @@
     "off": "Aus",
     "noChange": "Ohne Änderung",
     "on": "An"
+  },
+  "mode": {
+    "switchToBasic": "Zum Basismodus wechseln",
+    "switchToAdvanced": "Zum Bearbeitungsmodus wechseln",
+    "basicButton": "Basismodus",
+    "advancedButton": "Bearbeitungsmodus"
+  },
+  "basicMainSpace": {
+    "title": "Loot-Filter",
+    "searchPlaceholder": "Profile suchen...",
+    "applying": "Anwenden...",
+    "importProfile": "Profil importieren",
+    "dragAndDropHint": "Datei (.json) ablegen, um Loot-Filter zu importieren",
+    "sections": {
+      "recommended": "Empfohlen",
+      "userProfiles": "Benutzerprofile"
+    },
+    "buttons": {
+      "apply": "Anwenden",
+      "addLootFilter": "Loot-Filter hinzufügen",
+      "disableLootFilters": "Loot-Filter deaktivieren",
+      "howToUse": "Anleitung"
+    },
+    "tooltips": {
+      "clickToRename": "Klicken zum Umbenennen",
+      "duplicate": "Duplizieren"
+    },
+    "messages": {
+      "profileExists": "Profil mit diesem Namen existiert bereits",
+      "cannotRename": "Dieses Profil kann nicht umbenannt werden",
+      "profileRenamed": "Profil umbenannt",
+      "profileImported": "Profil erfolgreich importiert",
+      "importError": "Fehler beim Importieren des Profils",
+      "dragFileHint": "Bitte ziehen Sie eine Profildatei (.json)"
+    },
+    "confirmDelete": {
+      "title": "Löschen bestätigen",
+      "message": "Sind Sie sicher, dass Sie dieses Profil löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
+      "cancel": "Abbrechen",
+      "delete": "Löschen"
+    },
+    "helpModal": {
+      "title": "Anleitung",
+      "content": {
+        "line1": "Wählen Sie einen Loot-Filter aus der Liste. Klicken Sie auf Anwenden und starten Sie dann das Spiel neu.",
+        "line2": "Sie können eigene Loot-Filter hinzufügen (Datei auf den Bildschirm ziehen) und vorhandene im Bearbeitungsmodus bearbeiten (Taste oben).",
+        "line3": "Sie können Loot-Filter auch jederzeit deaktivieren (Taste unten)."
+      },
+      "close": "Schließen"
+    }
   }
 }
 

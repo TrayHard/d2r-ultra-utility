@@ -5,6 +5,7 @@ import { useSettings } from "../../app/providers/SettingsContext";
 import { localeOptions, STORAGE_KEYS } from "../../shared/constants";
 import Switcher from "../../shared/components/Switcher";
 import Button from "../../shared/components/Button";
+import LogExporter from "../../shared/components/LogExporter";
 import { getVersion } from "@tauri-apps/api/app";
 // Removed unused updater/process imports
 
@@ -28,12 +29,15 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
     getIsDarkTheme,
     toggleTheme,
     getGamePath,
+    getDebugMode,
+    updateDebugMode,
   } = useSettings();
 
   const selectedLocales = getSelectedLocales();
   const currentAppLanguage = getAppLanguage();
   const isCurrentlyDarkTheme = getIsDarkTheme();
   const currentGamePath = getGamePath();
+  const isDebugMode = getDebugMode();
   const [appVersion, setAppVersion] = React.useState<string>("");
 
   React.useEffect(() => {
@@ -352,6 +356,63 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
                 </div>
               </div>
             </div>
+
+            {/* Отладочный режим */}
+            <div
+              className={`p-6 rounded-lg border ${
+                isDarkTheme
+                  ? "bg-gray-800 border-gray-700"
+                  : "bg-white border-gray-200"
+              }`}
+            >
+              <h3
+                className={`text-xl font-semibold mb-4 ${
+                  isDarkTheme ? "text-white" : "text-gray-900"
+                }`}
+              >
+                {t("settings.debugMode")}
+              </h3>
+              <div className="space-y-4">
+                <div>
+                  <p
+                    className={`text-sm mb-4 ${
+                      isDarkTheme ? "text-gray-400" : "text-gray-600"
+                    }`}
+                  >
+                    {t("settings.debugModeDescription")}
+                  </p>
+
+                  <Switcher
+                    checked={isDebugMode}
+                    onChange={updateDebugMode}
+                    label={
+                      isDebugMode
+                        ? t("settings.debugModeEnabled")
+                        : t("settings.debugModeDisabled")
+                    }
+                    isDarkTheme={isDarkTheme}
+                    size="md"
+                  />
+                  
+                  {isDebugMode && (
+                    <div className="mt-4">
+                      <p
+                        className={`text-xs mb-2 ${
+                          isDarkTheme ? "text-yellow-400" : "text-yellow-600"
+                        }`}
+                      >
+                        ⚠️ {t("settings.debugModeWarning")}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Экспорт логов */}
+            {isDebugMode && (
+              <LogExporter isDarkTheme={isDarkTheme} />
+            )}
 
             {/* О приложении / версия */}
             <div
