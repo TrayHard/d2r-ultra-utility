@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import { useLogger } from "../utils/logger";
+import { ensureWritable } from "../utils/fsUtils";
 import {
   idToCommonItemMapper,
   commonItemToIdMapper,
@@ -540,7 +541,23 @@ export const useCommonItemsWorker = (
               maxAttempts,
               error: err instanceof Error ? err.message : String(err),
             }, 'applyChanges');
-            if (isLast) throw err;
+            if (isLast) {
+              try {
+                const results = await ensureWritable([path]);
+                const r = results[0];
+                logger.warn('Attempted to ensure writable', { path, result: r }, 'applyChanges');
+              } catch (e) {
+                logger.warn('ensureWritable invocation failed', { path, error: e instanceof Error ? e.message : String(e) }, 'applyChanges');
+              }
+              try {
+                await writeTextFile(path, content);
+                return;
+              } catch (finalErr) {
+                const suggestion = t?.('messages.error.writePermissionSuggestion') || 'Could not write the file. Try running the app as Administrator or move the game to a folder where you have write permissions.';
+                const msg = (finalErr instanceof Error ? finalErr.message : String(finalErr)) + `\n${suggestion}`;
+                throw new Error(msg);
+              }
+            }
             const backoffMs = Math.min(1000, 100 * Math.pow(2, attempt));
             await new Promise((r) => setTimeout(r, backoffMs));
           }

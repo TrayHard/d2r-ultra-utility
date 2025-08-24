@@ -452,7 +452,8 @@
       "applyError": "Anwendungsfehler",
       "settingsNotFound": "Einstellungen nicht gefunden",
       "highlightLoadError": "Fehler beim Laden der Hervorhebung",
-      "itemsApplyFailed": "Anwenden der Gegenstandseinstellungen fehlgeschlagen"
+      "itemsApplyFailed": "Anwenden der Gegenstandseinstellungen fehlgeschlagen",
+      "writePermissionSuggestion": "Datei konnte nicht geschrieben werden. Führen Sie die App als Administrator aus oder verschieben Sie das Spiel in einen Ordner mit Schreibrechten."
     }
   },
   "startupLoadModal": {
