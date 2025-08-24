@@ -431,7 +431,8 @@
       "profileDeleted": "Perfil \"{{name}}\" eliminado",
       "profileExported": "Perfil exportado",
       "profileImported": "Perfil importado. Puedes seleccionarlo en la lista de perfiles.",
-      "importError": "Error al importar el perfil"
+      "importError": "Error al importar el perfil",
+      "profileDuplicated": "Perfil \"{{name}}\" duplicado"
     }
   },
   "itemsPage": {

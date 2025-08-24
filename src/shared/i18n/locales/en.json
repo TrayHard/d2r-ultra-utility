@@ -432,7 +432,8 @@
       "profileDeleted": "Profile \"{{name}}\" deleted",
       "profileExported": "Profile exported",
       "profileImported": "Profile imported. You can select it in the profiles list.",
-      "importError": "Error importing profile"
+      "importError": "Error importing profile",
+      "profileDuplicated": "Profile \"{{name}}\" duplicated"
     }
   },
   "files": {

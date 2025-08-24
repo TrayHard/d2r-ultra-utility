@@ -1764,7 +1764,12 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       setProfiles(updatedProfiles);
       saveProfilesToLocalStorage(updatedProfiles);
       
-      logger.debug(`Профиль продублирован: ${profileToDuplicate.name} -> ${newProfile.name}`);
+      // Сразу переключаемся на новый профиль
+      setActiveProfileId(newProfile.id);
+      saveActiveProfileToLocalStorage(newProfile.id);
+      setSettings(newProfile.settings);
+
+      logger.debug(`Профиль продублирован и активирован: ${profileToDuplicate.name} -> ${newProfile.name}`);
     },
     [profiles, immutableProfiles, saveProfilesToLocalStorage, logger]
   );

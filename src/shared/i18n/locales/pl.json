@@ -515,6 +515,7 @@
       "profileRenamed": "Profil został przemianowany",
       "profileImported": "Profil pomyślnie zaimportowany",
       "importError": "Błąd podczas importowania profilu",
+      "profileDuplicated": "Profil \"{{name}}\" zduplikowano",
       "dragFileHint": "Przeciągnij plik profilu (.json)"
     },
     "confirmDelete": {
