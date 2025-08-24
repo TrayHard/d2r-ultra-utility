@@ -67,7 +67,9 @@ export const useCommonItemsWorker = (
     title?: string
   ) => void,
   t?: (key: string, options?: any) => string,
-  getCommonSettings?: () => CommonSettings
+  getCommonSettings?: () => CommonSettings,
+  allowedMode?: "basic" | "advanced" | null,
+  getCurrentMode?: () => "basic" | "advanced"
 ) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -561,6 +563,15 @@ export const useCommonItemsWorker = (
   }, [readLocales]);
 
   const applyCommonItemsChanges = useCallback(async () => {
+    // Проверяем, разрешено ли применение изменений в текущем режиме
+    if (allowedMode && getCurrentMode) {
+      const currentMode = getCurrentMode();
+      if (currentMode !== allowedMode) {
+        console.log('Skipping common items changes application - wrong mode', { currentMode, allowedMode });
+        return;
+      }
+    }
+
     setIsLoading(true);
     setError(null);
 
@@ -611,7 +622,7 @@ export const useCommonItemsWorker = (
       setIsLoading(false);
       logger.info('Finished applying common items changes', undefined, 'applyCommonItemsChanges');
     }
-  }, [getCommonSettings, applyChanges, sendMessage, t]);
+  }, [getCommonSettings, applyChanges, sendMessage, t, allowedMode, getCurrentMode]);
 
   return {
     isLoading,
