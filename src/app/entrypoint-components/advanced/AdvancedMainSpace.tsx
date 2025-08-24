@@ -53,6 +53,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     duplicateProfile,
     exportProfile,
     importProfile,
+    getAppMode,
   } = useSettings();
 
   const { sendMessage, muteTypes, unmute } = useGlobalMessage();
@@ -74,7 +75,9 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       sendMessage(message, { type, title });
     },
     t,
-    () => settings.runes
+    () => settings.runes,
+    "advanced", // разрешенный режим
+    getAppMode
   );
 
   // Хук для обычных предметов
@@ -95,7 +98,9 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       sendMessage(message, { type, title });
     },
     t,
-    getCommonSettings
+    getCommonSettings,
+    "advanced", // разрешенный режим
+    getAppMode
   );
 
   // Хук для драгоценных камней
@@ -116,7 +121,9 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       sendMessage(message, { type, title });
     },
     t,
-    getGemSettings
+    getGemSettings,
+    "advanced", // разрешенный режим
+    getAppMode
   );
 
   // Подготавливаем данные для хука предметов
@@ -151,7 +158,9 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     t,
     getItemsSettings,
     getSelectedLocales,
-    itemsForWorker
+    itemsForWorker,
+    "advanced", // разрешенный режим
+    getAppMode
   );
 
   // Определяем, какой хук использовать в зависимости от активного таба

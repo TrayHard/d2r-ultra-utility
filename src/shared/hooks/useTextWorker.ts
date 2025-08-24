@@ -53,7 +53,9 @@ export const useTextWorker = (
     title?: string
   ) => void,
   t?: (key: string, options?: any) => string,
-  getAllRuneSettings?: () => Record<ERune, RuneSettings>
+  getAllRuneSettings?: () => Record<ERune, RuneSettings>,
+  allowedMode?: "basic" | "advanced" | null,
+  getCurrentMode?: () => "basic" | "advanced"
 ) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -285,6 +287,16 @@ export const useTextWorker = (
 
   const applyChanges = useCallback(async () => {
     logger.info('Starting to apply runes changes', undefined, 'applyChanges');
+    
+    // Проверяем, разрешено ли применение изменений в текущем режиме
+    if (allowedMode && getCurrentMode) {
+      const currentMode = getCurrentMode();
+      if (currentMode !== allowedMode) {
+        logger.warn('Skipping runes changes application - wrong mode', { currentMode, allowedMode }, 'applyChanges');
+        return;
+      }
+    }
+    
     setIsLoading(true);
     setError(null);
 
@@ -344,7 +356,7 @@ export const useTextWorker = (
       setIsLoading(false);
       logger.info('Finished applying runes changes', { hasError: !!error }, 'applyChanges');
     }
-  }, [t, sendMessage, getAllRuneSettings]);
+  }, [t, sendMessage, getAllRuneSettings, allowedMode, getCurrentMode]);
 
   // Функция для применения изменений к файлу локализации
   const applyLocalizationChanges = useCallback(
