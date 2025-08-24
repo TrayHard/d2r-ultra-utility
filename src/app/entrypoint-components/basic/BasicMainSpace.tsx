@@ -12,6 +12,7 @@ import { useTextWorker } from "../../../shared/hooks/useTextWorker.ts";
 import { useCommonItemsWorker } from "../../../shared/hooks/useCommonItemsWorker.ts";
 import { useGemsWorker } from "../../../shared/hooks/useGemsWorker.ts";
 import { useItemsWorker } from "../../../shared/hooks/useItemsWorker.ts";
+import { useApplyAllWorker } from "../../../shared/hooks/useApplyAllWorker.ts";
 import basesData from "../../../pages/items/bases.json";
 import type { AppSettings } from "../../providers/SettingsContext.tsx";
 import Icon from "@mdi/react";
@@ -184,7 +185,7 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
     getAppMode,
   } = useSettings();
 
-  const { sendMessage, muteTypes, unmute } = useGlobalMessage();
+  const { sendMessage } = useGlobalMessage();
 
   // Helper: check duplicate profile name
   const isDuplicateProfileName = useCallback(
@@ -278,6 +279,18 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
     getSelectedLocales,
     itemsForWorker,
     "basic", // разрешенный режим
+    getAppMode
+  );
+
+  // Единый агрегатор записи
+  const { applyAllChanges } = useApplyAllWorker(
+    (message, opts) => {
+      sendMessage(message, { type: opts?.type, title: opts?.title });
+    },
+    t,
+    getAllSettings,
+    getSelectedLocales,
+    "basic",
     getAppMode
   );
 
@@ -427,25 +440,8 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
   );
 
   const executeApplyAll = useCallback(async () => {
-    muteTypes(["success"]);
-    try {
-      const results = await Promise.allSettled([
-        applyCommonRef.current?.(),
-        applyItemsRef.current?.(),
-        applyRunesRef.current?.(),
-        applyGemsRef.current?.(),
-      ]);
-      const hasError = results.some((r) => r && r.status === "rejected");
-      if (!hasError) {
-        sendMessage("Изменения применены", {
-          type: "success",
-          title: "Сохранено",
-        });
-      }
-    } finally {
-      unmute();
-    }
-  }, [muteTypes, unmute, sendMessage]);
+    await applyAllChanges();
+  }, [applyAllChanges]);
 
   const activeProfileIdRef = useRef(activeProfileId);
   useEffect(() => {

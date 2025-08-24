@@ -333,10 +333,10 @@ export const useTextWorker = (
 
       // Отправляем сообщение об успехе
       const successTitle =
-        t?.("messages.success.changesSaved") ?? "Изменения сохранены";
+        t?.("messages.success.changesSaved") ?? "Changes saved";
       const successMessage =
         t?.("messages.success.changesAppliedText") ??
-        "Изменения успешно применены к файлам игры";
+        "Changes applied successfully";
 
       sendMessage?.(successMessage, "success", successTitle);
     } catch (err) {

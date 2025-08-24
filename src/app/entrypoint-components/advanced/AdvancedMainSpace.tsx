@@ -12,6 +12,7 @@ import { useTextWorker } from "../../../shared/hooks/useTextWorker.ts";
 import { useCommonItemsWorker } from "../../../shared/hooks/useCommonItemsWorker.ts";
 import { useGemsWorker } from "../../../shared/hooks/useGemsWorker.ts";
 import { useItemsWorker } from "../../../shared/hooks/useItemsWorker.ts";
+import { useApplyAllWorker } from "../../../shared/hooks/useApplyAllWorker.ts";
 import basesData from "../../../pages/items/bases.json";
 // no storage keys needed here anymore
 
@@ -40,6 +41,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     getCommonSettings,
     getGemSettings,
     getItemsSettings,
+    getAllSettings,
     getSelectedLocales,
     settings,
     profiles,
@@ -163,6 +165,19 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     getAppMode
   );
 
+  // Единый агрегатор записи
+  const { applyAllChanges } = useApplyAllWorker(
+    (message, opts) => {
+      if (isBulkLoading && opts?.type === "success") return;
+      sendMessage(message, { type: opts?.type, title: opts?.title });
+    },
+    t,
+    getAllSettings,
+    getSelectedLocales,
+    "advanced",
+    getAppMode
+  );
+
   // Определяем, какой хук использовать в зависимости от активного таба
   const isLoading =
     activeTab === "runes"
@@ -248,33 +263,10 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
   ]);
 
   const executeApplyAll = useCallback(async () => {
-    logger.info('Starting bulk apply operation for all file types', undefined, 'executeApplyAll');
-    const results = await Promise.allSettled([
-      applyCommonItemsChanges(),
-      applyItemsChanges(),
-      applyRunesChanges(),
-      applyGemsChanges(),
-    ]);
-    const hasError = results.some((r) => r.status === "rejected");
-    if (hasError) {
-      const details = results.map((r, idx) => {
-        if (r.status === 'rejected') {
-          return { index: idx, error: r.reason instanceof Error ? r.reason.message : String(r.reason) };
-        }
-        return { index: idx, value: 'ok' };
-      });
-      logger.error('One or more apply operations failed', new Error('Bulk apply failure'), { details }, 'executeApplyAll');
-    }
-    
-    logger.info('Completed bulk apply operation', { hasError, resultCount: results.length }, 'executeApplyAll');
-    
-    if (!hasError) {
-      sendMessage(
-        t("messages.success.changesSaved") || "Changes saved",
-        { type: "success", title: t("messages.success.changesSaved") }
-      );
-    }
-  }, [applyCommonItemsChanges, applyItemsChanges, applyRunesChanges, applyGemsChanges, sendMessage, t, logger]);
+    logger.info('Starting aggregated apply operation', undefined, 'executeApplyAll');
+    await applyAllChanges();
+    logger.info('Completed aggregated apply operation', undefined, 'executeApplyAll');
+  }, [applyAllChanges, logger]);
 
   const handleConfirm = () => {
     const action = confirmAction;
