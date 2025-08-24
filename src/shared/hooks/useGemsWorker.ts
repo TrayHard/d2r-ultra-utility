@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
+import { useLogger } from "../utils/logger";
 import {
   idToGemMapper,
   gemToIdMapper,
@@ -59,48 +60,62 @@ export const useGemsWorker = (
 ) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const logger = useLogger('GemsWorker');
 
   const readLocales = useCallback(async () => {
+    logger.info('Starting to read gems locales', undefined, 'readLocales');
     setIsLoading(true);
     setError(null);
 
     try {
       // Получаем домашнюю директорию из настроек
       const settings = loadSavedSettings();
-      console.log("Loaded settings:", settings);
+      logger.debug('Loaded settings for gems', { settings }, 'readLocales');
 
       if (!settings?.homeDirectory) {
         const errorMsg =
           t?.("messages.error.pathNotFound") ??
           "Путь к игре не найден в настройках";
+        logger.error('Home directory not found for gems', new Error(errorMsg), { settings }, 'readLocales');
         throw new Error(errorMsg);
       }
 
       // Строим полные пути к файлам
       const homeDir = settings.homeDirectory.replace(/[\/\\]+$/, "");
-      console.log("Home directory:", homeDir);
-
       const itemNamesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.ITEMS_FILE}`;
       const nameAffixesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.NAMEAFFIXES_FILE}`;
 
-      console.log("Reading gems from paths:", {
-        itemNamesPath,
-        nameAffixesPath,
-      });
+      logger.info('Reading gems from paths', { itemNamesPath, nameAffixesPath }, 'readLocales');
 
       // Читаем оба файла
       let itemNamesContent, nameAffixesContent;
       try {
         itemNamesContent = await readTextFile(itemNamesPath);
         nameAffixesContent = await readTextFile(nameAffixesPath);
+        logger.debug('Successfully read gems files', { 
+          itemNamesLength: itemNamesContent.length, 
+          nameAffixesLength: nameAffixesContent.length 
+        }, 'readLocales');
       } catch (fileError) {
-        console.error("Error reading gem files:", fileError);
+        logger.error('Error reading gem files', fileError as Error, { itemNamesPath, nameAffixesPath }, 'readLocales');
         const errorMsg = `Не удалось прочитать файлы драгоценных камней`;
         throw new Error(errorMsg);
       }
 
-      const itemNamesData: LocaleItem[] = JSON.parse(itemNamesContent);
-      const nameAffixesData: LocaleItem[] = JSON.parse(nameAffixesContent);
+      let itemNamesData: LocaleItem[] = [];
+      let nameAffixesData: LocaleItem[] = [];
+      try {
+        itemNamesData = JSON.parse(itemNamesContent);
+      } catch (parseError) {
+        logger.error('Failed to parse item-names JSON for gems', parseError as Error, { path: itemNamesPath }, 'readLocales');
+        throw new Error(`Некорректный JSON в файле: ${itemNamesPath}`);
+      }
+      try {
+        nameAffixesData = JSON.parse(nameAffixesContent);
+      } catch (parseError) {
+        logger.error('Failed to parse item-nameaffixes JSON for gems', parseError as Error, { path: nameAffixesPath }, 'readLocales');
+        throw new Error(`Некорректный JSON в файле: ${nameAffixesPath}`);
+      }
 
       console.log(`Loaded ${itemNamesData.length} items from item-names.json`);
       console.log(
@@ -135,7 +150,7 @@ export const useGemsWorker = (
           const level = parseInt(gem.slice(-1)) - 1; // amethyst1 -> 0 (первый уровень)
 
           if (!gemType) {
-            console.error(`Unknown gem type: ${gemBase} from ${gem}`);
+            logger.warn('Unknown gem type while reading locales', { gem, gemBase }, 'readLocales');
             return;
           }
 
@@ -174,7 +189,7 @@ export const useGemsWorker = (
         }
       });
 
-      console.log(`Processed ${processedGems} gems`);
+      logger.debug('Processed gems count', { processedGems }, 'readLocales');
 
       // Отправляем сообщение об успехе
       const successTitle =
@@ -189,7 +204,7 @@ export const useGemsWorker = (
         "Неизвестная ошибка при чтении файлов";
       const errorMessage = err instanceof Error ? err.message : defaultErrorMsg;
       setError(errorMessage);
-      console.error("Error reading gems locales:", err);
+      logger.error('Failed to read gems locales', err as Error, { error: err instanceof Error ? err.message : String(err) }, 'readLocales');
 
       // Отправляем сообщение об ошибке
       const errorTitle =
@@ -199,6 +214,7 @@ export const useGemsWorker = (
       throw err;
     } finally {
       setIsLoading(false);
+      logger.info('Finished reading gems locales', undefined, 'readLocales');
     }
   }, [updateGemGroupSettings, updateGemLevelSettings, sendMessage, t]);
 
@@ -207,16 +223,25 @@ export const useGemsWorker = (
       const itemNamesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.ITEMS_FILE}`;
       const nameAffixesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.NAMEAFFIXES_FILE}`;
 
-      console.log("Applying gems changes to:", {
-        itemNamesPath,
-        nameAffixesPath,
-      });
+      logger.info('Applying gems changes to paths', { itemNamesPath, nameAffixesPath }, 'applyChanges');
 
       // Читаем оба файла
       const itemNamesContent = await readTextFile(itemNamesPath);
       const nameAffixesContent = await readTextFile(nameAffixesPath);
-      const itemNamesData: LocaleItem[] = JSON.parse(itemNamesContent);
-      const nameAffixesData: LocaleItem[] = JSON.parse(nameAffixesContent);
+      let itemNamesData: LocaleItem[] = [];
+      let nameAffixesData: LocaleItem[] = [];
+      try {
+        itemNamesData = JSON.parse(itemNamesContent);
+      } catch (parseError) {
+        logger.error('Failed to parse item-names JSON for applying gems', parseError as Error, { path: itemNamesPath }, 'applyChanges');
+        throw new Error(`Некорректный JSON в файле: ${itemNamesPath}`);
+      }
+      try {
+        nameAffixesData = JSON.parse(nameAffixesContent);
+      } catch (parseError) {
+        logger.error('Failed to parse item-nameaffixes JSON for applying gems', parseError as Error, { path: nameAffixesPath }, 'applyChanges');
+        throw new Error(`Некорректный JSON в файле: ${nameAffixesPath}`);
+      }
 
       // Создаем обновленные данные
       const updatedItemNamesData = [...itemNamesData];
@@ -316,10 +341,14 @@ export const useGemsWorker = (
         2
       );
 
-      await writeTextFile(itemNamesPath, updatedItemNamesContent);
-      await writeTextFile(nameAffixesPath, updatedNameAffixesContent);
-
-      console.log("Gems localization changes applied successfully");
+      try {
+        await writeTextFile(itemNamesPath, updatedItemNamesContent);
+        await writeTextFile(nameAffixesPath, updatedNameAffixesContent);
+        logger.info('Gems localization changes written successfully', undefined, 'applyChanges');
+      } catch (writeError) {
+        logger.error('Failed to write gems localization changes', writeError as Error, { itemNamesPath, nameAffixesPath }, 'applyChanges');
+        throw new Error('Не удалось записать изменения для камней');
+      }
     },
     []
   );

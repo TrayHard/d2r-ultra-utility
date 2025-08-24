@@ -46,7 +46,6 @@
     "firePotions": "Pociones de fuego",
     "searchPlaceholder": "Buscar",
     "enableCustomization": "Habilitar personalización",
-    "localeSettings": "Ajustes de localización",
     "healthPotionsLevels": {
       "level1": "Poción menor de vida",
       "level2": "Poción ligera de vida",
@@ -338,7 +337,13 @@
       "numberingSettings": "Ajustes de numeración",
       "noChange": "Sin cambios",
       "cancel": "Cancelar",
-      "applyToRunes": "Aplicar a {{count}} runas"
+      "applyToRunes": "Aplicar a {{count}} runas",
+      "runeMode": "Modo",
+      "runeModeTooltips": {
+        "auto": "Modo automático",
+        "noChange": "No cambiar modo",
+        "manual": "Modo manual"
+      }
     },
     "textWorker": {
       "readFromFiles": "Leer de archivos",
@@ -467,6 +472,56 @@
     "off": "Apagado",
     "noChange": "Sin cambios",
     "on": "Encendido"
+  },
+  "mode": {
+    "switchToBasic": "Cambiar a modo básico",
+    "switchToAdvanced": "Cambiar a modo de edición",
+    "basicButton": "Modo Básico",
+    "advancedButton": "Modo de Edición"
+  },
+  "basicMainSpace": {
+    "title": "Filtros de Botín",
+    "searchPlaceholder": "Buscar perfiles...",
+    "applying": "Aplicando...",
+    "importProfile": "Importar Perfil",
+    "dragAndDropHint": "Suelta el archivo (.json) para importar filtro de botín",
+    "sections": {
+      "recommended": "Recomendados",
+      "userProfiles": "Perfiles de Usuario"
+    },
+    "buttons": {
+      "apply": "Aplicar",
+      "addLootFilter": "Añadir Filtro de Botín",
+      "disableLootFilters": "Deshabilitar Filtros de Botín",
+      "howToUse": "Cómo usar"
+    },
+    "tooltips": {
+      "clickToRename": "Haz clic para renombrar",
+      "duplicate": "Duplicar"
+    },
+    "messages": {
+      "profileExists": "Ya existe un perfil con este nombre",
+      "cannotRename": "No se puede renombrar este perfil",
+      "profileRenamed": "Perfil renombrado",
+      "profileImported": "Perfil importado exitosamente",
+      "importError": "Error al importar el perfil",
+      "dragFileHint": "Por favor arrastra un archivo de perfil (.json)"
+    },
+    "confirmDelete": {
+      "title": "Confirmar Eliminación",
+      "message": "¿Estás seguro de que quieres eliminar este perfil? Esta acción no se puede deshacer.",
+      "cancel": "Cancelar",
+      "delete": "Eliminar"
+    },
+    "helpModal": {
+      "title": "Cómo usar",
+      "content": {
+        "line1": "Selecciona un filtro de botín de la lista. Haz clic en Aplicar y luego reinicia el juego.",
+        "line2": "Puedes añadir tus propios filtros de botín (arrastra archivo a la pantalla) y editar los existentes en Modo de Edición (botón arriba).",
+        "line3": "También puedes desactivar los filtros de botín en cualquier momento (botón abajo)."
+      },
+      "close": "Cerrar"
+    }
   }
 }
 

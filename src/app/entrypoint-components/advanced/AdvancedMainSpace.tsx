@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import MainSpaceBody, { TabType } from "./MainSpaceBody.tsx";
+import { useLogger } from "../../../shared/utils/logger.ts";
+import AdvancedMainSpaceBody, { TabType } from "./AdvancedMainSpaceBody.tsx";
 import Tabs, { TabItem } from "../../../shared/components/Tabs.tsx";
 import AppToolbar from "../../../shared/components/AppToolbar.tsx";
 import Modal from "../../../shared/components/Modal.tsx";
@@ -18,8 +19,9 @@ interface MainSpaceProps {
   isDarkTheme: boolean;
 }
 
-const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
+const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
   const { t } = useTranslation();
+  const logger = useLogger('MainSpace');
   const [activeTab, setActiveTab] = useState<TabType>("common");
   const [confirmAction, setConfirmAction] = useState<
     null | "readAll" | "applyAll" | "readCurrent" | "applyCurrent"
@@ -41,12 +43,14 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     getSelectedLocales,
     settings,
     profiles,
+    immutableProfiles,
     activeProfileId,
     createProfile,
     saveProfile,
     loadProfile,
     renameProfile,
     deleteProfile,
+    duplicateProfile,
     exportProfile,
     importProfile,
   } = useSettings();
@@ -193,6 +197,7 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       : () => {};
 
   const executeReadAll = useCallback(async () => {
+    logger.info('Starting bulk read operation for all file types', undefined, 'executeReadAll');
     setIsBulkLoading(true);
     muteTypes(["success"]);
     const results = await Promise.allSettled([
@@ -204,6 +209,18 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     setIsBulkLoading(false);
     unmute();
     const hasError = results.some((r) => r.status === "rejected");
+    if (hasError) {
+      const details = results.map((r, idx) => {
+        if (r.status === 'rejected') {
+          return { index: idx, error: r.reason instanceof Error ? r.reason.message : String(r.reason) };
+        }
+        return { index: idx, value: 'ok' };
+      });
+      logger.error('One or more read operations failed', new Error('Bulk read failure'), { details }, 'executeReadAll');
+    }
+    
+    logger.info('Completed bulk read operation', { hasError, resultCount: results.length }, 'executeReadAll');
+    
     if (!hasError) {
       sendMessage(
         t("messages.success.allLoaded") || "All settings loaded successfully",
@@ -222,6 +239,7 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
   ]);
 
   const executeApplyAll = useCallback(async () => {
+    logger.info('Starting bulk apply operation for all file types', undefined, 'executeApplyAll');
     const results = await Promise.allSettled([
       applyCommonItemsChanges(),
       applyItemsChanges(),
@@ -229,13 +247,25 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       applyGemsChanges(),
     ]);
     const hasError = results.some((r) => r.status === "rejected");
+    if (hasError) {
+      const details = results.map((r, idx) => {
+        if (r.status === 'rejected') {
+          return { index: idx, error: r.reason instanceof Error ? r.reason.message : String(r.reason) };
+        }
+        return { index: idx, value: 'ok' };
+      });
+      logger.error('One or more apply operations failed', new Error('Bulk apply failure'), { details }, 'executeApplyAll');
+    }
+    
+    logger.info('Completed bulk apply operation', { hasError, resultCount: results.length }, 'executeApplyAll');
+    
     if (!hasError) {
       sendMessage(
         t("messages.success.changesSaved") || "Changes saved",
         { type: "success", title: t("messages.success.changesSaved") }
       );
     }
-  }, [applyCommonItemsChanges, applyItemsChanges, applyRunesChanges, applyGemsChanges, sendMessage, t]);
+  }, [applyCommonItemsChanges, applyItemsChanges, applyRunesChanges, applyGemsChanges, sendMessage, t, logger]);
 
   const handleConfirm = () => {
     const action = confirmAction;
@@ -266,20 +296,19 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
         isDarkTheme={isDarkTheme}
         settings={settings}
         profiles={profiles}
+        immutableProfiles={immutableProfiles}
         activeProfileId={activeProfileId}
         isLoading={isLoading}
-        activeTab={activeTab}
         onProfileSelect={loadProfile}
         onProfileCreate={createProfile}
         onProfileSave={saveProfile}
         onProfileRename={renameProfile}
         onProfileDelete={deleteProfile}
+        onProfileDuplicate={duplicateProfile}
         onProfileExport={exportProfile}
         onProfileImport={importProfile}
         onReadAll={() => setConfirmAction("readAll")}
         onApplyAll={() => setConfirmAction("applyAll")}
-        onReadCurrent={() => setConfirmAction("readCurrent")}
-        onApplyCurrent={() => setConfirmAction("applyCurrent")}
       />
 
       {/* Error Display для всех табов */}
@@ -309,7 +338,7 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       {/* Tab Content */}
       <div className="flex-1">
         <div className={`h-full ${isDarkTheme ? "bg-gray-800" : "bg-white"}`}>
-          <MainSpaceBody
+          <AdvancedMainSpaceBody
             activeTab={activeTab}
             isDarkTheme={isDarkTheme}
             onReadFromFiles={readFromFiles}
@@ -367,4 +396,4 @@ const MainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
   );
 };
 
-export default MainSpace;
+export default AdvancedMainSpace;

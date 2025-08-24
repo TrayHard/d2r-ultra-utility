@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
+import { useLogger } from "../utils/logger";
 import {
   idToCommonItemMapper,
   commonItemToIdMapper,
@@ -70,38 +71,35 @@ export const useCommonItemsWorker = (
 ) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const logger = useLogger('CommonItemsWorker');
 
   const readLocales = useCallback(async () => {
+    logger.info('Starting to read locales for common items', undefined, 'readLocales');
     setIsLoading(true);
     setError(null);
 
     try {
       // Получаем домашнюю директорию из настроек
       const settings = loadSavedSettings();
-      console.log("Loaded settings:", settings);
+      logger.debug('Loaded settings from storage', { settings }, 'readLocales');
 
       if (!settings?.homeDirectory) {
         const errorMsg =
           t?.("messages.error.pathNotFound") ??
           "Путь к игре не найден в настройках";
+        logger.error('Home directory not found in settings', new Error(errorMsg), { settings }, 'readLocales');
         throw new Error(errorMsg);
       }
 
       // Строим полный путь к файлу
       const homeDir = settings.homeDirectory.replace(/[\/\\]+$/, "");
-      console.log("Home directory:", homeDir);
-      console.log("Game paths locales:", GAME_PATHS.LOCALES);
-      console.log("Game paths items file:", GAME_PATHS.ITEMS_FILE);
+      logger.debug('Resolved home directory and game paths', { homeDir, localesDir: GAME_PATHS.LOCALES, itemsFile: GAME_PATHS.ITEMS_FILE }, 'readLocales');
 
       const namesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.ITEMS_FILE}`;
       const affixesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.NAMEAFFIXES_FILE}`;
       const modifiersPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\item-modifiers.json`;
 
-      console.log("Reading common items from paths:", {
-        namesPath,
-        affixesPath,
-        modifiersPath,
-      });
+      logger.info('Reading common items from paths', { namesPath, affixesPath, modifiersPath }, 'readLocales');
 
       // Читаем файлы через Tauri API
       let namesContent: string = "[]";
@@ -110,24 +108,45 @@ export const useCommonItemsWorker = (
       try {
         namesContent = await readTextFile(namesPath);
       } catch (fileError) {
-        console.error("Error reading item-names:", fileError);
+        logger.error('Failed to read item-names file', fileError as Error, { path: namesPath }, 'readLocales');
         const errorMsg = `Не удалось прочитать файл: ${namesPath}`;
         throw new Error(errorMsg);
       }
       try {
         affixesContent = await readTextFile(affixesPath);
       } catch (fileError) {
-        console.warn("item-nameaffixes.json not read, continuing:", fileError);
+        logger.warn('item-nameaffixes.json not read, continuing', { path: affixesPath, error: fileError instanceof Error ? fileError.message : String(fileError) }, 'readLocales');
       }
       try {
         modifiersContent = await readTextFile(modifiersPath);
       } catch (fileError) {
-        console.warn("item-modifiers.json not read, continuing:", fileError);
+        logger.warn('item-modifiers.json not read, continuing', { path: modifiersPath, error: fileError instanceof Error ? fileError.message : String(fileError) }, 'readLocales');
       }
 
-      const namesData: LocaleItem[] = JSON.parse(namesContent);
-      const nameAffixesData: LocaleItem[] = affixesContent ? JSON.parse(affixesContent) : [];
-      const modifiersData: LocaleItem[] = modifiersContent ? JSON.parse(modifiersContent) : [];
+      let namesData: LocaleItem[] = [];
+      let nameAffixesData: LocaleItem[] = [];
+      let modifiersData: LocaleItem[] = [];
+
+      try {
+        namesData = JSON.parse(namesContent);
+      } catch (parseError) {
+        logger.error('Failed to parse item-names JSON', parseError as Error, { path: namesPath }, 'readLocales');
+        throw new Error(`Некорректный JSON в файле: ${namesPath}`);
+      }
+
+      try {
+        nameAffixesData = affixesContent ? JSON.parse(affixesContent) : [];
+      } catch (parseError) {
+        logger.error('Failed to parse item-nameaffixes JSON', parseError as Error, { path: affixesPath }, 'readLocales');
+        throw new Error(`Некорректный JSON в файле: ${affixesPath}`);
+      }
+
+      try {
+        modifiersData = modifiersContent ? JSON.parse(modifiersContent) : [];
+      } catch (parseError) {
+        logger.error('Failed to parse item-modifiers JSON', parseError as Error, { path: modifiersPath }, 'readLocales');
+        throw new Error(`Некорректный JSON в файле: ${modifiersPath}`);
+      }
 
       const localeData: LocaleItem[] = [
         ...namesData,
@@ -135,12 +154,7 @@ export const useCommonItemsWorker = (
         ...modifiersData,
       ];
 
-      console.log("Loaded common items locale data (merged)", {
-        names: namesData.length,
-        nameAffixes: nameAffixesData.length,
-        modifiers: modifiersData.length,
-        total: localeData.length,
-      });
+      logger.debug('Loaded common items locale data (merged)', { names: namesData.length, nameAffixes: nameAffixesData.length, modifiers: modifiersData.length, total: localeData.length }, 'readLocales');
 
       let processedItems = 0;
 
@@ -148,7 +162,7 @@ export const useCommonItemsWorker = (
       localeData.forEach((item) => {
         const commonItem = idToCommonItemMapper[item.id];
         if (commonItem) {
-          console.log(`Processing item ${commonItem} with ID ${item.id}`);
+          logger.debug('Processing common item', { commonItem, id: item.id }, 'readLocales');
 
           // Извлекаем локали для предмета
           const itemLocales = {
@@ -281,7 +295,7 @@ export const useCommonItemsWorker = (
         }
       });
 
-      console.log(`Processed ${processedItems} common items`);
+      logger.debug('Processed common items count', { processedItems }, 'readLocales');
 
       // Отправляем сообщение об успехе
       const successTitle =
@@ -299,7 +313,7 @@ export const useCommonItemsWorker = (
         "Неизвестная ошибка при чтении файлов";
       const errorMessage = err instanceof Error ? err.message : defaultErrorMsg;
       setError(errorMessage);
-      console.error("Error reading common items locales:", err);
+      logger.error('Failed to read common items locales', err as Error, { error: err instanceof Error ? err.message : String(err) }, 'readLocales');
 
       // Отправляем сообщение об ошибке
       const errorTitle =
@@ -309,6 +323,7 @@ export const useCommonItemsWorker = (
       throw err;
     } finally {
       setIsLoading(false);
+      logger.info('Finished reading locales for common items', undefined, 'readLocales');
     }
   }, [updateCommonItemSettings, updatePotionLevelSettings, sendMessage, t]);
 
@@ -318,9 +333,10 @@ export const useCommonItemsWorker = (
       const affixesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.NAMEAFFIXES_FILE}`;
       const modifiersPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\item-modifiers.json`;
 
-      console.log("Applying common items changes to:", namesPath);
+      logger.info("Applying common items changes", { namesPath, affixesPath, modifiersPath }, 'applyChanges');
 
       // Читаем текущий файл
+      logger.debug('Reading common items files for applying changes', { namesPath, affixesPath, modifiersPath }, 'applyChanges');
       const namesContent = await readTextFile(namesPath);
       const nameAffixesContent = await readTextFile(affixesPath);
       const modifiersContent = await readTextFile(modifiersPath);
@@ -328,6 +344,12 @@ export const useCommonItemsWorker = (
       const namesData: LocaleItem[] = JSON.parse(namesContent);
       const nameAffixesData: LocaleItem[] = JSON.parse(nameAffixesContent);
       const modifiersData: LocaleItem[] = JSON.parse(modifiersContent);
+      
+      logger.debug('Parsed common items data for changes', { 
+        namesCount: namesData.length, 
+        affixesCount: nameAffixesData.length,
+        modifiersCount: modifiersData.length 
+      }, 'applyChanges');
 
       // Создаем обновленные данные
       const updatedNames = [...namesData];
@@ -501,12 +523,35 @@ export const useCommonItemsWorker = (
         }
       );
 
-      // Записываем обновленные данные обратно в соответствующие файлы
-      await writeTextFile(namesPath, JSON.stringify(updatedNames, null, 2));
-      await writeTextFile(affixesPath, JSON.stringify(updatedAffixes, null, 2));
-      await writeTextFile(modifiersPath, JSON.stringify(updatedModifiers, null, 2));
+      // Хелпер: запись с повторами (фикс Windows Error 1224: user-mapped section)
+      const writeFileWithRetry = async (path: string, content: string) => {
+        const maxAttempts = 10;
+        for (let attempt = 0; attempt < maxAttempts; attempt++) {
+          try {
+            await writeTextFile(path, content);
+            return;
+          } catch (err) {
+            const isLast = attempt === maxAttempts - 1;
+            logger.warn('Write attempt failed, will retry', {
+              path,
+              attempt: attempt + 1,
+              maxAttempts,
+              error: err instanceof Error ? err.message : String(err),
+            }, 'applyChanges');
+            if (isLast) throw err;
+            const backoffMs = Math.min(1000, 100 * Math.pow(2, attempt));
+            await new Promise((r) => setTimeout(r, backoffMs));
+          }
+        }
+      };
 
-      console.log("Common items localization changes applied successfully");
+      // Записываем обновленные данные обратно в соответствующие файлы
+      logger.info('Writing updated common items files', { namesPath, affixesPath, modifiersPath }, 'applyChanges');
+      await writeFileWithRetry(namesPath, JSON.stringify(updatedNames, null, 2));
+      await writeFileWithRetry(affixesPath, JSON.stringify(updatedAffixes, null, 2));
+      await writeFileWithRetry(modifiersPath, JSON.stringify(updatedModifiers, null, 2));
+
+      logger.info("Common items localization changes applied successfully", undefined, 'applyChanges');
     },
     []
   );
@@ -554,7 +599,7 @@ export const useCommonItemsWorker = (
         "Неизвестная ошибка при применении изменений";
       const errorMessage = err instanceof Error ? err.message : defaultErrorMsg;
       setError(errorMessage);
-      console.error("Error applying common items changes:", err);
+      logger.error('Failed to apply common items changes', err as Error, { error: err instanceof Error ? err.message : String(err) }, 'applyCommonItemsChanges');
 
       // Отправляем сообщение об ошибке
       const errorTitle =
@@ -564,6 +609,7 @@ export const useCommonItemsWorker = (
       throw err;
     } finally {
       setIsLoading(false);
+      logger.info('Finished applying common items changes', undefined, 'applyCommonItemsChanges');
     }
   }, [getCommonSettings, applyChanges, sendMessage, t]);
 

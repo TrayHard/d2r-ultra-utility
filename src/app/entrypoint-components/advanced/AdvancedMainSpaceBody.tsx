@@ -6,14 +6,14 @@ import GemsTab from "../../../pages/gems/GemsTab.tsx";
 
 export type TabType = "common" | "items" | "runes" | "gems";
 
-interface MainSpaceBodyProps {
+interface AdvancedMainSpaceBodyProps {
   activeTab: TabType;
   isDarkTheme: boolean;
   onReadFromFiles?: () => void;
   onApplyChanges?: () => void;
 }
 
-const MainSpaceBody: React.FC<MainSpaceBodyProps> = ({
+const AdvancedMainSpaceBody: React.FC<AdvancedMainSpaceBodyProps> = ({
   activeTab,
   isDarkTheme,
   onReadFromFiles,
@@ -49,4 +49,4 @@ const MainSpaceBody: React.FC<MainSpaceBodyProps> = ({
   return <div className="flex-1 h-full">{renderContent()}</div>;
 };
 
-export default MainSpaceBody;
+export default AdvancedMainSpaceBody;

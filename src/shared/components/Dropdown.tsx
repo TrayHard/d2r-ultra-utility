@@ -6,6 +6,9 @@ import { mdiRename, mdiDelete } from "@mdi/js";
 interface DropdownOption {
   value: string;
   label: string;
+  readonly?: boolean; // Флаг для неизменяемых опций
+  isSeparator?: boolean; // Флаг для разделителя
+  isSectionHeader?: boolean; // Флаг для заголовка секции
 }
 
 interface DropdownProps {
@@ -207,6 +210,32 @@ const Dropdown: React.FC<DropdownProps> = ({
         >
           <div className="py-1">
             {options.map((option) => {
+              // Если это заголовок секции, рендерим отдельно
+              if (option.isSectionHeader) {
+                return (
+                  <div
+                    key={option.value}
+                    className={`px-3 py-1 text-xs font-semibold uppercase tracking-wide ${
+                      isDarkTheme ? "text-gray-400" : "text-gray-500"
+                    }`}
+                  >
+                    {option.label}
+                  </div>
+                );
+              }
+
+              // Если это разделитель, рендерим отдельно
+              if (option.isSeparator) {
+                return (
+                  <div
+                    key={option.value}
+                    className={`mx-2 my-1 border-t ${
+                      isDarkTheme ? "border-gray-600" : "border-gray-300"
+                    }`}
+                  />
+                );
+              }
+
               const isSelected = multiple
                 ? selectedValues?.includes(option.value)
                 : option.value === selectedValue;
@@ -251,7 +280,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                       <span className="text-xs opacity-75">(required)</span>
                     )}
                     {/* Option-level actions */}
-                    {onOptionRename && (
+                    {onOptionRename && !option.readonly && (
                       <Tooltip title={renameTitle} placement="top">
                         <div
                           onClick={(e) => {
@@ -266,7 +295,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                         </div>
                       </Tooltip>
                     )}
-                    {onOptionDelete && (
+                    {onOptionDelete && !option.readonly && (
                       <Tooltip title={deleteTitle} placement="top">
                         <div
                           onClick={(e) => {
