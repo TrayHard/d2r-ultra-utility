@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import { useLogger } from "../utils/logger";
+import { ensureWritable } from "../utils/fsUtils";
 import {
   idToGemMapper,
   gemToIdMapper,
@@ -56,7 +57,9 @@ export const useGemsWorker = (
     title?: string
   ) => void,
   t?: (key: string, options?: any) => string,
-  getGemSettings?: () => GemSettings
+  getGemSettings?: () => GemSettings,
+  allowedMode?: "basic" | "advanced" | null,
+  getCurrentMode?: () => "basic" | "advanced"
 ) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -346,14 +349,36 @@ export const useGemsWorker = (
         await writeTextFile(nameAffixesPath, updatedNameAffixesContent);
         logger.info('Gems localization changes written successfully', undefined, 'applyChanges');
       } catch (writeError) {
-        logger.error('Failed to write gems localization changes', writeError as Error, { itemNamesPath, nameAffixesPath }, 'applyChanges');
-        throw new Error('Не удалось записать изменения для камней');
+        logger.error('Initial write failed for gems, attempting ensureWritable', writeError as Error, { itemNamesPath, nameAffixesPath }, 'applyChanges');
+        try {
+          await ensureWritable([itemNamesPath, nameAffixesPath]);
+        } catch (e) {
+          logger.error('ensureWritable invocation failed for gems', e as Error, undefined, 'applyChanges');
+        }
+        try {
+          await writeTextFile(itemNamesPath, updatedItemNamesContent);
+          await writeTextFile(nameAffixesPath, updatedNameAffixesContent);
+          logger.info('Gems localization changes written after ensureWritable', undefined, 'applyChanges');
+        } catch (finalErr) {
+          const suggestion = t?.('messages.error.writePermissionSuggestion') || 'Could not write the file. Try running the app as Administrator or move the game to a folder where you have write permissions.';
+          const msg = (finalErr instanceof Error ? finalErr.message : String(finalErr)) + `\n${suggestion}`;
+          throw new Error(msg);
+        }
       }
     },
     []
   );
 
   const applyGemsChanges = useCallback(async () => {
+    // Проверяем, разрешено ли применение изменений в текущем режиме
+    if (allowedMode && getCurrentMode) {
+      const currentMode = getCurrentMode();
+      if (currentMode !== allowedMode) {
+        console.log('Skipping gems changes application - wrong mode', { currentMode, allowedMode });
+        return;
+      }
+    }
+    
     setIsLoading(true);
     setError(null);
 
@@ -403,7 +428,7 @@ export const useGemsWorker = (
     } finally {
       setIsLoading(false);
     }
-  }, [getGemSettings, applyChanges, sendMessage, t]);
+  }, [getGemSettings, applyChanges, sendMessage, t, allowedMode, getCurrentMode]);
 
   const readFromFiles = useCallback(async () => {
     return await readLocales();

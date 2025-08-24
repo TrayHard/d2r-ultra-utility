@@ -409,7 +409,8 @@
       "profileDeleted": "Profil \"{{name}}\" gelöscht",
       "profileExported": "Profil exportiert",
       "profileImported": "Profil importiert. Sie können es in der Profilliste auswählen.",
-      "importError": "Fehler beim Import des Profils"
+      "importError": "Fehler beim Import des Profils",
+      "profileDuplicated": "Profil \"{{name}}\" dupliziert"
     }
   },
   "files": {
@@ -451,7 +452,8 @@
       "applyError": "Anwendungsfehler",
       "settingsNotFound": "Einstellungen nicht gefunden",
       "highlightLoadError": "Fehler beim Laden der Hervorhebung",
-      "itemsApplyFailed": "Anwenden der Gegenstandseinstellungen fehlgeschlagen"
+      "itemsApplyFailed": "Anwenden der Gegenstandseinstellungen fehlgeschlagen",
+      "writePermissionSuggestion": "Datei konnte nicht geschrieben werden. Führen Sie die App als Administrator aus oder verschieben Sie das Spiel in einen Ordner mit Schreibrechten."
     }
   },
   "startupLoadModal": {

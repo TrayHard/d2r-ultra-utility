@@ -268,7 +268,16 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
           >
             <Button
               variant="secondary"
-              onClick={() => activeProfileId && onProfileDuplicate(activeProfileId)}
+              onClick={() => {
+                if (activeProfileId) {
+                  onProfileDuplicate(activeProfileId);
+                  const duplicated = allProfiles.find((p) => p.id === activeProfileId);
+                  sendMessage(
+                    t("profiles.messages.profileDuplicated", { name: duplicated?.name }) || "Profile duplicated",
+                    { type: "success", title: t("profiles.messages.success") }
+                  );
+                }
+              }}
               disabled={!activeProfileId}
               isDarkTheme={isDarkTheme}
               icon={mdiContentDuplicate}

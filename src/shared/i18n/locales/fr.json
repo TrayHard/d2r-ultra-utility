@@ -371,6 +371,9 @@
   "messages": {
     "success": {
       "allLoaded": "Tous les paramètres ont été chargés avec succès"
+    },
+    "error": {
+      "writePermissionSuggestion": "Impossible d’écrire le fichier. Exécutez l’application en tant qu’administrateur ou déplacez le jeu dans un dossier avec des droits d’écriture."
     }
   },
   "window": {
@@ -441,7 +444,8 @@
       "profileDeleted": "Profil \"{{name}}\" supprimé",
       "profileExported": "Profil exporté",
       "profileImported": "Profil importé. Vous pouvez le sélectionner dans la liste des profils.",
-      "importError": "Erreur lors de l'import du profil"
+      "importError": "Erreur lors de l'import du profil",
+      "profileDuplicated": "Profil \"{{name}}\" dupliqué"
     }
   },
   "itemsPage": {
@@ -473,16 +477,7 @@
       "relatedItems": "Objets associés"
     }
   },
-  "window": {
-    "minimize": "Minimiser",
-    "maximize": "Maximiser",
-    "close": "Fermer"
-  },
-  "triState": {
-    "off": "Désactivé",
-    "noChange": "Sans changement",
-    "on": "Activé"
-  },
+  
   "mode": {
     "switchToBasic": "Basculer en mode basique",
     "switchToAdvanced": "Basculer en mode édition",
