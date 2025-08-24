@@ -150,6 +150,7 @@ const ItemsSettingsModal: React.FC<ItemsSettingsModalProps> = ({
               value
             )
           }
+          hideToggle={true}
         />
 
         {/* Quality Prefixes */}
