@@ -1102,7 +1102,7 @@
     },
     "common": {
       "arrows": {
-        "enabled": true,
+        "enabled": false,
         "locales": {
           "enUS": "Arr",
           "ruRU": "Стр",
@@ -1140,8 +1140,8 @@
       "staminaPotions": {
         "enabled": true,
         "locales": {
-          "enUS": "ÿcMSt",
-          "ruRU": "ÿcMВын",
+          "enUS": "St",
+          "ruRU": "Вын",
           "zhTW": "精力藥水",
           "deDE": "Ausdauerelixier",
           "esES": "Poción de aguante",
@@ -1158,8 +1158,8 @@
       "antidotes": {
         "enabled": true,
         "locales": {
-          "enUS": "ÿcAAd",
-          "ruRU": "ÿcAЯд",
+          "enUS": "Ad",
+          "ruRU": "Яд",
           "zhTW": "解毒藥水",
           "deDE": "Gegengiftelixier",
           "esES": "Poción antídoto",
@@ -1176,8 +1176,8 @@
       "thawingPotions": {
         "enabled": true,
         "locales": {
-          "enUS": "ÿcTTh",
-          "ruRU": "ÿcTОтт",
+          "enUS": "Th",
+          "ruRU": "Отт",
           "zhTW": "",
           "deDE": "",
           "esES": "",
@@ -1194,8 +1194,8 @@
       "amulets": {
         "enabled": true,
         "locales": {
-          "enUS": "Amulet",
-          "ruRU": "[ms]амулет",
+          "enUS": "  Amulet  ",
+          "ruRU": "[ms]  амулет  ",
           "zhTW": "護身符",
           "deDE": "[ns]Amulett",
           "esES": "[ms]Amuleto",
@@ -1212,8 +1212,8 @@
       "rings": {
         "enabled": true,
         "locales": {
-          "enUS": "Ring",
-          "ruRU": "[ns]кольцо",
+          "enUS": "  Ring  ",
+          "ruRU": "[ns]  кольцо  ",
           "zhTW": "戒指",
           "deDE": "[ms]Ring",
           "esES": "[ms]Anillo",
@@ -1230,8 +1230,8 @@
       "jewels": {
         "enabled": true,
         "locales": {
-          "enUS": "Jewel",
-          "ruRU": "[ms]cамоцвет",
+          "enUS": "  Jewel  ",
+          "ruRU": "[ms]  cамоцвет  ",
           "zhTW": "珠寶",
           "deDE": "[ns]Juwel",
           "esES": "[fs]Joya",
@@ -1248,8 +1248,8 @@
       "smallCharms": {
         "enabled": true,
         "locales": {
-          "enUS": "S Charm",
-          "ruRU": "м оберег",
+          "enUS": "   S Charm   ",
+          "ruRU": "   М Оберег   ",
           "zhTW": "小型咒符",
           "deDE": "[ms]Kleiner Zauber",
           "esES": "[ms]Dije pequeño",
@@ -1267,7 +1267,7 @@
         "enabled": true,
         "locales": {
           "enUS": "L Charm",
-          "ruRU": "б оберег",
+          "ruRU": "   Б оберег   ",
           "zhTW": "大型咒符",
           "deDE": "[ms]Großer Zauber",
           "esES": "[ms]Dije grande",
@@ -1284,8 +1284,8 @@
       "grandCharms": {
         "enabled": true,
         "locales": {
-          "enUS": "G Charm",
-          "ruRU": "в оберег",
+          "enUS": "   G Charm   ",
+          "ruRU": "   В Оберег   ",
           "zhTW": "特大咒符",
           "deDE": "[ms]Riesenzauber",
           "esES": "[ms]Dije enorme",
@@ -1864,7 +1864,7 @@
             }
           }
         ],
-        "activeTab": 2
+        "activeTab": 0
       },
       "firePotions": {
         "enabled": false,
@@ -1924,7 +1924,7 @@
             }
           }
         ],
-        "activeTab": 2
+        "activeTab": 1
       }
     },
     "gems": {
@@ -1988,8 +1988,8 @@
           {
             "enabled": true,
             "locales": {
-              "enUS": "ÿc5★ÿc0 F Skull",
-              "ruRU": "ÿc5★ÿc0 Б Череп",
+              "enUS": "ÿc5★ÿc0 Skull",
+              "ruRU": "ÿc5★ÿc0 Череп",
               "zhTW": "無瑕骷髏石",
               "deDE": "makelloser Schädel",
               "esES": "Cráneo sin defectos",
@@ -2083,8 +2083,8 @@
           {
             "enabled": true,
             "locales": {
-              "enUS": "ÿc;★ÿc0 F Amethyst",
-              "ruRU": "ÿc;★ÿc0 Б Аметист",
+              "enUS": "ÿc;★ÿc0 Amethyst",
+              "ruRU": "ÿc;★ÿc0 Аметист",
               "zhTW": "無瑕紫寶石",
               "deDE": "makelloser Amethyst",
               "esES": "Amatista sin defectos",
@@ -2178,8 +2178,8 @@
           {
             "enabled": true,
             "locales": {
-              "enUS": "ÿc9★ÿc0 F Topaz",
-              "ruRU": "ÿc9★ÿc0 Б Топаз",
+              "enUS": "ÿc9★ÿc0 Topaz",
+              "ruRU": "ÿc9★ÿc0 Топаз",
               "zhTW": "無瑕黃寶石",
               "deDE": "makelloser Topas",
               "esES": "Topacio sin defectos",
@@ -2273,8 +2273,8 @@
           {
             "enabled": true,
             "locales": {
-              "enUS": "ÿc3★ÿc0 F Sapphire",
-              "ruRU": "ÿc3★ÿc0 Б Сапфир",
+              "enUS": "ÿc3★ÿc0 Sapphire",
+              "ruRU": "ÿc3★ÿc0 Сапфир",
               "zhTW": "無瑕藍寶石",
               "deDE": "makelloser Saphir",
               "esES": "Zafiro sin defectos",
@@ -2368,8 +2368,8 @@
           {
             "enabled": true,
             "locales": {
-              "enUS": "ÿc2★ÿc0 F Emerald",
-              "ruRU": "ÿc2★ÿc0 Б Изумруд",
+              "enUS": "ÿc2★ÿc0 Emerald",
+              "ruRU": "ÿc2★ÿc0 Изумруд",
               "zhTW": "無瑕綠寶石",
               "deDE": "makelloser Smaragd",
               "esES": "Esmeralda sin defectos",
@@ -2463,8 +2463,8 @@
           {
             "enabled": true,
             "locales": {
-              "enUS": "ÿc1★ÿc0 F Ruby",
-              "ruRU": "ÿc1★ÿc0 Б Рубин",
+              "enUS": "ÿc1★ÿc0 Ruby",
+              "ruRU": "ÿc1★ÿc0 Рубин",
               "zhTW": "無瑕紅寶石",
               "deDE": "makelloser Rubin",
               "esES": "Rubí sin defectos",
@@ -2558,8 +2558,8 @@
           {
             "enabled": true,
             "locales": {
-              "enUS": "ÿc5★ÿc0 F Diamond",
-              "ruRU": "ÿc5★ÿc0 Б Алмаз",
+              "enUS": "ÿc5★ÿc0 Diamond",
+              "ruRU": "ÿc5★ÿc0 Алмаз",
               "zhTW": "無瑕鑽石",
               "deDE": "makelloser Diamant",
               "esES": "Diamante sin defectos",
@@ -2596,66 +2596,66 @@
     },
     "items": {
       "difficultyClassMarkers": {
-        "enabled": false,
+        "enabled": true,
         "levels": [
           {
-            "enabled": false,
+            "enabled": true,
             "locales": {
-              "enUS": "[n]",
-              "ruRU": "[n]",
-              "zhTW": "[n]",
-              "deDE": "[n]",
-              "esES": "[n]",
-              "frFR": "[n]",
-              "itIT": "[n]",
-              "koKR": "[n]",
-              "plPL": "[n]",
-              "esMX": "[n]",
-              "jaJP": "[n]",
-              "ptBR": "[n]",
-              "zhCN": "[n]"
+              "enUS": "(n)",
+              "ruRU": "(n)",
+              "zhTW": "(n)",
+              "deDE": "(n)",
+              "esES": "(n)",
+              "frFR": "(n)",
+              "itIT": "(n)",
+              "koKR": "(n)",
+              "plPL": "(n)",
+              "esMX": "(n)",
+              "jaJP": "(n)",
+              "ptBR": "(n)",
+              "zhCN": "(n)"
             }
           },
           {
-            "enabled": false,
+            "enabled": true,
             "locales": {
-              "enUS": "[x]",
-              "ruRU": "[x]",
-              "zhTW": "[x]",
-              "deDE": "[x]",
-              "esES": "[x]",
-              "frFR": "[x]",
-              "itIT": "[x]",
-              "koKR": "[x]",
-              "plPL": "[x]",
-              "esMX": "[x]",
-              "jaJP": "[x]",
-              "ptBR": "[x]",
-              "zhCN": "[x]"
+              "enUS": "(x)",
+              "ruRU": "(x)",
+              "zhTW": "(x)",
+              "deDE": "(x)",
+              "esES": "(x)",
+              "frFR": "(x)",
+              "itIT": "(x)",
+              "koKR": "(x)",
+              "plPL": "(x)",
+              "esMX": "(x)",
+              "jaJP": "(x)",
+              "ptBR": "(x)",
+              "zhCN": "(x)"
             }
           },
           {
-            "enabled": false,
+            "enabled": true,
             "locales": {
-              "enUS": "[e]",
-              "ruRU": "[e]",
-              "zhTW": "[e]",
-              "deDE": "[e]",
-              "esES": "[e]",
-              "frFR": "[e]",
-              "itIT": "[e]",
-              "koKR": "[e]",
-              "plPL": "[e]",
-              "esMX": "[e]",
-              "jaJP": "[e]",
-              "ptBR": "[e]",
-              "zhCN": "[e]"
+              "enUS": "(e)",
+              "ruRU": "(e)",
+              "zhTW": "(e)",
+              "deDE": "(e)",
+              "esES": "(e)",
+              "frFR": "(e)",
+              "itIT": "(e)",
+              "koKR": "(e)",
+              "plPL": "(e)",
+              "esMX": "(e)",
+              "jaJP": "(e)",
+              "ptBR": "(e)",
+              "zhCN": "(e)"
             }
           }
         ]
       },
       "qualityPrefixes": {
-        "enabled": false,
+        "enabled": true,
         "levels": [
           {
             "enabled": true,
@@ -12066,6 +12066,6 @@
       }
     }
   },
-  "createdAt": "2025-08-23T19:03:19.629Z",
-  "modifiedAt": "2025-08-23T19:03:19.629Z"
+  "createdAt": "2025-08-24T22:47:58.662Z",
+  "modifiedAt": "2025-08-24T22:54:11.944Z"
 }
