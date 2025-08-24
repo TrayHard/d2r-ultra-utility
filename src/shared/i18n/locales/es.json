@@ -371,6 +371,9 @@
   "messages": {
     "success": {
       "allLoaded": "Todos los ajustes se cargaron correctamente"
+    },
+    "error": {
+      "writePermissionSuggestion": "No se pudo escribir el archivo. Ejecuta la aplicación como Administrador o mueve el juego a una carpeta donde tengas permisos de escritura."
     }
   },
   "startupLoadModal": {
@@ -431,7 +434,8 @@
       "profileDeleted": "Perfil \"{{name}}\" eliminado",
       "profileExported": "Perfil exportado",
       "profileImported": "Perfil importado. Puedes seleccionarlo en la lista de perfiles.",
-      "importError": "Error al importar el perfil"
+      "importError": "Error al importar el perfil",
+      "profileDuplicated": "Perfil \"{{name}}\" duplicado"
     }
   },
   "itemsPage": {

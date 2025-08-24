@@ -432,7 +432,8 @@
       "profileDeleted": "Profile \"{{name}}\" deleted",
       "profileExported": "Profile exported",
       "profileImported": "Profile imported. You can select it in the profiles list.",
-      "importError": "Error importing profile"
+      "importError": "Error importing profile",
+      "profileDuplicated": "Profile \"{{name}}\" duplicated"
     }
   },
   "files": {
@@ -474,7 +475,8 @@
       "applyError": "Apply error",
       "settingsNotFound": "Settings not found",
       "highlightLoadError": "Highlight settings loading error",
-      "itemsApplyFailed": "Failed to apply items settings"
+      "itemsApplyFailed": "Failed to apply items settings",
+      "writePermissionSuggestion": "Could not write the file. Try running the app as Administrator or move the game to a folder where you have write permissions."
     }
   },
   "startupLoadModal": {

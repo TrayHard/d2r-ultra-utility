@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
+import { ensureWritable } from "../utils/fsUtils";
 import { useLogger } from "../utils/logger";
 import {
   idToRuneMapper,
@@ -53,7 +54,9 @@ export const useTextWorker = (
     title?: string
   ) => void,
   t?: (key: string, options?: any) => string,
-  getAllRuneSettings?: () => Record<ERune, RuneSettings>
+  getAllRuneSettings?: () => Record<ERune, RuneSettings>,
+  allowedMode?: "basic" | "advanced" | null,
+  getCurrentMode?: () => "basic" | "advanced"
 ) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -285,6 +288,16 @@ export const useTextWorker = (
 
   const applyChanges = useCallback(async () => {
     logger.info('Starting to apply runes changes', undefined, 'applyChanges');
+    
+    // Проверяем, разрешено ли применение изменений в текущем режиме
+    if (allowedMode && getCurrentMode) {
+      const currentMode = getCurrentMode();
+      if (currentMode !== allowedMode) {
+        logger.warn('Skipping runes changes application - wrong mode', { currentMode, allowedMode }, 'applyChanges');
+        return;
+      }
+    }
+    
     setIsLoading(true);
     setError(null);
 
@@ -321,10 +334,10 @@ export const useTextWorker = (
 
       // Отправляем сообщение об успехе
       const successTitle =
-        t?.("messages.success.changesSaved") ?? "Изменения сохранены";
+        t?.("messages.success.changesSaved") ?? "Changes saved";
       const successMessage =
         t?.("messages.success.changesAppliedText") ??
-        "Изменения успешно применены к файлам игры";
+        "Changes applied successfully";
 
       sendMessage?.(successMessage, "success", successTitle);
     } catch (err) {
@@ -344,7 +357,7 @@ export const useTextWorker = (
       setIsLoading(false);
       logger.info('Finished applying runes changes', { hasError: !!error }, 'applyChanges');
     }
-  }, [t, sendMessage, getAllRuneSettings]);
+  }, [t, sendMessage, getAllRuneSettings, allowedMode, getCurrentMode]);
 
   // Функция для применения изменений к файлу локализации
   const applyLocalizationChanges = useCallback(
@@ -367,7 +380,7 @@ export const useTextWorker = (
       const updatedData = [...currentData];
 
       // Обновляем только выбранные локали из настроек приложения
-      const selectedLocales = (JSON.parse(localStorage.getItem(STORAGE_KEYS.APP_CONFIG) || '{}')?.selectedLocales) || ["enUS"]; 
+      const selectedLocales = (JSON.parse(localStorage.getItem(STORAGE_KEYS.APP_CONFIG) || '{}')?.selectedLocales) || ["enUS", "ruRU"]; 
 
       Object.entries(runeSettings).forEach(([rune, settings]) => {
         const runeEnum = rune as ERune;
@@ -447,7 +460,23 @@ export const useTextWorker = (
           } catch (err) {
             const isLast = attempt === maxAttempts - 1;
             console.warn('Runes write attempt failed, retrying', path, attempt + 1, err);
-            if (isLast) throw err;
+            if (isLast) {
+              try {
+                const results = await ensureWritable([path]);
+                const r = results[0];
+                console.warn('Attempted to ensure writable', { path, result: r });
+              } catch (e) {
+                console.warn('ensureWritable invocation failed', path, e);
+              }
+              try {
+                await writeTextFile(path, content);
+                return;
+              } catch (finalErr) {
+                const suggestion = t?.('messages.error.writePermissionSuggestion') || 'Could not write the file. Try running the app as Administrator or move the game to a folder where you have write permissions.';
+                const msg = (finalErr instanceof Error ? finalErr.message : String(finalErr)) + `\n${suggestion}`;
+                throw new Error(msg);
+              }
+            }
             const backoffMs = Math.min(1000, 100 * Math.pow(2, attempt));
             await new Promise((r) => setTimeout(r, backoffMs));
           }
@@ -491,7 +520,23 @@ export const useTextWorker = (
               } catch (err) {
                 const isLast = attempt === maxAttempts - 1;
                 console.warn('Highlight write attempt failed, retrying', path, attempt + 1, err);
-                if (isLast) throw err;
+                if (isLast) {
+                  try {
+                    const results = await ensureWritable([path]);
+                    const r = results[0];
+                    console.warn('Attempted to ensure writable', { path, result: r });
+                  } catch (e) {
+                    console.warn('ensureWritable invocation failed', path, e);
+                  }
+                  try {
+                    await writeTextFile(path, content);
+                    return;
+                  } catch (finalErr) {
+                    const suggestion = t?.('messages.error.writePermissionSuggestion') || 'Could not write the file. Try running the app as Administrator or move the game to a folder where you have write permissions.';
+                    const msg = (finalErr instanceof Error ? finalErr.message : String(finalErr)) + `\n${suggestion}`;
+                    throw new Error(msg);
+                  }
+                }
                 const backoffMs = Math.min(1000, 100 * Math.pow(2, attempt));
                 await new Promise((r) => setTimeout(r, backoffMs));
               }

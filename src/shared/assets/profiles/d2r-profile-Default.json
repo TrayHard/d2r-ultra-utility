@@ -4,7 +4,7 @@
   "settings": {
     "runes": {
       "el": {
-        "mode": "auto",
+        "mode": "manual",
         "isHighlighted": false,
         "autoSettings": {
           "numbering": {
@@ -20,7 +20,7 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "El Rune ÿc9(ÿc01ÿc9)",
+            "enUS": "El Rune",
             "ruRU": "Руна Эль",
             "zhTW": "符文：艾爾",
             "deDE": "[fs]El-Rune",
@@ -37,7 +37,7 @@
         }
       },
       "eld": {
-        "mode": "auto",
+        "mode": "manual",
         "isHighlighted": false,
         "autoSettings": {
           "numbering": {
@@ -53,7 +53,7 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "Eld Rune ÿc9(ÿc02ÿc9)",
+            "enUS": "Eld Rune",
             "ruRU": "Руна Элд",
             "zhTW": "符文：艾德",
             "deDE": "[fs]Eld-Rune",
@@ -70,7 +70,7 @@
         }
       },
       "tir": {
-        "mode": "auto",
+        "mode": "manual",
         "isHighlighted": false,
         "autoSettings": {
           "numbering": {
@@ -86,7 +86,7 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "Tir Rune ÿc9(ÿc03ÿc9)",
+            "enUS": "Tir Rune",
             "ruRU": "Руна Тир",
             "zhTW": "符文：特爾",
             "deDE": "[fs]Tir-Rune",
@@ -103,7 +103,7 @@
         }
       },
       "nef": {
-        "mode": "auto",
+        "mode": "manual",
         "isHighlighted": false,
         "autoSettings": {
           "numbering": {
@@ -119,7 +119,7 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "Nef Rune ÿc9(ÿc04ÿc9)",
+            "enUS": "Nef Rune",
             "ruRU": "Руна Неф",
             "zhTW": "符文：那夫",
             "deDE": "[fs]Nef-Rune",
@@ -136,7 +136,7 @@
         }
       },
       "eth": {
-        "mode": "auto",
+        "mode": "manual",
         "isHighlighted": false,
         "autoSettings": {
           "numbering": {
@@ -152,7 +152,7 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "Eth Rune ÿc9(ÿc05ÿc9)",
+            "enUS": "Eth Rune",
             "ruRU": "Руна Эт",
             "zhTW": "符文：愛斯",
             "deDE": "[fs]Eth-Rune",
@@ -169,7 +169,7 @@
         }
       },
       "ith": {
-        "mode": "auto",
+        "mode": "manual",
         "isHighlighted": false,
         "autoSettings": {
           "numbering": {
@@ -185,7 +185,7 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "Ith Rune ÿc9(ÿc06ÿc9)",
+            "enUS": "Ith Rune",
             "ruRU": "Руна Ит",
             "zhTW": "符文：伊司",
             "deDE": "[fs]Ith-Rune",
@@ -202,7 +202,7 @@
         }
       },
       "tal": {
-        "mode": "auto",
+        "mode": "manual",
         "isHighlighted": false,
         "autoSettings": {
           "numbering": {
@@ -218,7 +218,7 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "Tal Rune ÿc9(ÿc07ÿc9)",
+            "enUS": "Tal Rune",
             "ruRU": "Руна Тал",
             "zhTW": "符文：塔爾",
             "deDE": "[fs]Tal-Rune",
@@ -235,7 +235,7 @@
         }
       },
       "ral": {
-        "mode": "auto",
+        "mode": "manual",
         "isHighlighted": false,
         "autoSettings": {
           "numbering": {
@@ -251,7 +251,7 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "Ral Rune ÿc9(ÿc08ÿc9)",
+            "enUS": "Ral Rune",
             "ruRU": "Руна Рал",
             "zhTW": "符文：拉爾",
             "deDE": "[fs]Ral-Rune",
@@ -268,7 +268,7 @@
         }
       },
       "ort": {
-        "mode": "auto",
+        "mode": "manual",
         "isHighlighted": false,
         "autoSettings": {
           "numbering": {
@@ -284,7 +284,7 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "Ort Rune ÿc9(ÿc39ÿc9)",
+            "enUS": "Ort Rune",
             "ruRU": "Руна Орт",
             "zhTW": "符文：歐特",
             "deDE": "[fs]Ort-Rune",
@@ -301,7 +301,7 @@
         }
       },
       "thul": {
-        "mode": "auto",
+        "mode": "manual",
         "isHighlighted": false,
         "autoSettings": {
           "numbering": {
@@ -317,7 +317,7 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "Thul Rune ÿc9(ÿc310ÿc9)",
+            "enUS": "Thul Rune",
             "ruRU": "Руна Тул",
             "zhTW": "符文：書爾",
             "deDE": "[fs]Thul-Rune",
@@ -334,7 +334,7 @@
         }
       },
       "amn": {
-        "mode": "auto",
+        "mode": "manual",
         "isHighlighted": false,
         "autoSettings": {
           "numbering": {
@@ -350,7 +350,7 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "Amn Rune ÿc9(ÿc311ÿc9)",
+            "enUS": "Amn Rune",
             "ruRU": "Руна Амн",
             "zhTW": "符文：安姆",
             "deDE": "[fs]Amn-Rune",
@@ -367,7 +367,7 @@
         }
       },
       "sol": {
-        "mode": "auto",
+        "mode": "manual",
         "isHighlighted": false,
         "autoSettings": {
           "numbering": {
@@ -383,7 +383,7 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "Sol Rune ÿc9(ÿc312ÿc9)",
+            "enUS": "Sol Rune",
             "ruRU": "Руна Сол",
             "zhTW": "符文：索爾",
             "deDE": "[fs]Sol-Rune",
@@ -400,7 +400,7 @@
         }
       },
       "shael": {
-        "mode": "auto",
+        "mode": "manual",
         "isHighlighted": false,
         "autoSettings": {
           "numbering": {
@@ -416,7 +416,7 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "Shael Rune ÿc9(ÿc313ÿc9)",
+            "enUS": "Shael Rune",
             "ruRU": "Руна Шаэль",
             "zhTW": "符文：夏",
             "deDE": "[fs]Shael-Rune",
@@ -433,7 +433,7 @@
         }
       },
       "dol": {
-        "mode": "auto",
+        "mode": "manual",
         "isHighlighted": false,
         "autoSettings": {
           "numbering": {
@@ -449,7 +449,7 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "Dol Rune ÿc9(ÿc314ÿc9)",
+            "enUS": "Dol Rune",
             "ruRU": "Руна Дол",
             "zhTW": "符文：多爾",
             "deDE": "[fs]Dol-Rune",
@@ -466,7 +466,7 @@
         }
       },
       "hel": {
-        "mode": "auto",
+        "mode": "manual",
         "isHighlighted": false,
         "autoSettings": {
           "numbering": {
@@ -482,7 +482,7 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "Hel Rune ÿc9(ÿc315ÿc9)",
+            "enUS": "Hel Rune",
             "ruRU": "Руна Хел",
             "zhTW": "符文：海爾",
             "deDE": "[fs]Hel-Rune",
@@ -499,7 +499,7 @@
         }
       },
       "io": {
-        "mode": "auto",
+        "mode": "manual",
         "isHighlighted": false,
         "autoSettings": {
           "numbering": {
@@ -515,7 +515,7 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "Io Rune ÿc9(ÿc316ÿc9)",
+            "enUS": "Io Rune",
             "ruRU": "Руна Ио",
             "zhTW": "符文：埃歐",
             "deDE": "[fs]Io-Rune",
@@ -532,7 +532,7 @@
         }
       },
       "lum": {
-        "mode": "auto",
+        "mode": "manual",
         "isHighlighted": false,
         "autoSettings": {
           "numbering": {
@@ -548,7 +548,7 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "ÿcULum Rune ÿc9(ÿc817ÿc9)\nÿc;•Pick  Up•ÿc0",
+            "enUS": "Lum Rune",
             "ruRU": "Руна Лум",
             "zhTW": "符文：盧姆",
             "deDE": "[fs]Lum-Rune",
@@ -565,7 +565,7 @@
         }
       },
       "ko": {
-        "mode": "auto",
+        "mode": "manual",
         "isHighlighted": false,
         "autoSettings": {
           "numbering": {
@@ -581,7 +581,7 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "ÿcUKo Rune ÿc9(ÿc818ÿc9)\nÿc;•Pick  Up•ÿc0",
+            "enUS": "Ko Rune",
             "ruRU": "Руна Ко",
             "zhTW": "符文：科",
             "deDE": "[fs]Ko-Rune",
@@ -598,7 +598,7 @@
         }
       },
       "fal": {
-        "mode": "auto",
+        "mode": "manual",
         "isHighlighted": false,
         "autoSettings": {
           "numbering": {
@@ -614,7 +614,7 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "ÿcUFal Rune ÿc9(ÿc819ÿc9)\nÿc;•Pick  Up•ÿc0",
+            "enUS": "Fal Rune",
             "ruRU": "Руна Фал",
             "zhTW": "符文：法爾",
             "deDE": "[fs]Fal-Rune",
@@ -631,8 +631,8 @@
         }
       },
       "lem": {
-        "mode": "auto",
-        "isHighlighted": true,
+        "mode": "manual",
+        "isHighlighted": false,
         "autoSettings": {
           "numbering": {
             "show": true,
@@ -647,14 +647,14 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "\n~         Lem Rune ÿc9(ÿc820ÿc9)         ~\nÿc;~         Pick  Me         ~ÿc0\n",
+            "enUS": "Lem Rune",
             "ruRU": "Руна Лем",
             "zhTW": "符文：藍姆",
             "deDE": "[fs]Lem-Rune",
             "esES": "Runa Lem",
             "frFR": "[fs]Rune Lem",
             "itIT": "[fs]Runa Lem",
-            "koKR": "\n~         렘 룬         ~\nÿc;~         주으세요         ~ÿc0\n",
+            "koKR": "렘 룬",
             "plPL": "Runa Lem",
             "esMX": "Runa Lem",
             "jaJP": "レム・ルーン",
@@ -664,8 +664,8 @@
         }
       },
       "pul": {
-        "mode": "auto",
-        "isHighlighted": true,
+        "mode": "manual",
+        "isHighlighted": false,
         "autoSettings": {
           "numbering": {
             "show": true,
@@ -680,14 +680,14 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "\n~         Pul Rune ÿc9(ÿc821ÿc9)         ~\nÿc;~         Pick  Me         ~ÿc0\n",
+            "enUS": "Pul Rune",
             "ruRU": "Руна Пул",
             "zhTW": "符文：普爾",
             "deDE": "[fs]Pul-Rune",
             "esES": "Runa Pul",
             "frFR": "[fs]Rune Pul",
             "itIT": "[fs]Runa Pul",
-            "koKR": "\n~         풀 룬         ~\nÿc;~         주으세요         ~ÿc0\n",
+            "koKR": "풀 룬",
             "plPL": "Runa Pul",
             "esMX": "Runa Pul",
             "jaJP": "プル・ルーン",
@@ -697,8 +697,8 @@
         }
       },
       "um": {
-        "mode": "auto",
-        "isHighlighted": true,
+        "mode": "manual",
+        "isHighlighted": false,
         "autoSettings": {
           "numbering": {
             "show": true,
@@ -713,14 +713,14 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "\n~         Um Rune ÿc9(ÿc822ÿc9)         ~\nÿc;~         Pick  Me         ~ÿc0\n",
+            "enUS": "Um Rune",
             "ruRU": "Руна Ум",
             "zhTW": "符文：烏姆",
             "deDE": "[fs]Um-Rune",
             "esES": "Runa Um",
             "frFR": "[fs]Rune Um",
             "itIT": "[fs]Runa Um",
-            "koKR": "\n~         우움 룬         ~\nÿc;~         주으세요         ~ÿc0\n",
+            "koKR": "우움 룬",
             "plPL": "Runa Um",
             "esMX": "Runa Um",
             "jaJP": "アム・ルーン",
@@ -730,8 +730,8 @@
         }
       },
       "mal": {
-        "mode": "auto",
-        "isHighlighted": true,
+        "mode": "manual",
+        "isHighlighted": false,
         "autoSettings": {
           "numbering": {
             "show": true,
@@ -746,14 +746,14 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "\n~         Mal Rune ÿc9(ÿc823ÿc9)         ~\nÿc;~         Pick  Me         ~ÿc0\n",
+            "enUS": "Mal Rune",
             "ruRU": "Руна Мал",
             "zhTW": "符文：馬爾",
             "deDE": "[fs]Mal-Rune",
             "esES": "Runa Mal",
             "frFR": "[fs]Rune Mal",
             "itIT": "[fs]Runa Mal",
-            "koKR": "\n~         말 룬         ~\nÿc;~         주으세요         ~ÿc0\n",
+            "koKR": "말 룬",
             "plPL": "Runa Mal",
             "esMX": "Runa Mal",
             "jaJP": "マル・ルーン",
@@ -763,8 +763,8 @@
         }
       },
       "ist": {
-        "mode": "auto",
-        "isHighlighted": true,
+        "mode": "manual",
+        "isHighlighted": false,
         "autoSettings": {
           "numbering": {
             "show": true,
@@ -779,14 +779,14 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "\n~         Ist Rune ÿc9(ÿc824ÿc9)         ~\nÿc;~         Pick  Me         ~ÿc0\n",
+            "enUS": "Ist Rune",
             "ruRU": "Руна Ист",
             "zhTW": "符文：伊司特",
             "deDE": "[fs]Ist-Rune",
             "esES": "Runa Ist",
             "frFR": "[fs]Rune Ist",
             "itIT": "[fs]Runa Ist",
-            "koKR": "\n~         이스트 룬         ~\nÿc;~         주으세요         ~ÿc0\n",
+            "koKR": "이스트 룬",
             "plPL": "Runa Ist",
             "esMX": "Runa Ist",
             "jaJP": "イスト・ルーン",
@@ -796,8 +796,8 @@
         }
       },
       "gul": {
-        "mode": "auto",
-        "isHighlighted": true,
+        "mode": "manual",
+        "isHighlighted": false,
         "autoSettings": {
           "numbering": {
             "show": true,
@@ -812,14 +812,14 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "\n~         Gul Rune ÿc9(ÿc125ÿc9)         ~\nÿc;~         Pick  Me         ~ÿc0\n",
+            "enUS": "Gul Rune",
             "ruRU": "Руна Гул",
             "zhTW": "符文：古爾",
             "deDE": "[fs]Gul-Rune",
             "esES": "Runa Gul",
             "frFR": "[fs]Rune Gul",
             "itIT": "[fs]Runa Gul",
-            "koKR": "\n~         굴 룬         ~\nÿc;~         주으세요         ~ÿc0\n",
+            "koKR": "굴 룬",
             "plPL": "Runa Gul",
             "esMX": "Runa Gul",
             "jaJP": "ガル・ルーン",
@@ -829,8 +829,8 @@
         }
       },
       "vex": {
-        "mode": "auto",
-        "isHighlighted": true,
+        "mode": "manual",
+        "isHighlighted": false,
         "autoSettings": {
           "numbering": {
             "show": true,
@@ -845,14 +845,14 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "\n~         Vex Rune ÿc9(ÿc126ÿc9)         ~\nÿc;~         Pick  Me         ~ÿc0\n",
+            "enUS": "Vex Rune",
             "ruRU": "Руна Векс",
             "zhTW": "符文：伐克斯",
             "deDE": "[fs]Vex-Rune",
             "esES": "Runa Vex",
             "frFR": "[fs]Rune Vex",
             "itIT": "[fs]Runa Vex",
-            "koKR": "\n~         벡스 룬         ~\nÿc;~         주으세요         ~ÿc0\n",
+            "koKR": "벡스 룬",
             "plPL": "Runa Vex",
             "esMX": "Runa Vex",
             "jaJP": "ヴェックス・ルーン",
@@ -862,8 +862,8 @@
         }
       },
       "ohm": {
-        "mode": "auto",
-        "isHighlighted": true,
+        "mode": "manual",
+        "isHighlighted": false,
         "autoSettings": {
           "numbering": {
             "show": true,
@@ -878,14 +878,14 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "\n~         Ohm Rune ÿc9(ÿc127ÿc9)         ~\nÿc;~         Pick  Me         ~ÿc0\n",
+            "enUS": "Ohm Rune",
             "ruRU": "Руна Ом",
             "zhTW": "符文：歐姆",
             "deDE": "[fs]Ohm-Rune",
             "esES": "Runa Ohm",
             "frFR": "[fs]Rune Ohm",
             "itIT": "[fs]Runa Ohm",
-            "koKR": "\n~         오움 룬         ~\nÿc;~         주으세요         ~ÿc0\n",
+            "koKR": "오움 룬",
             "plPL": "Runa Ohm",
             "esMX": "Runa Ohm",
             "jaJP": "オーム・ルーン",
@@ -895,8 +895,8 @@
         }
       },
       "lo": {
-        "mode": "auto",
-        "isHighlighted": true,
+        "mode": "manual",
+        "isHighlighted": false,
         "autoSettings": {
           "numbering": {
             "show": true,
@@ -911,14 +911,14 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "\n~         Lo Rune ÿc9(ÿc128ÿc9)         ~\nÿc;~         Pick  Me         ~ÿc0\n",
+            "enUS": "Lo Rune",
             "ruRU": "Руна Ло",
             "zhTW": "符文：羅",
             "deDE": "[fs]Lo-Rune",
             "esES": "Runa Lo",
             "frFR": "[fs]Rune Lo",
             "itIT": "[fs]Runa Lo",
-            "koKR": "\n~         로 룬         ~\nÿc;~         주으세요         ~ÿc0\n",
+            "koKR": "로 룬",
             "plPL": "Runa Lo",
             "esMX": "Runa Lo",
             "jaJP": "ロー・ルーン",
@@ -928,8 +928,8 @@
         }
       },
       "sur": {
-        "mode": "auto",
-        "isHighlighted": true,
+        "mode": "manual",
+        "isHighlighted": false,
         "autoSettings": {
           "numbering": {
             "show": true,
@@ -944,14 +944,14 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "\n~         Sur Rune ÿc9(ÿc129ÿc9)         ~\nÿc;~         Pick  Me         ~ÿc0\n",
+            "enUS": "Sur Rune",
             "ruRU": "Руна Сур",
             "zhTW": "符文：瑟",
             "deDE": "[fs]Sur-Rune",
             "esES": "Runa Sur",
             "frFR": "[fs]Rune Sur",
             "itIT": "[fs]Runa Sur",
-            "koKR": "\n~         수르 룬         ~\nÿc;~         주으세요         ~ÿc0\n",
+            "koKR": "수르 룬",
             "plPL": "Runa Sur",
             "esMX": "Runa Sur",
             "jaJP": "サー・ルーン",
@@ -961,8 +961,8 @@
         }
       },
       "ber": {
-        "mode": "auto",
-        "isHighlighted": true,
+        "mode": "manual",
+        "isHighlighted": false,
         "autoSettings": {
           "numbering": {
             "show": true,
@@ -977,14 +977,14 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "Ber\n~         Ber Rune ÿc9(ÿc130ÿc9)         ~\nÿc;~         Pick  Me         ~ÿc0\n",
+            "enUS": "Ber Rune",
             "ruRU": "Руна Бер",
             "zhTW": "符文：貝",
             "deDE": "[fs]Ber-Rune",
             "esES": "Runa Ber",
             "frFR": "[fs]Rune Ber",
             "itIT": "[fs]Runa Ber",
-            "koKR": "\n~         베르 룬         ~\nÿc;~         주으세요         ~ÿc0\n",
+            "koKR": "베르 룬",
             "plPL": "Runa Ber",
             "esMX": "Runa Ber",
             "jaJP": "バー・ルーン",
@@ -994,8 +994,8 @@
         }
       },
       "jah": {
-        "mode": "auto",
-        "isHighlighted": true,
+        "mode": "manual",
+        "isHighlighted": false,
         "autoSettings": {
           "numbering": {
             "show": true,
@@ -1010,7 +1010,7 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "Jah\n~         Jah Rune ÿc9(ÿc131ÿc9)         ~\nÿc;~         Pick  Me         ~ÿc0\n",
+            "enUS": "Jah Rune",
             "ruRU": "Руна Джа",
             "zhTW": "符文：喬",
             "deDE": "[fs]Jah-Rune",
@@ -1027,8 +1027,8 @@
         }
       },
       "cham": {
-        "mode": "auto",
-        "isHighlighted": true,
+        "mode": "manual",
+        "isHighlighted": false,
         "autoSettings": {
           "numbering": {
             "show": true,
@@ -1043,14 +1043,14 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "\n~         Cham Rune ÿc9(ÿc132ÿc9)         ~\nÿc;~         Pick  Me         ~ÿc0\n",
+            "enUS": "Cham Rune",
             "ruRU": "Руна Чам",
             "zhTW": "符文：查姆",
             "deDE": "[fs]Cham-Rune",
             "esES": "Runa Cham",
             "frFR": "[fs]Rune Cham",
             "itIT": "[fs]Runa Cham",
-            "koKR": "\n~         참 룬         ~\nÿc;~         주으세요         ~ÿc0\n",
+            "koKR": "참 룬",
             "plPL": "Runa Cham",
             "esMX": "Runa Cham",
             "jaJP": "チャム・ルーン",
@@ -1060,8 +1060,8 @@
         }
       },
       "zod": {
-        "mode": "auto",
-        "isHighlighted": true,
+        "mode": "manual",
+        "isHighlighted": false,
         "autoSettings": {
           "numbering": {
             "show": true,
@@ -1076,14 +1076,14 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "\n~         Zod Rune ÿc9(ÿc133ÿc9)         ~\nÿc;~         Pick  Me         ~ÿc0\n",
+            "enUS": "Zod Rune",
             "ruRU": "Руна Зод",
             "zhTW": "符文：薩德",
             "deDE": "[fs]Zod-Rune",
             "esES": "Runa Zod",
             "frFR": "[fs]Rune Zod",
             "itIT": "[fs]Runa Zod",
-            "koKR": "\n~         조드 룬         ~\nÿc;~         주으세요         ~ÿc0\n",
+            "koKR": "조드 룬",
             "plPL": "Runa Zod",
             "esMX": "Runa Zod",
             "jaJP": "ゾッド・ルーン",
@@ -2596,60 +2596,60 @@
     },
     "items": {
       "difficultyClassMarkers": {
-        "enabled": false,
+        "enabled": true,
         "levels": [
           {
-            "enabled": false,
+            "enabled": true,
             "locales": {
-              "enUS": "[n]",
-              "ruRU": "[n]",
-              "zhTW": "[n]",
-              "deDE": "[n]",
-              "esES": "[n]",
-              "frFR": "[n]",
-              "itIT": "[n]",
-              "koKR": "[n]",
-              "plPL": "[n]",
-              "esMX": "[n]",
-              "jaJP": "[n]",
-              "ptBR": "[n]",
-              "zhCN": "[n]"
+              "enUS": "(n)",
+              "ruRU": "(n)",
+              "zhTW": "(n)",
+              "deDE": "(n)",
+              "esES": "(n)",
+              "frFR": "(n)",
+              "itIT": "(n)",
+              "koKR": "(n)",
+              "plPL": "(n)",
+              "esMX": "(n)",
+              "jaJP": "(n)",
+              "ptBR": "(n)",
+              "zhCN": "(n)"
             }
           },
           {
-            "enabled": false,
+            "enabled": true,
             "locales": {
-              "enUS": "[x]",
-              "ruRU": "[x]",
-              "zhTW": "[x]",
-              "deDE": "[x]",
-              "esES": "[x]",
-              "frFR": "[x]",
-              "itIT": "[x]",
-              "koKR": "[x]",
-              "plPL": "[x]",
-              "esMX": "[x]",
-              "jaJP": "[x]",
-              "ptBR": "[x]",
-              "zhCN": "[x]"
+              "enUS": "(x)",
+              "ruRU": "(x)",
+              "zhTW": "(x)",
+              "deDE": "(x)",
+              "esES": "(x)",
+              "frFR": "(x)",
+              "itIT": "(x)",
+              "koKR": "(x)",
+              "plPL": "(x)",
+              "esMX": "(x)",
+              "jaJP": "(x)",
+              "ptBR": "(x)",
+              "zhCN": "(x)"
             }
           },
           {
-            "enabled": false,
+            "enabled": true,
             "locales": {
-              "enUS": "[e]",
-              "ruRU": "[e]",
-              "zhTW": "[e]",
-              "deDE": "[e]",
-              "esES": "[e]",
-              "frFR": "[e]",
-              "itIT": "[e]",
-              "koKR": "[e]",
-              "plPL": "[e]",
-              "esMX": "[e]",
-              "jaJP": "[e]",
-              "ptBR": "[e]",
-              "zhCN": "[e]"
+              "enUS": "(e)",
+              "ruRU": "(e)",
+              "zhTW": "(e)",
+              "deDE": "(e)",
+              "esES": "(e)",
+              "frFR": "(e)",
+              "itIT": "(e)",
+              "koKR": "(e)",
+              "plPL": "(e)",
+              "esMX": "(e)",
+              "jaJP": "(e)",
+              "ptBR": "(e)",
+              "zhCN": "(e)"
             }
           }
         ]
@@ -2698,7 +2698,7 @@
       "items": {
         "belt": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Belt",
             "ruRU": "[ms]пояс",
@@ -2717,7 +2717,7 @@
         },
         "mesh_belt": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Mesh Belt",
             "ruRU": "[ms]сетчатый пояс",
@@ -2736,7 +2736,7 @@
         },
         "mithril_coil": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Mithril Coil",
             "ruRU": "[fs]мифриловая опояска",
@@ -2755,7 +2755,7 @@
         },
         "heavy_belt": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Heavy Belt",
             "ruRU": "[ms]тяжелый пояс",
@@ -2774,7 +2774,7 @@
         },
         "battle_belt": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Battle Belt",
             "ruRU": "[ms]боевой пояс",
@@ -2793,7 +2793,7 @@
         },
         "troll_belt": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Troll Belt",
             "ruRU": "[ms]троллий пояс",
@@ -2812,7 +2812,7 @@
         },
         "light_belt": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Light Belt",
             "ruRU": "[ms]легкий пояс",
@@ -2831,7 +2831,7 @@
         },
         "sharkskin_belt": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Sharkskin Belt",
             "ruRU": "[ms]акулий пояс",
@@ -2850,7 +2850,7 @@
         },
         "vampirefang_belt": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Vampirefang Belt",
             "ruRU": "[ms]вампирский пояс",
@@ -2869,7 +2869,7 @@
         },
         "plated_belt": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Plated Belt",
             "ruRU": "[ms]латный пояс",
@@ -2888,7 +2888,7 @@
         },
         "war_belt": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "War Belt",
             "ruRU": "[ms]воинский пояс",
@@ -2907,7 +2907,7 @@
         },
         "colossus_girdle": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Colossus Girdle",
             "ruRU": "[ms]массивный ремень",
@@ -2926,7 +2926,7 @@
         },
         "sash": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Sash",
             "ruRU": "[ms]кушак",
@@ -2945,7 +2945,7 @@
         },
         "demonhide_sash": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Demonhide Sash",
             "ruRU": "[ms]демонический кожаный кушак",
@@ -2964,7 +2964,7 @@
         },
         "spiderweb_sash": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Spiderweb Sash",
             "ruRU": "[ms]паутинный кушак",
@@ -2983,7 +2983,7 @@
         },
         "ancient_armor": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Ancient Armor",
             "ruRU": "[ms]древний доспех",
@@ -3002,7 +3002,7 @@
         },
         "ornate_plate": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Ornate Plate",
             "ruRU": "[ms]изукрашенный доспех",
@@ -3021,7 +3021,7 @@
         },
         "sacred_armor": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Sacred Armor",
             "ruRU": "[ms]священный доспех",
@@ -3040,7 +3040,7 @@
         },
         "breast_plate": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Breast Plate",
             "ruRU": "[ms]нагрудник",
@@ -3059,7 +3059,7 @@
         },
         "cuirass": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Cuirass",
             "ruRU": "[fs]кираса",
@@ -3078,7 +3078,7 @@
         },
         "great_hauberk": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Great Hauberk",
             "ruRU": "[ms]тяжелый панцирь",
@@ -3097,7 +3097,7 @@
         },
         "chain_mail": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Chain Mail",
             "ruRU": "[ms]кольчужный доспех",
@@ -3116,7 +3116,7 @@
         },
         "mesh_armor": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Mesh Armor",
             "ruRU": "[ms]сетчатый доспех",
@@ -3135,7 +3135,7 @@
         },
         "boneweave": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Boneweave",
             "ruRU": "[fs]плетеная кость",
@@ -3154,7 +3154,7 @@
         },
         "field_plate": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Field Plate",
             "ruRU": "[ms]полевой латный доспех",
@@ -3173,7 +3173,7 @@
         },
         "sharktooth_armor": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Sharktooth Armor",
             "ruRU": "[ms]акулий доспех",
@@ -3192,7 +3192,7 @@
         },
         "kraken_shell": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Kraken Shell",
             "ruRU": "[fs]раковина кракена",
@@ -3211,7 +3211,7 @@
         },
         "full_plate_mail": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Full Plate Mail",
             "ruRU": "[ms]полный латный доспех",
@@ -3230,7 +3230,7 @@
         },
         "chaos_armor": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Chaos Armor",
             "ruRU": "[ms]хаотический доспех",
@@ -3249,7 +3249,7 @@
         },
         "shadow_plate": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Shadow Plate",
             "ruRU": "[ms]сумрачный доспех",
@@ -3268,7 +3268,7 @@
         },
         "gothic_plate": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Gothic Plate",
             "ruRU": "[ms]готический доспех",
@@ -3287,7 +3287,7 @@
         },
         "embossed_plate": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Embossed Plate",
             "ruRU": "[ms]гравированный доспех",
@@ -3306,7 +3306,7 @@
         },
         "lacquered_plate": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Lacquered Plate",
             "ruRU": "[ms]лакированный доспех",
@@ -3325,7 +3325,7 @@
         },
         "hard_leather_armor": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Hard Leather Armor",
             "ruRU": "[ms]плотный кожаный доспех",
@@ -3344,7 +3344,7 @@
         },
         "demonhide_armor": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Demonhide Armor",
             "ruRU": "[ms]демонический кожаный доспех",
@@ -3363,7 +3363,7 @@
         },
         "scarab_husk": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Scarab Husk",
             "ruRU": "[ms]панцирь скарабея",
@@ -3382,7 +3382,7 @@
         },
         "leather_armor": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Leather Armor",
             "ruRU": "[ms]кожаный доспех",
@@ -3401,7 +3401,7 @@
         },
         "serpentskin_armor": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Serpentskin Armor",
             "ruRU": "[ms]змеиный доспех",
@@ -3420,7 +3420,7 @@
         },
         "wyrmhide": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Wyrmhide",
             "ruRU": "[fs]змеиная кожа",
@@ -3439,7 +3439,7 @@
         },
         "light_plate": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Light Plate",
             "ruRU": "[ms]легкий латный доспех",
@@ -3458,7 +3458,7 @@
         },
         "mage_plate": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Mage Plate",
             "ruRU": "[ms]магический доспех",
@@ -3477,7 +3477,7 @@
         },
         "archon_plate": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Archon Plate",
             "ruRU": "[fs]архонтова броня",
@@ -3496,7 +3496,7 @@
         },
         "plate_mail": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Plate Mail",
             "ruRU": "[ms]латный доспех",
@@ -3515,7 +3515,7 @@
         },
         "templar_coat": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Templar Coat",
             "ruRU": "[ms]тамплиерский мундир",
@@ -3534,7 +3534,7 @@
         },
         "hellforge_plate": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Hellforge Plate",
             "ruRU": "[pl]латы из адской кузни",
@@ -3553,7 +3553,7 @@
         },
         "quilted_armor": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Quilted Armor",
             "ruRU": "[ms]стеганый доспех",
@@ -3572,7 +3572,7 @@
         },
         "ghost_armor": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Ghost Armor",
             "ruRU": "[ms]призрачный доспех",
@@ -3591,7 +3591,7 @@
         },
         "dusk_shroud": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Dusk Shroud",
             "ruRU": "[fs]сумеречная пелена",
@@ -3610,7 +3610,7 @@
         },
         "ring_mail": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Ring Mail",
             "ruRU": "[ms]кольчатый доспех",
@@ -3629,7 +3629,7 @@
         },
         "linked_mail": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Linked Mail",
             "ruRU": "[fs]клепаная кольчуга",
@@ -3648,7 +3648,7 @@
         },
         "diamond_mail": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Diamond Mail",
             "ruRU": "[fs]алмазная кольчуга",
@@ -3667,7 +3667,7 @@
         },
         "scale_mail": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Scale Mail",
             "ruRU": "[ms]чешуйчатый доспех",
@@ -3686,7 +3686,7 @@
         },
         "tigulated_mail": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Tigulated Mail",
             "ruRU": "[ms]черепичный доспех",
@@ -3705,7 +3705,7 @@
         },
         "loricated_mail": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Loricated Mail",
             "ruRU": "[ms]панцирный доспех",
@@ -3724,7 +3724,7 @@
         },
         "splint_mail": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Splint Mail",
             "ruRU": "[ms]пластинчатый доспех",
@@ -3743,7 +3743,7 @@
         },
         "russet_armor": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Russet Armor",
             "ruRU": "[ms]терракотовый доспех",
@@ -3762,7 +3762,7 @@
         },
         "balrog_skin": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Balrog Skin",
             "ruRU": "[fs]балрогова шкура",
@@ -3781,7 +3781,7 @@
         },
         "studded_leather": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Studded Leather",
             "ruRU": "[ms]клепаный кожаный доспех",
@@ -3800,7 +3800,7 @@
         },
         "trellised_armor": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Trellised Armor",
             "ruRU": "[ms]сетчатый доспех",
@@ -3819,7 +3819,7 @@
         },
         "wire_fleece": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Wire Fleece",
             "ruRU": "[fs]плетеная безрукавка",
@@ -3838,7 +3838,7 @@
         },
         "boots": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Boots",
             "ruRU": "[pl]сапоги",
@@ -3857,7 +3857,7 @@
         },
         "demonhide_boots": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Demonhide Boots",
             "ruRU": "[pl]демонические кожаные сапоги",
@@ -3876,7 +3876,7 @@
         },
         "wyrmhide_boots": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Wyrmhide Boots",
             "ruRU": "[pl]змеиные сапоги",
@@ -3895,7 +3895,7 @@
         },
         "chain_boots": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Chain Boots",
             "ruRU": "[pl]кольчужные сапоги",
@@ -3914,7 +3914,7 @@
         },
         "mesh_boots": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Mesh Boots",
             "ruRU": "[pl]сетчатые сапоги",
@@ -3933,7 +3933,7 @@
         },
         "boneweave_boots": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Boneweave Boots",
             "ruRU": "[pl]латно-костяные сапоги",
@@ -3952,7 +3952,7 @@
         },
         "greaves": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Greaves",
             "ruRU": "[pl]наголенники",
@@ -3971,7 +3971,7 @@
         },
         "war_boots": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "War Boots",
             "ruRU": "[pl]воинские сапоги",
@@ -3990,7 +3990,7 @@
         },
         "myrmidon_greaves": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Myrmidon Greaves",
             "ruRU": "[pl]мирмидонские наголенники",
@@ -4009,7 +4009,7 @@
         },
         "heavy_boots": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Heavy Boots",
             "ruRU": "[pl]тяжелые сапоги",
@@ -4028,7 +4028,7 @@
         },
         "sharkskin_boots": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Sharkskin Boots",
             "ruRU": "[pl]акульи сапоги",
@@ -4047,7 +4047,7 @@
         },
         "scarabshell_boots": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Scarabshell Boots",
             "ruRU": "[pl]скарабеевы сапоги",
@@ -4066,7 +4066,7 @@
         },
         "light_plated_boots": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Light Plated Boots",
             "ruRU": "[pl]легкие латные сапоги",
@@ -4085,7 +4085,7 @@
         },
         "battle_boots": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Battle Boots",
             "ruRU": "[pl]боевые сапоги",
@@ -4104,7 +4104,7 @@
         },
         "mirrored_boots": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Mirrored Boots",
             "ruRU": "[pl]зеркальные сапоги",
@@ -4123,7 +4123,7 @@
         },
         "chain_gloves": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Chain Gloves",
             "ruRU": "[pl]кольчужные перчатки",
@@ -4142,7 +4142,7 @@
         },
         "heavy_bracers": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Heavy Bracers",
             "ruRU": "[pl]тяжелые наручи",
@@ -4161,7 +4161,7 @@
         },
         "vambraces": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Vambraces",
             "ruRU": "[pl]латные щитки",
@@ -4180,7 +4180,7 @@
         },
         "gauntlets": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Gauntlets",
             "ruRU": "[pl]рукавицы",
@@ -4199,7 +4199,7 @@
         },
         "war_gauntlets": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "War Gauntlets",
             "ruRU": "[pl]воинские рукавицы",
@@ -4218,7 +4218,7 @@
         },
         "ogre_gauntlets": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Ogre Gauntlets",
             "ruRU": "[pl]устрашающие рукавицы",
@@ -4237,7 +4237,7 @@
         },
         "heavy_gloves": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Heavy Gloves",
             "ruRU": "[pl]тяжелые перчатки",
@@ -4256,7 +4256,7 @@
         },
         "sharkskin_gloves": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Sharkskin Gloves",
             "ruRU": "[pl]акульи перчатки",
@@ -4275,7 +4275,7 @@
         },
         "vampirebone_gloves": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Vampirebone Gloves",
             "ruRU": "[pl]вампирьи перчатки",
@@ -4294,7 +4294,7 @@
         },
         "leather_gloves": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Leather Gloves",
             "ruRU": "[pl]кожаные перчатки",
@@ -4313,7 +4313,7 @@
         },
         "demonhide_gloves": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Demonhide Gloves",
             "ruRU": "[pl]демонические кожаные перчатки",
@@ -4332,7 +4332,7 @@
         },
         "bramble_mitts": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Bramble Mitts",
             "ruRU": "[pl]колючие рукавицы",
@@ -4351,7 +4351,7 @@
         },
         "light_gauntlets": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Light Gauntlets",
             "ruRU": "[pl]легкие рукавицы",
@@ -4370,7 +4370,7 @@
         },
         "battle_gauntlets": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Battle Gauntlets",
             "ruRU": "[pl]боевые рукавицы",
@@ -4389,7 +4389,7 @@
         },
         "crusader_gauntlets": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Crusader Gauntlets",
             "ruRU": "[pl]рыцарские перчатки",
@@ -4408,7 +4408,7 @@
         },
         "bone_helm": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Bone Helm",
             "ruRU": "[ms]костяной шлем",
@@ -4427,7 +4427,7 @@
         },
         "grim_helm": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Grim Helm",
             "ruRU": "[ms]жуткий шлем",
@@ -4446,7 +4446,7 @@
         },
         "bone_visage": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Bone Visage",
             "ruRU": "[fs]костяная личина",
@@ -4465,7 +4465,7 @@
         },
         "cap": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Cap",
             "ruRU": "[ms]наголовник",
@@ -4484,7 +4484,7 @@
         },
         "war_hat": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "War Hat",
             "ruRU": "[ms]воинский наголовник",
@@ -4503,7 +4503,7 @@
         },
         "shako": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Shako",
             "ruRU": "[ns]шако",
@@ -4522,7 +4522,7 @@
         },
         "circlet": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Circlet",
             "ruRU": "[ms]венец",
@@ -4541,7 +4541,7 @@
         },
         "tiara": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Tiara",
             "ruRU": "[fs]тиара",
@@ -4560,7 +4560,7 @@
         },
         "diadem": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Diadem",
             "ruRU": "[fs]диадема",
@@ -4579,7 +4579,7 @@
         },
         "coronet": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Coronet",
             "ruRU": "[ms]головной обруч",
@@ -4598,7 +4598,7 @@
         },
         "crown": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Crown",
             "ruRU": "[fs]корона",
@@ -4617,7 +4617,7 @@
         },
         "grand_crown": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Grand Crown",
             "ruRU": "[fs]большая корона",
@@ -4636,7 +4636,7 @@
         },
         "corona": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Corona",
             "ruRU": "[fs]богатая корона",
@@ -4655,7 +4655,7 @@
         },
         "full_helm": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Full Helm",
             "ruRU": "[ms]полный шлем",
@@ -4674,7 +4674,7 @@
         },
         "basinet": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Basinet",
             "ruRU": "[ms]стальной шлем",
@@ -4693,7 +4693,7 @@
         },
         "giant_conch": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Giant Conch",
             "ruRU": "[ms]большой полукруглый шлем",
@@ -4712,7 +4712,7 @@
         },
         "great_helm": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Great Helm",
             "ruRU": "[ms]большой шлем",
@@ -4731,7 +4731,7 @@
         },
         "winged_helm": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Winged Helm",
             "ruRU": "[ms]крылатый шлем",
@@ -4750,7 +4750,7 @@
         },
         "spired_helm": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Spired Helm",
             "ruRU": "[ms]гнуторогий шлем",
@@ -4769,7 +4769,7 @@
         },
         "helm": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Helm",
             "ruRU": "[ms]шлем",
@@ -4788,7 +4788,7 @@
         },
         "casque": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Casque",
             "ruRU": "[fs]каска",
@@ -4807,7 +4807,7 @@
         },
         "armet": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Armet",
             "ruRU": "[ms]армет",
@@ -4826,7 +4826,7 @@
         },
         "mask": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Mask",
             "ruRU": "[fs]маска",
@@ -4845,7 +4845,7 @@
         },
         "death_mask": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Death Mask",
             "ruRU": "[fs]посмертная маска",
@@ -4864,7 +4864,7 @@
         },
         "demonhead": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Demonhead",
             "ruRU": "[fs]демонская голова",
@@ -4883,7 +4883,7 @@
         },
         "skull_cap": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Skull Cap",
             "ruRU": "[ms]легкий шлем",
@@ -4902,7 +4902,7 @@
         },
         "sallet": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Sallet",
             "ruRU": "[ms]кабассет",
@@ -4921,7 +4921,7 @@
         },
         "hydraskull": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Hydraskull",
             "ruRU": "[ms]череп гидры",
@@ -4940,7 +4940,7 @@
         },
         "assault_helmet": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Assault Helmet",
             "ruRU": "[ms]штурмовой шлем",
@@ -4959,7 +4959,7 @@
         },
         "savage_helmet": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Savage Helmet",
             "ruRU": "[ms]дикий шлем",
@@ -4978,7 +4978,7 @@
         },
         "conqueror_crown": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Conqueror Crown",
             "ruRU": "[fs]победоносная корона",
@@ -4997,7 +4997,7 @@
         },
         "avenger_guard": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Avenger Guard",
             "ruRU": "[ms]героический шлем",
@@ -5016,7 +5016,7 @@
         },
         "slayer_guard": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Slayer Guard",
             "ruRU": "[ms]экзекуторский убор",
@@ -5035,7 +5035,7 @@
         },
         "guardian_crown": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Guardian Crown",
             "ruRU": "[fs]защитная корона",
@@ -5054,7 +5054,7 @@
         },
         "fanged_helm": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Fanged Helm",
             "ruRU": "[ms]клыкастый шлем",
@@ -5073,7 +5073,7 @@
         },
         "lion_helm": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Lion Helm",
             "ruRU": "[ms]львиный шлем",
@@ -5092,7 +5092,7 @@
         },
         "fury_visor": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Fury Visor",
             "ruRU": "[ms]яростный щиток",
@@ -5111,7 +5111,7 @@
         },
         "horned_helm": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Horned Helm",
             "ruRU": "[ms]рогатый шлем",
@@ -5130,7 +5130,7 @@
         },
         "rage_mask": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Rage Mask",
             "ruRU": "[fs]яростная маска",
@@ -5149,7 +5149,7 @@
         },
         "destroyer_helm": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Destroyer Helm",
             "ruRU": "[ms]разрушительный шлем",
@@ -5168,7 +5168,7 @@
         },
         "jawbone_cap": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Jawbone Cap",
             "ruRU": "[ms]наголовник с челюстью",
@@ -5187,7 +5187,7 @@
         },
         "jawbone_visor": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Jawbone Visor",
             "ruRU": "[ms]щиток с челюстью",
@@ -5206,7 +5206,7 @@
         },
         "carnage_helm": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Carnage Helm",
             "ruRU": "[ms]мясницкий шлем",
@@ -5225,7 +5225,7 @@
         },
         "antlers": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Antlers",
             "ruRU": "[pl]бараньи рога",
@@ -5244,7 +5244,7 @@
         },
         "hunter_s_guise": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Hunter's Guise",
             "ruRU": "[fs]охотничья личина",
@@ -5263,7 +5263,7 @@
         },
         "earth_spirit": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Earth Spirit",
             "ruRU": "[ms]земной дух",
@@ -5282,7 +5282,7 @@
         },
         "falcon_mask": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Falcon Mask",
             "ruRU": "[fs]соколиная маска",
@@ -5301,7 +5301,7 @@
         },
         "sacred_feathers": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Sacred Feathers",
             "ruRU": "[pl]священные перья",
@@ -5320,7 +5320,7 @@
         },
         "sky_spirit": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Sky Spirit",
             "ruRU": "[ms]воздушный дух",
@@ -5339,7 +5339,7 @@
         },
         "hawk_helm": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Hawk Helm",
             "ruRU": "[ms]ястребиный шлем",
@@ -5358,7 +5358,7 @@
         },
         "griffon_headdress": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Griffon Headdress",
             "ruRU": "[fs]грифонья маска",
@@ -5377,7 +5377,7 @@
         },
         "sun_spirit": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Sun Spirit",
             "ruRU": "[ms]солнечный дух",
@@ -5396,7 +5396,7 @@
         },
         "spirit_mask": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Spirit Mask",
             "ruRU": "[fs]духовная маска",
@@ -5415,7 +5415,7 @@
         },
         "totemic_mask": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Totemic Mask",
             "ruRU": "[fs]тотемная маска",
@@ -5434,7 +5434,7 @@
         },
         "dream_spirit": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Dream Spirit",
             "ruRU": "[ms]иллюзорный дух",
@@ -5453,7 +5453,7 @@
         },
         "wolf_head": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Wolf Head",
             "ruRU": "[fs]волчья голова",
@@ -5472,7 +5472,7 @@
         },
         "alpha_helm": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Alpha Helm",
             "ruRU": "[ms]волчий шлем",
@@ -5491,7 +5491,7 @@
         },
         "blood_spirit": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Blood Spirit",
             "ruRU": "[ms]кровавый дух",
@@ -5510,7 +5510,7 @@
         },
         "glaive": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Glaive",
             "ruRU": "[fs]глефа",
@@ -5529,7 +5529,7 @@
         },
         "spiculum": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Spiculum",
             "ruRU": "[ms]спикулум",
@@ -5548,7 +5548,7 @@
         },
         "ghost_glaive": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Ghost Glaive",
             "ruRU": "[fs]призрачная глефа",
@@ -5567,7 +5567,7 @@
         },
         "javelin": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Javelin",
             "ruRU": "[ms]ассегай",
@@ -5586,7 +5586,7 @@
         },
         "war_javelin": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "War Javelin",
             "ruRU": "[ms]воинский ассегай",
@@ -5605,7 +5605,7 @@
         },
         "hyperion_javelin": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Hyperion Javelin",
             "ruRU": "[ms]гиперионский ассегай",
@@ -5624,7 +5624,7 @@
         },
         "maiden_javelin": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Maiden Javelin",
             "ruRU": "[ms]девичий ассегай",
@@ -5643,7 +5643,7 @@
         },
         "ceremonial_javelin": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Ceremonial Javelin",
             "ruRU": "[ms]ритуальный ассегай",
@@ -5662,7 +5662,7 @@
         },
         "matriarchal_javelin": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Matriarchal Javelin",
             "ruRU": "[ms]матриарший ассегай",
@@ -5681,7 +5681,7 @@
         },
         "pilum": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Pilum",
             "ruRU": "[ms]пилум",
@@ -5700,7 +5700,7 @@
         },
         "great_pilum": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Great Pilum",
             "ruRU": "[ms]большой пилум",
@@ -5719,7 +5719,7 @@
         },
         "stygian_pilum": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Stygian Pilum",
             "ruRU": "[ms]стигийский пилум",
@@ -5738,7 +5738,7 @@
         },
         "short_spear": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Short Spear",
             "ruRU": "[ns]короткое копье",
@@ -5757,7 +5757,7 @@
         },
         "simbilan": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Simbilan",
             "ruRU": "[ms]симбилан",
@@ -5776,7 +5776,7 @@
         },
         "balrog_spear": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Balrog Spear",
             "ruRU": "[ns]балрогово копье",
@@ -5795,7 +5795,7 @@
         },
         "throwing_spear": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Throwing Spear",
             "ruRU": "[ns]метательное копье",
@@ -5814,7 +5814,7 @@
         },
         "harpoon": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Harpoon",
             "ruRU": "[ms]гарпун",
@@ -5833,7 +5833,7 @@
         },
         "winged_harpoon": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Winged Harpoon",
             "ruRU": "[ms]крыловидный гарпун",
@@ -5852,7 +5852,7 @@
         },
         "bone_shield": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Bone Shield",
             "ruRU": "[ms]костяной щит",
@@ -5871,7 +5871,7 @@
         },
         "grim_shield": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Grim Shield",
             "ruRU": "[ms]жуткий щит",
@@ -5890,7 +5890,7 @@
         },
         "troll_nest": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Troll Nest",
             "ruRU": "[ns]троллье гнездо",
@@ -5909,7 +5909,7 @@
         },
         "buckler": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Buckler",
             "ruRU": "[ms]баклер",
@@ -5928,7 +5928,7 @@
         },
         "defender": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Defender",
             "ruRU": "[ms]защитник",
@@ -5947,7 +5947,7 @@
         },
         "heater": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Heater",
             "ruRU": "[ms]клиновидный щит",
@@ -5966,7 +5966,7 @@
         },
         "gothic_shield": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Gothic Shield",
             "ruRU": "[ms]готический щит",
@@ -5985,7 +5985,7 @@
         },
         "ancient_shield": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Ancient Shield",
             "ruRU": "[ms]древний щит",
@@ -6004,7 +6004,7 @@
         },
         "ward": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Ward",
             "ruRU": "[ms]охранитель",
@@ -6023,7 +6023,7 @@
         },
         "kite_shield": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Kite Shield",
             "ruRU": "[ms]каплевидный щит",
@@ -6042,7 +6042,7 @@
         },
         "dragon_shield": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Dragon Shield",
             "ruRU": "[ms]драконий щит",
@@ -6061,7 +6061,7 @@
         },
         "monarch": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Monarch",
             "ruRU": "[ms]монарх",
@@ -6080,7 +6080,7 @@
         },
         "large_shield": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Large Shield",
             "ruRU": "[ms]большой щит",
@@ -6099,7 +6099,7 @@
         },
         "scutum": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Scutum",
             "ruRU": "[ms]скутум",
@@ -6118,7 +6118,7 @@
         },
         "hyperion": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Hyperion",
             "ruRU": "[ms]гиперион",
@@ -6137,7 +6137,7 @@
         },
         "small_shield": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Small Shield",
             "ruRU": "[ms]маленький щит",
@@ -6156,7 +6156,7 @@
         },
         "round_shield": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Round Shield",
             "ruRU": "[ms]круглый щит",
@@ -6175,7 +6175,7 @@
         },
         "luna": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Luna",
             "ruRU": "[fs]луна",
@@ -6194,7 +6194,7 @@
         },
         "spiked_shield": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Spiked Shield",
             "ruRU": "[ms]шипастый щит",
@@ -6213,7 +6213,7 @@
         },
         "barbed_shield": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Barbed Shield",
             "ruRU": "[ms]колючий щит",
@@ -6232,7 +6232,7 @@
         },
         "blade_barrier": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Blade Barrier",
             "ruRU": "[ms]клинковый барьер",
@@ -6251,7 +6251,7 @@
         },
         "tower_shield": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Tower Shield",
             "ruRU": "[ms]осадный щит",
@@ -6270,7 +6270,7 @@
         },
         "pavise": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Pavise",
             "ruRU": "[fs]павеза",
@@ -6289,7 +6289,7 @@
         },
         "aegis": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Aegis",
             "ruRU": "[fs]эгида",
@@ -6308,7 +6308,7 @@
         },
         "aerin_shield": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Aerin Shield",
             "ruRU": "[ms]Эринов щит",
@@ -6327,7 +6327,7 @@
         },
         "gilded_shield": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Gilded Shield",
             "ruRU": "[ms]золоченый щит",
@@ -6346,7 +6346,7 @@
         },
         "zakarum_shield": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Zakarum Shield",
             "ruRU": "[ms]закарумский щит",
@@ -6365,7 +6365,7 @@
         },
         "crown_shield": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Crown Shield",
             "ruRU": "[ms]королевский щит",
@@ -6384,7 +6384,7 @@
         },
         "royal_shield": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Royal Shield",
             "ruRU": "[ms]монарший щит",
@@ -6403,7 +6403,7 @@
         },
         "vortex_shield": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Vortex Shield",
             "ruRU": "[ms]ураганный щит",
@@ -6422,7 +6422,7 @@
         },
         "heraldic_shield": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Heraldic Shield",
             "ruRU": "[ms]геральдический щит",
@@ -6441,7 +6441,7 @@
         },
         "protector_shield": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Protector Shield",
             "ruRU": "[ms]покровительский щит",
@@ -6460,7 +6460,7 @@
         },
         "kurast_shield": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Kurast Shield",
             "ruRU": "Щит Кураста",
@@ -6479,7 +6479,7 @@
         },
         "rondache": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Rondache",
             "ruRU": "[ms]рондаш",
@@ -6498,7 +6498,7 @@
         },
         "akaran_rondache": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Akaran Rondache",
             "ruRU": "[ms]акаранский рондаш",
@@ -6517,7 +6517,7 @@
         },
         "sacred_rondache": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Sacred Rondache",
             "ruRU": "[ms]священный рондаш",
@@ -6536,7 +6536,7 @@
         },
         "targe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Targe",
             "ruRU": "[ms]тарджет",
@@ -6555,7 +6555,7 @@
         },
         "akaran_targe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Akaran Targe",
             "ruRU": "[ms]акаранский тарджет",
@@ -6574,7 +6574,7 @@
         },
         "sacred_targe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Sacred Targe",
             "ruRU": "[ms]священный тарджет",
@@ -6593,7 +6593,7 @@
         },
         "demon_head": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Demon Head",
             "ruRU": "[fs]голова демона",
@@ -6612,7 +6612,7 @@
         },
         "hierophant_trophy": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Hierophant Trophy",
             "ruRU": "[ms]жреческий трофей",
@@ -6631,7 +6631,7 @@
         },
         "bloodlord_skull": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Bloodlord Skull",
             "ruRU": "[ms]владыческий череп",
@@ -6650,7 +6650,7 @@
         },
         "gargoyle_head": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Gargoyle Head",
             "ruRU": "[fs]голова горгульи",
@@ -6669,7 +6669,7 @@
         },
         "cantor_trophy": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Cantor Trophy",
             "ruRU": "[ms]хоровой трофей",
@@ -6688,7 +6688,7 @@
         },
         "succubus_skull": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Succubus Skull",
             "ruRU": "[ms]суккубский череп",
@@ -6707,7 +6707,7 @@
         },
         "preserved_head": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Preserved Head",
             "ruRU": "[fs]забальзамированная голова",
@@ -6726,7 +6726,7 @@
         },
         "mummified_trophy": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Mummified Trophy",
             "ruRU": "[ms]засушенный трофей",
@@ -6745,7 +6745,7 @@
         },
         "minion_skull": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Minion Skull",
             "ruRU": "[ms]прислужничий череп",
@@ -6764,7 +6764,7 @@
         },
         "unraveller_head": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Unraveller Head",
             "ruRU": "[fs]голова развоплотителя",
@@ -6783,7 +6783,7 @@
         },
         "sexton_trophy": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Sexton Trophy",
             "ruRU": "[ms]алтарный трофей",
@@ -6802,7 +6802,7 @@
         },
         "overseer_skull": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Overseer Skull",
             "ruRU": "[ms]надзирательский череп",
@@ -6821,7 +6821,7 @@
         },
         "zombie_head": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Zombie Head",
             "ruRU": "[fs]голова зомби",
@@ -6840,7 +6840,7 @@
         },
         "fetish_trophy": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Fetish Trophy",
             "ruRU": "[ms]трофей-фетиш",
@@ -6859,7 +6859,7 @@
         },
         "hellspawn_skull": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Hellspawn Skull",
             "ruRU": "[ms]череп отродья тьмы",
@@ -6878,7 +6878,7 @@
         },
         "axe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Axe",
             "ruRU": "[ms]топор",
@@ -6897,7 +6897,7 @@
         },
         "cleaver": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Cleaver",
             "ruRU": "[ms]колун",
@@ -6916,7 +6916,7 @@
         },
         "small_crescent": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Small Crescent",
             "ruRU": "[ms]малый серповидный топор",
@@ -6935,7 +6935,7 @@
         },
         "battle_axe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Battle Axe",
             "ruRU": "[ms]боевой топор",
@@ -6954,7 +6954,7 @@
         },
         "tabar": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Tabar",
             "ruRU": "[ms]табар",
@@ -6973,7 +6973,7 @@
         },
         "decapitator": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Decapitator",
             "ruRU": "[ms]главорез",
@@ -6992,7 +6992,7 @@
         },
         "broad_axe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Broad Axe",
             "ruRU": "[ms]широколезвийный топор",
@@ -7011,7 +7011,7 @@
         },
         "bearded_axe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Bearded Axe",
             "ruRU": "[ms]скеггокс",
@@ -7030,7 +7030,7 @@
         },
         "silver_edged_axe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Silver-edged Axe",
             "ruRU": "[ms]посеребренный топор",
@@ -7049,7 +7049,7 @@
         },
         "double_axe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Double Axe",
             "ruRU": "[ms]обоюдоострый топор",
@@ -7068,7 +7068,7 @@
         },
         "twin_axe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Twin Axe",
             "ruRU": "[ms]двойной топор",
@@ -7087,7 +7087,7 @@
         },
         "ettin_axe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Ettin Axe",
             "ruRU": "[ms]эттинский топор",
@@ -7106,7 +7106,7 @@
         },
         "giant_axe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Giant Axe",
             "ruRU": "[ms]гигантский топор",
@@ -7125,7 +7125,7 @@
         },
         "ancient_axe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Ancient Axe",
             "ruRU": "[ms]древний топор",
@@ -7144,7 +7144,7 @@
         },
         "glorious_axe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Glorious Axe",
             "ruRU": "[ms]славный топор",
@@ -7163,7 +7163,7 @@
         },
         "great_axe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Great Axe",
             "ruRU": "[ms]огромный топор",
@@ -7182,7 +7182,7 @@
         },
         "gothic_axe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Gothic Axe",
             "ruRU": "[ms]готический топор",
@@ -7201,7 +7201,7 @@
         },
         "champion_axe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Champion Axe",
             "ruRU": "[ms]элитный топор",
@@ -7220,7 +7220,7 @@
         },
         "hand_axe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Hand Axe",
             "ruRU": "[ms]одноручный топор",
@@ -7239,7 +7239,7 @@
         },
         "hatchet": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Hatchet",
             "ruRU": "[ms]пальштаб",
@@ -7258,7 +7258,7 @@
         },
         "tomahawk": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Tomahawk",
             "ruRU": "[ms]томагавк",
@@ -7277,7 +7277,7 @@
         },
         "large_axe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Large Axe",
             "ruRU": "[ms]большой топор",
@@ -7296,7 +7296,7 @@
         },
         "military_axe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Military Axe",
             "ruRU": "[ms]солдатский топор",
@@ -7315,7 +7315,7 @@
         },
         "feral_axe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Feral Axe",
             "ruRU": "[ms]звериный топор",
@@ -7334,7 +7334,7 @@
         },
         "military_pick": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Military Pick",
             "ruRU": "[ms]солдатский клевец",
@@ -7353,7 +7353,7 @@
         },
         "crowbill": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Crowbill",
             "ruRU": "[ms]клевец",
@@ -7372,7 +7372,7 @@
         },
         "war_spike": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "War Spike",
             "ruRU": "[ms]воинский шип",
@@ -7391,7 +7391,7 @@
         },
         "war_axe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "War Axe",
             "ruRU": "[ms]воинский топор",
@@ -7410,7 +7410,7 @@
         },
         "naga": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Naga",
             "ruRU": "[fs]нага",
@@ -7429,7 +7429,7 @@
         },
         "berserker_axe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Berserker Axe",
             "ruRU": "[fs]секира берсерка",
@@ -7448,7 +7448,7 @@
         },
         "club": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Club",
             "ruRU": "[fs]дубина",
@@ -7467,7 +7467,7 @@
         },
         "cudgel": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Cudgel",
             "ruRU": "[fs]палица",
@@ -7486,7 +7486,7 @@
         },
         "truncheon": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Truncheon",
             "ruRU": "[fs]укрепленная дубинка",
@@ -7505,7 +7505,7 @@
         },
         "spiked_club": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Spiked Club",
             "ruRU": "[fs]шипастая дубина",
@@ -7524,7 +7524,7 @@
         },
         "barbed_club": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Barbed Club",
             "ruRU": "[fs]колючая дубина",
@@ -7543,7 +7543,7 @@
         },
         "tyrant_club": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Tyrant Club",
             "ruRU": "[fs]тираническая дубина",
@@ -7562,7 +7562,7 @@
         },
         "blade": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Blade",
             "ruRU": "[ms]клинок",
@@ -7581,7 +7581,7 @@
         },
         "stiletto": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Stiletto",
             "ruRU": "[ms]стилет",
@@ -7600,7 +7600,7 @@
         },
         "legend_spike": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Legend Spike",
             "ruRU": "[ms]легендарный зубец",
@@ -7619,7 +7619,7 @@
         },
         "dagger": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Dagger",
             "ruRU": "[ms]кинжал",
@@ -7638,7 +7638,7 @@
         },
         "poignard": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Poignard",
             "ruRU": "[ms]пуаньяр",
@@ -7657,7 +7657,7 @@
         },
         "bone_knife": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Bone Knife",
             "ruRU": "[ms]костяной нож",
@@ -7676,7 +7676,7 @@
         },
         "dirk": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Dirk",
             "ruRU": "[ms]кортик",
@@ -7695,7 +7695,7 @@
         },
         "rondel": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Rondel",
             "ruRU": "[ms]рондель",
@@ -7714,7 +7714,7 @@
         },
         "mithril_point": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Mithril Point",
             "ruRU": "[ms]мифриловый кинжал",
@@ -7733,7 +7733,7 @@
         },
         "kris": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Kris",
             "ruRU": "[ms]крис",
@@ -7752,7 +7752,7 @@
         },
         "cinquedeas": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Cinquedeas",
             "ruRU": "[fs]чинкуэда",
@@ -7771,7 +7771,7 @@
         },
         "fanged_knife": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Fanged Knife",
             "ruRU": "[ms]нож-клык",
@@ -7790,7 +7790,7 @@
         },
         "war_hammer": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "War Hammer",
             "ruRU": "[ms]воинский молот",
@@ -7809,7 +7809,7 @@
         },
         "battle_hammer": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Battle Hammer",
             "ruRU": "[ms]боевой молот",
@@ -7828,7 +7828,7 @@
         },
         "legendary_mallet": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Legendary Mallet",
             "ruRU": "[fs]легендарная колотушка",
@@ -7847,7 +7847,7 @@
         },
         "great_maul": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Great Maul",
             "ruRU": "[fs]большая кувалда",
@@ -7866,7 +7866,7 @@
         },
         "martel_de_fer": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Martel de Fer",
             "ruRU": "[ms]Мартель-де-фер",
@@ -7885,7 +7885,7 @@
         },
         "thunder_maul": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Thunder Maul",
             "ruRU": "[fs]громовая кувалда",
@@ -7904,7 +7904,7 @@
         },
         "maul": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Maul",
             "ruRU": "[fs]кувалда",
@@ -7923,7 +7923,7 @@
         },
         "war_club": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "War Club",
             "ruRU": "[fs]воинская дубина",
@@ -7942,7 +7942,7 @@
         },
         "ogre_maul": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Ogre Maul",
             "ruRU": "[fs]устрашающая кувалда",
@@ -7961,7 +7961,7 @@
         },
         "blade_talons": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Blade Talons",
             "ruRU": "[pl]острые птичьи когти",
@@ -7980,7 +7980,7 @@
         },
         "greater_talons": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Greater Talons",
             "ruRU": "[pl]длинные птичьи когти",
@@ -7999,7 +7999,7 @@
         },
         "runic_talons": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Runic Talons",
             "ruRU": "[pl]рунные птичьи когти",
@@ -8018,7 +8018,7 @@
         },
         "cestus": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Cestus",
             "ruRU": "[ms]цестус",
@@ -8037,7 +8037,7 @@
         },
         "hand_scythe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Hand Scythe",
             "ruRU": "[ms]ручной серп",
@@ -8056,7 +8056,7 @@
         },
         "battle_cestus": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Battle Cestus",
             "ruRU": "[ms]боевой цестус",
@@ -8075,7 +8075,7 @@
         },
         "claws": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Claws",
             "ruRU": "[pl]когти",
@@ -8094,7 +8094,7 @@
         },
         "greater_claws": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Greater Claws",
             "ruRU": "[pl]длинные когти",
@@ -8113,7 +8113,7 @@
         },
         "feral_claws": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Feral Claws",
             "ruRU": "[pl]звериные когти",
@@ -8132,7 +8132,7 @@
         },
         "hatchet_hands": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Hatchet Hands",
             "ruRU": "[ms]накулачный топор",
@@ -8151,7 +8151,7 @@
         },
         "fascia": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Fascia",
             "ruRU": "[fs]фасция",
@@ -8170,7 +8170,7 @@
         },
         "war_fist": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "War Fist",
             "ruRU": "[ms]воинский кулак",
@@ -8189,7 +8189,7 @@
         },
         "katar": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Katar",
             "ruRU": "[ms]катар",
@@ -8208,7 +8208,7 @@
         },
         "quhab": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Quhab",
             "ruRU": "[ms]кухаб",
@@ -8227,7 +8227,7 @@
         },
         "suwayyah": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Suwayyah",
             "ruRU": "[fs]сувайя",
@@ -8246,7 +8246,7 @@
         },
         "scissors_katar": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Scissors Katar",
             "ruRU": "[pl]катар-ножницы",
@@ -8265,7 +8265,7 @@
         },
         "scissors_quhab": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Scissors Quhab",
             "ruRU": "[pl]кухаб-ножницы",
@@ -8284,7 +8284,7 @@
         },
         "scissors_suwayyah": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Scissors Suwayyah",
             "ruRU": "[pl]сувайя-ножницы",
@@ -8303,7 +8303,7 @@
         },
         "wrist_blade": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Wrist Blade",
             "ruRU": "[ms]наручный клинок",
@@ -8322,7 +8322,7 @@
         },
         "wrist_spike": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Wrist Spike",
             "ruRU": "[ms]наручный кинжал",
@@ -8341,7 +8341,7 @@
         },
         "wrist_sword": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Wrist Sword",
             "ruRU": "[ms]наручный меч",
@@ -8360,7 +8360,7 @@
         },
         "flail": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Flail",
             "ruRU": "[ms]кистень",
@@ -8379,7 +8379,7 @@
         },
         "knout": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Knout",
             "ruRU": "[ms]кнут",
@@ -8398,7 +8398,7 @@
         },
         "scourge": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Scourge",
             "ruRU": "[fs]плеть",
@@ -8417,7 +8417,7 @@
         },
         "mace": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Mace",
             "ruRU": "[fs]булава",
@@ -8436,7 +8436,7 @@
         },
         "flanged_mace": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Flanged Mace",
             "ruRU": "[fs]шипастая булава",
@@ -8455,7 +8455,7 @@
         },
         "reinforced_mace": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Reinforced Mace",
             "ruRU": "[fs]укрепленная булава",
@@ -8474,7 +8474,7 @@
         },
         "morning_star": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Morning Star",
             "ruRU": "[ms]моргенштерн",
@@ -8493,7 +8493,7 @@
         },
         "jagged_star": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Jagged Star",
             "ruRU": "[fs]утренняя звезда",
@@ -8512,7 +8512,7 @@
         },
         "devil_star": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Devil Star",
             "ruRU": "[fs]дьявольская звезда",
@@ -8531,7 +8531,7 @@
         },
         "bardiche": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Bardiche",
             "ruRU": "[ms]бердыш",
@@ -8550,7 +8550,7 @@
         },
         "lochaber_axe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Lochaber Axe",
             "ruRU": "[ms]лохаберкаст",
@@ -8569,7 +8569,7 @@
         },
         "ogre_axe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Ogre Axe",
             "ruRU": "[ms]топор людоеда",
@@ -8588,7 +8588,7 @@
         },
         "halberd": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Halberd",
             "ruRU": "[fs]алебарда",
@@ -8607,7 +8607,7 @@
         },
         "bec_de_corbin": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Bec-de-Corbin",
             "ruRU": "[ms]чекан",
@@ -8626,7 +8626,7 @@
         },
         "great_poleaxe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Great Poleaxe",
             "ruRU": "[ms]большой полэкс",
@@ -8645,7 +8645,7 @@
         },
         "poleaxe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Poleaxe",
             "ruRU": "[ms]полэкс",
@@ -8664,7 +8664,7 @@
         },
         "partizan": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Partizan",
             "ruRU": "[ms]протазан",
@@ -8683,7 +8683,7 @@
         },
         "cryptic_axe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Cryptic Axe",
             "ruRU": "[ms]таинственный топор",
@@ -8702,7 +8702,7 @@
         },
         "voulge": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Voulge",
             "ruRU": "[ms]вуж",
@@ -8721,7 +8721,7 @@
         },
         "bill": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Bill",
             "ruRU": "[ms]билл",
@@ -8740,7 +8740,7 @@
         },
         "colossus_voulge": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Colossus Voulge",
             "ruRU": "[ms]массивный вуж",
@@ -8759,7 +8759,7 @@
         },
         "war_scythe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "War Scythe",
             "ruRU": "[fs]воинская коса",
@@ -8778,7 +8778,7 @@
         },
         "grim_scythe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Grim Scythe",
             "ruRU": "[fs]жуткая коса",
@@ -8797,7 +8797,7 @@
         },
         "giant_thresher": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Giant Thresher",
             "ruRU": "[ms]гигантский жнец",
@@ -8816,7 +8816,7 @@
         },
         "battle_scythe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Battle Scythe",
             "ruRU": "[fs]боевая коса",
@@ -8835,7 +8835,7 @@
         },
         "thresher": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Thresher",
             "ruRU": "[ms]жнец",
@@ -8854,7 +8854,7 @@
         },
         "grand_scepter": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Grand Scepter",
             "ruRU": "[ms]большой скипетр",
@@ -8873,7 +8873,7 @@
         },
         "holy_water_sprinkler": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Holy Water Sprinkler",
             "ruRU": "[ns]кропило",
@@ -8892,7 +8892,7 @@
         },
         "seraph_rod": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Seraph Rod",
             "ruRU": "[ms]серафимов скипетр",
@@ -8911,7 +8911,7 @@
         },
         "scepter": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Scepter",
             "ruRU": "[ms]скипетр",
@@ -8930,7 +8930,7 @@
         },
         "rune_scepter": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Rune Scepter",
             "ruRU": "[ms]рунный скипетр",
@@ -8949,7 +8949,7 @@
         },
         "mighty_scepter": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Mighty Scepter",
             "ruRU": "[ms]могучий скипетр",
@@ -8968,7 +8968,7 @@
         },
         "war_scepter": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "War Scepter",
             "ruRU": "[ms]воинский скипетр",
@@ -8987,7 +8987,7 @@
         },
         "divine_scepter": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Divine Scepter",
             "ruRU": "[ms]божественный скипетр",
@@ -9006,7 +9006,7 @@
         },
         "caduceus": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Caduceus",
             "ruRU": "[ms]кадуцей",
@@ -9025,7 +9025,7 @@
         },
         "brandistock": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Brandistock",
             "ruRU": "[fs]рунка",
@@ -9044,7 +9044,7 @@
         },
         "war_fork": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "War Fork",
             "ruRU": "[pl]воинские вилы",
@@ -9063,7 +9063,7 @@
         },
         "mancatcher": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Mancatcher",
             "ruRU": "[ms]ухват",
@@ -9082,7 +9082,7 @@
         },
         "maiden_pike": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Maiden Pike",
             "ruRU": "[fs]девичья пика",
@@ -9101,7 +9101,7 @@
         },
         "ceremonial_pike": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Ceremonial Pike",
             "ruRU": "[fs]ритуальная пика",
@@ -9120,7 +9120,7 @@
         },
         "matriarchal_pike": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Matriarchal Pike",
             "ruRU": "[fs]матриаршая пика",
@@ -9139,7 +9139,7 @@
         },
         "maiden_spear": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Maiden Spear",
             "ruRU": "[ns]девичье копье",
@@ -9158,7 +9158,7 @@
         },
         "ceremonial_spear": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Ceremonial Spear",
             "ruRU": "[ns]ритуальное копье",
@@ -9177,7 +9177,7 @@
         },
         "matriarchal_spear": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Matriarchal Spear",
             "ruRU": "[ns]матриаршее копье",
@@ -9196,7 +9196,7 @@
         },
         "pike": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Pike",
             "ruRU": "[fs]пика",
@@ -9215,7 +9215,7 @@
         },
         "lance": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Lance",
             "ruRU": "[ns]массивное копье",
@@ -9234,7 +9234,7 @@
         },
         "war_pike": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "War Pike",
             "ruRU": "[fs]воинская пика",
@@ -9253,7 +9253,7 @@
         },
         "spear": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Spear",
             "ruRU": "[ns]копье",
@@ -9272,7 +9272,7 @@
         },
         "war_spear": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "War Spear",
             "ruRU": "[ns]воинское копье",
@@ -9291,7 +9291,7 @@
         },
         "hyperion_spear": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Hyperion Spear",
             "ruRU": "[ns]гиперионское копье",
@@ -9310,7 +9310,7 @@
         },
         "spetum": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Spetum",
             "ruRU": "[ms]спетум",
@@ -9329,7 +9329,7 @@
         },
         "yari": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Yari",
             "ruRU": "[ns]яри",
@@ -9348,7 +9348,7 @@
         },
         "ghost_spear": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Ghost Spear",
             "ruRU": "[ns]призрачное копье",
@@ -9367,7 +9367,7 @@
         },
         "trident": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Trident",
             "ruRU": "[ms]трезубец",
@@ -9386,7 +9386,7 @@
         },
         "fuscina": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Fuscina",
             "ruRU": "[pl]вилы",
@@ -9405,7 +9405,7 @@
         },
         "stygian_pike": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Stygian Pike",
             "ruRU": "[fs]стигийская пика",
@@ -9424,7 +9424,7 @@
         },
         "battle_staff": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Battle Staff",
             "ruRU": "[ms]боевой посох",
@@ -9443,7 +9443,7 @@
         },
         "gothic_staff": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Gothic Staff",
             "ruRU": "[ms]готический посох",
@@ -9462,7 +9462,7 @@
         },
         "shillelagh": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Shillelagh",
             "ruRU": "[fs]шилейла",
@@ -9481,7 +9481,7 @@
         },
         "gnarled_staff": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Gnarled Staff",
             "ruRU": "[ms]изогнутый посох",
@@ -9500,7 +9500,7 @@
         },
         "cedar_staff": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Cedar Staff",
             "ruRU": "[ms]кедровый посох",
@@ -9519,7 +9519,7 @@
         },
         "elder_staff": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Elder Staff",
             "ruRU": "[ms]бузинный посох",
@@ -9538,7 +9538,7 @@
         },
         "long_staff": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Long Staff",
             "ruRU": "[ms]длинный посох",
@@ -9557,7 +9557,7 @@
         },
         "quarterstaff": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Quarterstaff",
             "ruRU": "[ms]окованный посох",
@@ -9576,7 +9576,7 @@
         },
         "stalagmite": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Stalagmite",
             "ruRU": "[ms]сталагмит",
@@ -9595,7 +9595,7 @@
         },
         "short_staff": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Short Staff",
             "ruRU": "[ms]короткий посох",
@@ -9614,7 +9614,7 @@
         },
         "jo_staff": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Jo Staff",
             "ruRU": "[ms]посох дзе",
@@ -9633,7 +9633,7 @@
         },
         "walking_stick": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Walking Stick",
             "ruRU": "[fs]трость",
@@ -9652,7 +9652,7 @@
         },
         "war_staff": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "War Staff",
             "ruRU": "[ms]воинский посох",
@@ -9671,7 +9671,7 @@
         },
         "rune_staff": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Rune Staff",
             "ruRU": "[ms]рунический посох",
@@ -9690,7 +9690,7 @@
         },
         "archon_staff": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Archon Staff",
             "ruRU": "[ms]архонтов посох",
@@ -9709,7 +9709,7 @@
         },
         "bastard_sword": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Bastard Sword",
             "ruRU": "[ms]бастард",
@@ -9728,7 +9728,7 @@
         },
         "gothic_sword": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Gothic Sword",
             "ruRU": "[ms]готический меч",
@@ -9747,7 +9747,7 @@
         },
         "champion_sword": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Champion Sword",
             "ruRU": "[ms]элитный меч",
@@ -9766,7 +9766,7 @@
         },
         "broad_sword": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Broad Sword",
             "ruRU": "[ms]широкий меч",
@@ -9785,7 +9785,7 @@
         },
         "battle_sword": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Battle Sword",
             "ruRU": "[ms]боевой меч",
@@ -9804,7 +9804,7 @@
         },
         "conquest_sword": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Conquest Sword",
             "ruRU": "[ms]победный меч",
@@ -9823,7 +9823,7 @@
         },
         "claymore": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Claymore",
             "ruRU": "[ms]клеймор",
@@ -9842,7 +9842,7 @@
         },
         "dacian_falx": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Dacian Falx",
             "ruRU": "[ms]дакийский фалькс",
@@ -9861,7 +9861,7 @@
         },
         "highland_blade": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Highland Blade",
             "ruRU": "[ms]высокогорный меч",
@@ -9880,7 +9880,7 @@
         },
         "crystal_sword": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Crystal Sword",
             "ruRU": "[ms]кристаллический меч",
@@ -9899,7 +9899,7 @@
         },
         "dimensional_blade": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Dimensional Blade",
             "ruRU": "[ms]межпространственный клинок",
@@ -9918,7 +9918,7 @@
         },
         "phase_blade": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Phase Blade",
             "ruRU": "[ms]фазовый клинок",
@@ -9937,7 +9937,7 @@
         },
         "falchion": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Falchion",
             "ruRU": "[ms]фальшион",
@@ -9956,7 +9956,7 @@
         },
         "tulwar": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Tulwar",
             "ruRU": "[ms]тальвар",
@@ -9975,7 +9975,7 @@
         },
         "hydra_edge": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Hydra Edge",
             "ruRU": "[ms]гидровый клинок",
@@ -9994,7 +9994,7 @@
         },
         "flamberge": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Flamberge",
             "ruRU": "[ms]фламберг",
@@ -10013,7 +10013,7 @@
         },
         "zweihander": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Zweihander",
             "ruRU": "[ms]цвайхандер",
@@ -10032,7 +10032,7 @@
         },
         "colossus_sword": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Colossus Sword",
             "ruRU": "[ms]массивный меч",
@@ -10051,7 +10051,7 @@
         },
         "giant_sword": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Giant Sword",
             "ruRU": "[ms]гигантский меч",
@@ -10070,7 +10070,7 @@
         },
         "tusk_sword": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Tusk Sword",
             "ruRU": "[ms]бивенный меч",
@@ -10089,7 +10089,7 @@
         },
         "balrog_blade": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Balrog Blade",
             "ruRU": "[ms]балрогов клинок",
@@ -10108,7 +10108,7 @@
         },
         "great_sword": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Great Sword",
             "ruRU": "[ms]великий меч",
@@ -10127,7 +10127,7 @@
         },
         "executioner_sword": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Executioner Sword",
             "ruRU": "[ms]палаческий меч",
@@ -10146,7 +10146,7 @@
         },
         "colossus_blade": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Colossus Blade",
             "ruRU": "[ms]массивный клинок",
@@ -10165,7 +10165,7 @@
         },
         "long_sword": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Long Sword",
             "ruRU": "[ms]длинный меч",
@@ -10184,7 +10184,7 @@
         },
         "rune_sword": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Rune Sword",
             "ruRU": "[ms]рунический меч",
@@ -10203,7 +10203,7 @@
         },
         "cryptic_sword": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Cryptic Sword",
             "ruRU": "[ms]таинственный меч",
@@ -10222,7 +10222,7 @@
         },
         "sabre": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Sabre",
             "ruRU": "[fs]сабля",
@@ -10241,7 +10241,7 @@
         },
         "shamshir": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Shamshir",
             "ruRU": "[ms]шамшир",
@@ -10260,7 +10260,7 @@
         },
         "elegant_blade": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Elegant Blade",
             "ruRU": "[ms]изящный клинок",
@@ -10279,7 +10279,7 @@
         },
         "scimitar": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Scimitar",
             "ruRU": "[fs]кривая сабля",
@@ -10298,7 +10298,7 @@
         },
         "cutlass": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Cutlass",
             "ruRU": "[fs]абордажная сабля",
@@ -10317,7 +10317,7 @@
         },
         "ataghan": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Ataghan",
             "ruRU": "[ms]ятаган",
@@ -10336,7 +10336,7 @@
         },
         "short_sword": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Short Sword",
             "ruRU": "[ms]короткий меч",
@@ -10355,7 +10355,7 @@
         },
         "gladius": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Gladius",
             "ruRU": "[ms]гладиус",
@@ -10374,7 +10374,7 @@
         },
         "falcata": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Falcata",
             "ruRU": "[fs]фальката",
@@ -10393,7 +10393,7 @@
         },
         "two_handed_sword": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Two-Handed Sword",
             "ruRU": "[ms]двуручный меч",
@@ -10412,7 +10412,7 @@
         },
         "espandon": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Espandon",
             "ruRU": "[ms]эспадон",
@@ -10431,7 +10431,7 @@
         },
         "legend_sword": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Legend Sword",
             "ruRU": "[ms]легендарный меч",
@@ -10450,7 +10450,7 @@
         },
         "war_sword": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "War Sword",
             "ruRU": "[ms]воинский меч",
@@ -10469,7 +10469,7 @@
         },
         "ancient_sword": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Ancient Sword",
             "ruRU": "[ms]древний меч",
@@ -10488,7 +10488,7 @@
         },
         "mythical_sword": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Mythical Sword",
             "ruRU": "[ms]мифический меч",
@@ -10507,7 +10507,7 @@
         },
         "bone_wand": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Bone Wand",
             "ruRU": "[ms]костяной жезл",
@@ -10526,7 +10526,7 @@
         },
         "tomb_wand": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Tomb Wand",
             "ruRU": "[ms]могильный жезл",
@@ -10545,7 +10545,7 @@
         },
         "lich_wand": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Lich Wand",
             "ruRU": "[ms]жезл лича",
@@ -10564,7 +10564,7 @@
         },
         "grim_wand": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Grim Wand",
             "ruRU": "[ms]устрашающий жезл",
@@ -10583,7 +10583,7 @@
         },
         "grave_wand": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Grave Wand",
             "ruRU": "[ms]загробный жезл",
@@ -10602,7 +10602,7 @@
         },
         "unearthed_wand": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Unearthed Wand",
             "ruRU": "[ms]выкопанный жезл",
@@ -10621,7 +10621,7 @@
         },
         "wand": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Wand",
             "ruRU": "[ms]жезл",
@@ -10640,7 +10640,7 @@
         },
         "burnt_wand": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Burnt Wand",
             "ruRU": "[ms]обгорелый жезл",
@@ -10659,7 +10659,7 @@
         },
         "polished_wand": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Polished Wand",
             "ruRU": "[ms]отполированный жезл",
@@ -10678,7 +10678,7 @@
         },
         "yew_wand": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Yew Wand",
             "ruRU": "[ms]тисовый жезл",
@@ -10697,7 +10697,7 @@
         },
         "petrified_wand": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Petrified Wand",
             "ruRU": "[ms]окаменелый жезл",
@@ -10716,7 +10716,7 @@
         },
         "ghost_wand": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Ghost Wand",
             "ruRU": "[ms]призрачный жезл",
@@ -10735,7 +10735,7 @@
         },
         "composite_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Composite Bow",
             "ruRU": "[ms]составной лук",
@@ -10754,7 +10754,7 @@
         },
         "double_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Double Bow",
             "ruRU": "[ms]двойной лук",
@@ -10773,7 +10773,7 @@
         },
         "great_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Great Bow",
             "ruRU": "[ms]большой лук",
@@ -10792,7 +10792,7 @@
         },
         "hunter_s_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Hunter's Bow",
             "ruRU": "[ms]охотничий лук",
@@ -10811,7 +10811,7 @@
         },
         "razor_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Razor Bow",
             "ruRU": "[ms]бритвенный лук",
@@ -10830,7 +10830,7 @@
         },
         "blade_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Blade Bow",
             "ruRU": "[ms]лопастной лук",
@@ -10849,7 +10849,7 @@
         },
         "long_battle_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Long Battle Bow",
             "ruRU": "[ms]длинный боевой лук",
@@ -10868,7 +10868,7 @@
         },
         "large_siege_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Large Siege Bow",
             "ruRU": "[ms]большой осадный лук",
@@ -10887,7 +10887,7 @@
         },
         "crusader_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Crusader Bow",
             "ruRU": "[ms]рыцарский лук",
@@ -10906,7 +10906,7 @@
         },
         "long_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Long Bow",
             "ruRU": "[ms]длинный лук",
@@ -10925,7 +10925,7 @@
         },
         "cedar_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Cedar Bow",
             "ruRU": "[ms]кедровый лук",
@@ -10944,7 +10944,7 @@
         },
         "shadow_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Shadow Bow",
             "ruRU": "[ms]темный лук",
@@ -10963,7 +10963,7 @@
         },
         "long_war_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Long War Bow",
             "ruRU": "[ms]длинный воинский лук",
@@ -10982,7 +10982,7 @@
         },
         "gothic_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Gothic Bow",
             "ruRU": "[ms]готический лук",
@@ -11001,7 +11001,7 @@
         },
         "hydra_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Hydra Bow",
             "ruRU": "[ms]гидровый лук",
@@ -11020,7 +11020,7 @@
         },
         "reflex_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Reflex Bow",
             "ruRU": "[ms]рефлексивный лук",
@@ -11039,7 +11039,7 @@
         },
         "ceremonial_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Ceremonial Bow",
             "ruRU": "[ms]ритуальный лук",
@@ -11058,7 +11058,7 @@
         },
         "grand_matron_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Grand Matron Bow",
             "ruRU": "[ms]большой матронин лук",
@@ -11077,7 +11077,7 @@
         },
         "short_battle_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Short Battle Bow",
             "ruRU": "[ms]короткий боевой лук",
@@ -11096,7 +11096,7 @@
         },
         "short_siege_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Short Siege Bow",
             "ruRU": "[ms]короткий осадный лук",
@@ -11115,7 +11115,7 @@
         },
         "diamond_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Diamond Bow",
             "ruRU": "[ms]алмазный лук",
@@ -11134,7 +11134,7 @@
         },
         "short_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Short Bow",
             "ruRU": "[ms]короткий лук",
@@ -11153,7 +11153,7 @@
         },
         "edge_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Edge Bow",
             "ruRU": "[ms]кромчатый лук",
@@ -11172,7 +11172,7 @@
         },
         "spider_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Spider Bow",
             "ruRU": "[ms]паучий лук",
@@ -11191,7 +11191,7 @@
         },
         "short_war_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Short War Bow",
             "ruRU": "[ms]короткий воинский лук",
@@ -11210,7 +11210,7 @@
         },
         "rune_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Rune Bow",
             "ruRU": "[ms]рунический лук",
@@ -11229,7 +11229,7 @@
         },
         "ward_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Ward Bow",
             "ruRU": "[ms]охранный лук",
@@ -11248,7 +11248,7 @@
         },
         "stag_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Stag Bow",
             "ruRU": "[ms]рогатый лук",
@@ -11267,7 +11267,7 @@
         },
         "ashwood_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Ashwood Bow",
             "ruRU": "[ms]ясеневый лук",
@@ -11286,7 +11286,7 @@
         },
         "matriarchal_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Matriarchal Bow",
             "ruRU": "[ms]матриарший лук",
@@ -11305,7 +11305,7 @@
         },
         "crossbow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Crossbow",
             "ruRU": "[ms]арбалет",
@@ -11324,7 +11324,7 @@
         },
         "siege_crossbow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Siege Crossbow",
             "ruRU": "[ms]осадный арбалет",
@@ -11343,7 +11343,7 @@
         },
         "gorgon_crossbow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Gorgon Crossbow",
             "ruRU": "[ms]горгоний арбалет",
@@ -11362,7 +11362,7 @@
         },
         "heavy_crossbow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Heavy Crossbow",
             "ruRU": "[ms]тяжелый арбалет",
@@ -11381,7 +11381,7 @@
         },
         "ballista": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Ballista",
             "ruRU": "[fs]баллиста",
@@ -11400,7 +11400,7 @@
         },
         "colossus_crossbow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Colossus Crossbow",
             "ruRU": "[ms]массивный арбалет",
@@ -11419,7 +11419,7 @@
         },
         "light_crossbow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Light Crossbow",
             "ruRU": "[ms]легкий арбалет",
@@ -11438,7 +11438,7 @@
         },
         "arbalest": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Arbalest",
             "ruRU": "[ms]самострел",
@@ -11457,7 +11457,7 @@
         },
         "pellet_bow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Pellet Bow",
             "ruRU": "[ms]шариковый арбалет",
@@ -11476,7 +11476,7 @@
         },
         "repeating_crossbow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Repeating Crossbow",
             "ruRU": "[ms]многозарядный арбалет",
@@ -11495,7 +11495,7 @@
         },
         "chu_ko_nu": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Chu-Ko-Nu",
             "ruRU": "[ms]чо-ко-ну",
@@ -11514,7 +11514,7 @@
         },
         "demon_crossbow": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Demon Crossbow",
             "ruRU": "[ms]демонический арбалет",
@@ -11533,7 +11533,7 @@
         },
         "throwing_axe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Throwing Axe",
             "ruRU": "[ms]метательный топорик",
@@ -11552,7 +11552,7 @@
         },
         "clasped_orb": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Clasped Orb",
             "ruRU": "[fs]стянутая сфера",
@@ -11571,7 +11571,7 @@
         },
         "sparkling_ball": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Sparkling Ball",
             "ruRU": "[ms]мерцающий шар",
@@ -11590,7 +11590,7 @@
         },
         "vortex_orb": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Vortex Orb",
             "ruRU": "[fs]ураганная сфера",
@@ -11609,7 +11609,7 @@
         },
         "eagle_orb": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Eagle Orb",
             "ruRU": "[fs]орлиная сфера",
@@ -11628,7 +11628,7 @@
         },
         "glowing_orb": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Glowing Orb",
             "ruRU": "[fs]светящаяся сфера",
@@ -11647,7 +11647,7 @@
         },
         "heavenly_stone": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Heavenly Stone",
             "ruRU": "[ms]небесный камень",
@@ -11666,7 +11666,7 @@
         },
         "jared_s_stone": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Jared's Stone",
             "ruRU": "[ms]камень Джареда",
@@ -11685,7 +11685,7 @@
         },
         "swirling_crystal": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Swirling Crystal",
             "ruRU": "[ms]кружащийся кристалл",
@@ -11704,7 +11704,7 @@
         },
         "dimensional_shard": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Dimensional Shard",
             "ruRU": "[ms]межпространственный осколок",
@@ -11723,7 +11723,7 @@
         },
         "sacred_globe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Sacred Globe",
             "ruRU": "[ms]священный шар",
@@ -11742,7 +11742,7 @@
         },
         "crystalline_globe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Crystalline Globe",
             "ruRU": "[ms]кристальный шар",
@@ -11761,7 +11761,7 @@
         },
         "eldritch_orb": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Eldritch Orb",
             "ruRU": "[fs]зловещая сфера",
@@ -11780,7 +11780,7 @@
         },
         "smoked_sphere": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Smoked Sphere",
             "ruRU": "[fs]дымчатая сфера",
@@ -11799,7 +11799,7 @@
         },
         "cloudy_sphere": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Cloudy Sphere",
             "ruRU": "[fs]туманная сфера",
@@ -11818,7 +11818,7 @@
         },
         "demon_heart": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Demon Heart",
             "ruRU": "[ns]демонское сердце",
@@ -11837,7 +11837,7 @@
         },
         "scythe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Scythe",
             "ruRU": "[fs]коса",
@@ -11856,7 +11856,7 @@
         },
         "balanced_axe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Balanced Axe",
             "ruRU": "[ms]сбалансированный топор",
@@ -11875,7 +11875,7 @@
         },
         "hurlbat": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Hurlbat",
             "ruRU": "[ms]метательный топор",
@@ -11894,7 +11894,7 @@
         },
         "winged_axe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Winged Axe",
             "ruRU": "[ms]крыловидный топор",
@@ -11913,7 +11913,7 @@
         },
         "balanced_knife": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Balanced Knife",
             "ruRU": "[ms]сбалансированный нож",
@@ -11932,7 +11932,7 @@
         },
         "war_dart": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "War Dart",
             "ruRU": "[ms]воинский кинжал",
@@ -11951,7 +11951,7 @@
         },
         "winged_knife": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Winged Knife",
             "ruRU": "[ms]крыловидный нож",
@@ -11970,7 +11970,7 @@
         },
         "throwing_knife": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Throwing Knife",
             "ruRU": "[ms]метательный нож",
@@ -11989,7 +11989,7 @@
         },
         "battle_dart": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Battle Dart",
             "ruRU": "[ms]боевой кинжал",
@@ -12008,7 +12008,7 @@
         },
         "flying_knife": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Flying Knife",
             "ruRU": "[ms]летающий нож",
@@ -12027,7 +12027,7 @@
         },
         "francisca": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Francisca",
             "ruRU": "[fs]франциска",
@@ -12046,7 +12046,7 @@
         },
         "flying_axe": {
           "enabled": true,
-          "showDifficultyClassMarker": true,
+          "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Flying Axe",
             "ruRU": "[ms]летающий топор",
@@ -12066,6 +12066,6 @@
       }
     }
   },
-  "createdAt": "2025-08-21T19:37:39.989Z",
-  "modifiedAt": "2025-08-23T13:16:02.215Z"
+  "createdAt": "2025-08-24T13:55:13.849Z",
+  "modifiedAt": "2025-08-24T14:14:38.525Z"
 }
