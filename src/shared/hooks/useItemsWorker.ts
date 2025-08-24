@@ -35,7 +35,9 @@ export const useItemsWorker = (
   t?: (key: string, options?: any) => string,
   getItemsSettings?: () => ItemsSettings,
   getSelectedLocales?: () => string[],
-  items?: Array<{ key: string; id: number }>
+  items?: Array<{ key: string; id: number }>,
+  allowedMode?: "basic" | "advanced" | null,
+  getCurrentMode?: () => "basic" | "advanced"
 ) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -330,6 +332,15 @@ export const useItemsWorker = (
 
   // Функция для применения изменений к файлам
   const applyChanges = useCallback(async () => {
+    // Проверяем, разрешено ли применение изменений в текущем режиме
+    if (allowedMode && getCurrentMode) {
+      const currentMode = getCurrentMode();
+      if (currentMode !== allowedMode) {
+        console.log('Skipping items changes application - wrong mode', { currentMode, allowedMode });
+        return;
+      }
+    }
+    
     if (
       !sendMessage ||
       !t ||
@@ -584,6 +595,8 @@ export const useItemsWorker = (
     items,
     setIsLoading,
     setError,
+    allowedMode,
+    getCurrentMode,
   ]);
 
   return {

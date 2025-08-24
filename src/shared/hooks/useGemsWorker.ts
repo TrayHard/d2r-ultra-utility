@@ -56,7 +56,9 @@ export const useGemsWorker = (
     title?: string
   ) => void,
   t?: (key: string, options?: any) => string,
-  getGemSettings?: () => GemSettings
+  getGemSettings?: () => GemSettings,
+  allowedMode?: "basic" | "advanced" | null,
+  getCurrentMode?: () => "basic" | "advanced"
 ) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -354,6 +356,15 @@ export const useGemsWorker = (
   );
 
   const applyGemsChanges = useCallback(async () => {
+    // Проверяем, разрешено ли применение изменений в текущем режиме
+    if (allowedMode && getCurrentMode) {
+      const currentMode = getCurrentMode();
+      if (currentMode !== allowedMode) {
+        console.log('Skipping gems changes application - wrong mode', { currentMode, allowedMode });
+        return;
+      }
+    }
+    
     setIsLoading(true);
     setError(null);
 
@@ -403,7 +414,7 @@ export const useGemsWorker = (
     } finally {
       setIsLoading(false);
     }
-  }, [getGemSettings, applyChanges, sendMessage, t]);
+  }, [getGemSettings, applyChanges, sendMessage, t, allowedMode, getCurrentMode]);
 
   const readFromFiles = useCallback(async () => {
     return await readLocales();
