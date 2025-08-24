@@ -331,6 +331,8 @@ interface SettingsContextType {
   saveProfile: (profileId: string, settings: AppSettings) => void;
   loadProfile: (profileId: string) => void;
   renameProfile: (profileId: string, newName: string) => void;
+  reorderUserProfiles: (profileIds: string[]) => void;
+  duplicateProfile: (profileId: string) => void;
   deleteProfile: (profileId: string) => void;
   exportProfile: (profileId: string) => void;
   importProfile: (profileData: any) => void;
@@ -1699,6 +1701,74 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     [profiles, saveProfilesToLocalStorage]
   );
 
+  // Изменить порядок пользовательских профилей
+  const reorderUserProfiles = useCallback(
+    (profileIds: string[]) => {
+      // Создаём новый массив профилей в указанном порядке
+      const reorderedProfiles = profileIds
+        .map(id => profiles.find(p => p.id === id))
+        .filter((p): p is Profile => p !== undefined);
+      
+      // Добавляем профили, которые не были в списке (на случай рассинхронизации)
+      const includedIds = new Set(profileIds);
+      const missingProfiles = profiles.filter(p => !includedIds.has(p.id));
+      
+      const updatedProfiles = [...reorderedProfiles, ...missingProfiles];
+      setProfiles(updatedProfiles);
+      saveProfilesToLocalStorage(updatedProfiles);
+      
+      logger.info("Изменён порядок пользовательских профилей", { 
+        newOrder: profileIds 
+      });
+    },
+    [profiles, saveProfilesToLocalStorage]
+  );
+
+  // Дублировать профиль
+  const duplicateProfile = useCallback(
+    (profileId: string) => {
+      // Найти профиль для дублирования (может быть как пользовательский, так и неизменяемый)
+      const allProfiles = [...profiles, ...immutableProfiles];
+      const profileToDuplicate = allProfiles.find(p => p.id === profileId);
+      
+      if (!profileToDuplicate) {
+        logger.error(`Профиль для дублирования не найден: ${profileId}`);
+        return;
+      }
+
+      // Генерируем уникальное имя для дубликата
+      const allExistingNames = new Set(
+        [...profiles, ...immutableProfiles]
+          .map((p) => (p.name || "").trim().toLowerCase())
+      );
+      
+      let duplicateName = `${profileToDuplicate.name} (Copy)`;
+      let counter = 1;
+      
+      while (allExistingNames.has(duplicateName.toLowerCase())) {
+        counter++;
+        duplicateName = `${profileToDuplicate.name} (Copy ${counter})`;
+      }
+
+      // Создаём новый профиль (всегда пользовательский, даже если оригинал был неизменяемым)
+      const newProfile: Profile = {
+        id: `profile-${Date.now()}`,
+        name: duplicateName,
+        settings: profileToDuplicate.settings,
+        createdAt: new Date().toISOString(),
+        modifiedAt: new Date().toISOString(),
+        isImmutable: false, // Дубликат всегда пользовательский
+      };
+
+      const updatedProfiles = [...profiles, newProfile];
+      setProfiles(updatedProfiles);
+      saveProfilesToLocalStorage(updatedProfiles);
+      
+      logger.debug(`Профиль продублирован: ${profileToDuplicate.name} -> ${newProfile.name}`);
+    },
+    [profiles, immutableProfiles, saveProfilesToLocalStorage, logger]
+  );
+
   // Удалить профиль
   const deleteProfile = useCallback(
     (profileId: string) => {
@@ -2327,6 +2397,8 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     saveProfile,
     loadProfile,
     renameProfile,
+    reorderUserProfiles,
+    duplicateProfile,
     deleteProfile,
     exportProfile,
     importProfile,

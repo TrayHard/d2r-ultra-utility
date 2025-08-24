@@ -7,6 +7,7 @@ import {
   mdiFileImport,
   mdiFileExport,
   mdiCheck,
+  mdiContentDuplicate,
 } from "@mdi/js";
 import Button from "./Button";
 import Dropdown from "./Dropdown";
@@ -26,6 +27,7 @@ interface ProfileManagerProps {
   onProfileSave: (profileId: string, settings: any) => void;
   onProfileRename: (profileId: string, newName: string) => void;
   onProfileDelete: (profileId: string) => void;
+  onProfileDuplicate: (profileId: string) => void;
   onProfileExport: (profileId: string) => void;
   onProfileImport: (profileData: any) => void;
 }
@@ -41,6 +43,7 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
   onProfileSave,
   onProfileRename,
   onProfileDelete,
+  onProfileDuplicate,
   onProfileExport,
   onProfileImport,
 }) => {
@@ -256,6 +259,23 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
               className="h-[38px]"
             />
           </Tooltip>
+
+          {/* Duplicate Profile Button */}
+          <Tooltip
+            title={t("basicMainSpace.tooltips.duplicate")}
+            placement="top"
+            mouseEnterDelay={0.3}
+          >
+            <Button
+              variant="secondary"
+              onClick={() => activeProfileId && onProfileDuplicate(activeProfileId)}
+              disabled={!activeProfileId}
+              isDarkTheme={isDarkTheme}
+              icon={mdiContentDuplicate}
+              size="sm"
+              className="h-[38px]"
+            />
+          </Tooltip>
         </div>
 
         {/* Import Profile Button */}
@@ -323,6 +343,7 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
               value={newProfileName}
               onChange={(e) => setNewProfileName(e.target.value)}
               placeholder={t("profiles.enterProfileName")}
+              maxLength={30}
               className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                 isDarkTheme
                   ? "bg-gray-700 border-gray-600 text-white"
@@ -376,6 +397,7 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
               value={newProfileName}
               onChange={(e) => setNewProfileName(e.target.value)}
               placeholder={t("profiles.enterProfileName")}
+              maxLength={25}
               className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                 isDarkTheme
                   ? "bg-gray-700 border-gray-600 text-white"
