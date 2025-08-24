@@ -371,6 +371,9 @@
   "messages": {
     "success": {
       "allLoaded": "Wszystkie ustawienia zostały pomyślnie wczytane"
+    },
+    "error": {
+      "writePermissionSuggestion": "Nie można zapisać pliku. Uruchom aplikację jako Administrator lub przenieś grę do folderu, w którym masz uprawnienia do zapisu."
     }
   },
   "window": {
@@ -472,16 +475,6 @@
       "reqDexterityTooltip": "Podaj swoją zręczność, aby wyświetlać tylko odpowiednie przedmioty",
       "relatedItems": "Powiązane przedmioty"
     }
-  },
-  "window": {
-    "minimize": "Zminimalizuj",
-    "maximize": "Zmaksymalizuj",
-    "close": "Zamknij"
-  },
-  "triState": {
-    "off": "Wyłączone",
-    "noChange": "Bez zmian",
-    "on": "Włączone"
   },
   "mode": {
     "switchToBasic": "Przełącz na tryb podstawowy",

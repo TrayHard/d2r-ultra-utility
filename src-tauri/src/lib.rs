@@ -3,6 +3,7 @@ use rfd::FileDialog;
 use std::env;
 use std::fs;
 use std::path::Path;
+use std::process::Command;
 use tauri::{AppHandle, Emitter};
 use tokio::time::{sleep, Duration};
 
@@ -271,8 +272,113 @@ pub fn run() {
             greet,
             search_file,
             set_selected_file,
-            open_file_dialog
+            open_file_dialog,
+            ensure_writable
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+}
+
+#[derive(serde::Serialize)]
+struct EnsureResult {
+    path: String,
+    is_readonly: bool,
+    removed_readonly: bool,
+    granted_acl: bool,
+    writable: bool,
+    error: Option<String>,
+}
+
+#[tauri::command]
+async fn ensure_writable(paths: Vec<String>) -> Result<Vec<EnsureResult>, String> {
+    let mut results: Vec<EnsureResult> = Vec::with_capacity(paths.len());
+
+    for path in paths {
+        let mut is_readonly = false;
+        let mut removed_readonly = false;
+        let mut granted_acl = false;
+        let mut writable = false;
+        let mut error: Option<String> = None;
+
+        let target = Path::new(&path);
+        let parent = target.parent().map(|p| p.to_path_buf());
+
+        // Step 1: check readonly and try to clear it (file or parent dir if file missing)
+        let target_for_attr = if target.exists() {
+            target.to_path_buf()
+        } else if let Some(parent_dir) = &parent {
+            parent_dir.to_path_buf()
+        } else {
+            target.to_path_buf()
+        };
+
+        match fs::metadata(&target_for_attr) {
+            Ok(md) => {
+                is_readonly = md.permissions().readonly();
+                if is_readonly {
+                    // Try via Rust API
+                    let mut perms = md.permissions();
+                    perms.set_readonly(false);
+                    if fs::set_permissions(&target_for_attr, perms).is_ok() {
+                        removed_readonly = true;
+                    } else {
+                        // Fallback to attrib
+                        let status = Command::new("cmd")
+                            .args(["/C", "attrib", "+S", "+H"]) // no-op to warm shell
+                            .status();
+                        let _ = status; // ignore
+                        let out = Command::new("cmd")
+                            .args(["/C", "attrib", "-R", &format!("\"{}\"", target_for_attr.display())])
+                            .output();
+                        if let Ok(o) = out {
+                            if o.status.success() {
+                                removed_readonly = true;
+                            }
+                        }
+                    }
+                }
+            }
+            Err(e) => {
+                error = Some(format!("metadata error: {}", e));
+            }
+        }
+
+        // Step 2: try grant ACL full control to current user (best effort)
+        #[cfg(target_os = "windows")]
+        {
+            // Resolve current user as DOMAIN\\User via whoami
+            let user = Command::new("whoami").output().ok().and_then(|o| String::from_utf8(o.stdout).ok()).map(|s| s.trim().to_string());
+            if let Some(u) = user {
+                let icacls_cmd = format!("icacls \"{}\" /grant {}:F /C /Q", target_for_attr.display(), u);
+                if let Ok(o) = Command::new("cmd").args(["/C", &icacls_cmd]).output() {
+                    if o.status.success() {
+                        granted_acl = true;
+                    }
+                }
+            }
+        }
+
+        // Step 3: check writability by attempting to open for append/create
+        match fs::OpenOptions::new().create(true).append(true).open(&target_for_attr) {
+            Ok(_) => {
+                writable = true;
+            }
+            Err(e) => {
+                if error.is_none() {
+                    error = Some(format!("open error: {}", e));
+                }
+            }
+        }
+
+        results.push(EnsureResult {
+            path,
+            is_readonly,
+            removed_readonly,
+            granted_acl,
+            writable,
+            error,
+        });
+    }
+
+    Ok(results)
 }

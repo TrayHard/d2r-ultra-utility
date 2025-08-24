@@ -371,6 +371,9 @@
   "messages": {
     "success": {
       "allLoaded": "Tous les paramètres ont été chargés avec succès"
+    },
+    "error": {
+      "writePermissionSuggestion": "Impossible d’écrire le fichier. Exécutez l’application en tant qu’administrateur ou déplacez le jeu dans un dossier avec des droits d’écriture."
     }
   },
   "window": {

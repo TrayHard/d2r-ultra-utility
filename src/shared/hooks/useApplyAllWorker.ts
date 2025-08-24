@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import { useLogger } from "../utils/logger";
+import { ensureWritable } from "../utils/fsUtils";
 import {
   GAME_PATHS as COMMON_GAME_PATHS,
   loadSavedSettings,
@@ -72,7 +73,23 @@ export const useApplyAllWorker = (
           maxAttempts,
           error: err instanceof Error ? err.message : String(err),
         }, 'writeFileWithRetry');
-        if (isLast) throw err;
+        if (isLast) {
+          try {
+            const results = await ensureWritable([path]);
+            const r = results[0];
+            logger.warn('Attempted to ensure writable', { path, result: r }, 'writeFileWithRetry');
+          } catch (e) {
+            logger.warn('ensureWritable invocation failed', { path, error: e instanceof Error ? e.message : String(e) }, 'writeFileWithRetry');
+          }
+          try {
+            await writeTextFile(path, content);
+            return;
+          } catch (finalErr) {
+            const suggestion = tRef.current?.('messages.error.writePermissionSuggestion') || 'Could not write the file. Try running the app as Administrator or move the game to a folder where you have write permissions.';
+            const msg = (finalErr instanceof Error ? finalErr.message : String(finalErr)) + `\n${suggestion}`;
+            throw new Error(msg);
+          }
+        }
         const backoffMs = Math.min(1000, 100 * Math.pow(2, attempt));
         await new Promise((r) => setTimeout(r, backoffMs));
       }

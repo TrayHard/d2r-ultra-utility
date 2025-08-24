@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
+import { ensureWritable } from "../utils/fsUtils";
 import { useLogger } from "../utils/logger";
 import {
   idToRuneMapper,
@@ -459,7 +460,23 @@ export const useTextWorker = (
           } catch (err) {
             const isLast = attempt === maxAttempts - 1;
             console.warn('Runes write attempt failed, retrying', path, attempt + 1, err);
-            if (isLast) throw err;
+            if (isLast) {
+              try {
+                const results = await ensureWritable([path]);
+                const r = results[0];
+                console.warn('Attempted to ensure writable', { path, result: r });
+              } catch (e) {
+                console.warn('ensureWritable invocation failed', path, e);
+              }
+              try {
+                await writeTextFile(path, content);
+                return;
+              } catch (finalErr) {
+                const suggestion = t?.('messages.error.writePermissionSuggestion') || 'Could not write the file. Try running the app as Administrator or move the game to a folder where you have write permissions.';
+                const msg = (finalErr instanceof Error ? finalErr.message : String(finalErr)) + `\n${suggestion}`;
+                throw new Error(msg);
+              }
+            }
             const backoffMs = Math.min(1000, 100 * Math.pow(2, attempt));
             await new Promise((r) => setTimeout(r, backoffMs));
           }
@@ -503,7 +520,23 @@ export const useTextWorker = (
               } catch (err) {
                 const isLast = attempt === maxAttempts - 1;
                 console.warn('Highlight write attempt failed, retrying', path, attempt + 1, err);
-                if (isLast) throw err;
+                if (isLast) {
+                  try {
+                    const results = await ensureWritable([path]);
+                    const r = results[0];
+                    console.warn('Attempted to ensure writable', { path, result: r });
+                  } catch (e) {
+                    console.warn('ensureWritable invocation failed', path, e);
+                  }
+                  try {
+                    await writeTextFile(path, content);
+                    return;
+                  } catch (finalErr) {
+                    const suggestion = t?.('messages.error.writePermissionSuggestion') || 'Could not write the file. Try running the app as Administrator or move the game to a folder where you have write permissions.';
+                    const msg = (finalErr instanceof Error ? finalErr.message : String(finalErr)) + `\n${suggestion}`;
+                    throw new Error(msg);
+                  }
+                }
                 const backoffMs = Math.min(1000, 100 * Math.pow(2, attempt));
                 await new Promise((r) => setTimeout(r, backoffMs));
               }
