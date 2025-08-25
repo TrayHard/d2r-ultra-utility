@@ -339,20 +339,57 @@ export const useApplyAllWorker = (
         if (!id) return;
         const idx = updatedItemNames.findIndex(d => d.id === id);
         if (idx === -1) return;
+
         const base = bases.find(b => b.id === id);
         const difficultyLevel = base?.difficultyClass === 'normal' ? 0 : base?.difficultyClass === 'exceptional' ? 1 : 2;
-        const marker = itemsSettings.difficultyClassMarkers.levels[difficultyLevel];
+        const markerLevel = itemsSettings.difficultyClassMarkers.levels[difficultyLevel];
+
         selectedLocales.forEach((loc) => {
           const k = loc as keyof CommonLocaleItem;
           const sk = loc as keyof ItemSettings['locales'];
-          const name = (itemSettings as ItemSettings).locales[sk];
-          if (!name || !name.trim()) return;
-          let finalName = name;
-          if ((itemSettings as ItemSettings).showDifficultyClassMarker && marker) {
-            const m = marker.locales[sk];
-            if (m && m.trim()) finalName = `${name} ${m}`;
+
+          // Если предмет выключен — очищаем строки для выбранных локалей
+          if (!(itemSettings as ItemSettings).enabled) {
+            (updatedItemNames[idx] as any)[k] = "";
+            return;
           }
-          (updatedItemNames[idx] as any)[k] = finalName;
+
+          const currentValue = ((updatedItemNames[idx] as any)[k] ?? "") as string;
+          const customName = (itemSettings as ItemSettings).locales[sk] ?? "";
+
+          // Подготовим список всех возможных маркеров для этой локали,
+          // чтобы уметь удалять ранее добавленные маркеры и избегать дубликатов
+          const allLocaleMarkers = itemsSettings.difficultyClassMarkers.levels
+            .map(lvl => lvl?.locales[sk])
+            .filter((s): s is string => !!s && !!s.trim());
+
+          const stripMarker = (value: string): string => {
+            let result = value;
+            allLocaleMarkers.forEach((m) => {
+              const suffix = ` ${m}`;
+              if (result.endsWith(suffix)) {
+                result = result.slice(0, -suffix.length);
+              }
+            });
+            return result;
+          };
+
+          // Базовое имя: приоритет кастомному, иначе текущее из файла
+          let baseName = (customName.trim() ? customName : currentValue) as string;
+          baseName = stripMarker(baseName);
+
+          // Добавляем маркер класса сложности при необходимости
+          if ((itemSettings as ItemSettings).showDifficultyClassMarker && markerLevel) {
+            const m = markerLevel.locales[sk];
+            if (m && m.trim()) {
+              const markerSuffix = ` ${m}`;
+              if (!baseName.endsWith(markerSuffix)) {
+                baseName = `${baseName}${markerSuffix}`;
+              }
+            }
+          }
+
+          (updatedItemNames[idx] as any)[k] = baseName;
         });
       });
 
