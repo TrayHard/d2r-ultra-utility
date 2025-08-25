@@ -29,14 +29,12 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
     getIsDarkTheme,
     toggleTheme,
     getGamePath,
-    getDebugMode,
   } = useSettings();
 
   const selectedLocales = getSelectedLocales();
   const currentAppLanguage = getAppLanguage();
   const isCurrentlyDarkTheme = getIsDarkTheme();
   const currentGamePath = getGamePath();
-  const isDebugMode = getDebugMode();
   const [appVersion, setAppVersion] = React.useState<string>("");
 
   React.useEffect(() => {
