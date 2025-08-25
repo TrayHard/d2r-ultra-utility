@@ -347,7 +347,7 @@ interface SettingsContextType {
 
 // Дефолтные настройки приложения
 const getDefaultAppConfig = (): AppConfig => ({
-  selectedLocales: ["enUS"], // По умолчанию выбран только английский язык
+  selectedLocales: ["enUS", "ruRU"], // По умолчанию выбраны английский и русский языки
   appLanguage: "enUS", // По умолчанию язык интерфейса - английский
   gamePath: "", // По умолчанию путь к игре не задан
   theme: "dark", // По умолчанию темная тема
@@ -1447,7 +1447,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   const resetSelectedLocales = useCallback(() => {
     setAppConfig((prev) => ({
       ...prev,
-      selectedLocales: ["enUS"],
+      selectedLocales: ["enUS", "ruRU"],
     }));
   }, [setAppConfig]);
 

@@ -380,7 +380,7 @@ export const useTextWorker = (
       const updatedData = [...currentData];
 
       // Обновляем только выбранные локали из настроек приложения
-      const selectedLocales = (JSON.parse(localStorage.getItem(STORAGE_KEYS.APP_CONFIG) || '{}')?.selectedLocales) || ["enUS"]; 
+      const selectedLocales = (JSON.parse(localStorage.getItem(STORAGE_KEYS.APP_CONFIG) || '{}')?.selectedLocales) || ["enUS", "ruRU"]; 
 
       Object.entries(runeSettings).forEach(([rune, settings]) => {
         const runeEnum = rune as ERune;
