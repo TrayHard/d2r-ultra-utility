@@ -7,9 +7,9 @@ Desktop application to enhance your Diablo II Resurrected playing experience.
 ### Loot filters
 #### Basic Mode
 
-You can just apply already existing loot filters in one click.
+You can just apply already existing lootfilter profiles in one click.
 
-<img src="https://i.imgur.com/kQFHjv9.png" />
+<img src="https://i.imgur.com/kQFHjv9.png" height="500"/>
 
 #### Edit mode
 Or you can edit lootfilters as you want
