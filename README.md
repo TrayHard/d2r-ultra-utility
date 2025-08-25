@@ -5,8 +5,15 @@ Desktop application to enhance your Diablo II Resurrected playing experience.
 ## Features:
 
 ### Loot filters
+#### Basic Mode
 
-#### Items
+You can just apply already existing loot filters in one click.
+
+<img src="https://i.imgur.com/kQFHjv9.png" />
+
+#### Edit mode
+Or you can edit lootfilters as you want
+##### Items
 <img src="https://i.imgur.com/Nkyrwdg.png" width="900" />
 
 - You can filter items by requirements, weight, difficulty class and character class limitations
@@ -19,7 +26,7 @@ Desktop application to enhance your Diablo II Resurrected playing experience.
 
 <img src="https://i.imgur.com/k8Brnzv.png" width="450" />
 
-#### Runes
+##### Runes
 <img src="https://i.imgur.com/W46s3Iw.png" height="500" />
 
 - You can define how they should look like
@@ -32,16 +39,16 @@ Desktop application to enhance your Diablo II Resurrected playing experience.
 - You can edit them manually directly
 <img src="https://i.imgur.com/CyAx17m.png" width="600" />
 
-#### Common items
+##### Common items
 <img src="https://i.imgur.com/PN724uG.png" height="500" />
 
-#### Profiles
+##### Profiles
 Now you can store all your loot filter settings and switch between them very quickly. Different characters or different game stage (levelling\endgame farm)? You can change the profile for your needs. 
 And you can also export\import it to save it for yourself or to share with friends!
 
 <img src="https://i.imgur.com/fTPAeTC.png" height="500" />
 
-#### Localizations
+##### Localizations
 You can choose the game locales you are interested in
 
 <img src="https://i.imgur.com/yXO5l13.png" height="500" />
