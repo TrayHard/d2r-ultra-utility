@@ -296,6 +296,10 @@
         "clickToCopy": "Click on any color to copy its code",
         "copied": "Copied {{code}} to clipboard"
       },
+      "symbolsHint": {
+        "copy": "Copy",
+        "copied": "Copied {{symbol}} to clipboard"
+      },
       "sizes": {
         "Normal": "Normal",
         "Exceptional": "Exceptional",

@@ -9,7 +9,11 @@ import Icon from "@mdi/react";
 import { mdiEyeOutline, mdiEyeOffOutline } from "@mdi/js";
 import MultipleLeveledLocales from "../../shared/components/MultipleLeveledLocales";
 import ColorHint from "../../shared/components/ColorHint";
-import type { CommonItemSettings, PotionGroupSettings } from "../../app/providers/SettingsContext";
+import SymbolsHint from "../../shared/components/SymbolsHint";
+import type {
+  CommonItemSettings,
+  PotionGroupSettings,
+} from "../../app/providers/SettingsContext";
 
 interface CommonTabProps {
   isDarkTheme: boolean;
@@ -17,9 +21,7 @@ interface CommonTabProps {
   onApplyChanges?: () => void;
 }
 
-const CommonTab: React.FC<CommonTabProps> = ({
-  isDarkTheme,
-}) => {
+const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
   const { t } = useTranslation();
   const {
     getSelectedLocales,
@@ -218,7 +220,10 @@ const CommonTab: React.FC<CommonTabProps> = ({
         continue;
       }
       nodes.push(
-        <span key={`p-${i}`} style={currentColor ? { color: currentColor } : undefined}>
+        <span
+          key={`p-${i}`}
+          style={currentColor ? { color: currentColor } : undefined}
+        >
           {part}
         </span>
       );
@@ -228,7 +233,12 @@ const CommonTab: React.FC<CommonTabProps> = ({
 
   // Обработчики для зелий
   const handlePotionLevelToggle = (
-    itemType: "healthPotions" | "manaPotions" | "rejuvenationPotions" | "poisonPotions" | "firePotions",
+    itemType:
+      | "healthPotions"
+      | "manaPotions"
+      | "rejuvenationPotions"
+      | "poisonPotions"
+      | "firePotions",
     level: number,
     enabled: boolean
   ) => {
@@ -236,7 +246,12 @@ const CommonTab: React.FC<CommonTabProps> = ({
   };
 
   const handlePotionTabChange = (
-    itemType: "healthPotions" | "manaPotions" | "rejuvenationPotions" | "poisonPotions" | "firePotions",
+    itemType:
+      | "healthPotions"
+      | "manaPotions"
+      | "rejuvenationPotions"
+      | "poisonPotions"
+      | "firePotions",
     tabIndex: number
   ) => {
     updatePotionGroupSettings(itemType, { activeTab: tabIndex });
@@ -286,19 +301,38 @@ const CommonTab: React.FC<CommonTabProps> = ({
       | "keys",
     toggleHandler: (enabled: boolean) => void
   ) => {
+    const showGenderCodeHintForItemType = (
+      itemType === "amulets" ||
+      itemType === "rings" ||
+      itemType === "jewels" ||
+      itemType === "smallCharms" ||
+      itemType === "largeCharms" ||
+      itemType === "grandCharms"
+    );
     return (
       <div className="space-y-4">
         {/* Предпросмотр + переключатель состояния */}
         <div className="flex items-center space-x-3">
           <div className="w-20">
-            <Tooltip title={t("runePage.controls.toggleItemVisibilityTooltip")} placement="top">
+            <Tooltip
+              title={t("runePage.controls.toggleItemVisibilityTooltip")}
+              placement="top"
+            >
               <div>
                 <Switch
                   enabled={itemSettings.enabled}
                   onChange={(enabled) => toggleHandler(enabled)}
                   isDarkTheme={isDarkTheme}
-                  onIcon={<Icon path={mdiEyeOutline} size={0.55} color="#16A34A" />}
-                  offIcon={<Icon path={mdiEyeOffOutline} size={0.55} color={isDarkTheme ? "#111827" : "#6B7280"} />}
+                  onIcon={
+                    <Icon path={mdiEyeOutline} size={0.55} color="#16A34A" />
+                  }
+                  offIcon={
+                    <Icon
+                      path={mdiEyeOffOutline}
+                      size={0.55}
+                      color={isDarkTheme ? "#111827" : "#6B7280"}
+                    />
+                  }
                 />
               </div>
             </Tooltip>
@@ -307,14 +341,17 @@ const CommonTab: React.FC<CommonTabProps> = ({
             <div
               className={`
                 h-9 px-3 rounded-md border flex items-center overflow-hidden text-sm diablo-font whitespace-pre w-full
-                ${isDarkTheme
-                  ? "bg-gray-800 border-gray-600 text-white"
-                  : "bg-white border-gray-300 text-gray-900"
+                ${
+                  isDarkTheme
+                    ? "bg-gray-800 border-gray-600 text-white"
+                    : "bg-white border-gray-300 text-gray-900"
                 }
               `}
             >
               <span
-                className={"mr-2 font-semibold tracking-wide text-xs text-gray-400 font-sans cursor-default select-none"}
+                className={
+                  "mr-2 font-semibold tracking-wide text-xs text-gray-400 font-sans cursor-default select-none"
+                }
               >
                 {(t("runePage.controls.preview") || "Preview") + ":"}
               </span>
@@ -323,7 +360,7 @@ const CommonTab: React.FC<CommonTabProps> = ({
                 if (focusedLocale) {
                   const text =
                     itemSettings.locales[
-                    focusedLocale as keyof typeof itemSettings.locales
+                      focusedLocale as keyof typeof itemSettings.locales
                     ] || "";
                   return renderColoredText(text);
                 }
@@ -335,8 +372,8 @@ const CommonTab: React.FC<CommonTabProps> = ({
                 const firstSelected = selectedLocales[0];
                 const fallbackText = firstSelected
                   ? itemSettings.locales[
-                  firstSelected as keyof typeof itemSettings.locales
-                  ] || ""
+                      firstSelected as keyof typeof itemSettings.locales
+                    ] || ""
                   : "";
                 return renderColoredText(fallbackText);
               })()}
@@ -356,18 +393,41 @@ const CommonTab: React.FC<CommonTabProps> = ({
                     ${isDarkTheme ? "text-gray-300" : "text-gray-700"}
                   `}
                 >
-                  {locale.label}:
+                  {locale.value === "ruRU" && showGenderCodeHintForItemType ? (
+                    <Tooltip
+                      title={
+                        "В квадратных скобках указывается код, который показывает какого рода предмет, чтобы различные аффиксы корректно показывались. Не убирайте его, если не хотите проблем с родами на аффиксах у предметов"
+                      }
+                      placement="top"
+                    >
+                      <span
+                        className="relative inline-block pr-3"
+                        style={{ textDecoration: "underline dotted" }}
+                      >
+                        {locale.label}:
+                        <span className="pointer-events-none absolute -top-1 -right-1 opacity-50 text-[10px]">
+                          ?
+                        </span>
+                      </span>
+                    </Tooltip>
+                  ) : (
+                    <>{locale.label}:</>
+                  )}
                 </span>
                 <div className="flex-1 flex items-center space-x-2">
                   <input
                     type="text"
                     value={
                       itemSettings.locales[
-                      locale.value as keyof typeof itemSettings.locales
+                        locale.value as keyof typeof itemSettings.locales
                       ] ?? ""
                     }
                     onChange={(e) =>
-                      handleLocaleChange(itemType, locale.value, e.target.value)
+                      handleLocaleChange(
+                        itemType,
+                        locale.value,
+                        e.target.value
+                      )
                     }
                     onFocus={() => setFocusedLocale(locale.value)}
                     onBlur={() => setFocusedLocale(null)}
@@ -377,19 +437,24 @@ const CommonTab: React.FC<CommonTabProps> = ({
                     )}
                     className={`
                       flex-1 px-3 py-2 rounded-md border transition-colors
-                      ${isDarkTheme
-                        ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                        : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
+                      ${
+                        isDarkTheme
+                          ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                          : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
                       }
-                      ${!itemSettings.enabled
-                        ? "opacity-50 cursor-not-allowed"
-                        : isDarkTheme
+                      ${
+                        !itemSettings.enabled
+                          ? "opacity-50 cursor-not-allowed"
+                          : isDarkTheme
                           ? "focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
                           : "focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
                       }
                     `}
                   />
-                  <ColorHint isDarkTheme={isDarkTheme} />
+                  <div className="flex items-center gap-1">
+                    <SymbolsHint isDarkTheme={isDarkTheme} />
+                    <ColorHint isDarkTheme={isDarkTheme} />
+                  </div>
                 </div>
               </div>
             ))}
@@ -437,7 +502,12 @@ const CommonTab: React.FC<CommonTabProps> = ({
 
   // Получаем путь к изображению для зелья по уровню
   const getPotionImagePath = (
-    itemType: "healthPotions" | "manaPotions" | "rejuvenationPotions" | "poisonPotions" | "firePotions",
+    itemType:
+      | "healthPotions"
+      | "manaPotions"
+      | "rejuvenationPotions"
+      | "poisonPotions"
+      | "firePotions",
     level: number
   ): string => {
     const imagePaths = {
@@ -503,11 +573,21 @@ const CommonTab: React.FC<CommonTabProps> = ({
 
   // Компонент для рендеринга блока зелий с табами
   const renderPotionBlock = (
-    itemType: "healthPotions" | "manaPotions" | "rejuvenationPotions" | "poisonPotions" | "firePotions",
+    itemType:
+      | "healthPotions"
+      | "manaPotions"
+      | "rejuvenationPotions"
+      | "poisonPotions"
+      | "firePotions",
     potionSettings: PotionGroupSettings
   ) => {
     // Получаем иконку для заголовка: для HP/MP - 5-й уровень (индекс 4), для реджувенации - 2-й уровень (индекс 1)
-    const headerIconIndex = itemType === "rejuvenationPotions" ? 1 : (itemType === "poisonPotions" || itemType === "firePotions" ? 0 : 4);
+    const headerIconIndex =
+      itemType === "rejuvenationPotions"
+        ? 1
+        : itemType === "poisonPotions" || itemType === "firePotions"
+        ? 0
+        : 4;
     const headerIcon = getPotionImagePath(itemType, headerIconIndex);
 
     return (
@@ -552,8 +632,12 @@ const CommonTab: React.FC<CommonTabProps> = ({
         headerIcon={headerIcon}
         isOpen={collapseStates[itemType]}
         onToggle={(isOpen) => handleCollapseToggle(itemType, isOpen)}
-        onTabChange={(tabIndex) => updatePotionGroupSettings(itemType, { activeTab: tabIndex })}
-        onLevelToggle={(level, enabled) => updatePotionLevelSettings(itemType, level, { enabled })}
+        onTabChange={(tabIndex) =>
+          updatePotionGroupSettings(itemType, { activeTab: tabIndex })
+        }
+        onLevelToggle={(level, enabled) =>
+          updatePotionLevelSettings(itemType, level, { enabled })
+        }
         onLocaleChange={(level, locale, value) =>
           handlePotionLocaleChange(itemType, level, locale, value)
         }
@@ -575,25 +659,31 @@ const CommonTab: React.FC<CommonTabProps> = ({
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder={t("commonPage.searchPlaceholder") || "Search blocks..."}
-          className={`w-full px-3 py-2 rounded-md border text-sm ${isDarkTheme
+          className={`w-full px-3 py-2 rounded-md border text-sm ${
+            isDarkTheme
               ? "bg-gray-800 border-gray-600 text-white placeholder-gray-400"
               : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
-            }`}
+          }`}
         />
       </div>
       <div className="space-y-6">
         {/* Блоки зелий с табами */}
-        {shouldShow(t("commonPage.healthPotions")) && renderPotionBlock("healthPotions", healthPotions)}
+        {shouldShow(t("commonPage.healthPotions")) &&
+          renderPotionBlock("healthPotions", healthPotions)}
 
-        {shouldShow(t("commonPage.manaPotions")) && renderPotionBlock("manaPotions", manaPotions)}
+        {shouldShow(t("commonPage.manaPotions")) &&
+          renderPotionBlock("manaPotions", manaPotions)}
 
-        {shouldShow(t("commonPage.rejuvenationPotions")) && renderPotionBlock("rejuvenationPotions", rejuvenationPotions)}
+        {shouldShow(t("commonPage.rejuvenationPotions")) &&
+          renderPotionBlock("rejuvenationPotions", rejuvenationPotions)}
 
         {/* Ядовитые зелья */}
-        {shouldShow(t("commonPage.poisonPotions")) && renderPotionBlock("poisonPotions", poisonPotions)}
+        {shouldShow(t("commonPage.poisonPotions")) &&
+          renderPotionBlock("poisonPotions", poisonPotions)}
 
         {/* Огненные зелья */}
-        {shouldShow(t("commonPage.firePotions")) && renderPotionBlock("firePotions", firePotions)}
+        {shouldShow(t("commonPage.firePotions")) &&
+          renderPotionBlock("firePotions", firePotions)}
 
         {/* Идентификация (свиток/том) */}
         {shouldShow(t("commonPage.identify")) &&
@@ -612,59 +702,81 @@ const CommonTab: React.FC<CommonTabProps> = ({
           renderMultiBlock(
             "portal",
             portal,
-            [
-              "/img/common/scroll_portal.png",
-              "/img/common/book_portal.png",
-            ],
+            ["/img/common/scroll_portal.png", "/img/common/book_portal.png"],
             "/img/common/book_portal.png"
           )}
 
         {/* Зелья выносливости */}
-        {shouldShow(t("commonPage.staminaPotions")) && renderItemSection(
-          "staminaPotions",
-          staminaPotions,
-          handleStaminaPotionsToggle
-        )}
+        {shouldShow(t("commonPage.staminaPotions")) &&
+          renderItemSection(
+            "staminaPotions",
+            staminaPotions,
+            handleStaminaPotionsToggle
+          )}
 
         {/* Противоядия */}
-        {shouldShow(t("commonPage.antidotes")) && renderItemSection("antidotes", antidotes, handleAntidotesToggle)}
+        {shouldShow(t("commonPage.antidotes")) &&
+          renderItemSection("antidotes", antidotes, handleAntidotesToggle)}
 
         {/* Зелья оттаивания */}
-        {shouldShow(t("commonPage.thawingPotions")) && renderItemSection(
-          "thawingPotions",
-          thawingPotions,
-          handleThawingPotionsToggle
-        )}
+        {shouldShow(t("commonPage.thawingPotions")) &&
+          renderItemSection(
+            "thawingPotions",
+            thawingPotions,
+            handleThawingPotionsToggle
+          )}
 
         {/* Золото */}
-        {shouldShow(t("commonPage.gold")) && renderItemSection("gold", gold, handleGoldToggle)}
+        {shouldShow(t("commonPage.gold")) &&
+          renderItemSection("gold", gold, handleGoldToggle)}
 
         {/* Обычные ключи */}
-        {shouldShow(t("commonPage.keys")) && renderItemSection("keys", keys, handleKeysToggle)}
+        {shouldShow(t("commonPage.keys")) &&
+          renderItemSection("keys", keys, handleKeysToggle)}
 
         {/* Стрелы */}
-        {shouldShow(t("commonPage.arrows")) && renderItemSection("arrows", arrows, handleArrowsToggle)}
+        {shouldShow(t("commonPage.arrows")) &&
+          renderItemSection("arrows", arrows, handleArrowsToggle)}
 
         {/* Болты */}
-        {shouldShow(t("commonPage.bolts")) && renderItemSection("bolts", bolts, handleBoltsToggle)}
+        {shouldShow(t("commonPage.bolts")) &&
+          renderItemSection("bolts", bolts, handleBoltsToggle)}
 
         {/* Амулеты */}
-        {shouldShow(t("commonPage.amulets")) && renderItemSection("amulets", amulets, handleAmuletsToggle)}
+        {shouldShow(t("commonPage.amulets")) &&
+          renderItemSection("amulets", amulets, handleAmuletsToggle)}
 
         {/* Кольца */}
-        {shouldShow(t("commonPage.rings")) && renderItemSection("rings", rings, handleRingsToggle)}
+        {shouldShow(t("commonPage.rings")) &&
+          renderItemSection("rings", rings, handleRingsToggle)}
 
         {/* Самоцветы */}
-        {shouldShow(t("commonPage.jewels")) && renderItemSection("jewels", jewels, handleJewelsToggle)}
+        {shouldShow(t("commonPage.jewels")) &&
+          renderItemSection("jewels", jewels, handleJewelsToggle)}
 
         {/* Маленькие обереги */}
-        {shouldShow(t("commonPage.smallCharms")) && renderItemSection("smallCharms", smallCharms, handleSmallCharmsToggle)}
+        {shouldShow(t("commonPage.smallCharms")) &&
+          renderItemSection(
+            "smallCharms",
+            smallCharms,
+            handleSmallCharmsToggle
+          )}
 
         {/* Большие обереги */}
-        {shouldShow(t("commonPage.largeCharms")) && renderItemSection("largeCharms", largeCharms, handleLargeCharmsToggle)}
+        {shouldShow(t("commonPage.largeCharms")) &&
+          renderItemSection(
+            "largeCharms",
+            largeCharms,
+            handleLargeCharmsToggle
+          )}
 
         {/* Великие обереги */}
-        {shouldShow(t("commonPage.grandCharms")) && renderItemSection("grandCharms", grandCharms, handleGrandCharmsToggle)}
+        {shouldShow(t("commonPage.grandCharms")) &&
+          renderItemSection(
+            "grandCharms",
+            grandCharms,
+            handleGrandCharmsToggle
+          )}
 
         {/* Убер-ключи */}
         {shouldShow(t("commonPage.uberKeys")) &&
