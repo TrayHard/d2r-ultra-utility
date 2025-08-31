@@ -405,7 +405,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
                         style={{ textDecoration: "underline dotted" }}
                       >
                         {locale.label}:
-                        <span className="pointer-events-none absolute -top-1 -right-1 opacity-50 text-[10px]">
+                        <span className="pointer-events-none absolute -top-1 opacity-50 text-[10px]" style={{ right: "4px" }}>
                           ?
                         </span>
                       </span>
