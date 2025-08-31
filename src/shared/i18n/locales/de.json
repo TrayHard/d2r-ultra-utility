@@ -277,6 +277,10 @@
         "clickToCopy": "Klicke auf eine Farbe, um den Code zu kopieren",
         "copied": "{{code}} in die Zwischenablage kopiert"
       },
+      "symbolsHint": {
+        "copy": "Kopieren",
+        "copied": "Symbol {{symbol}} in die Zwischenablage kopiert"
+      },
       "sizes": {
         "Normal": "Normal",
         "Exceptional": "Außergewöhnlich",

@@ -5,6 +5,7 @@ import { localeOptions, colorCodeToHex } from "../constants";
 import Collapse from "./Collapse";
 import Switch from "./Switch";
 import ColorHint from "./ColorHint";
+import SymbolsHint from "./SymbolsHint";
 import Icon from "@mdi/react";
 import { mdiEyeOutline, mdiEyeOffOutline } from "@mdi/js";
 import type {
@@ -74,7 +75,24 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
                   ${isDarkTheme ? "text-gray-300" : "text-gray-700"}
                 `}
               >
-                {locale.label}:
+                {/* Показываем подсказку только для вкладки CommonTab: амулеты/кольца/самоцветы/обереги.
+                    Здесь компонент используется и в CommonTab, и в мульти-блоках (identify/portal/uber/essences).
+                    Для мульти-блоков itemType начинается с "commonPage." и мы не хотим показывать подсказку там. */}
+                {false ? (
+                  <Tooltip
+                    title={
+                      "В квадратных скобках указывается код, который показывает какого рода предмет, чтобы различные аффиксы корректно показывались. Не убирайте его, если не хотите проблем с родами на аффиксах у предметов"
+                    }
+                    placement="top"
+                  >
+                    <span className="relative inline-block pr-3" style={{ textDecoration: "underline dotted" }}>
+                      {locale.label}:
+                      <span className="pointer-events-none absolute -top-1 -right-1 opacity-50 text-[10px]">?</span>
+                    </span>
+                  </Tooltip>
+                ) : (
+                  <>{locale.label}:</>
+                )}
               </span>
               <div className="flex-1 flex items-center space-x-2">
                 <input
@@ -107,7 +125,10 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
                     }
                   `}
                 />
-                <ColorHint isDarkTheme={isDarkTheme} />
+                <div className="flex items-center gap-1">
+                  <SymbolsHint isDarkTheme={isDarkTheme} />
+                  <ColorHint isDarkTheme={isDarkTheme} />
+                </div>
               </div>
             </div>
           ))}

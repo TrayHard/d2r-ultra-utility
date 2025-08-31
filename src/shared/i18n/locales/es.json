@@ -255,6 +255,10 @@
         "clickToCopy": "Haz clic en un color para copiar su código",
         "copied": "{{code}} copiado al portapapeles"
       },
+      "symbolsHint": {
+        "copy": "Copiar",
+        "copied": "Símbolo {{symbol}} copiado al portapapeles"
+      },
       "sizes": {
         "Normal": "Normal",
         "Exceptional": "Excepcional",

@@ -255,6 +255,10 @@
         "clickToCopy": "Cliquez sur une couleur pour copier son code",
         "copied": "{{code}} copié dans le presse-papiers"
       },
+      "symbolsHint": {
+        "copy": "Copier",
+        "copied": "Symbole {{symbol}} copié dans le presse-papiers"
+      },
       "sizes": {
         "Normal": "Normal",
         "Exceptional": "Exceptionnel",

@@ -255,6 +255,10 @@
         "clickToCopy": "Kliknij kolor, aby skopiować kod",
         "copied": "Skopiowano {{code}} do schowka"
       },
+      "symbolsHint": {
+        "copy": "Kopiuj",
+        "copied": "Symbol {{symbol}} skopiowano do schowka"
+      },
       "sizes": {
         "Normal": "Normalny",
         "Exceptional": "Wyjątkowy",
