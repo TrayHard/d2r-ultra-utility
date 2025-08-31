@@ -93,6 +93,9 @@
       "level1": "Mikstura piorunująca",
       "level2": "Mikstura wybuchowa",
       "level3": "Mikstura olejowa"
+    },
+    "tooltips": {
+      "highlightOnGround": "Podświetl na ziemi"
     }
   },
   "gemsPage": {
@@ -254,6 +257,10 @@
         "description": "Użyj tych kodów, aby kolorować tekst w grze",
         "clickToCopy": "Kliknij kolor, aby skopiować kod",
         "copied": "Skopiowano {{code}} do schowka"
+      },
+      "symbolsHint": {
+        "copy": "Kopiuj",
+        "copied": "Symbol {{symbol}} skopiowano do schowka"
       },
       "sizes": {
         "Normal": "Normalny",

@@ -6,6 +6,7 @@ import ColorPallet from "../../shared/components/ColorPallet.tsx";
 import Switcher from "../../shared/components/Switcher.tsx";
 import Checkbox from "../../shared/components/Checkbox.tsx";
 import ColorHint from "../../shared/components/ColorHint.tsx";
+import SymbolsHint from "../../shared/components/SymbolsHint";
 import {
   RuneSettings,
   useSettings,
@@ -753,8 +754,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
                             isDarkTheme ? "text-gray-400" : "text-gray-600"
                           }`}
                         >
-                          {t(`runePage.controls.languageLabels.${langCode}`)}{" "}
-                          ({langCode})
+                          {t(`runePage.controls.languageLabels.${langCode}`)} ({langCode})
                         </label>
                         <div className="flex items-end space-x-2">
                           <textarea
@@ -778,7 +778,10 @@ const RuneCard: React.FC<RuneCardProps> = ({
                                 }
                               `}
                           />
-                          <ColorHint isDarkTheme={isDarkTheme} />
+                          <div className="flex items-center gap-1">
+                            <SymbolsHint isDarkTheme={isDarkTheme} />
+                            <ColorHint isDarkTheme={isDarkTheme} />
+                          </div>
                         </div>
                       </div>
                     ))}

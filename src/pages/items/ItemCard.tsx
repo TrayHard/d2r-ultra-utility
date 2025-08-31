@@ -6,6 +6,8 @@ import { Badge, Tooltip } from "antd";
 import Switcher from "../../shared/components/Switcher";
 import { ItemSettings, useSettings } from "../../app/providers/SettingsContext";
 import ColorHint from "../../shared/components/ColorHint";
+import { colorCodeToHex } from "../../shared/constants";
+import SymbolsHint from "../../shared/components/SymbolsHint";
 
 interface BaseItem {
   key: string;
@@ -220,6 +222,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
   const [showDifficultyClassMarker, setShowDifficultyClassMarker] =
     React.useState(settings.showDifficultyClassMarker);
   const [locales, setLocales] = React.useState(settings.locales);
+  const [focusedLocale, setFocusedLocale] = React.useState<string | null>(null);
 
   // Обновляем локальные состояния при изменении настроек
   React.useEffect(() => {
@@ -327,6 +330,29 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
     } catch {
       return text;
     }
+  };
+
+  // Рендер строки с учетом цветовых кодов ÿcX
+  const renderColoredText = (text: string) => {
+    if (!text) return null;
+    const tokenRegex = /(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])/g;
+    const parts = text.split(tokenRegex);
+    let currentColor: string | null = null;
+    const nodes: React.ReactNode[] = [];
+    for (let i = 0; i < parts.length; i++) {
+      const part = parts[i];
+      if (!part) continue;
+      if (part.startsWith("ÿc")) {
+        currentColor = colorCodeToHex[part] || currentColor;
+        continue;
+      }
+      nodes.push(
+        <span key={`p-${i}`} style={currentColor ? { color: currentColor } : undefined}>
+          {part}
+        </span>
+      );
+    }
+    return nodes;
   };
 
   return (
@@ -554,6 +580,53 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
                     "Language Customization"}
                 </h4>
               </div>
+              {/* Предпросмотр названия предмета с учетом цветовых кодов */}
+              <div className="mb-3">
+                <div className="flex items-center space-x-3">
+                  <div className="flex-1 flex grow w-full">
+                    <div
+                      className={`
+                        h-9 px-3 rounded-md border flex items-center overflow-hidden text-sm diablo-font whitespace-pre w-full
+                        ${
+                          isDarkTheme
+                            ? "bg-gray-800 border-gray-600 text-white"
+                            : "bg-white border-gray-300 text-gray-900"
+                        }
+                      `}
+                    >
+                      <span
+                        className={
+                          "mr-2 font-semibold tracking-wide text-xs text-gray-400 font-sans cursor-default select-none"
+                        }
+                      >
+                        {(t("runePage.controls.preview") || "Preview") + ":"}
+                      </span>
+                      {(() => {
+                        // 1) Если есть фокус — показываем фокусную локаль
+                        if (focusedLocale) {
+                          const text =
+                            locales[
+                              focusedLocale as keyof typeof locales
+                            ] || "";
+                          return renderColoredText(text);
+                        }
+                        // 2) По умолчанию всегда берём enUS, если он есть
+                        if (locales.enUS) {
+                          return renderColoredText(locales.enUS);
+                        }
+                        // 3) Иначе берём первую из выбранных локалей, если она есть
+                        const firstSelected = languageCodes[0];
+                        const fallbackText = firstSelected
+                          ? locales[
+                              firstSelected as keyof typeof locales
+                            ] || ""
+                          : "";
+                        return renderColoredText(fallbackText);
+                      })()}
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div className="space-y-3 overflow-y-auto max-h-[calc(100vh-400px)]">
                 {languageCodes.map((langCode) => (
                   <div key={langCode}>
@@ -563,7 +636,24 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
                           isDarkTheme ? "text-gray-400" : "text-gray-600"
                         }`}
                       >
-                        {langCode}:
+                        {langCode === "ruRU" ? (
+                          <Tooltip
+                            title={
+                              "В квадратных скобках указывается код, который показывает какого рода предмет, чтобы различные аффиксы корректно показывались. Не убирайте его, если не хотите проблем с родами на аффиксах у предметов"
+                            }
+                            placement="top"
+                          >
+                            <span
+                              className="relative inline-block pr-3"
+                              style={{ textDecoration: "underline dotted" }}
+                            >
+                              ruRU:
+                              <span className="pointer-events-none absolute -top-1 -right-1 opacity-50 text-[10px]">?</span>
+                            </span>
+                          </Tooltip>
+                        ) : (
+                          <>{langCode}:</>
+                        )}
                       </label>
                       <div className="flex-1 flex items-center space-x-2">
                         <input
@@ -572,6 +662,8 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
                           onChange={(e) =>
                             handleLanguageNameChange(langCode, e.target.value)
                           }
+                          onFocus={() => setFocusedLocale(langCode)}
+                          onBlur={() => setFocusedLocale(null)}
                           placeholder={
                             t(`runePage.controls.placeholders.${langCode}`) ||
                             `Name in ${langCode}`
@@ -587,7 +679,10 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
                             ${!enabled ? "opacity-50 cursor-not-allowed" : ""}
                           `}
                         />
-                        <ColorHint isDarkTheme={isDarkTheme} />
+                        <div className="flex items-center gap-1">
+                          <SymbolsHint isDarkTheme={isDarkTheme} />
+                          <ColorHint isDarkTheme={isDarkTheme} />
+                        </div>
                       </div>
                     </div>
                   </div>

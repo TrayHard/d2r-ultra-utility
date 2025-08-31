@@ -93,6 +93,9 @@
       "level1": "Poción fulminante",
       "level2": "Poción explosiva",
       "level3": "Poción de aceite"
+    },
+    "tooltips": {
+      "highlightOnGround": "Resaltar en el suelo"
     }
   },
   "gemsPage": {
@@ -254,6 +257,10 @@
         "description": "Usa estos códigos para colorear el texto en el juego",
         "clickToCopy": "Haz clic en un color para copiar su código",
         "copied": "{{code}} copiado al portapapeles"
+      },
+      "symbolsHint": {
+        "copy": "Copiar",
+        "copied": "Símbolo {{symbol}} copiado al portapapeles"
       },
       "sizes": {
         "Normal": "Normal",
