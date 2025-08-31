@@ -222,7 +222,7 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
             {/* Пустой спейсер под ширину метки локали, чтобы выровнять блок по инпутам */}
             <div
               className={`
-                  h-9 px-3 rounded-md border flex items-center overflow-hidden text-sm font-mono whitespace-pre w-full
+                  h-9 px-3 rounded-md border flex items-center overflow-hidden text-sm diablo-font whitespace-pre w-full
                   ${isDarkTheme
                   ? "bg-gray-800 border-gray-600 text-white"
                   : "bg-white border-gray-300 text-gray-900"
