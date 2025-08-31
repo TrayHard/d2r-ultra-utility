@@ -1655,6 +1655,7 @@
         "levels": [
           {
             "enabled": true,
+            "highlight": true,
             "locales": {
               "enUS": "     ÿc;Key of Terror     ",
               "ruRU": "     ÿc;Ключ Ужаса     ",
@@ -1673,6 +1674,7 @@
           },
           {
             "enabled": true,
+            "highlight": true,
             "locales": {
               "enUS": "     ÿc;Key of Hate     ",
               "ruRU": "     ÿc;Ключ Ненависти     ",
@@ -1691,6 +1693,7 @@
           },
           {
             "enabled": true,
+            "highlight": true,
             "locales": {
               "enUS": "     ÿc;Key of Destruction     ",
               "ruRU": "     ÿc;Ключ Разрушения     ",

@@ -9,6 +9,7 @@ import {
   generateFinalItemName,
   generateFinalPotionName,
   generateFinalGemName,
+  generateKeyHighlightData,
 } from "../utils/commonUtils";
 import {
   GAME_PATHS as RUNES_GAME_PATHS,
@@ -131,6 +132,7 @@ export const useApplyAllWorker = (
       const modifiersPath = `${homeDir}\\${COMMON_GAME_PATHS.LOCALES}\\item-modifiers.json`;
       const runesPath = `${homeDir}\\${RUNES_GAME_PATHS.LOCALES}\\${RUNES_GAME_PATHS.RUNES_FILE}`;
       const runeHighlightDir = `${homeDir}\\${RUNES_GAME_PATHS.RUNE_HIGHLIGHT}`;
+      const keysHighlightDir = `${homeDir}\\mods\\D2RMOD\\D2RMOD.mpq\\data\\hd\\items\\misc\\key`;
 
       logger.info('Reading source files (aggregate)', { itemNamesPath, nameAffixesPath, modifiersPath, runesPath }, 'applyAllChanges');
 
@@ -483,6 +485,33 @@ export const useApplyAllWorker = (
         } catch (e) {
           logger.warn('Failed to write rune highlight file', { rune, error: e instanceof Error ? e.message : String(e) }, 'applyAllChanges');
         }
+      }
+
+      // ===== UBER KEYS HIGHLIGHT FILES =====
+      try {
+        const uber = settings.common.uberKeys;
+        if (uber && Array.isArray(uber.levels) && uber.levels.length >= 3) {
+          const keyMapping = [
+            { keyName: "mephisto_key3", fileName: "mephisto_key3.json" }, // Key of Terror (0)
+            { keyName: "mephisto_key2", fileName: "mephisto_key2.json" }, // Key of Hate (1)
+            { keyName: "mephisto_key", fileName: "mephisto_key.json" },   // Key of Destruction (2)
+          ];
+
+          for (let i = 0; i < 3; i++) {
+            const level = uber.levels[i];
+            const { keyName, fileName } = keyMapping[i];
+            const isHighlighted = Boolean(level?.highlight);
+            try {
+              const keyData = generateKeyHighlightData(keyName, isHighlighted);
+              const targetPath = `${keysHighlightDir}\\${fileName}`;
+              await writeFileWithRetry(targetPath, JSON.stringify(keyData, null, 2));
+            } catch (e) {
+              logger.warn('Failed to write uber key highlight file', { fileName, keyName, error: e instanceof Error ? e.message : String(e) }, 'applyAllChanges');
+            }
+          }
+        }
+      } catch (e) {
+        logger.warn('Unexpected error while applying uber key highlight templates', { error: e instanceof Error ? e.message : String(e) }, 'applyAllChanges');
       }
 
       const successMessage = tRef.current?.('messages.success.changesAppliedText') || 'Changes applied successfully';

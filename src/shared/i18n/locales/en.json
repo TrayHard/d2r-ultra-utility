@@ -93,6 +93,9 @@
       "level1": "Fulminating Potion",
       "level2": "Exploding Potion",
       "level3": "Oil Potion"
+    },
+    "tooltips": {
+      "highlightOnGround": "Highlight on the ground"
     }
   },
   "gemsPage": {

@@ -139,6 +139,9 @@
       "level1": "Detonations-Trank",
       "level2": "Explosions-Trank",
       "level3": "Öltrank"
+    },
+    "tooltips": {
+      "highlightOnGround": "Am Boden hervorheben"
     }
   },
   "gemsPage": {

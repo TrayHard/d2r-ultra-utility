@@ -621,6 +621,12 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
     imagePaths: string[],
     headerIcon: string
   ) => {
+    const activeIndex =
+      potionSettings.activeTab >= 0 &&
+      potionSettings.activeTab < potionSettings.levels.length
+        ? potionSettings.activeTab
+        : 0;
+    const activeLevel = potionSettings.levels[activeIndex];
     return (
       <MultipleLeveledLocales
         title={t(`commonPage.${itemType}`)}
@@ -640,6 +646,14 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
         }
         onLocaleChange={(level, locale, value) =>
           handlePotionLocaleChange(itemType, level, locale, value)
+        }
+        showTopEnableSwitch={itemType === "uberKeys"}
+        showHighlightSwitch={itemType === "uberKeys"}
+        highlightEnabled={itemType === "uberKeys" ? Boolean(activeLevel?.highlight) : undefined}
+        onHighlightToggle={
+          itemType === "uberKeys"
+            ? (enabled) => updatePotionLevelSettings("uberKeys", activeIndex, { highlight: enabled })
+            : undefined
         }
       />
     );

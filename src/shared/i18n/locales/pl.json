@@ -93,6 +93,9 @@
       "level1": "Mikstura piorunująca",
       "level2": "Mikstura wybuchowa",
       "level3": "Mikstura olejowa"
+    },
+    "tooltips": {
+      "highlightOnGround": "Podświetl na ziemi"
     }
   },
   "gemsPage": {
