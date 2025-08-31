@@ -648,7 +648,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
                               style={{ textDecoration: "underline dotted" }}
                             >
                               ruRU:
-                              <span className="pointer-events-none absolute -top-1 -right-1 opacity-50 text-[10px]">?</span>
+                              <span className="pointer-events-none absolute -top-1 opacity-50 text-[10px]">?</span>
                             </span>
                           </Tooltip>
                         ) : (
