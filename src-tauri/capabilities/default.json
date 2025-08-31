@@ -11,6 +11,8 @@
     "fs:default",
     "fs:allow-read-text-file",
     "fs:read-all",
+    "fs:allow-app-write",
+    "fs:allow-rename",
     "core:window:allow-minimize",
     "core:window:allow-maximize",
     "core:window:allow-close",
@@ -28,11 +30,32 @@
       "allow": [
         "$APPDATA/**",
         "$HOME/**",
+        "A:/**",
+        "B:/**",
         "C:/**",
         "D:/**",
         "E:/**",
         "F:/**",
-        "G:/**"
+        "G:/**",
+        "H:/**",
+        "I:/**",
+        "J:/**",
+        "K:/**",
+        "L:/**",
+        "M:/**",
+        "N:/**",
+        "O:/**",
+        "P:/**",
+        "Q:/**",
+        "R:/**",
+        "S:/**",
+        "T:/**",
+        "U:/**",
+        "V:/**",
+        "W:/**",
+        "X:/**",
+        "Y:/**",
+        "Z:/**"
       ]
     }
   }
