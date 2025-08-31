@@ -1655,6 +1655,7 @@
         "levels": [
           {
             "enabled": true,
+            "highlight": true,
             "locales": {
               "enUS": "Key of Terror",
               "ruRU": "Ключ Ужаса",
@@ -1673,6 +1674,7 @@
           },
           {
             "enabled": true,
+            "highlight": true,
             "locales": {
               "enUS": "Key of Hate",
               "ruRU": "Ключ Ненависти",
@@ -1691,6 +1693,7 @@
           },
           {
             "enabled": true,
+            "highlight": true,
             "locales": {
               "enUS": "Key of Destruction",
               "ruRU": "Ключ Разрушения",
@@ -2596,60 +2599,60 @@
     },
     "items": {
       "difficultyClassMarkers": {
-        "enabled": false,
+        "enabled": true,
         "levels": [
           {
-            "enabled": false,
+            "enabled": true,
             "locales": {
-              "enUS": "[n]",
-              "ruRU": "[n]",
-              "zhTW": "[n]",
-              "deDE": "[n]",
-              "esES": "[n]",
-              "frFR": "[n]",
-              "itIT": "[n]",
-              "koKR": "[n]",
-              "plPL": "[n]",
-              "esMX": "[n]",
-              "jaJP": "[n]",
-              "ptBR": "[n]",
-              "zhCN": "[n]"
+              "enUS": "(n)",
+              "ruRU": "(n)",
+              "zhTW": "(n)",
+              "deDE": "(n)",
+              "esES": "(n)",
+              "frFR": "(n)",
+              "itIT": "(n)",
+              "koKR": "(n)",
+              "plPL": "(n)",
+              "esMX": "(n)",
+              "jaJP": "(n)",
+              "ptBR": "(n)",
+              "zhCN": "(n)"
             }
           },
           {
-            "enabled": false,
+            "enabled": true,
             "locales": {
-              "enUS": "[x]",
-              "ruRU": "[x]",
-              "zhTW": "[x]",
-              "deDE": "[x]",
-              "esES": "[x]",
-              "frFR": "[x]",
-              "itIT": "[x]",
-              "koKR": "[x]",
-              "plPL": "[x]",
-              "esMX": "[x]",
-              "jaJP": "[x]",
-              "ptBR": "[x]",
-              "zhCN": "[x]"
+              "enUS": "(x)",
+              "ruRU": "(x)",
+              "zhTW": "(x)",
+              "deDE": "(x)",
+              "esES": "(x)",
+              "frFR": "(x)",
+              "itIT": "(x)",
+              "koKR": "(x)",
+              "plPL": "(x)",
+              "esMX": "(x)",
+              "jaJP": "(x)",
+              "ptBR": "(x)",
+              "zhCN": "(x)"
             }
           },
           {
-            "enabled": false,
+            "enabled": true,
             "locales": {
-              "enUS": "[e]",
-              "ruRU": "[e]",
-              "zhTW": "[e]",
-              "deDE": "[e]",
-              "esES": "[e]",
-              "frFR": "[e]",
-              "itIT": "[e]",
-              "koKR": "[e]",
-              "plPL": "[e]",
-              "esMX": "[e]",
-              "jaJP": "[e]",
-              "ptBR": "[e]",
-              "zhCN": "[e]"
+              "enUS": "(e)",
+              "ruRU": "(e)",
+              "zhTW": "(e)",
+              "deDE": "(e)",
+              "esES": "(e)",
+              "frFR": "(e)",
+              "itIT": "(e)",
+              "koKR": "(e)",
+              "plPL": "(e)",
+              "esMX": "(e)",
+              "jaJP": "(e)",
+              "ptBR": "(e)",
+              "zhCN": "(e)"
             }
           }
         ]
@@ -2660,8 +2663,8 @@
           {
             "enabled": true,
             "locales": {
-              "enUS": "ÿc6",
-              "ruRU": "ÿc6",
+              "enUS": "ÿc6Cracked",
+              "ruRU": "[ms]ÿc6Некачественный[fs]ÿc6Некачественная[ns]ÿc6Некачественное[pl]ÿc6Некачественные",
               "zhTW": "劣等的",
               "deDE": "[ms]schlechter[fs]schlechte[ns]schlechtes[pl]schlechte",
               "esES": "de baja calidad",

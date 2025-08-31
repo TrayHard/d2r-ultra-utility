@@ -93,6 +93,7 @@ export interface CommonItemSettings {
 export interface PotionLevelSettings {
   enabled: boolean;
   locales: Locales;
+  highlight?: boolean;
 }
 
 export interface PotionGroupSettings {
@@ -352,7 +353,7 @@ const getDefaultAppConfig = (): AppConfig => ({
   gamePath: "", // По умолчанию путь к игре не задан
   theme: "dark", // По умолчанию темная тема
   debugMode: false, // По умолчанию отладочный режим выключен
-  appMode: "advanced", // По умолчанию расширенный режим (текущая логика)
+  appMode: "basic", // По умолчанию базовый режим
 });
 
 // Дефолтные общие настройки для рун
@@ -441,6 +442,7 @@ const getDefaultPotionLevelSettings = (): PotionLevelSettings => ({
     ptBR: "",
     zhCN: "",
   },
+  highlight: false,
 });
 
 // Дефолтные настройки для группы зелий
@@ -990,6 +992,8 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         const newAppConfig = {
           ...getDefaultAppConfig(),
           ...parsedAppConfig,
+          // Всегда запускаемся в базовом режиме, независимо от сохранённого
+          appMode: "basic",
         };
         setAppConfig(newAppConfig, true); // skipSave = true
 

@@ -22,6 +22,7 @@ import {
   loadSavedSettings,
   generateFinalItemName,
   generateFinalPotionName,
+  generateKeyHighlightData,
 } from "../utils/commonUtils";
 import { STORAGE_KEYS } from "../constants";
 type SupportedLocaleKey = Exclude<keyof LocaleItem, "id" | "Key">;
@@ -335,14 +336,25 @@ export const useCommonItemsWorker = (
       const namesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.ITEMS_FILE}`;
       const affixesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.NAMEAFFIXES_FILE}`;
       const modifiersPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\item-modifiers.json`;
+      const keysHighlightDir = `${homeDir}\\mods\\D2RMOD\\D2RMOD.mpq\\data\\hd\\items\\misc\\key`;
 
       logger.info("Applying common items changes", { namesPath, affixesPath, modifiersPath }, 'applyChanges');
 
       // Читаем текущий файл
       logger.debug('Reading common items files for applying changes', { namesPath, affixesPath, modifiersPath }, 'applyChanges');
       const namesContent = await readTextFile(namesPath);
-      const nameAffixesContent = await readTextFile(affixesPath);
-      const modifiersContent = await readTextFile(modifiersPath);
+      let nameAffixesContent = "[]";
+      let modifiersContent = "[]";
+      try {
+        nameAffixesContent = await readTextFile(affixesPath);
+      } catch {
+        // допустимо, продолжим с пустым
+      }
+      try {
+        modifiersContent = await readTextFile(modifiersPath);
+      } catch {
+        // допустимо, продолжим с пустым
+      }
 
       const namesData: LocaleItem[] = JSON.parse(namesContent);
       const nameAffixesData: LocaleItem[] = JSON.parse(nameAffixesContent);
@@ -571,6 +583,46 @@ export const useCommonItemsWorker = (
       await writeFileWithRetry(modifiersPath, JSON.stringify(updatedModifiers, null, 2));
 
       logger.info("Common items localization changes applied successfully", undefined, 'applyChanges');
+
+      // Дополнительно: запись файлов подсветки для убер-ключей
+      try {
+        const uber = commonSettings.uberKeys;
+        if (uber && Array.isArray(uber.levels) && uber.levels.length >= 3) {
+          // Соответствие уровней -> имен ключей и файлов
+          const keyMapping = [
+            { keyName: "mephisto_key3", fileName: "mephisto_key3.json" }, // Key of Terror (level 0)
+            { keyName: "mephisto_key2", fileName: "mephisto_key2.json" }, // Key of Hate (level 1)
+            { keyName: "mephisto_key", fileName: "mephisto_key.json" },   // Key of Destruction (level 2)
+          ];
+
+          for (let i = 0; i < 3; i++) {
+            const level = uber.levels[i];
+            const { keyName, fileName } = keyMapping[i];
+            const isHighlighted = level?.highlight || false;
+
+            try {
+              const keyData = generateKeyHighlightData(keyName, isHighlighted);
+              const targetPath = `${keysHighlightDir}\\${fileName}`;
+              await writeFileWithRetry(targetPath, JSON.stringify(keyData, null, 2));
+              logger.info('Key highlight file written', { 
+                targetPath, 
+                keyName, 
+                isHighlighted, 
+                fileName 
+              }, 'applyChanges');
+            } catch (e) {
+              logger.warn('Failed to write key highlight file', { 
+                fileName, 
+                keyName, 
+                isHighlighted, 
+                error: e instanceof Error ? e.message : String(e) 
+              }, 'applyChanges');
+            }
+          }
+        }
+      } catch (e) {
+        logger.warn('Unexpected error while applying key highlight templates', { error: e instanceof Error ? e.message : String(e) }, 'applyChanges');
+      }
     },
     []
   );
@@ -608,7 +660,10 @@ export const useCommonItemsWorker = (
         throw new Error(errorMsg);
       }
 
-      const homeDir = settings.homeDirectory.replace(/[\/\\]+$/, "");
+      let homeDir = settings.homeDirectory.replace(/[\/\\]+$/, "");
+      if (homeDir.endsWith(".exe")) {
+        homeDir = homeDir.substring(0, homeDir.lastIndexOf("\\"));
+      }
       const commonSettings = getCommonSettings();
 
       // Применяем изменения

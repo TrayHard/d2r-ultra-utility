@@ -1655,6 +1655,7 @@
         "levels": [
           {
             "enabled": true,
+            "highlight": true,
             "locales": {
               "enUS": "     ÿc;Key of Terror     ",
               "ruRU": "     ÿc;Ключ Ужаса     ",
@@ -1673,6 +1674,7 @@
           },
           {
             "enabled": true,
+            "highlight": true,
             "locales": {
               "enUS": "     ÿc;Key of Hate     ",
               "ruRU": "     ÿc;Ключ Ненависти     ",
@@ -1691,6 +1693,7 @@
           },
           {
             "enabled": true,
+            "highlight": true,
             "locales": {
               "enUS": "     ÿc;Key of Destruction     ",
               "ruRU": "     ÿc;Ключ Разрушения     ",
@@ -1810,7 +1813,7 @@
         "enabled": false,
         "levels": [
           {
-            "enabled": true,
+            "enabled": false,
             "locales": {
               "enUS": "Gas ÿc21",
               "ruRU": "Газ ÿc21",
@@ -1828,7 +1831,7 @@
             }
           },
           {
-            "enabled": true,
+            "enabled": false,
             "locales": {
               "enUS": "Gas ÿc22",
               "ruRU": "Газ ÿc22",
@@ -1846,7 +1849,7 @@
             }
           },
           {
-            "enabled": true,
+            "enabled": false,
             "locales": {
               "enUS": "Gas ÿc23",
               "ruRU": "Газ ÿc23",
@@ -1870,7 +1873,7 @@
         "enabled": false,
         "levels": [
           {
-            "enabled": true,
+            "enabled": false,
             "locales": {
               "enUS": "Oil ÿc91",
               "ruRU": "Масло ÿc91",
@@ -1888,7 +1891,7 @@
             }
           },
           {
-            "enabled": true,
+            "enabled": false,
             "locales": {
               "enUS": "Oil ÿc92",
               "ruRU": "Масло ÿc92",
@@ -1906,7 +1909,7 @@
             }
           },
           {
-            "enabled": true,
+            "enabled": false,
             "locales": {
               "enUS": "Oil ÿc93",
               "ruRU": "Масло ÿc93",
@@ -2660,8 +2663,8 @@
           {
             "enabled": true,
             "locales": {
-              "enUS": "ÿc5•ÿc6 ",
-              "ruRU": "ÿc5•ÿc6 ",
+              "enUS": "ÿc6",
+              "ruRU": "ÿc6",
               "zhTW": "劣等的",
               "deDE": "[ms]schlechter[fs]schlechte[ns]schlechtes[pl]schlechte",
               "esES": "de baja calidad",
@@ -12066,6 +12069,7 @@
       }
     }
   },
-  "createdAt": "2025-08-24T22:47:58.662Z",
-  "modifiedAt": "2025-08-24T22:54:11.944Z"
+  "createdAt": "2025-08-31T01:28:16.555Z",
+  "modifiedAt": "2025-08-31T01:28:29.855Z",
+  "isImmutable": true
 }

@@ -93,6 +93,9 @@
       "level1": "Fulminating Potion",
       "level2": "Exploding Potion",
       "level3": "Oil Potion"
+    },
+    "tooltips": {
+      "highlightOnGround": "Highlight on the ground"
     }
   },
   "gemsPage": {
@@ -295,6 +298,10 @@
         "description": "Use these codes to colorize text in game",
         "clickToCopy": "Click on any color to copy its code",
         "copied": "Copied {{code}} to clipboard"
+      },
+      "symbolsHint": {
+        "copy": "Copy",
+        "copied": "Copied {{symbol}} to clipboard"
       },
       "sizes": {
         "Normal": "Normal",

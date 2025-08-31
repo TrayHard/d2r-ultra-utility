@@ -5,8 +5,9 @@ import { localeOptions, colorCodeToHex } from "../constants";
 import Collapse from "./Collapse";
 import Switch from "./Switch";
 import ColorHint from "./ColorHint";
+import SymbolsHint from "./SymbolsHint";
 import Icon from "@mdi/react";
-import { mdiEyeOutline, mdiEyeOffOutline } from "@mdi/js";
+import { mdiEyeOutline, mdiEyeOffOutline, mdiLightbulbOnOutline, mdiLightbulbOffOutline } from "@mdi/js";
 import type {
   PotionGroupSettings,
   PotionLevelSettings,
@@ -27,6 +28,11 @@ interface MultipleLeveledLocalesProps {
   onLocaleChange: (level: number, locale: string, value: string) => void;
   headerIcon?: string; // Путь к изображению для иконки в заголовке
   hideToggle?: boolean; // Скрыть переключатель вкл/выкл
+  // Дополнительно для особых случаев (например, убер-ключи)
+  showTopEnableSwitch?: boolean; // Показать переключатель включения уровня над предпросмотром
+  showHighlightSwitch?: boolean; // Показать переключатель подсветки
+  highlightEnabled?: boolean; // Состояние подсветки
+  onHighlightToggle?: (enabled: boolean) => void; // Хендлер переключения подсветки
 }
 
 const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
@@ -44,6 +50,10 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
   onLocaleChange,
   headerIcon,
   hideToggle = false,
+  showTopEnableSwitch = false,
+  showHighlightSwitch = false,
+  highlightEnabled,
+  onHighlightToggle,
 }) => {
   const { t } = useTranslation();
 
@@ -74,7 +84,24 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
                   ${isDarkTheme ? "text-gray-300" : "text-gray-700"}
                 `}
               >
-                {locale.label}:
+                {/* Показываем подсказку только для вкладки CommonTab: амулеты/кольца/самоцветы/обереги.
+                    Здесь компонент используется и в CommonTab, и в мульти-блоках (identify/portal/uber/essences).
+                    Для мульти-блоков itemType начинается с "commonPage." и мы не хотим показывать подсказку там. */}
+                {false ? (
+                  <Tooltip
+                    title={
+                      "В квадратных скобках указывается код, который показывает какого рода предмет, чтобы различные аффиксы корректно показывались. Не убирайте его, если не хотите проблем с родами на аффиксах у предметов"
+                    }
+                    placement="top"
+                  >
+                    <span className="relative inline-block pr-3" style={{ textDecoration: "underline dotted" }}>
+                      {locale.label}:
+                      <span className="pointer-events-none absolute -top-1 -right-1 opacity-50 text-[10px]">?</span>
+                    </span>
+                  </Tooltip>
+                ) : (
+                  <>{locale.label}:</>
+                )}
               </span>
               <div className="flex-1 flex items-center space-x-2">
                 <input
@@ -107,7 +134,10 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
                     }
                   `}
                 />
-                <ColorHint isDarkTheme={isDarkTheme} />
+                <div className="flex items-center gap-1">
+                  <SymbolsHint isDarkTheme={isDarkTheme} />
+                  <ColorHint isDarkTheme={isDarkTheme} />
+                </div>
               </div>
             </div>
           ))}
@@ -201,64 +231,134 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
 
       {/* Контент активного таба */}
       <div className="space-y-4 mt-8">
-        <div className="flex items-center space-x-3">
-          {!hideToggle && (
-            <div className="w-20">
-              <Tooltip title={t("runePage.controls.toggleItemVisibilityTooltip")} placement="top">
-                <div>
-                  <Switch
-                    enabled={activeLevel.enabled}
-                    onChange={(enabled) => onLevelToggle(activeTabIndex, enabled)}
-                    isDarkTheme={isDarkTheme}
-                    onIcon={<Icon path={mdiEyeOutline} size={0.55} color="#16A34A" />}
-                    offIcon={<Icon path={mdiEyeOffOutline} size={0.55} color={isDarkTheme ? "#111827" : "#6B7280"} />}
-                  />
-                </div>
-              </Tooltip>
-            </div>
-          )}
-          {/* Предпросмотр текущей локали */}
-          <div className="flex-1 flex grow w-full">
-            {/* Пустой спейсер под ширину метки локали, чтобы выровнять блок по инпутам */}
-            <div
-              className={`
-                  h-9 px-3 rounded-md border flex items-center overflow-hidden text-sm font-mono whitespace-pre w-full
-                  ${isDarkTheme
-                  ? "bg-gray-800 border-gray-600 text-white"
-                  : "bg-white border-gray-300 text-gray-900"
-                }
-                `}
-            >
-              <span
-                className={"mr-2 font-semibold tracking-wide text-xs text-gray-400 font-sans cursor-default select-none"}
+        {showTopEnableSwitch ? (
+          <>
+            {/* Верхняя панель переключателей */}
+            {(showTopEnableSwitch || showHighlightSwitch) && (
+              <div className="flex items-center gap-3">
+                {!hideToggle && (
+                  <Tooltip title={t("runePage.controls.toggleItemVisibilityTooltip")} placement="top">
+                    <div>
+                      <Switch
+                        enabled={activeLevel.enabled}
+                        onChange={(enabled) => onLevelToggle(activeTabIndex, enabled)}
+                        isDarkTheme={isDarkTheme}
+                        onIcon={<Icon path={mdiEyeOutline} size={0.55} color="#16A34A" />}
+                        offIcon={<Icon path={mdiEyeOffOutline} size={0.55} color={isDarkTheme ? "#111827" : "#6B7280"} />}
+                      />
+                    </div>
+                  </Tooltip>
+                )}
+                {showHighlightSwitch && (
+                  <Tooltip title={t("commonPage.tooltips.highlightOnGround") || "Highlight on the ground"} placement="top">
+                    <div>
+                      <Switch
+                        enabled={Boolean(highlightEnabled)}
+                        onChange={(enabled) => onHighlightToggle && onHighlightToggle(enabled)}
+                        isDarkTheme={isDarkTheme}
+                        onIcon={<Icon path={mdiLightbulbOnOutline} size={0.6} color="#F59E0B" />}
+                        offIcon={<Icon path={mdiLightbulbOffOutline} size={0.6} color={isDarkTheme ? "#4B5563" : "#9CA3AF"} />}
+                      />
+                    </div>
+                  </Tooltip>
+                )}
+              </div>
+            )}
+
+            {/* Предпросмотр на всю ширину */}
+            <div className="w-full">
+              <div
+                className={`
+                    h-9 px-3 rounded-md border flex items-center overflow-hidden text-sm diablo-font whitespace-pre w-full
+                    ${isDarkTheme
+                    ? "bg-gray-800 border-gray-600 text-white"
+                    : "bg-white border-gray-300 text-gray-900"
+                  }
+                  `}
               >
-                {(t("runePage.controls.preview") || "Preview") + ":"}
-              </span>
-              {(() => {
-                // 1) Если есть фокус — показываем фокусную локаль
-                if (focusedLocale) {
-                  const text =
-                    activeLevel.locales[
-                    focusedLocale as keyof typeof activeLevel.locales
-                    ] || "";
-                  return renderColoredText(text);
-                }
-                // 2) По умолчанию всегда берём enUS, если он есть
-                if (activeLevel.locales.enUS) {
-                  return renderColoredText(activeLevel.locales.enUS);
-                }
-                // 3) Иначе берём первую из выбранных локалей, если она есть
-                const firstSelected = selectedLocales[0];
-                const fallbackText = firstSelected
-                  ? activeLevel.locales[
-                  firstSelected as keyof typeof activeLevel.locales
-                  ] || ""
-                  : "";
-                return renderColoredText(fallbackText);
-              })()}
+                <span
+                  className={"mr-2 font-semibold tracking-wide text-xs text-gray-400 font-sans cursor-default select-none"}
+                >
+                  {(t("runePage.controls.preview") || "Preview") + ":"}
+                </span>
+                {(() => {
+                  if (focusedLocale) {
+                    const text =
+                      activeLevel.locales[
+                      focusedLocale as keyof typeof activeLevel.locales
+                      ] || "";
+                    return renderColoredText(text);
+                  }
+                  if (activeLevel.locales.enUS) {
+                    return renderColoredText(activeLevel.locales.enUS);
+                  }
+                  const firstSelected = selectedLocales[0];
+                  const fallbackText = firstSelected
+                    ? activeLevel.locales[
+                    firstSelected as keyof typeof activeLevel.locales
+                    ] || ""
+                    : "";
+                  return renderColoredText(fallbackText);
+                })()}
+              </div>
+            </div>
+          </>
+        ) : (
+          // Старый вариант: свитч слева от предпросмотра
+          <div className="flex items-center space-x-3">
+            {!hideToggle && (
+              <div className="w-20">
+                <Tooltip title={t("runePage.controls.toggleItemVisibilityTooltip")} placement="top">
+                  <div>
+                    <Switch
+                      enabled={activeLevel.enabled}
+                      onChange={(enabled) => onLevelToggle(activeTabIndex, enabled)}
+                      isDarkTheme={isDarkTheme}
+                      onIcon={<Icon path={mdiEyeOutline} size={0.55} color="#16A34A" />}
+                      offIcon={<Icon path={mdiEyeOffOutline} size={0.55} color={isDarkTheme ? "#111827" : "#6B7280"} />}
+                    />
+                  </div>
+                </Tooltip>
+              </div>
+            )}
+            <div className="flex-1 flex grow w-full">
+              <div
+                className={`
+                    h-9 px-3 rounded-md border flex items-center overflow-hidden text-sm diablo-font whitespace-pre w-full
+                    ${isDarkTheme
+                    ? "bg-gray-800 border-gray-600 text-white"
+                    : "bg-white border-gray-300 text-gray-900"
+                  }
+                  `}
+              >
+                <span
+                  className={"mr-2 font-semibold tracking-wide text-xs text-gray-400 font-sans cursor-default select-none"}
+                >
+                  {(t("runePage.controls.preview") || "Preview") + ":"}
+                </span>
+                {(() => {
+                  if (focusedLocale) {
+                    const text =
+                      activeLevel.locales[
+                      focusedLocale as keyof typeof activeLevel.locales
+                      ] || "";
+                    return renderColoredText(text);
+                  }
+                  if (activeLevel.locales.enUS) {
+                    return renderColoredText(activeLevel.locales.enUS);
+                  }
+                  const firstSelected = selectedLocales[0];
+                  const fallbackText = firstSelected
+                    ? activeLevel.locales[
+                    firstSelected as keyof typeof activeLevel.locales
+                    ] || ""
+                    : "";
+                  return renderColoredText(fallbackText);
+                })()}
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {renderLocaleInputs(activeLevel, activeTabIndex)}
       </div>
