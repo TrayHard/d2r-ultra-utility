@@ -93,6 +93,7 @@ export interface CommonItemSettings {
 export interface PotionLevelSettings {
   enabled: boolean;
   locales: Locales;
+  highlight?: boolean;
 }
 
 export interface PotionGroupSettings {
@@ -441,6 +442,7 @@ const getDefaultPotionLevelSettings = (): PotionLevelSettings => ({
     ptBR: "",
     zhCN: "",
   },
+  highlight: false,
 });
 
 // Дефолтные настройки для группы зелий

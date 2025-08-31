@@ -93,6 +93,9 @@
       "level1": "Poción fulminante",
       "level2": "Poción explosiva",
       "level3": "Poción de aceite"
+    },
+    "tooltips": {
+      "highlightOnGround": "Resaltar en el suelo"
     }
   },
   "gemsPage": {
