@@ -29,41 +29,6 @@ const LogExporter: React.FC<LogExporterProps> = ({ isDarkTheme }) => {
     };
   }, [updateStats]);
 
-  const exportLogsAsJson = () => {
-    setIsExporting(true);
-    try {
-      const logsData = logger.exportLogs();
-      const dataUri =
-        "data:application/json;charset=utf-8," + encodeURIComponent(logsData);
-      const exportFileDefaultName = `d2r-debug-logs-${new Date()
-        .toISOString()
-        .slice(0, 19)
-        .replace(/:/g, "-")}.json`;
-
-      const linkElement = document.createElement("a");
-      linkElement.setAttribute("href", dataUri);
-      linkElement.setAttribute("download", exportFileDefaultName);
-      linkElement.click();
-
-      logger.info(
-        "Logs exported as JSON",
-        { format: "json", filename: exportFileDefaultName },
-        "LogExporter",
-        "exportLogsAsJson"
-      );
-    } catch (error) {
-      logger.error(
-        "Failed to export logs as JSON",
-        error as Error,
-        undefined,
-        "LogExporter",
-        "exportLogsAsJson"
-      );
-    } finally {
-      setIsExporting(false);
-    }
-  };
-
   const exportLogsAsText = () => {
     setIsExporting(true);
     try {
@@ -219,18 +184,9 @@ const LogExporter: React.FC<LogExporterProps> = ({ isDarkTheme }) => {
           <div className="space-y-2">
             <div className="flex gap-2">
               <Button
-                onClick={exportLogsAsJson}
-                disabled={isExporting || logStats.total === 0}
-                variant="primary"
-                size="sm"
-                className="flex-1"
-              >
-                {isExporting ? t("logs.exporting") : t("logs.exportJson")}
-              </Button>
-              <Button
                 onClick={exportLogsAsText}
                 disabled={isExporting || logStats.total === 0}
-                variant="secondary"
+                variant="primary"
                 size="sm"
                 className="flex-1"
               >

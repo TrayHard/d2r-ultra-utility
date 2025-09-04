@@ -125,9 +125,8 @@ class Logger {
 
   // Экспорт логов в JSON
   exportLogs(): string {
-    const logsToExport = this.debugModeEnabled
-      ? this.logs.filter(l => l.level === 'error')
-      : this.logs;
+    // Экспортируем ошибки, предупреждения и информационные сообщения
+    const logsToExport = this.logs.filter(l => l.level === 'error' || l.level === 'warn' || l.level === 'info');
     const exportData = {
       exportedAt: new Date().toISOString(),
       totalLogs: logsToExport.length,
@@ -138,9 +137,8 @@ class Logger {
 
   // Экспорт логов в текстовом формате
   exportLogsAsText(): string {
-    const logsToExport = this.debugModeEnabled
-      ? this.logs.filter(l => l.level === 'error')
-      : this.logs;
+    // Экспортируем ошибки, предупреждения и информационные сообщения
+    const logsToExport = this.logs.filter(l => l.level === 'error' || l.level === 'warn' || l.level === 'info');
     let output = `=== Debug Logs Export ===\n`;
     output += `Exported at: ${new Date().toISOString()}\n`;
     output += `Total logs: ${logsToExport.length}\n\n`;
