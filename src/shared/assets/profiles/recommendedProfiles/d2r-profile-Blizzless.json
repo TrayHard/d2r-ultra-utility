@@ -1248,8 +1248,8 @@
       "smallCharms": {
         "enabled": true,
         "locales": {
-          "enUS": "  ÿc1Small Charmÿc3  ",
-          "ruRU": "  ÿc1Маленький оберегÿc3  ",
+          "enUS": "  Small Charm  ",
+          "ruRU": "  Маленький оберег  ",
           "zhTW": "小型咒符",
           "deDE": "[ms]Kleiner Zauber",
           "esES": "[ms]Dije pequeño",

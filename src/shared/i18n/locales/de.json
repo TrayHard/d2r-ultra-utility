@@ -528,7 +528,8 @@
       "heavy": "Schwer",
       "anyClass": "Beliebige Klasse",
       "all": "Alle",
-      "selected": "ausgewählt"
+      "selected": "ausgewählt",
+      "noResults": "Keine Gegenstände gefunden"
     },
     "sorting": {
       "byType": "Nach Typ",

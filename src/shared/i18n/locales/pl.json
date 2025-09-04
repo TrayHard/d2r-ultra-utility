@@ -480,7 +480,8 @@
       "reqLevelTooltip": "Podaj swój poziom, aby wyświetlać tylko odpowiednie przedmioty",
       "reqStrengthTooltip": "Podaj swoją siłę, aby wyświetlać tylko odpowiednie przedmioty",
       "reqDexterityTooltip": "Podaj swoją zręczność, aby wyświetlać tylko odpowiednie przedmioty",
-      "relatedItems": "Powiązane przedmioty"
+      "relatedItems": "Powiązane przedmioty",
+      "noResults": "Nie znaleziono przedmiotów"
     }
   },
   "mode": {
