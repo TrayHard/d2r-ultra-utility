@@ -77,13 +77,10 @@ const UpdateButton: React.FC<UpdateButtonProps> = ({ isDarkTheme }) => {
             path={mdiDownload}
             size={0.9}
             className={
-              updateAvailable
-                ? isDarkTheme
-                  ? "text-green-500"
-                  : "text-green-600"
-                : isDarkTheme
-                ? "text-gray-400"
-                : "text-gray-500"
+              `${updateAvailable ? 'animate-bounce' : ''} ` +
+              (updateAvailable
+                ? (isDarkTheme ? 'text-green-500' : 'text-green-600')
+                : (isDarkTheme ? 'text-gray-400' : 'text-gray-500'))
             }
           />
         )}

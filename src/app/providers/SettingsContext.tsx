@@ -853,113 +853,135 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     [isLoading]
   );
 
-  // Загрузка неизменяемых профилей из ассетов
-  const loadImmutableProfiles = useCallback(() => {
+  // Загрузка неизменяемых профилей из GitHub (raw) с фоллбеком на ассеты
+  const loadImmutableProfiles = useCallback(async () => {
+    const now = Date.now();
+
+    // Используем raw-ссылки, чтобы получать актуальные версии из репозитория
+    const RAW_BASE = "https://raw.githubusercontent.com/TrayHard/d2r-ultra-utility/master/src/shared/assets/profiles";
+    const urls = {
+      default: `${RAW_BASE}/d2r-profile-Default.json`,
+      blizzless: `${RAW_BASE}/recommendedProfiles/d2r-profile-Blizzless.json`,
+      minimalistic: `${RAW_BASE}/recommendedProfiles/d2r-profile-Minimalistic.json`,
+    } as const;
+
+    type RawProfile = { id?: string; name?: string; settings?: unknown };
+
+    const fetchJson = async (url: string): Promise<RawProfile | null> => {
+      try {
+        const response = await fetch(url, { cache: "no-store" });
+        if (!response.ok) return null;
+        const data = (await response.json()) as RawProfile;
+        return data ?? null;
+      } catch (_) {
+        return null;
+      }
+    };
+
+    const [remoteDefault, remoteBlizzless, remoteMinimalistic] = await Promise.all([
+      fetchJson(urls.default),
+      fetchJson(urls.blizzless),
+      fetchJson(urls.minimalistic),
+    ]);
+
+    // Собираем локальные источники как фоллбек
+    const localRecommendedSources = Object.values(recommendedProfilesModules).map((m) => m.default);
+    const localDefaultSources = Object.values(defaultProfileModule).map((m) => m.default);
+
+    // Помощник для миграции и сборки профиля
+    const buildProfile = (
+      src: RawProfile,
+      index: number,
+      options: { isDefault?: boolean; fallbackName?: string }
+    ): Profile => {
+      const name = (src?.name || options.fallbackName || `Recommended Profile ${index + 1}`).trim();
+      const profileId = src?.id || `${options.isDefault ? "default" : "recommended"}_${now + index}`;
+      const settingsSource = src?.settings as unknown;
+
+      const settingsObj =
+        typeof settingsSource === "object" && settingsSource !== null
+          ? (settingsSource as Record<string, unknown>)
+          : {};
+
+      const runesObj =
+        typeof settingsObj["runes"] === "object" && settingsObj["runes"] !== null
+          ? (settingsObj["runes"] as Record<string, unknown>)
+          : {};
+
+      const migratedSettings: AppSettings = {
+        runes: Object.fromEntries(
+          Object.entries(runesObj).map(([key, value]) => [key, migrateRuneSettings(value)])
+        ) as Record<ERune, RuneSettings>,
+        generalRunes: getDefaultGeneralRuneSettings(),
+        common: settingsObj["common"] ? cleanSettings(settingsObj["common"]) : getDefaultCommonSettings(),
+        gems: settingsObj["gems"] ? (settingsObj["gems"] as GemSettings) : getDefaultGemSettings(),
+        items: settingsObj["items"] ? migrateItemsSettings(settingsObj["items"]) : getDefaultItemsSettings(),
+      };
+
+      return {
+        id: profileId,
+        name,
+        settings: migratedSettings,
+        createdAt: new Date().toISOString(),
+        modifiedAt: new Date().toISOString(),
+        isImmutable: true,
+        isDefault: options.isDefault || false,
+      };
+    };
+
     try {
-      // Загружаем все рекомендованные профили и отдельный Default
-      const modules = recommendedProfilesModules;
-      const sources = Object.values(modules).map((m) => m.default);
-      const defaultSources = Object.values(defaultProfileModule).map((m) => m.default);
-      const now = Date.now();
+      // 1) Формируем remote данные
+      const remoteRecommendedRaw: RawProfile[] = [];
+      if (remoteBlizzless) remoteRecommendedRaw.push(remoteBlizzless);
+      if (remoteMinimalistic) remoteRecommendedRaw.push(remoteMinimalistic);
+      const remoteDefaultRaw: RawProfile[] = remoteDefault ? [remoteDefault] : [];
 
-      const immutableProfilesData: Profile[] = sources
-        .map((src, index) => {
-          const data = src as unknown as { id?: string; name?: string; settings?: unknown };
-          const name = data?.name || `Recommended Profile ${index + 1}`;
-          const profileId = data?.id || `recommended_${now + index}`;
-          const settingsSource = data?.settings as unknown;
+      // 2) Фоллбек на локальные ассеты, если чего-то нет
+      const localRecommendedRaw: RawProfile[] = localRecommendedSources as RawProfile[];
+      const localDefaultRaw: RawProfile[] = localDefaultSources as RawProfile[];
 
-          const settingsObj =
-            typeof settingsSource === "object" && settingsSource !== null
-              ? (settingsSource as Record<string, unknown>)
-              : {};
+      // Дедуп по имени (нормализуем к нижнему регистру), приоритет remote
+      const byName = new Map<string, RawProfile & { __isDefault?: boolean }>();
+      const normalize = (v?: string) => (v || "").trim().toLowerCase();
 
-          const runesObj =
-            typeof settingsObj["runes"] === "object" && settingsObj["runes"] !== null
-              ? (settingsObj["runes"] as Record<string, unknown>)
-              : {};
+      // Рекомендуемые
+      remoteRecommendedRaw.forEach((p) => {
+        byName.set(normalize(p?.name), p);
+      });
+      localRecommendedRaw.forEach((p) => {
+        const key = normalize(p?.name);
+        if (!byName.has(key)) byName.set(key, p);
+      });
 
-          const migratedSettings: AppSettings = {
-            runes: Object.fromEntries(
-              Object.entries(runesObj).map(([key, value]) => [
-                key,
-                migrateRuneSettings(value),
-              ])
-            ) as Record<ERune, RuneSettings>,
-            generalRunes: getDefaultGeneralRuneSettings(),
-            common: settingsObj["common"]
-              ? cleanSettings(settingsObj["common"]) 
-              : getDefaultCommonSettings(),
-            gems: settingsObj["gems"]
-              ? (settingsObj["gems"] as GemSettings)
-              : getDefaultGemSettings(),
-            items: settingsObj["items"]
-              ? migrateItemsSettings(settingsObj["items"]) 
-              : getDefaultItemsSettings(),
-          };
+      // Default
+      if (remoteDefaultRaw[0]) {
+        const p = remoteDefaultRaw[0];
+        byName.set(normalize(p?.name || "Default"), { ...p, __isDefault: true });
+      } else if (localDefaultRaw[0]) {
+        const p = localDefaultRaw[0];
+        byName.set(normalize(p?.name || "Default"), { ...p, __isDefault: true });
+      }
 
-          return {
-            id: profileId,
-            name,
-            settings: migratedSettings,
-            createdAt: new Date().toISOString(),
-            modifiedAt: new Date().toISOString(),
-            isImmutable: true,
-          };
-        })
-        .filter((profile) => profile !== null);
+      // 3) Строим итоговые профили
+      const result: Profile[] = [];
 
-      // Добавляем Default профиль (если найден) как отдельный, неизменяемый и помеченный isDefault
-      const defaultProfiles: Profile[] = defaultSources
-        .map((src) => {
-          const data = src as unknown as { id?: string; name?: string; settings?: unknown };
-          const name = data?.name || "Default";
-          const profileId = data?.id || `default_${now}`;
-          const settingsSource = data?.settings as unknown;
+      // Сначала Default, если присутствует
+      const defaultKey = normalize("Default");
+      if (byName.has(defaultKey)) {
+        const src = byName.get(defaultKey)!;
+        result.push(buildProfile(src, 0, { isDefault: true, fallbackName: "Default" }));
+        byName.delete(defaultKey);
+      }
 
-          const settingsObj =
-            typeof settingsSource === "object" && settingsSource !== null
-              ? (settingsSource as Record<string, unknown>)
-              : {};
+      // Остальные рекомендуемые
+      let idx = 1;
+      for (const [, src] of byName) {
+        result.push(buildProfile(src, idx, { isDefault: false }));
+        idx++;
+      }
 
-          const runesObj =
-            typeof settingsObj["runes"] === "object" && settingsObj["runes"] !== null
-              ? (settingsObj["runes"] as Record<string, unknown>)
-              : {};
-
-          const migratedSettings: AppSettings = {
-            runes: Object.fromEntries(
-              Object.entries(runesObj).map(([key, value]) => [
-                key,
-                migrateRuneSettings(value),
-              ])
-            ) as Record<ERune, RuneSettings>,
-            generalRunes: getDefaultGeneralRuneSettings(),
-            common: settingsObj["common"]
-              ? cleanSettings(settingsObj["common"]) 
-              : getDefaultCommonSettings(),
-            gems: settingsObj["gems"]
-              ? (settingsObj["gems"] as GemSettings)
-              : getDefaultGemSettings(),
-            items: settingsObj["items"]
-              ? migrateItemsSettings(settingsObj["items"]) 
-              : getDefaultItemsSettings(),
-          };
-
-          return {
-            id: profileId,
-            name,
-            settings: migratedSettings,
-            createdAt: new Date().toISOString(),
-            modifiedAt: new Date().toISOString(),
-            isImmutable: true,
-            isDefault: true,
-          } as Profile;
-        })
-        .filter(Boolean);
-
-      setImmutableProfiles([...defaultProfiles, ...immutableProfilesData]);
-      logger.info("Загружены неизменяемые профили", { count: immutableProfilesData.length });
+      setImmutableProfiles(result);
+      logger.info("Загружены неизменяемые профили (remote + fallback)", { count: result.length });
     } catch (error) {
       logger.error("Ошибка загрузки неизменяемых профилей", error as Error);
       setImmutableProfiles([]);
