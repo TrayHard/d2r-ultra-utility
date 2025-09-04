@@ -546,7 +546,8 @@
       "heavy": "Тяжелый",
       "anyClass": "Любой класс",
       "all": "Все",
-      "selected": "выбрано"
+      "selected": "выбрано",
+      "noResults": "Предметы не найдены"
     },
     "sorting": {
       "byType": "По типу",
