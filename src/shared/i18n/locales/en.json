@@ -551,7 +551,8 @@
       "selected": "selected",
       "reqLevelTooltip": "Put your level to display only suitable items",
       "reqStrengthTooltip": "Put your strength to display only suitable items",
-      "reqDexterityTooltip": "Put your dexterity to display only suitable items"
+      "reqDexterityTooltip": "Put your dexterity to display only suitable items",
+      "noResults": "No items found"
     },
     "sorting": {
       "byType": "By Type",

@@ -364,7 +364,7 @@ const ItemsList: React.FC<ItemsListProps> = ({
                 isDarkTheme ? "text-gray-400" : "text-gray-600"
               }`}
             >
-              {t("search.noResults") ?? "No items found"}
+              {t("itemsPage.filters.noResults") ?? "No items found"}
             </p>
           </div>
         ) : (

@@ -471,7 +471,8 @@
       "reqLevelTooltip": "Indica tu nivel para mostrar solo objetos apropiados",
       "reqStrengthTooltip": "Indica tu fuerza para mostrar solo objetos apropiados",
       "reqDexterityTooltip": "Indica tu destreza para mostrar solo objetos apropiados",
-      "relatedItems": "Objetos relacionados"
+      "relatedItems": "Objetos relacionados",
+      "noResults": "No se encontraron objetos"
     }
   },
   "window": {
