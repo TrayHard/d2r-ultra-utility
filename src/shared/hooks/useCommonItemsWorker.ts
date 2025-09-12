@@ -336,7 +336,7 @@ export const useCommonItemsWorker = (
       const namesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.ITEMS_FILE}`;
       const affixesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.NAMEAFFIXES_FILE}`;
       const modifiersPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\item-modifiers.json`;
-      const keysHighlightDir = `${homeDir}\\mods\\D2RMOD\\D2RMOD.mpq\\data\\hd\\items\\misc\\key`;
+      const keysHighlightDir = `${homeDir}\\mods\\D2RBlizzless\\D2RBlizzless.mpq\\data\\hd\\items\\misc\\key`;
 
       logger.info("Applying common items changes", { namesPath, affixesPath, modifiersPath }, 'applyChanges');
 
