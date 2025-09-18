@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { EBaseType } from "./constants";
 import basesData from "./bases.json";
 import Icon from "@mdi/react";
-import { mdiClose } from "@mdi/js";
+import { mdiClose, mdiPencilBoxMultiple } from "@mdi/js";
 import Button from "../../shared/components/Button";
 import ItemsFilters from "./ItemsFilters";
 import ItemsList from "./ItemsList";
@@ -80,13 +80,13 @@ const ItemsTab: React.FC<ItemsTabProps> = ({ isDarkTheme }) => {
   const [reqStrengthFilter, setReqStrengthFilter] = useState<number>(0);
   const [reqDexterityFilter, setReqDexterityFilter] = useState<number>(0);
   const [selectedWeights, setSelectedWeights] = useState<Set<string>>(
-    new Set(),
+    new Set()
   );
   const [selectedRelatedKinds, setSelectedRelatedKinds] = useState<Set<string>>(
-    new Set(),
+    new Set()
   );
   const [selectedBaseTypes, setSelectedBaseTypes] = useState<Set<EBaseType>>(
-    new Set(),
+    new Set()
   );
 
   // Флаг для отслеживания первого открытия
@@ -95,7 +95,7 @@ const ItemsTab: React.FC<ItemsTabProps> = ({ isDarkTheme }) => {
   const items = useMemo(() => {
     // Фильтруем дубли по id
     const uniqueItems = (basesData as BaseItem[]).filter(
-      (item, index, arr) => arr.findIndex((i) => i.id === item.id) === index,
+      (item, index, arr) => arr.findIndex((i) => i.id === item.id) === index
     );
     return uniqueItems;
   }, []);
@@ -178,7 +178,7 @@ const ItemsTab: React.FC<ItemsTabProps> = ({ isDarkTheme }) => {
       // Фильтр по базовым типам (если выбран хотя бы один тип)
       if (selectedBaseTypes.size > 0) {
         const hasSelectedBaseType = item.baseTypes.some((baseType) =>
-          selectedBaseTypes.has(baseType as EBaseType),
+          selectedBaseTypes.has(baseType as EBaseType)
         );
 
         // Отладочный лог для проблемных предметов
@@ -272,16 +272,16 @@ const ItemsTab: React.FC<ItemsTabProps> = ({ isDarkTheme }) => {
   const handleItemSelection = (
     itemKey: string,
     isSelected: boolean,
-    shiftKey: boolean = false,
+    shiftKey: boolean = false
   ) => {
     const newSelected = new Set(selectedItems);
 
     if (shiftKey && lastSelectedItem && lastSelectedItem !== itemKey) {
       const lastIndex = filteredAndSortedItems.findIndex(
-        (item) => item.key === lastSelectedItem,
+        (item) => item.key === lastSelectedItem
       );
       const currentIndex = filteredAndSortedItems.findIndex(
-        (item) => item.key === itemKey,
+        (item) => item.key === itemKey
       );
 
       if (lastIndex !== -1 && currentIndex !== -1) {
@@ -472,8 +472,13 @@ const ItemsTab: React.FC<ItemsTabProps> = ({ isDarkTheme }) => {
                 <h3
                   className={`text-lg font-semibold ${
                     isDarkTheme ? "text-white" : "text-gray-900"
-                  }`}
+                  } flex items-center gap-2`}
                 >
+                  <Icon
+                    path={mdiPencilBoxMultiple}
+                    size={0.9}
+                    className={isDarkTheme ? "text-gray-300" : "text-gray-700"}
+                  />
                   {t("itemsPage.massEdit.modalTitle")}
                 </h3>
                 <button

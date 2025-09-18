@@ -43,7 +43,7 @@ interface ItemsListProps {
   onItemSelection: (
     itemKey: string,
     isSelected: boolean,
-    shiftKey: boolean,
+    shiftKey: boolean
   ) => void;
   onSelectAll: () => void;
   onDeselectAll: () => void;
@@ -66,7 +66,7 @@ interface ItemRowProps {
     onItemSelection: (
       itemKey: string,
       isSelected: boolean,
-      shiftKey: boolean,
+      shiftKey: boolean
     ) => void;
     onSetSelectedItemForSettings: (itemKey: string) => void;
   };
@@ -310,7 +310,10 @@ const ItemsList: React.FC<ItemsListProps> = ({
               variant="secondary"
               size="sm"
               title={t("itemsPage.massEdit.selectAll")}
-              onClick={onSelectAll}
+              onClick={() => {
+                onSelectAll();
+                onOpenMassEditModal();
+              }}
               isDarkTheme={isDarkTheme}
               icon={mdiCheckAll}
               iconSize={0.6}
