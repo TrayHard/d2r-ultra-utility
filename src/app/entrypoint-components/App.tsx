@@ -47,31 +47,43 @@ const loadSavedHomeDirectory = (): string | null => {
 
 const savePath = (filePath: string) => {
   // Извлекаем папку из полного пути к файлу
-  const homeDirectory = filePath.substring(0, filePath.lastIndexOf('\\'));
+  const homeDirectory = filePath.substring(0, filePath.lastIndexOf("\\"));
 
-  localStorage.setItem(SETTINGS_KEY, JSON.stringify({
-    d2rPath: filePath,
-    homeDirectory: homeDirectory,
-    savedAt: new Date().toISOString()
-  }));
+  localStorage.setItem(
+    SETTINGS_KEY,
+    JSON.stringify({
+      d2rPath: filePath,
+      homeDirectory: homeDirectory,
+      savedAt: new Date().toISOString(),
+    })
+  );
 };
 
 // const clearSavedPath = () => {
 //   localStorage.removeItem(SETTINGS_KEY);
 // };
 
-type AppState = 'loading' | 'saved-path' | 'searching' | 'path-selection' | 'manual-input';
+type AppState =
+  | "loading"
+  | "saved-path"
+  | "searching"
+  | "path-selection"
+  | "manual-input";
 
 function App() {
-  const logger = useLogger('App');
-  const [appState, setAppState] = useState<AppState>('loading');
-  
+  const logger = useLogger("App");
+  const [appState, setAppState] = useState<AppState>("loading");
+
   // Тестовое логирование при инициализации
   React.useEffect(() => {
-    logger.info('D2R Ultra Utility application initialized', { 
-      timestamp: new Date().toISOString(),
-      userAgent: navigator.userAgent 
-    }, 'init');
+    logger.info(
+      "D2R Ultra Utility application initialized",
+      {
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+      },
+      "init"
+    );
   }, [logger]);
   const [savedPath, setSavedPath] = useState<string | null>(null);
   const [homeDirectory, setHomeDirectory] = useState<string | null>(null);
@@ -90,21 +102,29 @@ function App() {
   // Проверяем сохраненные настройки при загрузке
   useEffect(() => {
     const checkSavedPath = async () => {
-      logger.info('App starting up', { appState }, 'checkSavedPath');
+      logger.info("App starting up", { appState }, "checkSavedPath");
       const savedFilePath = loadSavedPath();
       const savedHomeDir = loadSavedHomeDirectory();
 
       if (savedFilePath && savedHomeDir) {
-        logger.info('Found saved path, using existing configuration', { savedFilePath, savedHomeDir }, 'checkSavedPath');
+        logger.info(
+          "Found saved path, using existing configuration",
+          { savedFilePath, savedHomeDir },
+          "checkSavedPath"
+        );
         // Для Tauri приложения просто проверяем что путь есть в настройках
         // Полную проверку существования файла делать не будем, чтобы не усложнять
         setSavedPath(savedFilePath);
         setHomeDirectory(savedHomeDir);
-        setAppState('saved-path');
+        setAppState("saved-path");
         return;
       }
 
-      logger.info('No saved path found, starting auto search', undefined, 'checkSavedPath');
+      logger.info(
+        "No saved path found, starting auto search",
+        undefined,
+        "checkSavedPath"
+      );
       // Нет сохраненного пути, запускаем автопоиск
       startAutoSearch();
     };
@@ -126,13 +146,20 @@ function App() {
 
     return () => {
       if (unlisten) {
-        unlisten();
+        try {
+          unlisten();
+        } catch (err) {
+          console.warn(
+            "search_progress unlisten failed (probably already removed)",
+            err
+          );
+        }
       }
     };
   }, []);
 
   const startAutoSearch = async () => {
-    setAppState('searching');
+    setAppState("searching");
     setIsSearching(true);
     setSearchProgress({
       current: 0,
@@ -142,7 +169,9 @@ function App() {
     });
 
     try {
-      const result = await invoke<string[]>("search_file", { filename: "D2R.exe" });
+      const result = await invoke<string[]>("search_file", {
+        filename: "D2R.exe",
+      });
       setFoundPaths(result ?? []);
 
       if (result && result.length > 0) {
@@ -151,16 +180,16 @@ function App() {
           handlePathSelect(result[0]);
         } else {
           // Нашли несколько путей, показываем выбор
-          setAppState('path-selection');
+          setAppState("path-selection");
         }
       } else {
         // Ничего не нашли, переходим к ручному поиску
-        setAppState('manual-input');
+        setAppState("manual-input");
       }
     } catch (error) {
       console.error("Auto search failed:", error);
       setFoundPaths([]);
-      setAppState('manual-input');
+      setAppState("manual-input");
     } finally {
       setIsSearching(false);
     }
@@ -170,9 +199,9 @@ function App() {
     savePath(path);
     setSavedPath(path);
     // Извлекаем папку из полного пути к файлу
-    const homeDir = path.substring(0, path.lastIndexOf('\\'));
+    const homeDir = path.substring(0, path.lastIndexOf("\\"));
     setHomeDirectory(homeDir);
-    setAppState('saved-path');
+    setAppState("saved-path");
   };
 
   const handleChangePath = async () => {
@@ -190,7 +219,7 @@ function App() {
   };
 
   const handlePathSelectionCancel = () => {
-    setAppState('manual-input');
+    setAppState("manual-input");
   };
 
   const handleOpenFileDialog = async () => {
@@ -233,7 +262,7 @@ function App() {
   };
 
   // Если показываем WorkSpace, не добавляем дополнительные стили
-  if (appState === 'saved-path' && savedPath && homeDirectory) {
+  if (appState === "saved-path" && savedPath && homeDirectory) {
     return (
       <div className="h-screen flex flex-col bg-gradient-to-br from-gray-900 to-black">
         <CustomTitleBar />
@@ -248,9 +277,8 @@ function App() {
     <div className="h-screen flex flex-col bg-gradient-to-br from-gray-800 to-black pt-9">
       <CustomTitleBar />
       <main className="flex-1 flex flex-col justify-center items-center text-center p-8 mt-9">
-
         {/* Прогрессбар показываем когда идет поиск */}
-        {(isSearching || appState === 'loading') && (
+        {(isSearching || appState === "loading") && (
           <ProgressBar
             progress={searchProgress.current}
             message={searchProgress.message}
@@ -259,10 +287,8 @@ function App() {
           />
         )}
 
-
-
         {/* Показываем выбор из найденных путей */}
-        {appState === 'path-selection' && foundPaths.length > 0 && (
+        {appState === "path-selection" && foundPaths.length > 0 && (
           <PathSelector
             paths={foundPaths}
             onPathSelect={handlePathSelect}
@@ -271,7 +297,7 @@ function App() {
         )}
 
         {/* Показываем ручной ввод */}
-        {appState === 'manual-input' && (
+        {appState === "manual-input" && (
           <div className="max-w-2xl w-full">
             <div className="bg-yellow-900 border border-yellow-600 rounded-lg p-4 mb-6">
               <p className="text-yellow-200 mb-4">
@@ -309,7 +335,10 @@ function App() {
               </div>
               {manualFileName && (
                 <div className="text-gray-300">
-                  Selected file: <span className="font-mono text-blue-400">{manualFilePath || manualFileName}</span>
+                  Selected file:{" "}
+                  <span className="font-mono text-blue-400">
+                    {manualFilePath || manualFileName}
+                  </span>
                 </div>
               )}
             </div>
@@ -328,16 +357,21 @@ function App() {
             {!isSearching && manualResults.length > 0 && (
               <div className="max-w-4xl w-full mt-8">
                 <h3 className="text-lg font-semibold mb-4 text-gray-200">
-                  Found {manualResults.length} file{manualResults.length !== 1 ? 's' : ''} named "{manualFileName}":
+                  Found {manualResults.length} file
+                  {manualResults.length !== 1 ? "s" : ""} named "
+                  {manualFileName}":
                 </h3>
                 <div className="bg-gray-800 p-6 rounded-lg text-left shadow-lg border border-gray-700 max-h-96 overflow-y-auto">
                   <ul className="space-y-2">
                     {manualResults.map((path, index) => (
-                      <li key={index} className="flex items-center justify-between bg-gray-700 p-3 rounded border-l-4 border-blue-500 hover:bg-gray-600 transition-colors">
+                      <li
+                        key={index}
+                        className="flex items-center justify-between bg-gray-700 p-3 rounded border-l-4 border-blue-500 hover:bg-gray-600 transition-colors"
+                      >
                         <span className="text-sm font-mono break-all text-gray-200 flex-1">
                           {path}
                         </span>
-                        {manualFileName.toLowerCase() === 'd2r.exe' && (
+                        {manualFileName.toLowerCase() === "d2r.exe" && (
                           <button
                             onClick={() => handlePathSelect(path)}
                             className="ml-4 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition-colors text-sm flex-shrink-0"
@@ -352,15 +386,19 @@ function App() {
               </div>
             )}
 
-            {!isSearching && manualResults.length === 0 && searchProgress.current === 100 && manualFileName.trim() && (
-              <div className="max-w-2xl w-full mt-4">
-                <div className="bg-red-900 border border-red-600 rounded-lg p-4">
-                  <p className="text-red-200">
-                    No files found with name "{manualFileName}". Try a different filename!
-                  </p>
+            {!isSearching &&
+              manualResults.length === 0 &&
+              searchProgress.current === 100 &&
+              manualFileName.trim() && (
+                <div className="max-w-2xl w-full mt-4">
+                  <div className="bg-red-900 border border-red-600 rounded-lg p-4">
+                    <p className="text-red-200">
+                      No files found with name "{manualFileName}". Try a
+                      different filename!
+                    </p>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
           </div>
         )}
       </main>
