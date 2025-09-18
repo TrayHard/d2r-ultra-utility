@@ -446,7 +446,7 @@
     }
   },
   "itemsPage": {
-    "settings": { 
+    "settings": {
       "title": "Ajustes de objetos",
       "tooltips": {
         "enableItem": "Mostrar en el juego",
@@ -536,5 +536,3 @@
     }
   }
 }
-
-

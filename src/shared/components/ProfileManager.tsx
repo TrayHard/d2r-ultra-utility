@@ -73,7 +73,7 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
         {
           type: "success",
           title: t("profiles.messages.success"),
-        }
+        },
       );
     }
   };
@@ -89,7 +89,7 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
         {
           type: "success",
           title: t("profiles.messages.success"),
-        }
+        },
       );
     }
   };
@@ -105,7 +105,7 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
         {
           type: "success",
           title: t("profiles.messages.success"),
-        }
+        },
       );
     }
   };
@@ -284,13 +284,13 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
                 if (activeProfileId) {
                   onProfileDuplicate(activeProfileId);
                   const duplicated = allProfiles.find(
-                    (p) => p.id === activeProfileId
+                    (p) => p.id === activeProfileId,
                   );
                   sendMessage(
                     t("profiles.messages.profileDuplicated", {
                       name: duplicated?.name,
                     }) || "Profile duplicated",
-                    { type: "success", title: t("profiles.messages.success") }
+                    { type: "success", title: t("profiles.messages.success") },
                   );
                 }
               }}
@@ -529,7 +529,7 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
                     t("profiles.messages.profileSaved", {
                       name: activeProfile?.name,
                     }),
-                    { type: "success", title: t("profiles.messages.success") }
+                    { type: "success", title: t("profiles.messages.success") },
                   );
                 } catch (e) {
                   sendMessage(t("profiles.messages.saveError"), {

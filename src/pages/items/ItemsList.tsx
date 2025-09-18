@@ -43,7 +43,7 @@ interface ItemsListProps {
   onItemSelection: (
     itemKey: string,
     isSelected: boolean,
-    shiftKey: boolean
+    shiftKey: boolean,
   ) => void;
   onSelectAll: () => void;
   onDeselectAll: () => void;
@@ -66,7 +66,7 @@ interface ItemRowProps {
     onItemSelection: (
       itemKey: string,
       isSelected: boolean,
-      shiftKey: boolean
+      shiftKey: boolean,
     ) => void;
     onSetSelectedItemForSettings: (itemKey: string) => void;
   };
@@ -103,8 +103,8 @@ const ItemRow: React.FC<ItemRowProps> = ({ index, style, data }) => {
                   ? "bg-yellow-900/30 border-yellow-400"
                   : "bg-yellow-50 border-yellow-400"
                 : isDarkTheme
-                ? "bg-gray-800 border-gray-700 hover:bg-gray-750"
-                : "bg-white border-gray-200 hover:bg-gray-50"
+                  ? "bg-gray-800 border-gray-700 hover:bg-gray-750"
+                  : "bg-white border-gray-200 hover:bg-gray-50"
             }
           `}
         >
@@ -335,7 +335,10 @@ const ItemsList: React.FC<ItemsListProps> = ({
             </Button>
           </div>
 
-          <Tooltip title={t("itemsPage.massEdit.editSelected") ?? "Edit selected"} placement="top">
+          <Tooltip
+            title={t("itemsPage.massEdit.editSelected") ?? "Edit selected"}
+            placement="top"
+          >
             <Button
               variant={selectedItems.size === 0 ? "secondary" : "primary"}
               onClick={onOpenMassEditModal}

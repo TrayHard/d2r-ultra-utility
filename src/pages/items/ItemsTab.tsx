@@ -8,8 +8,13 @@ import Button from "../../shared/components/Button";
 import ItemsFilters from "./ItemsFilters";
 import ItemsList from "./ItemsList";
 import ItemCard from "./ItemCard";
-import TriStateSwitch, { TriState } from "../../shared/components/TriStateSwitch";
-import { useSettings, ItemSettings as ItemSettingsType } from "../../app/providers/SettingsContext";
+import TriStateSwitch, {
+  TriState,
+} from "../../shared/components/TriStateSwitch";
+import {
+  useSettings,
+  ItemSettings as ItemSettingsType,
+} from "../../app/providers/SettingsContext";
 import ItemsSettingsModal from "./ItemsSettingsModal";
 
 import "./ItemsTab.css";
@@ -48,9 +53,7 @@ type ItemSettings = ItemSettingsType;
 type SortType = "type" | "name" | "level";
 type SortOrder = "asc" | "desc";
 
-const ItemsTab: React.FC<ItemsTabProps> = ({
-  isDarkTheme,
-}) => {
+const ItemsTab: React.FC<ItemsTabProps> = ({ isDarkTheme }) => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [sortType, setSortType] = useState<SortType>("type");
@@ -77,13 +80,13 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
   const [reqStrengthFilter, setReqStrengthFilter] = useState<number>(0);
   const [reqDexterityFilter, setReqDexterityFilter] = useState<number>(0);
   const [selectedWeights, setSelectedWeights] = useState<Set<string>>(
-    new Set()
+    new Set(),
   );
   const [selectedRelatedKinds, setSelectedRelatedKinds] = useState<Set<string>>(
-    new Set()
+    new Set(),
   );
   const [selectedBaseTypes, setSelectedBaseTypes] = useState<Set<EBaseType>>(
-    new Set()
+    new Set(),
   );
 
   // Флаг для отслеживания первого открытия
@@ -92,7 +95,7 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
   const items = useMemo(() => {
     // Фильтруем дубли по id
     const uniqueItems = (basesData as BaseItem[]).filter(
-      (item, index, arr) => arr.findIndex((i) => i.id === item.id) === index
+      (item, index, arr) => arr.findIndex((i) => i.id === item.id) === index,
     );
     return uniqueItems;
   }, []);
@@ -175,7 +178,7 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
       // Фильтр по базовым типам (если выбран хотя бы один тип)
       if (selectedBaseTypes.size > 0) {
         const hasSelectedBaseType = item.baseTypes.some((baseType) =>
-          selectedBaseTypes.has(baseType as EBaseType)
+          selectedBaseTypes.has(baseType as EBaseType),
         );
 
         // Отладочный лог для проблемных предметов
@@ -269,16 +272,16 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
   const handleItemSelection = (
     itemKey: string,
     isSelected: boolean,
-    shiftKey: boolean = false
+    shiftKey: boolean = false,
   ) => {
     const newSelected = new Set(selectedItems);
 
     if (shiftKey && lastSelectedItem && lastSelectedItem !== itemKey) {
       const lastIndex = filteredAndSortedItems.findIndex(
-        (item) => item.key === lastSelectedItem
+        (item) => item.key === lastSelectedItem,
       );
       const currentIndex = filteredAndSortedItems.findIndex(
-        (item) => item.key === itemKey
+        (item) => item.key === itemKey,
       );
 
       if (lastIndex !== -1 && currentIndex !== -1) {
@@ -326,7 +329,8 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
 
   // Состояния TriState для массового редактирования
   const [massEnabled, setMassEnabled] = useState<TriState>(null);
-  const [massShowDifficultyMarker, setMassShowDifficultyMarker] = useState<TriState>(null);
+  const [massShowDifficultyMarker, setMassShowDifficultyMarker] =
+    useState<TriState>(null);
 
   const resetMassEditStates = () => {
     setMassEnabled(null);
@@ -337,7 +341,8 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
     // Собираем изменения из TriState и переданных настроек (если будут расширяться)
     const updates: Partial<ItemSettings> = { ...newSettings };
     if (massEnabled !== null) updates.enabled = massEnabled;
-    if (massShowDifficultyMarker !== null) updates.showDifficultyClassMarker = massShowDifficultyMarker;
+    if (massShowDifficultyMarker !== null)
+      updates.showDifficultyClassMarker = massShowDifficultyMarker;
 
     if (Object.keys(updates).length === 0) {
       return;
@@ -400,7 +405,7 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
 
   const selectedItem =
     items.find((item) => item.key === selectedItemForSettings) ?? null;
-  
+
   const filtersRef = useRef<HTMLDivElement>(null);
 
   return (
@@ -490,9 +495,13 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
 
               <div className="space-y-4">
                 {/* Переключатель Enabled */}
-                <div className={`p-3 rounded-lg ${isDarkTheme ? "bg-gray-800" : "bg-gray-50"}`}>
+                <div
+                  className={`p-3 rounded-lg ${isDarkTheme ? "bg-gray-800" : "bg-gray-50"}`}
+                >
                   <div className="flex items-center justify-between">
-                    <span className={`text-sm font-medium ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}>
+                    <span
+                      className={`text-sm font-medium ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}
+                    >
                       {t("itemsPage.settings.enableItem")}
                     </span>
                     <TriStateSwitch
@@ -505,9 +514,13 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
                 </div>
 
                 {/* Переключатель Show Difficulty Class Marker */}
-                <div className={`p-3 rounded-lg ${isDarkTheme ? "bg-gray-800" : "bg-gray-50"}`}>
+                <div
+                  className={`p-3 rounded-lg ${isDarkTheme ? "bg-gray-800" : "bg-gray-50"}`}
+                >
                   <div className="flex items-center justify-between">
-                    <span className={`text-sm font-medium ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}>
+                    <span
+                      className={`text-sm font-medium ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}
+                    >
                       {t("itemsPage.settings.showDifficultyClassMarker")}
                     </span>
                     <TriStateSwitch
@@ -539,7 +552,9 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
                     resetMassEditStates();
                   }}
                   isDarkTheme={isDarkTheme}
-                  disabled={massEnabled === null && massShowDifficultyMarker === null}
+                  disabled={
+                    massEnabled === null && massShowDifficultyMarker === null
+                  }
                 >
                   {t("itemsPage.massEdit.apply")}
                 </Button>

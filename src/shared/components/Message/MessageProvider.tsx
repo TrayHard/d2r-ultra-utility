@@ -1,32 +1,42 @@
-import React, { createContext, useContext, ReactNode } from 'react';
-import { useMessage, MessageData } from './useMessage.ts';
-import MessageContainer from './MessageContainer.tsx';
+import React, { createContext, useContext, ReactNode } from "react";
+import { useMessage, MessageData } from "./useMessage.ts";
+import MessageContainer from "./MessageContainer.tsx";
 
 interface MessageContextValue {
   messages: MessageData[];
-  sendMessage: (message: string, settings?: { type?: 'success' | 'error' | 'warning' | 'info'; title?: string; duration?: number; color?: string; }) => string;
+  sendMessage: (
+    message: string,
+    settings?: {
+      type?: "success" | "error" | "warning" | "info";
+      title?: string;
+      duration?: number;
+      color?: string;
+    },
+  ) => string;
   sendSuccess: (message: string, title?: string, duration?: number) => string;
   sendError: (message: string, title?: string, duration?: number) => string;
   sendWarning: (message: string, title?: string, duration?: number) => string;
   sendInfo: (message: string, title?: string, duration?: number) => string;
   removeMessage: (id: string) => void;
   clearAllMessages: () => void;
-  muteTypes: (types: Array<'success' | 'error' | 'warning' | 'info'>) => void;
+  muteTypes: (types: Array<"success" | "error" | "warning" | "info">) => void;
   unmute: () => void;
 }
 
-const MessageContext = createContext<MessageContextValue | undefined>(undefined);
+const MessageContext = createContext<MessageContextValue | undefined>(
+  undefined,
+);
 
 interface MessageProviderProps {
   children: ReactNode;
   isDarkTheme?: boolean;
-  position?: 'top' | 'bottom';
+  position?: "top" | "bottom";
 }
 
 export const MessageProvider: React.FC<MessageProviderProps> = ({
   children,
   isDarkTheme = true,
-  position = 'top'
+  position = "top",
 }) => {
   const messageHook = useMessage();
 
@@ -49,7 +59,7 @@ export const MessageProvider: React.FC<MessageProviderProps> = ({
 export const useGlobalMessage = (): MessageContextValue => {
   const context = useContext(MessageContext);
   if (context === undefined) {
-    throw new Error('useGlobalMessage must be used within a MessageProvider');
+    throw new Error("useGlobalMessage must be used within a MessageProvider");
   }
   return context;
 };

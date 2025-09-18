@@ -54,52 +54,54 @@ const RuneCard: React.FC<RuneCardProps> = ({
   const mode = React.useMemo(() => settings?.mode ?? "auto", [settings?.mode]);
   const isHighlighted = React.useMemo(
     () => settings?.isHighlighted ?? false,
-    [settings?.isHighlighted]
+    [settings?.isHighlighted],
   );
 
   // Автоматические настройки
   const autoSettings = React.useMemo(
-    () => settings?.autoSettings ?? {
-      numbering: {
-        show: false,
-        dividerType: generalSettings.dividerType,
-        dividerColor: generalSettings.dividerColor,
-        numberColor: generalSettings.numberColor,
+    () =>
+      settings?.autoSettings ?? {
+        numbering: {
+          show: false,
+          dividerType: generalSettings.dividerType,
+          dividerColor: generalSettings.dividerColor,
+          numberColor: generalSettings.numberColor,
+        },
+        boxSize: 0,
+        boxLimiters: generalSettings.boxLimiters,
+        boxLimitersColor: generalSettings.boxLimitersColor,
+        color: "white",
       },
-      boxSize: 0,
-      boxLimiters: generalSettings.boxLimiters,
-      boxLimitersColor: generalSettings.boxLimitersColor,
-      color: "white",
-    },
-    [settings?.autoSettings, generalSettings]
+    [settings?.autoSettings, generalSettings],
   );
 
   // Ручные настройки
   const manualSettings = React.useMemo(
-    () => settings?.manualSettings ?? {
-      locales: {
-        enUS: "",
-        ruRU: "",
-        zhTW: "",
-        deDE: "",
-        esES: "",
-        frFR: "",
-        itIT: "",
-        koKR: "",
-        plPL: "",
-        esMX: "",
-        jaJP: "",
-        ptBR: "",
-        zhCN: "",
+    () =>
+      settings?.manualSettings ?? {
+        locales: {
+          enUS: "",
+          ruRU: "",
+          zhTW: "",
+          deDE: "",
+          esES: "",
+          frFR: "",
+          itIT: "",
+          koKR: "",
+          plPL: "",
+          esMX: "",
+          jaJP: "",
+          ptBR: "",
+          zhCN: "",
+        },
       },
-    },
-    [settings?.manualSettings]
+    [settings?.manualSettings],
   );
 
   // Получаем захардкоженные локали для автоматического режима
   const hardcodedLocales = React.useMemo(
     () => runeHardcodedLocales[rune],
-    [rune]
+    [rune],
   );
 
   // Состояние для выбранной локали предпросмотра
@@ -122,13 +124,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
 
   React.useEffect(() => {
     setPreviewKey((prev) => prev + 1);
-  }, [
-    mode,
-    isHighlighted,
-    autoSettings,
-    manualSettings,
-    previewLocale,
-  ]);
+  }, [mode, isHighlighted, autoSettings, manualSettings, previewLocale]);
 
   // Handle language name change
   const handleLanguageNameChange = (langCode: string, value: string) => {
@@ -255,8 +251,6 @@ const RuneCard: React.FC<RuneCardProps> = ({
     });
   };
 
-
-
   // Options for dropdowns
   const sizeOptions = [
     { value: "0", label: t("runePage.controls.sizes.Normal") },
@@ -286,7 +280,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
   const localeOptions = React.useMemo(() => {
     const selectedLocales = getSelectedLocales();
     return allLocaleOptions.filter((option: { value: string; label: string }) =>
-      selectedLocales.includes(option.value)
+      selectedLocales.includes(option.value),
     );
   }, [getSelectedLocales]);
 
@@ -335,7 +329,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
     return generateStructuredPreview(
       rune,
       previewSettings as RuneSettings,
-      previewLocale as keyof typeof previewLocales
+      previewLocale as keyof typeof previewLocales,
     );
   }, [
     mode,
@@ -394,174 +388,224 @@ const RuneCard: React.FC<RuneCardProps> = ({
                     {t("runePage.settings.preview")}
                   </h4>
                   <div className="max-w-[560px] mx-auto">
-                    <div className={`relative rounded-lg bg-gray-900 border border-gray-700 min-h-[300px] overflow-visible`}>
-                    {/* Обёртка для изображения с overflow-hidden */}
-                    <div className="absolute inset-0 rounded-lg overflow-hidden">
-                      {/* Фоновое изображение руны */}
-                      <img
-                        src={isHighlighted ? highlightedBg : unhighlightedBg}
-                        alt={`Rune ${isHighlighted ? "highlighted" : "unhighlighted"} background`}
-                        className="absolute inset-0 w-full h-[300px] pointer-events-none"
-                        style={{
-                          objectPosition: isHighlighted ? "57% 20%" : "45% 20%",
-                        }}
-                      />
-                    </div>
-
-                    {/* Дропдаун выбора локали в правом верхнем углу */}
-                    <div className="absolute top-2 right-2 z-10">
-                      <div className="w-16">
-                        <Select
-                          options={localeOptions}
-                          value={previewLocale}
-                          onChange={(v) => setPreviewLocale(String(v))}
-                          size="small"
-                          style={{ width: "100%" }}
+                    <div
+                      className={`relative rounded-lg bg-gray-900 border border-gray-700 min-h-[300px] overflow-visible`}
+                    >
+                      {/* Обёртка для изображения с overflow-hidden */}
+                      <div className="absolute inset-0 rounded-lg overflow-hidden">
+                        {/* Фоновое изображение руны */}
+                        <img
+                          src={isHighlighted ? highlightedBg : unhighlightedBg}
+                          alt={`Rune ${isHighlighted ? "highlighted" : "unhighlighted"} background`}
+                          className="absolute inset-0 w-full h-[300px] pointer-events-none"
+                          style={{
+                            objectPosition: isHighlighted
+                              ? "57% 20%"
+                              : "45% 20%",
+                          }}
                         />
                       </div>
-                    </div>
 
-                    {/* Текст с полупрозрачным фоном */}
-                    <div
-                      key={previewKey}
-                      className="absolute px-1 bg-black/50 backdrop-blur-sm"
-                      style={{
-                        left: "50%",
-                        transform: "translateX(-50%)",
-                        bottom: `${300 * 0.13 - (parseFloat(getFontSize(getPreviewData().boxSize)) * (mode === "manual" ? 1.4 : 1)) / 2}px`,
-                        width: mode === "manual" ? "max-content" : getContainerWidth(getPreviewData().boxSize),
-                        minWidth: mode === "manual" ? undefined : getContainerWidth(getPreviewData().boxSize),
-                        textAlign: "center" as const,
-                        whiteSpace: mode === "manual" ? "pre" : "nowrap",
-                        lineHeight: "1.4",
-                      }}
-                    >
-                      {(() => {
-                        const previewData = getPreviewData();
+                      {/* Дропдаун выбора локали в правом верхнем углу */}
+                      <div className="absolute top-2 right-2 z-10">
+                        <div className="w-16">
+                          <Select
+                            options={localeOptions}
+                            value={previewLocale}
+                            onChange={(v) => setPreviewLocale(String(v))}
+                            size="small"
+                            style={{ width: "100%" }}
+                          />
+                        </div>
+                      </div>
 
-                        const baseStyle = {
-                          fontSize: getFontSize(previewData.boxSize),
-                          fontFamily: "Diablo, monospace",
-                          fontWeight: "bold",
-                          textShadow: "1px 1px 2px rgba(0,0,0,0.8)",
-                        };
+                      {/* Текст с полупрозрачным фоном */}
+                      <div
+                        key={previewKey}
+                        className="absolute px-1 bg-black/50 backdrop-blur-sm"
+                        style={{
+                          left: "50%",
+                          transform: "translateX(-50%)",
+                          bottom: `${300 * 0.13 - (parseFloat(getFontSize(getPreviewData().boxSize)) * (mode === "manual" ? 1.4 : 1)) / 2}px`,
+                          width:
+                            mode === "manual"
+                              ? "max-content"
+                              : getContainerWidth(getPreviewData().boxSize),
+                          minWidth:
+                            mode === "manual"
+                              ? undefined
+                              : getContainerWidth(getPreviewData().boxSize),
+                          textAlign: "center" as const,
+                          whiteSpace: mode === "manual" ? "pre" : "nowrap",
+                          lineHeight: "1.4",
+                        }}
+                      >
+                        {(() => {
+                          const previewData = getPreviewData();
 
-                        return (
-                          <div
-                            style={{
-                              position: "relative",
-                              width: "100%",
-                              height: "100%",
-                            }}
-                          >
-                            {/* Левый ограничитель на левом краю контейнера (только авто-режим) */}
-                            {mode === "auto" &&
-                              previewData.boxSize > 0 &&
-                              previewData.boxLimiters !== "spaces" && (
-                              <span
-                                style={{
-                                  ...baseStyle,
-                                  color: getD2RColorStyle?.(previewData.boxLimitersColor) || "#FFFFFF",
-                                  position: "absolute",
-                                  left: "0",
-                                  top: "50%",
-                                  transform: "translateY(-50%)",
-                                }}
-                              >
-                                {previewData.boxLimiters}
-                              </span>
-                            )}
+                          const baseStyle = {
+                            fontSize: getFontSize(previewData.boxSize),
+                            fontFamily: "Diablo, monospace",
+                            fontWeight: "bold",
+                            textShadow: "1px 1px 2px rgba(0,0,0,0.8)",
+                          };
 
-                            {/* Основной контент по центру */}
-                            <span
+                          return (
+                            <div
                               style={{
-                                ...baseStyle,
-                                lineHeight: mode === "manual" ? "1" : "normal",
+                                position: "relative",
+                                width: "100%",
+                                height: "100%",
                               }}
                             >
-                              {/* Основное имя руны */}
-                              {mode === "manual" ? (
-                                (() => {
-                                  const lines = previewData.baseName.split("\n");
-                                  return lines.map((line, lineIdx) => (
-                                    <React.Fragment key={`line-${lineIdx}`}>
-                                      {line.length === 0 ? (
-                                        <span style={{ color: getD2RColorStyle?.("orange") || "#FFA500" }}>
-                                          {"\u00A0"}
-                                        </span>
-                                      ) : (
-                                        parseColoredText(line, getD2RColorStyle).map((segment, segIdx) => (
-                                          <span key={`seg-${lineIdx}-${segIdx}`} style={{ color: segment.color }}>
-                                            {segment.text || "\u00A0"}
-                                          </span>
-                                        ))
-                                      )}
-                                      {lineIdx < lines.length - 1 && <br />}
-                                    </React.Fragment>
-                                  ));
-                                })()
-                              ) : (
-                                <span style={{ color: getD2RColorStyle?.(previewData.baseColor) || "#FFFFFF" }}>
-                                  {previewData.baseName}
-                                </span>
-                              )}
+                              {/* Левый ограничитель на левом краю контейнера (только авто-режим) */}
+                              {mode === "auto" &&
+                                previewData.boxSize > 0 &&
+                                previewData.boxLimiters !== "spaces" && (
+                                  <span
+                                    style={{
+                                      ...baseStyle,
+                                      color:
+                                        getD2RColorStyle?.(
+                                          previewData.boxLimitersColor,
+                                        ) || "#FFFFFF",
+                                      position: "absolute",
+                                      left: "0",
+                                      top: "50%",
+                                      transform: "translateY(-50%)",
+                                    }}
+                                  >
+                                    {previewData.boxLimiters}
+                                  </span>
+                                )}
 
-                              {/* Нумерация (если включена) */}
-                              {previewData.numbering && (
-                                <>
-                                  {previewData.numbering.openDivider === "|" ? " " : " "}
-                                  <span
-                                    style={{
-                                      color: getD2RColorStyle?.(previewData.numbering.dividerColor) || "#FFFFFF",
-                                    }}
-                                  >
-                                    {previewData.numbering.openDivider}
-                                  </span>
-                                  {previewData.numbering.openDivider === "|" && " "}
-                                  <span
-                                    style={{
-                                      color: getD2RColorStyle?.(previewData.numbering.numberColor) || "#FFFFFF",
-                                    }}
-                                  >
-                                    {previewData.numbering.number}
-                                  </span>
-                                  {previewData.numbering.openDivider === "|" && " "}
-                                  <span
-                                    style={{
-                                      color: getD2RColorStyle?.(previewData.numbering.dividerColor) || "#FFFFFF",
-                                    }}
-                                  >
-                                    {previewData.numbering.closeDivider}
-                                  </span>
-                                </>
-                              )}
-                            </span>
-
-                            {/* Правый ограничитель на правом краю контейнера (только авто-режим) */}
-                            {mode === "auto" &&
-                              previewData.boxSize > 0 &&
-                              previewData.boxLimiters !== "spaces" && (
+                              {/* Основной контент по центру */}
                               <span
                                 style={{
                                   ...baseStyle,
-                                  color: getD2RColorStyle?.(previewData.boxLimitersColor) || "#FFFFFF",
-                                  position: "absolute",
-                                  right: "0",
-                                  top: "50%",
-                                  transform: "translateY(-50%)",
+                                  lineHeight:
+                                    mode === "manual" ? "1" : "normal",
                                 }}
                               >
-                                {previewData.boxLimiters}
+                                {/* Основное имя руны */}
+                                {mode === "manual" ? (
+                                  (() => {
+                                    const lines =
+                                      previewData.baseName.split("\n");
+                                    return lines.map((line, lineIdx) => (
+                                      <React.Fragment key={`line-${lineIdx}`}>
+                                        {line.length === 0 ? (
+                                          <span
+                                            style={{
+                                              color:
+                                                getD2RColorStyle?.("orange") ||
+                                                "#FFA500",
+                                            }}
+                                          >
+                                            {"\u00A0"}
+                                          </span>
+                                        ) : (
+                                          parseColoredText(
+                                            line,
+                                            getD2RColorStyle,
+                                          ).map((segment, segIdx) => (
+                                            <span
+                                              key={`seg-${lineIdx}-${segIdx}`}
+                                              style={{ color: segment.color }}
+                                            >
+                                              {segment.text || "\u00A0"}
+                                            </span>
+                                          ))
+                                        )}
+                                        {lineIdx < lines.length - 1 && <br />}
+                                      </React.Fragment>
+                                    ));
+                                  })()
+                                ) : (
+                                  <span
+                                    style={{
+                                      color:
+                                        getD2RColorStyle?.(
+                                          previewData.baseColor,
+                                        ) || "#FFFFFF",
+                                    }}
+                                  >
+                                    {previewData.baseName}
+                                  </span>
+                                )}
+
+                                {/* Нумерация (если включена) */}
+                                {previewData.numbering && (
+                                  <>
+                                    {previewData.numbering.openDivider === "|"
+                                      ? " "
+                                      : " "}
+                                    <span
+                                      style={{
+                                        color:
+                                          getD2RColorStyle?.(
+                                            previewData.numbering.dividerColor,
+                                          ) || "#FFFFFF",
+                                      }}
+                                    >
+                                      {previewData.numbering.openDivider}
+                                    </span>
+                                    {previewData.numbering.openDivider ===
+                                      "|" && " "}
+                                    <span
+                                      style={{
+                                        color:
+                                          getD2RColorStyle?.(
+                                            previewData.numbering.numberColor,
+                                          ) || "#FFFFFF",
+                                      }}
+                                    >
+                                      {previewData.numbering.number}
+                                    </span>
+                                    {previewData.numbering.openDivider ===
+                                      "|" && " "}
+                                    <span
+                                      style={{
+                                        color:
+                                          getD2RColorStyle?.(
+                                            previewData.numbering.dividerColor,
+                                          ) || "#FFFFFF",
+                                      }}
+                                    >
+                                      {previewData.numbering.closeDivider}
+                                    </span>
+                                  </>
+                                )}
                               </span>
-                            )}
-                          </div>
-                        );
-                      })()}
+
+                              {/* Правый ограничитель на правом краю контейнера (только авто-режим) */}
+                              {mode === "auto" &&
+                                previewData.boxSize > 0 &&
+                                previewData.boxLimiters !== "spaces" && (
+                                  <span
+                                    style={{
+                                      ...baseStyle,
+                                      color:
+                                        getD2RColorStyle?.(
+                                          previewData.boxLimitersColor,
+                                        ) || "#FFFFFF",
+                                      position: "absolute",
+                                      right: "0",
+                                      top: "50%",
+                                      transform: "translateY(-50%)",
+                                    }}
+                                  >
+                                    {previewData.boxLimiters}
+                                  </span>
+                                )}
+                            </div>
+                          );
+                        })()}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
 
             {/* Общая подсветка руны */}
             <div className={`mb-4 flex justify-center`}>
@@ -586,7 +630,9 @@ const RuneCard: React.FC<RuneCardProps> = ({
               <div className="justify-self-center">
                 <Switcher
                   checked={mode === "manual"}
-                  onChange={(checked) => handleModeChange(checked ? "manual" : "auto")}
+                  onChange={(checked) =>
+                    handleModeChange(checked ? "manual" : "auto")
+                  }
                   isDarkTheme={isDarkTheme}
                   size="md"
                 />
@@ -602,7 +648,9 @@ const RuneCard: React.FC<RuneCardProps> = ({
 
             <div className="flex gap-8">
               {/* Левый блок - Автоматический режим */}
-              <div className={`flex-1 space-y-6 ${mode === "manual" ? "opacity-50 pointer-events-none" : ""}`}>
+              <div
+                className={`flex-1 space-y-6 ${mode === "manual" ? "opacity-50 pointer-events-none" : ""}`}
+              >
                 <h3
                   className={`text-lg font-semibold text-center ${
                     isDarkTheme ? "text-white" : "text-gray-900"
@@ -614,10 +662,16 @@ const RuneCard: React.FC<RuneCardProps> = ({
                 <div className="space-y-6">
                   {/* General + Box (в одну строку) */}
                   <div className="space-y-2">
-                    <h4 className={`text-sm font-semibold ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}>{t("runePage.controls.generalSection")}</h4>
+                    <h4
+                      className={`text-sm font-semibold ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}
+                    >
+                      {t("runePage.controls.generalSection")}
+                    </h4>
                     <div className="flex flex-wrap items-end gap-4">
                       <div className="h-[52px] flex flex-col justify-end">
-                        <label className={`block text-xs font-semibold mb-1 ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}>
+                        <label
+                          className={`block text-xs font-semibold mb-1 ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}
+                        >
                           {t("runePage.controls.color")}
                         </label>
                         <ColorPallet
@@ -628,7 +682,9 @@ const RuneCard: React.FC<RuneCardProps> = ({
                         />
                       </div>
                       <div>
-                        <label className={`block text-xs font-semibold mb-1 ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}>
+                        <label
+                          className={`block text-xs font-semibold mb-1 ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}
+                        >
                           {t("runePage.controls.boxSize")}
                         </label>
                         <Select
@@ -640,20 +696,26 @@ const RuneCard: React.FC<RuneCardProps> = ({
                         />
                       </div>
                       <div>
-                        <label className={`block text-xs font-semibold mb-1 ${isDarkTheme ? "text-gray-300" : "text-gray-700"} ${autoSettings.boxSize === 0 ? "opacity-50" : ""}`}>
+                        <label
+                          className={`block text-xs font-semibold mb-1 ${isDarkTheme ? "text-gray-300" : "text-gray-700"} ${autoSettings.boxSize === 0 ? "opacity-50" : ""}`}
+                        >
                           {t("runePage.controls.boxLimiters")}
                         </label>
                         <Select
                           options={boxLimitersOptions}
                           value={autoSettings.boxLimiters}
-                          onChange={(v) => handleAutoBoxLimitersChange(String(v))}
+                          onChange={(v) =>
+                            handleAutoBoxLimitersChange(String(v))
+                          }
                           size="middle"
                           disabled={autoSettings.boxSize === 0}
                           style={{ minWidth: 120 }}
                         />
                       </div>
                       <div className="h-[52px] flex flex-col justify-end">
-                        <label className={`block text-xs font-semibold mb-1 ${isDarkTheme ? "text-gray-300" : "text-gray-700"} ${autoSettings.boxSize === 0 ? "opacity-50" : ""}`}>
+                        <label
+                          className={`block text-xs font-semibold mb-1 ${isDarkTheme ? "text-gray-300" : "text-gray-700"} ${autoSettings.boxSize === 0 ? "opacity-50" : ""}`}
+                        >
                           {t("runePage.controls.boxLimitersColor")}
                         </label>
                         <ColorPallet
@@ -669,9 +731,15 @@ const RuneCard: React.FC<RuneCardProps> = ({
 
                   {/* Rune Number (в одну строку) */}
                   <div>
-                    <h4 className={`text-sm font-semibold ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}>{t("runePage.controls.runeNumberTitle")}</h4>
+                    <h4
+                      className={`text-sm font-semibold ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}
+                    >
+                      {t("runePage.controls.runeNumberTitle")}
+                    </h4>
                     <div className="flex flex-wrap items-end gap-4">
-                      <div className={`h-[32px] flex items-center px-2 rounded-lg ${isDarkTheme ? "bg-gray-700/20" : "bg-gray-100/40"}`}>
+                      <div
+                        className={`h-[32px] flex items-center px-2 rounded-lg ${isDarkTheme ? "bg-gray-700/20" : "bg-gray-100/40"}`}
+                      >
                         <Checkbox
                           checked={autoSettings.numbering.show}
                           onChange={handleAutoShowNumberChange}
@@ -681,7 +749,9 @@ const RuneCard: React.FC<RuneCardProps> = ({
                         />
                       </div>
                       <div className="h-[52px] flex flex-col justify-end">
-                        <label className={`block text-xs font-semibold mb-1 ${isDarkTheme ? "text-gray-300" : "text-gray-700"} ${!autoSettings.numbering.show ? "opacity-50" : ""}`}>
+                        <label
+                          className={`block text-xs font-semibold mb-1 ${isDarkTheme ? "text-gray-300" : "text-gray-700"} ${!autoSettings.numbering.show ? "opacity-50" : ""}`}
+                        >
                           {t("runePage.controls.numberColor")}
                         </label>
                         <ColorPallet
@@ -693,20 +763,26 @@ const RuneCard: React.FC<RuneCardProps> = ({
                         />
                       </div>
                       <div className="h-[52px] flex flex-col justify-end">
-                        <label className={`block text-xs font-semibold mb-1 ${isDarkTheme ? "text-gray-300" : "text-gray-700"} ${!autoSettings.numbering.show ? "opacity-50" : ""}`}>
+                        <label
+                          className={`block text-xs font-semibold mb-1 ${isDarkTheme ? "text-gray-300" : "text-gray-700"} ${!autoSettings.numbering.show ? "opacity-50" : ""}`}
+                        >
                           {t("runePage.controls.divider")}
                         </label>
                         <Select
                           options={dividerOptions}
                           value={autoSettings.numbering.dividerType}
-                          onChange={(v) => handleAutoDividerTypeChange(String(v))}
+                          onChange={(v) =>
+                            handleAutoDividerTypeChange(String(v))
+                          }
                           size="middle"
                           disabled={!autoSettings.numbering.show}
                           style={{ minWidth: 70 }}
                         />
                       </div>
                       <div className="h-[52px] flex flex-col justify-end">
-                        <label className={`block text-xs font-semibold mb-1 ${isDarkTheme ? "text-gray-300" : "text-gray-700"} ${!autoSettings.numbering.show ? "opacity-50" : ""}`}>
+                        <label
+                          className={`block text-xs font-semibold mb-1 ${isDarkTheme ? "text-gray-300" : "text-gray-700"} ${!autoSettings.numbering.show ? "opacity-50" : ""}`}
+                        >
                           {t("runePage.controls.dividerColor")}
                         </label>
                         <ColorPallet
@@ -717,17 +793,20 @@ const RuneCard: React.FC<RuneCardProps> = ({
                           disabled={!autoSettings.numbering.show}
                         />
                       </div>
-                      
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Вертикальный разделитель */}
-              <div className={`w-px ${isDarkTheme ? "bg-gray-700" : "bg-gray-200"}`}></div>
+              <div
+                className={`w-px ${isDarkTheme ? "bg-gray-700" : "bg-gray-200"}`}
+              ></div>
 
               {/* Правый блок - Ручной режим */}
-              <div className={`flex-1 space-y-6 ${mode === "auto" ? "opacity-50 pointer-events-none" : ""}`}>
+              <div
+                className={`flex-1 space-y-6 ${mode === "auto" ? "opacity-50 pointer-events-none" : ""}`}
+              >
                 <h3
                   className={`text-lg font-semibold text-center ${
                     isDarkTheme ? "text-white" : "text-gray-900"
@@ -735,7 +814,6 @@ const RuneCard: React.FC<RuneCardProps> = ({
                 >
                   {t("runePage.controls.manualMode")}
                 </h3>
-
 
                 {/* Language customization */}
                 <div>
@@ -754,19 +832,21 @@ const RuneCard: React.FC<RuneCardProps> = ({
                             isDarkTheme ? "text-gray-400" : "text-gray-600"
                           }`}
                         >
-                          {t(`runePage.controls.languageLabels.${langCode}`)} ({langCode})
+                          {t(`runePage.controls.languageLabels.${langCode}`)} (
+                          {langCode})
                         </label>
                         <div className="flex items-end space-x-2">
                           <textarea
-                            value={manualSettings.locales[langCode as keyof typeof manualSettings.locales]}
+                            value={
+                              manualSettings.locales[
+                                langCode as keyof typeof manualSettings.locales
+                              ]
+                            }
                             onChange={(e) =>
-                              handleLanguageNameChange(
-                                langCode,
-                                e.target.value
-                              )
+                              handleLanguageNameChange(langCode, e.target.value)
                             }
                             placeholder={t(
-                              `runePage.controls.placeholders.${langCode}`
+                              `runePage.controls.placeholders.${langCode}`,
                             )}
                             rows={3}
                             className={`

@@ -22,7 +22,7 @@ interface MainSpaceProps {
 
 const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
   const { t } = useTranslation();
-  const logger = useLogger('MainSpace');
+  const logger = useLogger("MainSpace");
   const [activeTab, setActiveTab] = useState<TabType>("common");
   const [confirmAction, setConfirmAction] = useState<
     null | "readAll" | "applyAll" | "readCurrent" | "applyCurrent"
@@ -71,7 +71,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     (
       message: string,
       type?: "success" | "error" | "warning" | "info",
-      title?: string
+      title?: string,
     ) => {
       if (isBulkLoading && type === "success") return;
       sendMessage(message, { type, title });
@@ -79,7 +79,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     t,
     () => settings.runes,
     "advanced", // разрешенный режим
-    getAppMode
+    getAppMode,
   );
 
   // Хук для обычных предметов
@@ -94,7 +94,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     (
       message: string,
       type?: "success" | "error" | "warning" | "info",
-      title?: string
+      title?: string,
     ) => {
       if (isBulkLoading && type === "success") return;
       sendMessage(message, { type, title });
@@ -102,7 +102,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     t,
     getCommonSettings,
     "advanced", // разрешенный режим
-    getAppMode
+    getAppMode,
   );
 
   // Хук для драгоценных камней
@@ -117,7 +117,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     (
       message: string,
       type?: "success" | "error" | "warning" | "info",
-      title?: string
+      title?: string,
     ) => {
       if (isBulkLoading && type === "success") return;
       sendMessage(message, { type, title });
@@ -125,14 +125,14 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     t,
     getGemSettings,
     "advanced", // разрешенный режим
-    getAppMode
+    getAppMode,
   );
 
   // Подготавливаем данные для хука предметов
   const itemsForWorker = useMemo(() => {
     // Фильтруем дубли по id
     const uniqueItems = (basesData as any[]).filter(
-      (item, index, arr) => arr.findIndex((i) => i.id === item.id) === index
+      (item, index, arr) => arr.findIndex((i) => i.id === item.id) === index,
     );
     return uniqueItems.map((item) => ({
       key: item.key,
@@ -152,7 +152,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     (
       message: string,
       type?: "success" | "error" | "warning" | "info",
-      title?: string
+      title?: string,
     ) => {
       if (isBulkLoading && type === "success") return;
       sendMessage(message, { type, title });
@@ -162,7 +162,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     getSelectedLocales,
     itemsForWorker,
     "advanced", // разрешенный режим
-    getAppMode
+    getAppMode,
   );
 
   // Единый агрегатор записи
@@ -175,7 +175,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     getAllSettings,
     getSelectedLocales,
     "advanced",
-    getAppMode
+    getAppMode,
   );
 
   // Определяем, какой хук использовать в зависимости от активного таба
@@ -183,45 +183,49 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     activeTab === "runes"
       ? isRunesLoading
       : activeTab === "common"
-      ? isCommonItemsLoading
-      : activeTab === "gems"
-      ? isGemsLoading
-      : activeTab === "items"
-      ? isItemsLoading
-      : false;
+        ? isCommonItemsLoading
+        : activeTab === "gems"
+          ? isGemsLoading
+          : activeTab === "items"
+            ? isItemsLoading
+            : false;
   const error =
     activeTab === "runes"
       ? runesError
       : activeTab === "common"
-      ? commonItemsError
-      : activeTab === "gems"
-      ? gemsError
-      : activeTab === "items"
-      ? itemsError
-      : null;
+        ? commonItemsError
+        : activeTab === "gems"
+          ? gemsError
+          : activeTab === "items"
+            ? itemsError
+            : null;
   const readFromFiles =
     activeTab === "runes"
       ? readRunesFromFiles
       : activeTab === "common"
-      ? readCommonItemsFromFiles
-      : activeTab === "gems"
-      ? readGemsFromFiles
-      : activeTab === "items"
-      ? readItemsFromFiles
-      : () => {};
+        ? readCommonItemsFromFiles
+        : activeTab === "gems"
+          ? readGemsFromFiles
+          : activeTab === "items"
+            ? readItemsFromFiles
+            : () => {};
   const applyChanges =
     activeTab === "runes"
       ? applyRunesChanges
       : activeTab === "common"
-      ? applyCommonItemsChanges
-      : activeTab === "gems"
-      ? applyGemsChanges
-      : activeTab === "items"
-      ? applyItemsChanges
-      : () => {};
+        ? applyCommonItemsChanges
+        : activeTab === "gems"
+          ? applyGemsChanges
+          : activeTab === "items"
+            ? applyItemsChanges
+            : () => {};
 
   const executeReadAll = useCallback(async () => {
-    logger.info('Starting bulk read operation for all file types', undefined, 'executeReadAll');
+    logger.info(
+      "Starting bulk read operation for all file types",
+      undefined,
+      "executeReadAll",
+    );
     setIsBulkLoading(true);
     muteTypes(["success"]);
     const results = await Promise.allSettled([
@@ -235,20 +239,33 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     const hasError = results.some((r) => r.status === "rejected");
     if (hasError) {
       const details = results.map((r, idx) => {
-        if (r.status === 'rejected') {
-          return { index: idx, error: r.reason instanceof Error ? r.reason.message : String(r.reason) };
+        if (r.status === "rejected") {
+          return {
+            index: idx,
+            error:
+              r.reason instanceof Error ? r.reason.message : String(r.reason),
+          };
         }
-        return { index: idx, value: 'ok' };
+        return { index: idx, value: "ok" };
       });
-      logger.error('One or more read operations failed', new Error('Bulk read failure'), { details }, 'executeReadAll');
+      logger.error(
+        "One or more read operations failed",
+        new Error("Bulk read failure"),
+        { details },
+        "executeReadAll",
+      );
     }
-    
-    logger.info('Completed bulk read operation', { hasError, resultCount: results.length }, 'executeReadAll');
-    
+
+    logger.info(
+      "Completed bulk read operation",
+      { hasError, resultCount: results.length },
+      "executeReadAll",
+    );
+
     if (!hasError) {
       sendMessage(
         t("messages.success.allLoaded") || "All settings loaded successfully",
-        { type: "success", title: t("messages.success.filesLoaded") }
+        { type: "success", title: t("messages.success.filesLoaded") },
       );
     }
   }, [
@@ -263,9 +280,17 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
   ]);
 
   const executeApplyAll = useCallback(async () => {
-    logger.info('Starting aggregated apply operation', undefined, 'executeApplyAll');
+    logger.info(
+      "Starting aggregated apply operation",
+      undefined,
+      "executeApplyAll",
+    );
     await applyAllChanges();
-    logger.info('Completed aggregated apply operation', undefined, 'executeApplyAll');
+    logger.info(
+      "Completed aggregated apply operation",
+      undefined,
+      "executeApplyAll",
+    );
   }, [applyAllChanges, logger]);
 
   const handleConfirm = () => {
@@ -367,8 +392,8 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
             }`}
           >
             {confirmAction === "readAll" || confirmAction === "readCurrent"
-              ? (t("runePage.textWorker.readConfirmMessage") ||
-                "Вы уверены, что хотите прочитать настройки из файлов? Текущие несохраненные изменения в настройках могут быть перезаписаны.")
+              ? t("runePage.textWorker.readConfirmMessage") ||
+                "Вы уверены, что хотите прочитать настройки из файлов? Текущие несохраненные изменения в настройках могут быть перезаписаны."
               : t("runePage.confirmModal.message")}
           </p>
           <div className="flex justify-end gap-2">
@@ -387,7 +412,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
               size="sm"
             >
               {confirmAction === "readAll" || confirmAction === "readCurrent"
-                ? (t("runePage.textWorker.readFromFiles") || "Прочитать")
+                ? t("runePage.textWorker.readFromFiles") || "Прочитать"
                 : t("runePage.confirmModal.confirm")}
             </Button>
           </div>

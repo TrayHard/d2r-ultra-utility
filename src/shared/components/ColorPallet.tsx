@@ -10,7 +10,8 @@ interface ColorPalletProps {
   disabled?: boolean;
 }
 
-const getCssColorForCode = (code: string): string => colorCodeToHex[code] || "#FFFFFF";
+const getCssColorForCode = (code: string): string =>
+  colorCodeToHex[code] || "#FFFFFF";
 
 const ColorPallet: React.FC<ColorPalletProps> = ({
   isDarkTheme,
@@ -33,10 +34,11 @@ const ColorPallet: React.FC<ColorPalletProps> = ({
           <button
             key={name}
             type="button"
-            className={`h-10 rounded-md border text-[10px] font-mono flex items-center justify-center transition-colors ${isDarkTheme
+            className={`h-10 rounded-md border text-[10px] font-mono flex items-center justify-center transition-colors ${
+              isDarkTheme
                 ? "border-gray-600 hover:border-yellow-400"
                 : "border-gray-300 hover:border-yellow-500"
-              }`}
+            }`}
             style={{ backgroundColor: getCssColorForCode(code), color: "#000" }}
             onClick={() => {
               onChange(name);
@@ -62,16 +64,19 @@ const ColorPallet: React.FC<ColorPalletProps> = ({
         disabled={disabled}
         className={`min-w-[32px] line-flex items-center justify-center gap-2 px-1 py-1 roundedborder transition-all 
           ${disabled ? "opacity-50 cursor-not-allowed hover:border-gray-600" : ""} 
-          ${isDarkTheme
-            ? "border-gray-600 hover:border-yellow-400"
-            : "border-gray-300 hover:border-yellow-500"
+          ${
+            isDarkTheme
+              ? "border-gray-600 hover:border-yellow-400"
+              : "border-gray-300 hover:border-yellow-500"
           }`}
-        style={{ backgroundColor: currentCss, height: buttonSize, display: "inline-block" }}
+        style={{
+          backgroundColor: currentCss,
+          height: buttonSize,
+          display: "inline-block",
+        }}
       />
     </Tooltip>
   );
 };
 
 export default ColorPallet;
-
-

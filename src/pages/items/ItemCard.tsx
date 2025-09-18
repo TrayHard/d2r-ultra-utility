@@ -48,7 +48,8 @@ const RelatedItemsBlock: React.FC<{
     return null;
   }
 
-  const escapeRegExp = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const escapeRegExp = (str: string) =>
+    str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
   const highlightText = (text: string): React.ReactNode => {
     const query = (searchQuery ?? "").trim();
@@ -60,13 +61,17 @@ const RelatedItemsBlock: React.FC<{
         index % 2 === 1 ? (
           <span
             key={index}
-            className={isDarkTheme ? "bg-yellow-300 text-black" : "bg-yellow-600 text-black"}
+            className={
+              isDarkTheme
+                ? "bg-yellow-300 text-black"
+                : "bg-yellow-600 text-black"
+            }
           >
             {part}
           </span>
         ) : (
           <React.Fragment key={index}>{part}</React.Fragment>
-        )
+        ),
       );
     } catch {
       return text;
@@ -125,7 +130,7 @@ const RelatedItemsBlock: React.FC<{
                   >
                     {highlightText(
                       (t(`itemsPage.uniques.${uniqueItem.key}`) as string) ||
-                        uniqueItem.key
+                        uniqueItem.key,
                     )}
                   </span>
                 </div>
@@ -173,7 +178,7 @@ const RelatedItemsBlock: React.FC<{
                   >
                     {highlightText(
                       (t(`itemsPage.setItems.${setItem.key}`) as string) ||
-                        setItem.key
+                        setItem.key,
                     )}
                   </span>
                 </div>
@@ -186,7 +191,11 @@ const RelatedItemsBlock: React.FC<{
   );
 };
 
-const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQuery }) => {
+const ItemCard: React.FC<ItemCardProps> = ({
+  isDarkTheme,
+  selectedItem,
+  searchQuery,
+}) => {
   const { t } = useTranslation();
   const { getSelectedLocales, getItemSettings, updateItemSettings } =
     useSettings();
@@ -242,7 +251,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
         updateItemSettings(selectedItem.key, newSettings);
       }
     },
-    [selectedItem, updateItemSettings]
+    [selectedItem, updateItemSettings],
   );
 
   const handleEnabledChange = React.useCallback(
@@ -250,7 +259,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
       setEnabled(checked);
       handleSettingChange({ enabled: checked });
     },
-    [handleSettingChange]
+    [handleSettingChange],
   );
 
   const handleShowDifficultyClassMarkerChange = React.useCallback(
@@ -258,7 +267,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
       setShowDifficultyClassMarker(checked);
       handleSettingChange({ showDifficultyClassMarker: checked });
     },
-    [handleSettingChange]
+    [handleSettingChange],
   );
 
   const handleLanguageNameChange = React.useCallback(
@@ -270,7 +279,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
       setLocales(newLocales);
       handleSettingChange({ locales: newLocales });
     },
-    [locales, handleSettingChange]
+    [locales, handleSettingChange],
   );
 
   // Функция для проверки, нужно ли показывать атрибут
@@ -313,7 +322,8 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
     );
   }
 
-  const escapeRegExp = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const escapeRegExp = (str: string) =>
+    str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const highlightTitle = (text: string): React.ReactNode => {
     const query = (searchQuery ?? "").trim();
     if (!query) return text;
@@ -322,10 +332,19 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
       const parts = text.split(regex);
       return parts.map((part, index) =>
         index % 2 === 1 ? (
-          <span key={index} className={isDarkTheme ? "bg-yellow-300 text-black" : "bg-yellow-600 text-black"}>{part}</span>
+          <span
+            key={index}
+            className={
+              isDarkTheme
+                ? "bg-yellow-300 text-black"
+                : "bg-yellow-600 text-black"
+            }
+          >
+            {part}
+          </span>
         ) : (
           <React.Fragment key={index}>{part}</React.Fragment>
-        )
+        ),
       );
     } catch {
       return text;
@@ -347,9 +366,12 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
         continue;
       }
       nodes.push(
-        <span key={`p-${i}`} style={currentColor ? { color: currentColor } : undefined}>
+        <span
+          key={`p-${i}`}
+          style={currentColor ? { color: currentColor } : undefined}
+        >
           {part}
-        </span>
+        </span>,
       );
     }
     return nodes;
@@ -381,38 +403,73 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
                       <div className="space-y-1 w-[200px]">
                         {shouldShowAttribute("reqLvl", selectedItem.reqLvl) && (
                           <div className="flex items-center justify-between gap-3 w-full">
-                            <span className="opacity-80">{t("itemsPage.filters.reqLevel")}</span>
-                            <span className="font-semibold">{selectedItem.reqLvl}</span>
+                            <span className="opacity-80">
+                              {t("itemsPage.filters.reqLevel")}
+                            </span>
+                            <span className="font-semibold">
+                              {selectedItem.reqLvl}
+                            </span>
                           </div>
                         )}
-                        {shouldShowAttribute("reqStrength", selectedItem.reqStrength) && (
+                        {shouldShowAttribute(
+                          "reqStrength",
+                          selectedItem.reqStrength,
+                        ) && (
                           <div className="flex items-center justify-between gap-3 w-full">
-                            <span className="opacity-80">{t("itemsPage.filters.reqStrength")}</span>
-                            <span className="font-semibold">{selectedItem.reqStrength}</span>
+                            <span className="opacity-80">
+                              {t("itemsPage.filters.reqStrength")}
+                            </span>
+                            <span className="font-semibold">
+                              {selectedItem.reqStrength}
+                            </span>
                           </div>
                         )}
-                        {shouldShowAttribute("reqDexterity", selectedItem.reqDexterity) && (
+                        {shouldShowAttribute(
+                          "reqDexterity",
+                          selectedItem.reqDexterity,
+                        ) && (
                           <div className="flex items-center justify-between gap-3 w-full">
-                            <span className="opacity-80">{t("itemsPage.filters.reqDexterity")}</span>
-                            <span className="font-semibold">{selectedItem.reqDexterity}</span>
+                            <span className="opacity-80">
+                              {t("itemsPage.filters.reqDexterity")}
+                            </span>
+                            <span className="font-semibold">
+                              {selectedItem.reqDexterity}
+                            </span>
                           </div>
                         )}
                         {shouldShowAttribute("weight", selectedItem.weight) && (
                           <div className="flex items-center justify-between gap-3 w-full">
-                            <span className="opacity-80">{t("itemsPage.filters.weight")}</span>
-                            <span className="font-semibold">{t(`itemsPage.filters.${selectedItem.weight}`)}</span>
+                            <span className="opacity-80">
+                              {t("itemsPage.filters.weight")}
+                            </span>
+                            <span className="font-semibold">
+                              {t(`itemsPage.filters.${selectedItem.weight}`)}
+                            </span>
                           </div>
                         )}
-                        {shouldShowAttribute("maxSockets", selectedItem.maxSockets) && (
+                        {shouldShowAttribute(
+                          "maxSockets",
+                          selectedItem.maxSockets,
+                        ) && (
                           <div className="flex items-center justify-between gap-3 w-full">
-                            <span className="opacity-80">{t("itemsPage.maxSockets") || "Max Sockets"}</span>
-                            <span className="font-semibold">{selectedItem.maxSockets}</span>
+                            <span className="opacity-80">
+                              {t("itemsPage.maxSockets") || "Max Sockets"}
+                            </span>
+                            <span className="font-semibold">
+                              {selectedItem.maxSockets}
+                            </span>
                           </div>
                         )}
                         {selectedItem.limitedToClass && (
                           <div className="flex items-center justify-between gap-3 w-full">
-                            <span className="opacity-80">{t("itemsPage.filters.limitedToClass")}</span>
-                            <span className="font-semibold">{t(`itemsPage.classes.${selectedItem.limitedToClass}`) || selectedItem.limitedToClass}</span>
+                            <span className="opacity-80">
+                              {t("itemsPage.filters.limitedToClass")}
+                            </span>
+                            <span className="font-semibold">
+                              {t(
+                                `itemsPage.classes.${selectedItem.limitedToClass}`,
+                              ) || selectedItem.limitedToClass}
+                            </span>
                           </div>
                         )}
                       </div>
@@ -466,7 +523,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
                 >
                   {highlightTitle(
                     (t(`itemsPage.bases.${selectedItem.key}`) as string) ||
-                      selectedItem.key
+                      selectedItem.key,
                   )}
                 </h3>
                 <p
@@ -489,22 +546,22 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
                             ? "#374151"
                             : "#f3f4f6"
                           : isDarkTheme
-                          ? "#1f2937"
-                          : "#e5e7eb",
+                            ? "#1f2937"
+                            : "#e5e7eb",
                         color: enabled
                           ? isDarkTheme
                             ? "#e5e7eb"
                             : "#374151"
                           : isDarkTheme
-                          ? "#6b7280"
-                          : "#9ca3af",
+                            ? "#6b7280"
+                            : "#9ca3af",
                         borderColor: enabled
                           ? isDarkTheme
                             ? "#4b5563"
                             : "#d1d5db"
                           : isDarkTheme
-                          ? "#374151"
-                          : "#d1d5db",
+                            ? "#374151"
+                            : "#d1d5db",
                         opacity: enabled ? 1 : 0.5,
                       }}
                     />
@@ -524,7 +581,10 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
                 `}
               >
                 <div className="flex justify-between items-center gap-4">
-                  <Tooltip title={t("itemsPage.settings.tooltips.enableItem")} placement="top">
+                  <Tooltip
+                    title={t("itemsPage.settings.tooltips.enableItem")}
+                    placement="top"
+                  >
                     <div>
                       <Switcher
                         checked={enabled}
@@ -535,12 +595,23 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
                       />
                     </div>
                   </Tooltip>
-                  <Tooltip title={<div style={{ textWrap: "pretty" }}>{t("itemsPage.settings.tooltips.showDifficultyClassMarkerSwitch")}</div>} placement="top">
+                  <Tooltip
+                    title={
+                      <div style={{ textWrap: "pretty" }}>
+                        {t(
+                          "itemsPage.settings.tooltips.showDifficultyClassMarkerSwitch",
+                        )}
+                      </div>
+                    }
+                    placement="top"
+                  >
                     <div>
                       <Switcher
                         checked={showDifficultyClassMarker}
                         onChange={handleShowDifficultyClassMarkerChange}
-                        label={t("itemsPage.settings.showDifficultyClassMarker")}
+                        label={t(
+                          "itemsPage.settings.showDifficultyClassMarker",
+                        )}
                         isDarkTheme={isDarkTheme}
                         size="md"
                         disabled={!enabled}
@@ -605,9 +676,8 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
                         // 1) Если есть фокус — показываем фокусную локаль
                         if (focusedLocale) {
                           const text =
-                            locales[
-                              focusedLocale as keyof typeof locales
-                            ] || "";
+                            locales[focusedLocale as keyof typeof locales] ||
+                            "";
                           return renderColoredText(text);
                         }
                         // 2) По умолчанию всегда берём enUS, если он есть
@@ -617,9 +687,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
                         // 3) Иначе берём первую из выбранных локалей, если она есть
                         const firstSelected = languageCodes[0];
                         const fallbackText = firstSelected
-                          ? locales[
-                              firstSelected as keyof typeof locales
-                            ] || ""
+                          ? locales[firstSelected as keyof typeof locales] || ""
                           : "";
                         return renderColoredText(fallbackText);
                       })()}
@@ -648,7 +716,9 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
                               style={{ textDecoration: "underline dotted" }}
                             >
                               ruRU:
-                              <span className="pointer-events-none absolute -top-1 opacity-50 text-[10px]">?</span>
+                              <span className="pointer-events-none absolute -top-1 opacity-50 text-[10px]">
+                                ?
+                              </span>
                             </span>
                           </Tooltip>
                         ) : (

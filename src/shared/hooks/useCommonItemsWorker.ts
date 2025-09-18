@@ -42,7 +42,7 @@ type UpdateCommonItemSettingsFunction = (
     | "grandCharms"
     | "gold"
     | "keys",
-  settings: Partial<CommonItemSettings>
+  settings: Partial<CommonItemSettings>,
 ) => void;
 
 type UpdatePotionLevelSettingsFunction = (
@@ -57,7 +57,7 @@ type UpdatePotionLevelSettingsFunction = (
     | "poisonPotions"
     | "firePotions",
   level: number,
-  settings: Partial<PotionLevelSettings>
+  settings: Partial<PotionLevelSettings>,
 ) => void;
 
 export const useCommonItemsWorker = (
@@ -66,44 +66,65 @@ export const useCommonItemsWorker = (
   sendMessage?: (
     message: string,
     type?: "success" | "error" | "warning" | "info",
-    title?: string
+    title?: string,
   ) => void,
   t?: (key: string, options?: any) => string,
   getCommonSettings?: () => CommonSettings,
   allowedMode?: "basic" | "advanced" | null,
-  getCurrentMode?: () => "basic" | "advanced"
+  getCurrentMode?: () => "basic" | "advanced",
 ) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const logger = useLogger('CommonItemsWorker');
+  const logger = useLogger("CommonItemsWorker");
 
   const readLocales = useCallback(async () => {
-    logger.info('Starting to read locales for common items', undefined, 'readLocales');
+    logger.info(
+      "Starting to read locales for common items",
+      undefined,
+      "readLocales",
+    );
     setIsLoading(true);
     setError(null);
 
     try {
       // Получаем домашнюю директорию из настроек
       const settings = loadSavedSettings();
-      logger.debug('Loaded settings from storage', { settings }, 'readLocales');
+      logger.debug("Loaded settings from storage", { settings }, "readLocales");
 
       if (!settings?.homeDirectory) {
         const errorMsg =
           t?.("messages.error.pathNotFound") ??
           "Путь к игре не найден в настройках";
-        logger.error('Home directory not found in settings', new Error(errorMsg), { settings }, 'readLocales');
+        logger.error(
+          "Home directory not found in settings",
+          new Error(errorMsg),
+          { settings },
+          "readLocales",
+        );
         throw new Error(errorMsg);
       }
 
       // Строим полный путь к файлу
       const homeDir = settings.homeDirectory.replace(/[\/\\]+$/, "");
-      logger.debug('Resolved home directory and game paths', { homeDir, localesDir: GAME_PATHS.LOCALES, itemsFile: GAME_PATHS.ITEMS_FILE }, 'readLocales');
+      logger.debug(
+        "Resolved home directory and game paths",
+        {
+          homeDir,
+          localesDir: GAME_PATHS.LOCALES,
+          itemsFile: GAME_PATHS.ITEMS_FILE,
+        },
+        "readLocales",
+      );
 
       const namesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.ITEMS_FILE}`;
       const affixesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.NAMEAFFIXES_FILE}`;
       const modifiersPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\item-modifiers.json`;
 
-      logger.info('Reading common items from paths', { namesPath, affixesPath, modifiersPath }, 'readLocales');
+      logger.info(
+        "Reading common items from paths",
+        { namesPath, affixesPath, modifiersPath },
+        "readLocales",
+      );
 
       // Читаем файлы через Tauri API
       let namesContent: string = "[]";
@@ -112,19 +133,44 @@ export const useCommonItemsWorker = (
       try {
         namesContent = await readTextFile(namesPath);
       } catch (fileError) {
-        logger.error('Failed to read item-names file', fileError as Error, { path: namesPath }, 'readLocales');
+        logger.error(
+          "Failed to read item-names file",
+          fileError as Error,
+          { path: namesPath },
+          "readLocales",
+        );
         const errorMsg = `Не удалось прочитать файл: ${namesPath}`;
         throw new Error(errorMsg);
       }
       try {
         affixesContent = await readTextFile(affixesPath);
       } catch (fileError) {
-        logger.warn('item-nameaffixes.json not read, continuing', { path: affixesPath, error: fileError instanceof Error ? fileError.message : String(fileError) }, 'readLocales');
+        logger.warn(
+          "item-nameaffixes.json not read, continuing",
+          {
+            path: affixesPath,
+            error:
+              fileError instanceof Error
+                ? fileError.message
+                : String(fileError),
+          },
+          "readLocales",
+        );
       }
       try {
         modifiersContent = await readTextFile(modifiersPath);
       } catch (fileError) {
-        logger.warn('item-modifiers.json not read, continuing', { path: modifiersPath, error: fileError instanceof Error ? fileError.message : String(fileError) }, 'readLocales');
+        logger.warn(
+          "item-modifiers.json not read, continuing",
+          {
+            path: modifiersPath,
+            error:
+              fileError instanceof Error
+                ? fileError.message
+                : String(fileError),
+          },
+          "readLocales",
+        );
       }
 
       let namesData: LocaleItem[] = [];
@@ -134,21 +180,36 @@ export const useCommonItemsWorker = (
       try {
         namesData = JSON.parse(namesContent);
       } catch (parseError) {
-        logger.error('Failed to parse item-names JSON', parseError as Error, { path: namesPath }, 'readLocales');
+        logger.error(
+          "Failed to parse item-names JSON",
+          parseError as Error,
+          { path: namesPath },
+          "readLocales",
+        );
         throw new Error(`Некорректный JSON в файле: ${namesPath}`);
       }
 
       try {
         nameAffixesData = affixesContent ? JSON.parse(affixesContent) : [];
       } catch (parseError) {
-        logger.error('Failed to parse item-nameaffixes JSON', parseError as Error, { path: affixesPath }, 'readLocales');
+        logger.error(
+          "Failed to parse item-nameaffixes JSON",
+          parseError as Error,
+          { path: affixesPath },
+          "readLocales",
+        );
         throw new Error(`Некорректный JSON в файле: ${affixesPath}`);
       }
 
       try {
         modifiersData = modifiersContent ? JSON.parse(modifiersContent) : [];
       } catch (parseError) {
-        logger.error('Failed to parse item-modifiers JSON', parseError as Error, { path: modifiersPath }, 'readLocales');
+        logger.error(
+          "Failed to parse item-modifiers JSON",
+          parseError as Error,
+          { path: modifiersPath },
+          "readLocales",
+        );
         throw new Error(`Некорректный JSON в файле: ${modifiersPath}`);
       }
 
@@ -158,7 +219,16 @@ export const useCommonItemsWorker = (
         ...modifiersData,
       ];
 
-      logger.debug('Loaded common items locale data (merged)', { names: namesData.length, nameAffixes: nameAffixesData.length, modifiers: modifiersData.length, total: localeData.length }, 'readLocales');
+      logger.debug(
+        "Loaded common items locale data (merged)",
+        {
+          names: namesData.length,
+          nameAffixes: nameAffixesData.length,
+          modifiers: modifiersData.length,
+          total: localeData.length,
+        },
+        "readLocales",
+      );
 
       let processedItems = 0;
 
@@ -166,7 +236,11 @@ export const useCommonItemsWorker = (
       localeData.forEach((item) => {
         const commonItem = idToCommonItemMapper[item.id];
         if (commonItem) {
-          logger.debug('Processing common item', { commonItem, id: item.id }, 'readLocales');
+          logger.debug(
+            "Processing common item",
+            { commonItem, id: item.id },
+            "readLocales",
+          );
 
           // Извлекаем локали для предмета
           const itemLocales = {
@@ -195,7 +269,7 @@ export const useCommonItemsWorker = (
               (key) =>
                 settingsKeyToCommonItemMapper[
                   key as keyof typeof settingsKeyToCommonItemMapper
-                ] === commonItem
+                ] === commonItem,
             ) as
               | "arrows"
               | "bolts"
@@ -235,7 +309,9 @@ export const useCommonItemsWorker = (
                 locales: itemLocales,
               });
             }
-          } else if (commonItemGroups.rejuvenationPotions.includes(commonItem)) {
+          } else if (
+            commonItemGroups.rejuvenationPotions.includes(commonItem)
+          ) {
             // Зелья восстановления
             const level =
               commonItemGroups.rejuvenationPotions.indexOf(commonItem);
@@ -299,7 +375,11 @@ export const useCommonItemsWorker = (
         }
       });
 
-      logger.debug('Processed common items count', { processedItems }, 'readLocales');
+      logger.debug(
+        "Processed common items count",
+        { processedItems },
+        "readLocales",
+      );
 
       // Отправляем сообщение об успехе
       const successTitle =
@@ -317,7 +397,12 @@ export const useCommonItemsWorker = (
         "Неизвестная ошибка при чтении файлов";
       const errorMessage = err instanceof Error ? err.message : defaultErrorMsg;
       setError(errorMessage);
-      logger.error('Failed to read common items locales', err as Error, { error: err instanceof Error ? err.message : String(err) }, 'readLocales');
+      logger.error(
+        "Failed to read common items locales",
+        err as Error,
+        { error: err instanceof Error ? err.message : String(err) },
+        "readLocales",
+      );
 
       // Отправляем сообщение об ошибке
       const errorTitle =
@@ -327,7 +412,11 @@ export const useCommonItemsWorker = (
       throw err;
     } finally {
       setIsLoading(false);
-      logger.info('Finished reading locales for common items', undefined, 'readLocales');
+      logger.info(
+        "Finished reading locales for common items",
+        undefined,
+        "readLocales",
+      );
     }
   }, [updateCommonItemSettings, updatePotionLevelSettings, sendMessage, t]);
 
@@ -338,10 +427,18 @@ export const useCommonItemsWorker = (
       const modifiersPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\item-modifiers.json`;
       const keysHighlightDir = `${homeDir}\\mods\\D2RBlizzless\\D2RBlizzless.mpq\\data\\hd\\items\\misc\\key`;
 
-      logger.info("Applying common items changes", { namesPath, affixesPath, modifiersPath }, 'applyChanges');
+      logger.info(
+        "Applying common items changes",
+        { namesPath, affixesPath, modifiersPath },
+        "applyChanges",
+      );
 
       // Читаем текущий файл
-      logger.debug('Reading common items files for applying changes', { namesPath, affixesPath, modifiersPath }, 'applyChanges');
+      logger.debug(
+        "Reading common items files for applying changes",
+        { namesPath, affixesPath, modifiersPath },
+        "applyChanges",
+      );
       const namesContent = await readTextFile(namesPath);
       let nameAffixesContent = "[]";
       let modifiersContent = "[]";
@@ -359,12 +456,16 @@ export const useCommonItemsWorker = (
       const namesData: LocaleItem[] = JSON.parse(namesContent);
       const nameAffixesData: LocaleItem[] = JSON.parse(nameAffixesContent);
       const modifiersData: LocaleItem[] = JSON.parse(modifiersContent);
-      
-      logger.debug('Parsed common items data for changes', { 
-        namesCount: namesData.length, 
-        affixesCount: nameAffixesData.length,
-        modifiersCount: modifiersData.length 
-      }, 'applyChanges');
+
+      logger.debug(
+        "Parsed common items data for changes",
+        {
+          namesCount: namesData.length,
+          affixesCount: nameAffixesData.length,
+          modifiersCount: modifiersData.length,
+        },
+        "applyChanges",
+      );
 
       // Создаем обновленные данные
       const updatedNames = [...namesData];
@@ -373,8 +474,8 @@ export const useCommonItemsWorker = (
 
       // Обновляем только выбранные локали из настроек приложения
       const selectedLocales =
-        ((JSON.parse(localStorage.getItem(STORAGE_KEYS.APP_CONFIG) || "{}")?.
-          selectedLocales) as SupportedLocaleKey[]) ||
+        (JSON.parse(localStorage.getItem(STORAGE_KEYS.APP_CONFIG) || "{}")
+          ?.selectedLocales as SupportedLocaleKey[]) ||
         (["enUS"] as SupportedLocaleKey[]);
 
       // Обновляем простые предметы
@@ -399,18 +500,19 @@ export const useCommonItemsWorker = (
             item.forEach((potionItem, level) => {
               const potionId = commonItemToIdMapper[potionItem];
               const levelSettings = potionGroup.levels[level];
-              const targetFile = commonItemFileMapper[potionItem as ECommonItem];
+              const targetFile =
+                commonItemFileMapper[potionItem as ECommonItem];
               const targetArray =
                 targetFile === "item-nameaffixes"
                   ? updatedAffixes
                   : targetFile === "item-modifiers"
-                  ? updatedModifiers
-                  : updatedNames;
+                    ? updatedModifiers
+                    : updatedNames;
 
               if (potionId && levelSettings) {
                 // Находим или создаем элемент в данных
                 const itemIndex = targetArray.findIndex(
-                  (dataItem) => dataItem.id === potionId
+                  (dataItem) => dataItem.id === potionId,
                 );
 
                 if (itemIndex !== -1) {
@@ -419,7 +521,7 @@ export const useCommonItemsWorker = (
                     if (levelSettings.enabled) {
                       const finalName = generateFinalPotionName(
                         levelSettings,
-                        locale
+                        locale,
                       );
                       targetArray[itemIndex][locale] = finalName;
                     } else {
@@ -452,7 +554,7 @@ export const useCommonItemsWorker = (
                     if (levelSettings.enabled) {
                       const finalName = generateFinalPotionName(
                         levelSettings,
-                        locale
+                        locale,
                       );
                       newItem[locale] = finalName;
                     } else {
@@ -475,13 +577,13 @@ export const useCommonItemsWorker = (
               targetFile === "item-nameaffixes"
                 ? updatedAffixes
                 : targetFile === "item-modifiers"
-                ? updatedModifiers
-                : updatedNames;
+                  ? updatedModifiers
+                  : updatedNames;
 
             if (itemId && itemSettings) {
               // Находим или создаем элемент в данных
               const itemIndex = targetArray.findIndex(
-                (dataItem) => dataItem.id === itemId
+                (dataItem) => dataItem.id === itemId,
               );
 
               if (itemIndex !== -1) {
@@ -490,7 +592,7 @@ export const useCommonItemsWorker = (
                   if (itemSettings.enabled) {
                     const finalName = generateFinalItemName(
                       itemSettings,
-                      locale
+                      locale,
                     );
                     targetArray[itemIndex][locale] = finalName;
                   } else {
@@ -523,7 +625,7 @@ export const useCommonItemsWorker = (
                   if (itemSettings.enabled) {
                     const finalName = generateFinalItemName(
                       itemSettings,
-                      locale
+                      locale,
                     );
                     newItem[locale] = finalName;
                   } else {
@@ -535,7 +637,7 @@ export const useCommonItemsWorker = (
               }
             }
           }
-        }
+        },
       );
 
       // Хелпер: запись с повторами (фикс Windows Error 1224: user-mapped section)
@@ -547,26 +649,43 @@ export const useCommonItemsWorker = (
             return;
           } catch (err) {
             const isLast = attempt === maxAttempts - 1;
-            logger.warn('Write attempt failed, will retry', {
-              path,
-              attempt: attempt + 1,
-              maxAttempts,
-              error: err instanceof Error ? err.message : String(err),
-            }, 'applyChanges');
+            logger.warn(
+              "Write attempt failed, will retry",
+              {
+                path,
+                attempt: attempt + 1,
+                maxAttempts,
+                error: err instanceof Error ? err.message : String(err),
+              },
+              "applyChanges",
+            );
             if (isLast) {
               try {
                 const results = await ensureWritable([path]);
                 const r = results[0];
-                logger.warn('Attempted to ensure writable', { path, result: r }, 'applyChanges');
+                logger.warn(
+                  "Attempted to ensure writable",
+                  { path, result: r },
+                  "applyChanges",
+                );
               } catch (e) {
-                logger.warn('ensureWritable invocation failed', { path, error: e instanceof Error ? e.message : String(e) }, 'applyChanges');
+                logger.warn(
+                  "ensureWritable invocation failed",
+                  { path, error: e instanceof Error ? e.message : String(e) },
+                  "applyChanges",
+                );
               }
               try {
                 await writeTextFile(path, content);
                 return;
               } catch (finalErr) {
-                const suggestion = t?.('messages.error.writePermissionSuggestion') || 'Could not write the file. Try running the app as Administrator or move the game to a folder where you have write permissions.';
-                const msg = (finalErr instanceof Error ? finalErr.message : String(finalErr)) + `\n${suggestion}`;
+                const suggestion =
+                  t?.("messages.error.writePermissionSuggestion") ||
+                  "Could not write the file. Try running the app as Administrator or move the game to a folder where you have write permissions.";
+                const msg =
+                  (finalErr instanceof Error
+                    ? finalErr.message
+                    : String(finalErr)) + `\n${suggestion}`;
                 throw new Error(msg);
               }
             }
@@ -577,12 +696,29 @@ export const useCommonItemsWorker = (
       };
 
       // Записываем обновленные данные обратно в соответствующие файлы
-      logger.info('Writing updated common items files', { namesPath, affixesPath, modifiersPath }, 'applyChanges');
-      await writeFileWithRetry(namesPath, JSON.stringify(updatedNames, null, 2));
-      await writeFileWithRetry(affixesPath, JSON.stringify(updatedAffixes, null, 2));
-      await writeFileWithRetry(modifiersPath, JSON.stringify(updatedModifiers, null, 2));
+      logger.info(
+        "Writing updated common items files",
+        { namesPath, affixesPath, modifiersPath },
+        "applyChanges",
+      );
+      await writeFileWithRetry(
+        namesPath,
+        JSON.stringify(updatedNames, null, 2),
+      );
+      await writeFileWithRetry(
+        affixesPath,
+        JSON.stringify(updatedAffixes, null, 2),
+      );
+      await writeFileWithRetry(
+        modifiersPath,
+        JSON.stringify(updatedModifiers, null, 2),
+      );
 
-      logger.info("Common items localization changes applied successfully", undefined, 'applyChanges');
+      logger.info(
+        "Common items localization changes applied successfully",
+        undefined,
+        "applyChanges",
+      );
 
       // Дополнительно: запись файлов подсветки для убер-ключей
       try {
@@ -592,7 +728,7 @@ export const useCommonItemsWorker = (
           const keyMapping = [
             { keyName: "mephisto_key3", fileName: "mephisto_key3.json" }, // Key of Terror (level 0)
             { keyName: "mephisto_key2", fileName: "mephisto_key2.json" }, // Key of Hate (level 1)
-            { keyName: "mephisto_key", fileName: "mephisto_key.json" },   // Key of Destruction (level 2)
+            { keyName: "mephisto_key", fileName: "mephisto_key.json" }, // Key of Destruction (level 2)
           ];
 
           for (let i = 0; i < 3; i++) {
@@ -603,28 +739,43 @@ export const useCommonItemsWorker = (
             try {
               const keyData = generateKeyHighlightData(keyName, isHighlighted);
               const targetPath = `${keysHighlightDir}\\${fileName}`;
-              await writeFileWithRetry(targetPath, JSON.stringify(keyData, null, 2));
-              logger.info('Key highlight file written', { 
-                targetPath, 
-                keyName, 
-                isHighlighted, 
-                fileName 
-              }, 'applyChanges');
+              await writeFileWithRetry(
+                targetPath,
+                JSON.stringify(keyData, null, 2),
+              );
+              logger.info(
+                "Key highlight file written",
+                {
+                  targetPath,
+                  keyName,
+                  isHighlighted,
+                  fileName,
+                },
+                "applyChanges",
+              );
             } catch (e) {
-              logger.warn('Failed to write key highlight file', { 
-                fileName, 
-                keyName, 
-                isHighlighted, 
-                error: e instanceof Error ? e.message : String(e) 
-              }, 'applyChanges');
+              logger.warn(
+                "Failed to write key highlight file",
+                {
+                  fileName,
+                  keyName,
+                  isHighlighted,
+                  error: e instanceof Error ? e.message : String(e),
+                },
+                "applyChanges",
+              );
             }
           }
         }
       } catch (e) {
-        logger.warn('Unexpected error while applying key highlight templates', { error: e instanceof Error ? e.message : String(e) }, 'applyChanges');
+        logger.warn(
+          "Unexpected error while applying key highlight templates",
+          { error: e instanceof Error ? e.message : String(e) },
+          "applyChanges",
+        );
       }
     },
-    []
+    [],
   );
 
   const readFromFiles = useCallback(async () => {
@@ -636,7 +787,10 @@ export const useCommonItemsWorker = (
     if (allowedMode && getCurrentMode) {
       const currentMode = getCurrentMode();
       if (currentMode !== allowedMode) {
-        console.log('Skipping common items changes application - wrong mode', { currentMode, allowedMode });
+        console.log("Skipping common items changes application - wrong mode", {
+          currentMode,
+          allowedMode,
+        });
         return;
       }
     }
@@ -682,7 +836,12 @@ export const useCommonItemsWorker = (
         "Неизвестная ошибка при применении изменений";
       const errorMessage = err instanceof Error ? err.message : defaultErrorMsg;
       setError(errorMessage);
-      logger.error('Failed to apply common items changes', err as Error, { error: err instanceof Error ? err.message : String(err) }, 'applyCommonItemsChanges');
+      logger.error(
+        "Failed to apply common items changes",
+        err as Error,
+        { error: err instanceof Error ? err.message : String(err) },
+        "applyCommonItemsChanges",
+      );
 
       // Отправляем сообщение об ошибке
       const errorTitle =
@@ -692,9 +851,20 @@ export const useCommonItemsWorker = (
       throw err;
     } finally {
       setIsLoading(false);
-      logger.info('Finished applying common items changes', undefined, 'applyCommonItemsChanges');
+      logger.info(
+        "Finished applying common items changes",
+        undefined,
+        "applyCommonItemsChanges",
+      );
     }
-  }, [getCommonSettings, applyChanges, sendMessage, t, allowedMode, getCurrentMode]);
+  }, [
+    getCommonSettings,
+    applyChanges,
+    sendMessage,
+    t,
+    allowedMode,
+    getCurrentMode,
+  ]);
 
   return {
     isLoading,

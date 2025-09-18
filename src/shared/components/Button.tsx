@@ -109,9 +109,7 @@ const Button: React.FC<ButtonProps> = ({
     >
       {iconPosition === "left" && renderIcon()}
       {hasText ? (
-        <span className={`truncate min-w-0 flex-1`}>
-          {children}
-        </span>
+        <span className={`truncate min-w-0 flex-1`}>{children}</span>
       ) : null}
       {iconPosition === "right" && renderIcon()}
     </button>

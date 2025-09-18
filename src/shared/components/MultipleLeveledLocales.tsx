@@ -7,7 +7,12 @@ import Switch from "./Switch";
 import ColorHint from "./ColorHint";
 import SymbolsHint from "./SymbolsHint";
 import Icon from "@mdi/react";
-import { mdiEyeOutline, mdiEyeOffOutline, mdiLightbulbOnOutline, mdiLightbulbOffOutline } from "@mdi/js";
+import {
+  mdiEyeOutline,
+  mdiEyeOffOutline,
+  mdiLightbulbOnOutline,
+  mdiLightbulbOffOutline,
+} from "@mdi/js";
 import type {
   PotionGroupSettings,
   PotionLevelSettings,
@@ -70,7 +75,7 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
   // Компонент для рендеринга инпутов локалей
   const renderLocaleInputs = (
     levelSettings: PotionLevelSettings,
-    level: number
+    level: number,
   ) => {
     return (
       <div className="space-y-3">
@@ -94,9 +99,14 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
                     }
                     placement="top"
                   >
-                    <span className="relative inline-block pr-3" style={{ textDecoration: "underline dotted" }}>
+                    <span
+                      className="relative inline-block pr-3"
+                      style={{ textDecoration: "underline dotted" }}
+                    >
                       {locale.label}:
-                      <span className="pointer-events-none absolute -top-1 -right-1 opacity-50 text-[10px]">?</span>
+                      <span className="pointer-events-none absolute -top-1 -right-1 opacity-50 text-[10px]">
+                        ?
+                      </span>
                     </span>
                   </Tooltip>
                 ) : (
@@ -108,7 +118,7 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
                   type="text"
                   value={
                     levelSettings.locales[
-                    locale.value as keyof typeof levelSettings.locales
+                      locale.value as keyof typeof levelSettings.locales
                     ] ?? ""
                   }
                   onChange={(e) =>
@@ -118,19 +128,21 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
                   onBlur={() => setFocusedLocale(null)}
                   disabled={!hideToggle && !levelSettings.enabled}
                   placeholder={t(
-                    `runePage.controls.placeholders.${locale.value}`
+                    `runePage.controls.placeholders.${locale.value}`,
                   )}
                   className={`
                     flex-1 px-3 py-2 rounded-md border transition-colors
-                    ${isDarkTheme
-                      ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                      : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
+                    ${
+                      isDarkTheme
+                        ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                        : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
                     }
-                    ${!hideToggle && !levelSettings.enabled
-                      ? "opacity-50 cursor-not-allowed"
-                      : isDarkTheme
-                        ? "focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
-                        : "focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
+                    ${
+                      !hideToggle && !levelSettings.enabled
+                        ? "opacity-50 cursor-not-allowed"
+                        : isDarkTheme
+                          ? "focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
+                          : "focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
                     }
                   `}
                 />
@@ -144,7 +156,6 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
       </div>
     );
   };
-
 
   // Рендер строки с учетом цветовых кодов ÿcX
   const renderColoredText = (text: string) => {
@@ -161,9 +172,12 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
         continue;
       }
       nodes.push(
-        <span key={`p-${i}`} style={currentColor ? { color: currentColor } : undefined}>
+        <span
+          key={`p-${i}`}
+          style={currentColor ? { color: currentColor } : undefined}
+        >
           {part}
-        </span>
+        </span>,
       );
     }
     return nodes;
@@ -176,12 +190,10 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
       isOpen={isOpen}
       onToggle={onToggle}
       icon={headerIcon}
-      containerClassName={`rounded-b-lg border p-4 ${isDarkTheme
-        ? "bg-gray-800 border-gray-700"
-        : "bg-white border-gray-300"
+      containerClassName={`rounded-b-lg border p-4 ${
+        isDarkTheme ? "bg-gray-800 border-gray-700" : "bg-white border-gray-300"
       }`}
     >
-
       {/* Табы с картинками */}
       <div className="flex space-x-2 mb-4 relative">
         {settings.levels.map((level, index) => {
@@ -189,10 +201,11 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
             <button
               key={index}
               onClick={() => onTabChange(index)}
-              className={`p-2 rounded-lg transition-all duration-200 border-2 ${isDarkTheme
+              className={`p-2 rounded-lg transition-all duration-200 border-2 ${
+                isDarkTheme
                   ? "border-gray-600 bg-gray-700/50 hover:border-gray-500"
                   : "border-gray-300 bg-gray-100/50 hover:border-gray-400"
-                }`}
+              }`}
               style={{
                 width: "65px",
               }}
@@ -217,8 +230,9 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
 
         {/* Подчеркивание активного таба */}
         <div
-          className={`absolute h-0.5 transition-all duration-300 ease-out ${isDarkTheme ? "bg-yellow-400" : "bg-yellow-500"
-            }`}
+          className={`absolute h-0.5 transition-all duration-300 ease-out ${
+            isDarkTheme ? "bg-yellow-400" : "bg-yellow-500"
+          }`}
           style={{
             left: `${activeTabIndex * (65 + 8)}px`, // 65px кнопка + 8px gap
             width: "65px",
@@ -237,27 +251,64 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
             {(showTopEnableSwitch || showHighlightSwitch) && (
               <div className="flex items-center gap-3">
                 {!hideToggle && (
-                  <Tooltip title={t("runePage.controls.toggleItemVisibilityTooltip")} placement="top">
+                  <Tooltip
+                    title={t("runePage.controls.toggleItemVisibilityTooltip")}
+                    placement="top"
+                  >
                     <div>
                       <Switch
                         enabled={activeLevel.enabled}
-                        onChange={(enabled) => onLevelToggle(activeTabIndex, enabled)}
+                        onChange={(enabled) =>
+                          onLevelToggle(activeTabIndex, enabled)
+                        }
                         isDarkTheme={isDarkTheme}
-                        onIcon={<Icon path={mdiEyeOutline} size={0.55} color="#16A34A" />}
-                        offIcon={<Icon path={mdiEyeOffOutline} size={0.55} color={isDarkTheme ? "#111827" : "#6B7280"} />}
+                        onIcon={
+                          <Icon
+                            path={mdiEyeOutline}
+                            size={0.55}
+                            color="#16A34A"
+                          />
+                        }
+                        offIcon={
+                          <Icon
+                            path={mdiEyeOffOutline}
+                            size={0.55}
+                            color={isDarkTheme ? "#111827" : "#6B7280"}
+                          />
+                        }
                       />
                     </div>
                   </Tooltip>
                 )}
                 {showHighlightSwitch && (
-                  <Tooltip title={t("commonPage.tooltips.highlightOnGround") || "Highlight on the ground"} placement="top">
+                  <Tooltip
+                    title={
+                      t("commonPage.tooltips.highlightOnGround") ||
+                      "Highlight on the ground"
+                    }
+                    placement="top"
+                  >
                     <div>
                       <Switch
                         enabled={Boolean(highlightEnabled)}
-                        onChange={(enabled) => onHighlightToggle && onHighlightToggle(enabled)}
+                        onChange={(enabled) =>
+                          onHighlightToggle && onHighlightToggle(enabled)
+                        }
                         isDarkTheme={isDarkTheme}
-                        onIcon={<Icon path={mdiLightbulbOnOutline} size={0.6} color="#F59E0B" />}
-                        offIcon={<Icon path={mdiLightbulbOffOutline} size={0.6} color={isDarkTheme ? "#4B5563" : "#9CA3AF"} />}
+                        onIcon={
+                          <Icon
+                            path={mdiLightbulbOnOutline}
+                            size={0.6}
+                            color="#F59E0B"
+                          />
+                        }
+                        offIcon={
+                          <Icon
+                            path={mdiLightbulbOffOutline}
+                            size={0.6}
+                            color={isDarkTheme ? "#4B5563" : "#9CA3AF"}
+                          />
+                        }
                       />
                     </div>
                   </Tooltip>
@@ -270,14 +321,17 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
               <div
                 className={`
                     h-9 px-3 rounded-md border flex items-center overflow-hidden text-sm diablo-font whitespace-pre w-full
-                    ${isDarkTheme
-                    ? "bg-gray-800 border-gray-600 text-white"
-                    : "bg-white border-gray-300 text-gray-900"
-                  }
+                    ${
+                      isDarkTheme
+                        ? "bg-gray-800 border-gray-600 text-white"
+                        : "bg-white border-gray-300 text-gray-900"
+                    }
                   `}
               >
                 <span
-                  className={"mr-2 font-semibold tracking-wide text-xs text-gray-400 font-sans cursor-default select-none"}
+                  className={
+                    "mr-2 font-semibold tracking-wide text-xs text-gray-400 font-sans cursor-default select-none"
+                  }
                 >
                   {(t("runePage.controls.preview") || "Preview") + ":"}
                 </span>
@@ -285,7 +339,7 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
                   if (focusedLocale) {
                     const text =
                       activeLevel.locales[
-                      focusedLocale as keyof typeof activeLevel.locales
+                        focusedLocale as keyof typeof activeLevel.locales
                       ] || "";
                     return renderColoredText(text);
                   }
@@ -295,8 +349,8 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
                   const firstSelected = selectedLocales[0];
                   const fallbackText = firstSelected
                     ? activeLevel.locales[
-                    firstSelected as keyof typeof activeLevel.locales
-                    ] || ""
+                        firstSelected as keyof typeof activeLevel.locales
+                      ] || ""
                     : "";
                   return renderColoredText(fallbackText);
                 })()}
@@ -308,14 +362,31 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
           <div className="flex items-center space-x-3">
             {!hideToggle && (
               <div className="w-20">
-                <Tooltip title={t("runePage.controls.toggleItemVisibilityTooltip")} placement="top">
+                <Tooltip
+                  title={t("runePage.controls.toggleItemVisibilityTooltip")}
+                  placement="top"
+                >
                   <div>
                     <Switch
                       enabled={activeLevel.enabled}
-                      onChange={(enabled) => onLevelToggle(activeTabIndex, enabled)}
+                      onChange={(enabled) =>
+                        onLevelToggle(activeTabIndex, enabled)
+                      }
                       isDarkTheme={isDarkTheme}
-                      onIcon={<Icon path={mdiEyeOutline} size={0.55} color="#16A34A" />}
-                      offIcon={<Icon path={mdiEyeOffOutline} size={0.55} color={isDarkTheme ? "#111827" : "#6B7280"} />}
+                      onIcon={
+                        <Icon
+                          path={mdiEyeOutline}
+                          size={0.55}
+                          color="#16A34A"
+                        />
+                      }
+                      offIcon={
+                        <Icon
+                          path={mdiEyeOffOutline}
+                          size={0.55}
+                          color={isDarkTheme ? "#111827" : "#6B7280"}
+                        />
+                      }
                     />
                   </div>
                 </Tooltip>
@@ -325,14 +396,17 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
               <div
                 className={`
                     h-9 px-3 rounded-md border flex items-center overflow-hidden text-sm diablo-font whitespace-pre w-full
-                    ${isDarkTheme
-                    ? "bg-gray-800 border-gray-600 text-white"
-                    : "bg-white border-gray-300 text-gray-900"
-                  }
+                    ${
+                      isDarkTheme
+                        ? "bg-gray-800 border-gray-600 text-white"
+                        : "bg-white border-gray-300 text-gray-900"
+                    }
                   `}
               >
                 <span
-                  className={"mr-2 font-semibold tracking-wide text-xs text-gray-400 font-sans cursor-default select-none"}
+                  className={
+                    "mr-2 font-semibold tracking-wide text-xs text-gray-400 font-sans cursor-default select-none"
+                  }
                 >
                   {(t("runePage.controls.preview") || "Preview") + ":"}
                 </span>
@@ -340,7 +414,7 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
                   if (focusedLocale) {
                     const text =
                       activeLevel.locales[
-                      focusedLocale as keyof typeof activeLevel.locales
+                        focusedLocale as keyof typeof activeLevel.locales
                       ] || "";
                     return renderColoredText(text);
                   }
@@ -350,8 +424,8 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
                   const firstSelected = selectedLocales[0];
                   const fallbackText = firstSelected
                     ? activeLevel.locales[
-                    firstSelected as keyof typeof activeLevel.locales
-                    ] || ""
+                        firstSelected as keyof typeof activeLevel.locales
+                      ] || ""
                     : "";
                   return renderColoredText(fallbackText);
                 })()}

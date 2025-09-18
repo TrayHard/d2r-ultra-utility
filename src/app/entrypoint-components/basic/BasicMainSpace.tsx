@@ -193,11 +193,11 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
       if (!name) return false;
       const target = name.trim().toLowerCase();
       const allNames = [...profiles, ...immutableProfiles].map((p) =>
-        (p.name || "").trim().toLowerCase()
+        (p.name || "").trim().toLowerCase(),
       );
       return allNames.includes(target);
     },
-    [profiles, immutableProfiles]
+    [profiles, immutableProfiles],
   );
 
   // Генерация уникального имени: "Имя (n)"
@@ -207,8 +207,8 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
         (originalName && originalName.trim()) || "Безымянный профиль";
       const allNames = new Set(
         [...profiles, ...immutableProfiles].map((p) =>
-          (p.name || "").trim().toLowerCase()
-        )
+          (p.name || "").trim().toLowerCase(),
+        ),
       );
       if (!allNames.has(baseName.toLowerCase())) return baseName;
       let counter = 2; // если уже есть точное совпадение, начинаем с (2)
@@ -221,7 +221,7 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
         counter++;
       }
     },
-    [profiles, immutableProfiles]
+    [profiles, immutableProfiles],
   );
 
   // workers
@@ -233,7 +233,7 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
     t,
     () => settings.runes,
     "basic", // разрешенный режим
-    getAppMode
+    getAppMode,
   );
 
   const { applyCommonItemsChanges } = useCommonItemsWorker(
@@ -245,7 +245,7 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
     t,
     getCommonSettings,
     "basic", // разрешенный режим
-    getAppMode
+    getAppMode,
   );
 
   const { applyGemsChanges } = useGemsWorker(
@@ -257,13 +257,13 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
     t,
     getGemSettings,
     "basic", // разрешенный режим
-    getAppMode
+    getAppMode,
   );
 
   // Подготовка списка предметов как в Advanced
   const itemsForWorker = useMemo(() => {
     const uniqueItems = (basesData as any[]).filter(
-      (item, index, arr) => arr.findIndex((i) => i.id === item.id) === index
+      (item, index, arr) => arr.findIndex((i) => i.id === item.id) === index,
     );
     return uniqueItems.map((item) => ({ key: item.key, id: item.id }));
   }, []);
@@ -279,7 +279,7 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
     getSelectedLocales,
     itemsForWorker,
     "basic", // разрешенный режим
-    getAppMode
+    getAppMode,
   );
 
   // Единый агрегатор записи
@@ -291,7 +291,7 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
     getAllSettings,
     getSelectedLocales,
     "basic",
-    getAppMode
+    getAppMode,
   );
 
   // Рефы с актуальными функциями применения (чтобы избежать устаревших замыканий)
@@ -323,19 +323,19 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
 
   const defaultProfile = useMemo(
     () => immutableProfiles.find((p) => p.isDefault),
-    [immutableProfiles]
+    [immutableProfiles],
   );
 
   const recommendedProfiles = useMemo(
     () => immutableProfiles.filter((p) => !p.isDefault),
-    [immutableProfiles]
+    [immutableProfiles],
   );
 
   const filteredRecommended = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return recommendedProfiles;
     return recommendedProfiles.filter((p) =>
-      (p.name || "").toLowerCase().includes(q)
+      (p.name || "").toLowerCase().includes(q),
     );
   }, [recommendedProfiles, query]);
 
@@ -375,7 +375,7 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
     const exists = [...profiles, ...immutableProfiles].some(
       (p) =>
         p.id !== editingProfileId &&
-        (p.name || "").trim().toLowerCase() === lower
+        (p.name || "").trim().toLowerCase() === lower,
     );
     if (exists) {
       sendMessage(t("basicMainSpace.messages.profileExists"), {
@@ -411,7 +411,7 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   // Обработчик drag and drop с @dnd-kit
@@ -421,22 +421,22 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
 
       if (active.id !== over?.id) {
         const oldIndex = filteredUserProfiles.findIndex(
-          (p) => p.id === active.id
+          (p) => p.id === active.id,
         );
         const newIndex = filteredUserProfiles.findIndex(
-          (p) => p.id === over?.id
+          (p) => p.id === over?.id,
         );
 
         const reorderedProfiles = arrayMove(
           filteredUserProfiles,
           oldIndex,
-          newIndex
+          newIndex,
         );
         const newIds = reorderedProfiles.map((p) => p.id);
         reorderUserProfiles(newIds);
       }
     },
-    [filteredUserProfiles, reorderUserProfiles]
+    [filteredUserProfiles, reorderUserProfiles],
   );
 
   const executeApplyAll = useCallback(async () => {
@@ -458,7 +458,7 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
         await new Promise((r) => setTimeout(r, 25));
       }
     },
-    [getAllSettings]
+    [getAllSettings],
   );
 
   const handleApplyProfile = useCallback(
@@ -483,7 +483,7 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
       loadProfile,
       waitForProfileLoaded,
       executeApplyAll,
-    ]
+    ],
   );
 
   const handleDisableLootfilters = useCallback(async () => {
@@ -566,12 +566,12 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
                 (e.payload as any)?.paths || (e.payload as any)?.files || [];
               if (!paths || paths.length === 0) return;
               const jsonPath = paths.find((p) =>
-                p.toLowerCase().endsWith(".json")
+                p.toLowerCase().endsWith(".json"),
               );
               if (!jsonPath) {
                 sendMessageRef.current(
                   t("basicMainSpace.messages.dragFileHint"),
-                  { type: "warning" }
+                  { type: "warning" },
                 );
                 return;
               }
@@ -588,7 +588,7 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
                 t("basicMainSpace.messages.profileImported"),
                 {
                   type: "success",
-                }
+                },
               );
             } catch (err) {
               console.error("Error importing profile via Tauri DnD:", err);
@@ -616,7 +616,7 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
         } catch (err) {
           console.warn(
             "Drag&Drop unlisten failed (probably already removed)",
-            err
+            err,
           );
         } finally {
           unlisten = null;

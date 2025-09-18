@@ -96,7 +96,9 @@ const Collapse: React.FC<CollapseProps> = ({
           ${isOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"}
         `}
       >
-        <div className={`p-4 ${isDarkTheme ? "bg-gray-800" : "bg-white"} ${containerClassName || ""}`}>
+        <div
+          className={`p-4 ${isDarkTheme ? "bg-gray-800" : "bg-white"} ${containerClassName || ""}`}
+        >
           {children}
         </div>
       </div>

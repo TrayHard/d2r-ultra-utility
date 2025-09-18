@@ -60,7 +60,7 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
     onToggle: (item: string) => void,
     getLabel: (item: string) => string,
     placeholder: string,
-    width: string = "w-48"
+    width: string = "w-48",
   ) => (
     <div className={width}>
       <Select
@@ -111,8 +111,8 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
                     ? "bg-yellow-900/30 border-yellow-400 text-yellow-300"
                     : "bg-yellow-50 border-yellow-400 text-yellow-800"
                   : isDarkTheme
-                  ? "bg-gray-700 border-gray-600 text-white hover:bg-gray-600"
-                  : "bg-white border-gray-300 text-gray-900 hover:bg-gray-50"
+                    ? "bg-gray-700 border-gray-600 text-white hover:bg-gray-600"
+                    : "bg-white border-gray-300 text-gray-900 hover:bg-gray-50"
               }
             `}
           >
@@ -136,7 +136,9 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
     <div
       ref={filtersRef}
       className={`py-4 px-3 border-b ${
-        isDarkTheme ? "border-gray-700 dark-theme" : "border-gray-200 dark-theme"
+        isDarkTheme
+          ? "border-gray-700 dark-theme"
+          : "border-gray-200 dark-theme"
       }`}
     >
       {/* Первая строка фильтров */}
@@ -166,7 +168,7 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
           onToggleDifficultyClass,
           (item: string) => t(`itemsPage.filters.${item}`),
           t("itemsPage.filters.difficultyClass"),
-          "grow basis-48"
+          "grow basis-48",
         )}
 
         {renderTagSelect(
@@ -178,11 +180,14 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
               ? t("itemsPage.filters.anyClass")
               : t(`itemsPage.classes.${item.toLowerCase()}`),
           t("itemsPage.filters.limitedToClass"),
-          "grow basis-48"
+          "grow basis-48",
         )}
 
         <div className="flex gap-2">
-          <Tooltip title={t("itemsPage.filters.reqLevelTooltip")} placement="top">
+          <Tooltip
+            title={t("itemsPage.filters.reqLevelTooltip")}
+            placement="top"
+          >
             <InputNumber
               placeholder={t("itemsPage.filters.reqLevel")}
               value={reqLevelFilter || null}
@@ -193,7 +198,10 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
             />
           </Tooltip>
 
-          <Tooltip title={t("itemsPage.filters.reqStrengthTooltip")} placement="top">
+          <Tooltip
+            title={t("itemsPage.filters.reqStrengthTooltip")}
+            placement="top"
+          >
             <InputNumber
               placeholder={t("itemsPage.filters.reqStrength")}
               value={reqStrengthFilter || null}
@@ -204,7 +212,10 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
             />
           </Tooltip>
 
-          <Tooltip title={t("itemsPage.filters.reqDexterityTooltip")} placement="top">
+          <Tooltip
+            title={t("itemsPage.filters.reqDexterityTooltip")}
+            placement="top"
+          >
             <InputNumber
               placeholder={t("itemsPage.filters.reqDexterity")}
               value={reqDexterityFilter || null}
@@ -222,7 +233,7 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
           onToggleWeight,
           (item: string) => t(`itemsPage.filters.${item}`),
           t("itemsPage.filters.weight"),
-          "w-32"
+          "w-32",
         )}
 
         {renderTagSelect(
@@ -231,7 +242,7 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
           onToggleRelatedKind,
           (item: string) => t(`itemsPage.relatedItems.${item}`) as string,
           t("itemsPage.filters.relatedItems"),
-          "w-48"
+          "w-48",
         )}
       </div>
 

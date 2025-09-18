@@ -63,7 +63,10 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
 
   const dividerOptions = [
     { value: "", label: t("runePage.massEdit.noChange") },
-    { value: "parentheses", label: t("runePage.controls.dividerTypes.parentheses") },
+    {
+      value: "parentheses",
+      label: t("runePage.controls.dividerTypes.parentheses"),
+    },
     { value: "brackets", label: t("runePage.controls.dividerTypes.brackets") },
     { value: "pipe", label: t("runePage.controls.dividerTypes.pipe") },
   ];
@@ -114,7 +117,9 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
       dividerColor !== "" ||
       numberColor !== ""
     ) {
-      const numberingChanges: Partial<RuneSettings["autoSettings"]["numbering"]> = {};
+      const numberingChanges: Partial<
+        RuneSettings["autoSettings"]["numbering"]
+      > = {};
 
       if (showRuneNumber !== null) {
         numberingChanges.show = showRuneNumber as boolean;
@@ -129,11 +134,13 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
         numberingChanges.numberColor = numberColor;
       }
 
-      autoChanges.numbering = numberingChanges as RuneSettings["autoSettings"]["numbering"];
+      autoChanges.numbering =
+        numberingChanges as RuneSettings["autoSettings"]["numbering"];
     }
 
     if (Object.keys(autoChanges).length > 0) {
-      filteredSettings.autoSettings = autoChanges as RuneSettings["autoSettings"];
+      filteredSettings.autoSettings =
+        autoChanges as RuneSettings["autoSettings"];
     }
 
     onApply(filteredSettings);
@@ -160,10 +167,14 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
       <div className="p-2 space-y-6">
         {/* Заголовок */}
         <div>
-          <h2 className={`text-xl font-semibold ${isDarkTheme ? "text-white" : "text-gray-900"}`}>
+          <h2
+            className={`text-xl font-semibold ${isDarkTheme ? "text-white" : "text-gray-900"}`}
+          >
             {t("runePage.massEdit.modalTitle")}
           </h2>
-          <p className={`text-sm mt-1 ${isDarkTheme ? "text-gray-400" : "text-gray-600"}`}>
+          <p
+            className={`text-sm mt-1 ${isDarkTheme ? "text-gray-400" : "text-gray-600"}`}
+          >
             {selectedRunes.size} {t("runePage.massEdit.selected")}
           </p>
         </div>
@@ -172,32 +183,64 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Левый столбец */}
           <div className="space-y-4">
-            <h3 className={`text-lg font-medium ${isDarkTheme ? "text-gray-200" : "text-gray-800"}`}>
+            <h3
+              className={`text-lg font-medium ${isDarkTheme ? "text-gray-200" : "text-gray-800"}`}
+            >
               {t("runePage.massEdit.basicSettings")}
             </h3>
 
             {/* Подсветка руны */}
-            <div className={`p-3 rounded-lg ${isDarkTheme ? "bg-gray-800" : "bg-gray-50"}`}>
+            <div
+              className={`p-3 rounded-lg ${isDarkTheme ? "bg-gray-800" : "bg-gray-50"}`}
+            >
               <div className="flex items-center justify-between">
-                <span className={`text-sm font-medium ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}>
+                <span
+                  className={`text-sm font-medium ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}
+                >
                   {t("runePage.controls.highlightRune")}
                 </span>
-                <TriStateSwitch value={isHighlighted} onChange={setIsHighlighted} isDarkTheme={isDarkTheme} size="md" />
+                <TriStateSwitch
+                  value={isHighlighted}
+                  onChange={setIsHighlighted}
+                  isDarkTheme={isDarkTheme}
+                  size="md"
+                />
               </div>
             </div>
 
             {/* Режим руны (auto/manual) */}
             <div>
-              <label className={`block text-sm font-medium mb-2 ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}>
+              <label
+                className={`block text-sm font-medium mb-2 ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}
+              >
                 {t("runePage.massEdit.runeMode") || "Режим руны"}
               </label>
               <Select
                 options={[
-                  { value: "", label: t("runePage.massEdit.noChange") || "Не изменять" },
-                  { value: "auto", label: t("runePage.massEdit.runeModeTooltips.auto") || "Автоматический режим" },
-                  { value: "manual", label: t("runePage.massEdit.runeModeTooltips.manual") || "Ручной режим" }
+                  {
+                    value: "",
+                    label: t("runePage.massEdit.noChange") || "Не изменять",
+                  },
+                  {
+                    value: "auto",
+                    label:
+                      t("runePage.massEdit.runeModeTooltips.auto") ||
+                      "Автоматический режим",
+                  },
+                  {
+                    value: "manual",
+                    label:
+                      t("runePage.massEdit.runeModeTooltips.manual") ||
+                      "Ручной режим",
+                  },
                 ]}
-                value={modeState === null ? "" : modeState === false ? "auto" : "manual"}
+                value={
+                  modeState === null
+                    ? ""
+                    : modeState === false
+                      ? "auto"
+                      : "manual"
+                }
                 onChange={(v) => {
                   if (v === "") setModeState(null);
                   else if (v === "auto") setModeState(false);
@@ -210,7 +253,9 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
 
             {/* Размер бокса */}
             <div className={isManualModeSelected ? "opacity-50" : ""}>
-              <label className={`block text-sm font-medium mb-2 ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}>
+              <label
+                className={`block text-sm font-medium mb-2 ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}
+              >
                 {t("runePage.controls.boxSize")}
               </label>
               <Select
@@ -225,13 +270,23 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
 
             {/* Цвет */}
             <div className={isManualModeSelected ? "opacity-50" : ""}>
-              <label className={`block text-sm font-medium mb-2 ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}>
+              <label
+                className={`block text-sm font-medium mb-2 ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}
+              >
                 {t("runePage.controls.color")}
               </label>
               <div className="flex items-center gap-2">
-                <ColorPallet isDarkTheme={isDarkTheme} value={color || "white"} onChange={(name) => setColor(name)} size="sm" disabled={isManualModeSelected} />
+                <ColorPallet
+                  isDarkTheme={isDarkTheme}
+                  value={color || "white"}
+                  onChange={(name) => setColor(name)}
+                  size="sm"
+                  disabled={isManualModeSelected}
+                />
                 {color === "" ? (
-                  <span className={`${isDarkTheme ? "text-gray-400" : "text-gray-500"} text-xs`}>
+                  <span
+                    className={`${isDarkTheme ? "text-gray-400" : "text-gray-500"} text-xs`}
+                  >
                     {t("runePage.massEdit.noChange")}
                   </span>
                 ) : (
@@ -249,7 +304,9 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
 
             {/* Ограничители бокса */}
             <div className={isManualModeSelected ? "opacity-50" : ""}>
-              <label className={`block text-sm font-medium mb-2 ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}>
+              <label
+                className={`block text-sm font-medium mb-2 ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}
+              >
                 Box limiters
               </label>
               <Select
@@ -264,7 +321,9 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
 
             {/* Цвет ограничителей */}
             <div className={isManualModeSelected ? "opacity-50" : ""}>
-              <label className={`block text-sm font-medium mb-2 ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}>
+              <label
+                className={`block text-sm font-medium mb-2 ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}
+              >
                 Box limiters color
               </label>
               <div className="flex items-center gap-2">
@@ -276,7 +335,9 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
                   disabled={isManualModeSelected || boxSize === "0"}
                 />
                 {boxLimitersColor === "" ? (
-                  <span className={`${isDarkTheme ? "text-gray-400" : "text-gray-500"} text-xs`}>
+                  <span
+                    className={`${isDarkTheme ? "text-gray-400" : "text-gray-500"} text-xs`}
+                  >
                     {t("runePage.massEdit.noChange")}
                   </span>
                 ) : (
@@ -295,23 +356,37 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
 
           {/* Правый столбец */}
           <div className="space-y-4">
-            <h3 className={`text-lg font-medium ${isDarkTheme ? "text-gray-200" : "text-gray-800"}`}>
+            <h3
+              className={`text-lg font-medium ${isDarkTheme ? "text-gray-200" : "text-gray-800"}`}
+            >
               {t("runePage.massEdit.numberingSettings")}
             </h3>
 
             {/* Показ номера руны */}
-            <div className={`p-3 rounded-lg ${isDarkTheme ? "bg-gray-800" : "bg-gray-50"} ${isManualModeSelected ? "opacity-50" : ""}`}>
+            <div
+              className={`p-3 rounded-lg ${isDarkTheme ? "bg-gray-800" : "bg-gray-50"} ${isManualModeSelected ? "opacity-50" : ""}`}
+            >
               <div className="flex items-center justify-between">
-                <span className={`text-sm font-medium ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}>
+                <span
+                  className={`text-sm font-medium ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}
+                >
                   {t("runePage.controls.showRuneNumber")}
                 </span>
-                <TriStateSwitch value={showRuneNumber} onChange={setShowRuneNumber} isDarkTheme={isDarkTheme} size="md" disabled={isManualModeSelected} />
+                <TriStateSwitch
+                  value={showRuneNumber}
+                  onChange={setShowRuneNumber}
+                  isDarkTheme={isDarkTheme}
+                  size="md"
+                  disabled={isManualModeSelected}
+                />
               </div>
             </div>
 
             {/* Разделитель */}
             <div className={isManualModeSelected ? "opacity-50" : ""}>
-              <label className={`block text-sm font-medium mb-2 ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}>
+              <label
+                className={`block text-sm font-medium mb-2 ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}
+              >
                 {t("runePage.controls.divider")}
               </label>
               <Select
@@ -326,7 +401,9 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
 
             {/* Цвет разделителя */}
             <div className={isManualModeSelected ? "opacity-50" : ""}>
-              <label className={`block text-sm font-medium mb-2 ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}>
+              <label
+                className={`block text-sm font-medium mb-2 ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}
+              >
                 {t("runePage.controls.dividerColor")}
               </label>
               <div className="flex items-center gap-2">
@@ -338,7 +415,9 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
                   disabled={isManualModeSelected || showRuneNumber === false}
                 />
                 {dividerColor === "" ? (
-                  <span className={`${isDarkTheme ? "text-gray-400" : "text-gray-500"} text-xs`}>
+                  <span
+                    className={`${isDarkTheme ? "text-gray-400" : "text-gray-500"} text-xs`}
+                  >
                     {t("runePage.massEdit.noChange")}
                   </span>
                 ) : (
@@ -356,7 +435,9 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
 
             {/* Цвет числа */}
             <div className={isManualModeSelected ? "opacity-50" : ""}>
-              <label className={`block text-sm font-medium mb-2 ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}>
+              <label
+                className={`block text-sm font-medium mb-2 ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}
+              >
                 {t("runePage.controls.numberColor")}
               </label>
               <div className="flex items-center gap-2">
@@ -368,7 +449,9 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
                   disabled={isManualModeSelected || showRuneNumber === false}
                 />
                 {numberColor === "" ? (
-                  <span className={`${isDarkTheme ? "text-gray-400" : "text-gray-500"} text-xs`}>
+                  <span
+                    className={`${isDarkTheme ? "text-gray-400" : "text-gray-500"} text-xs`}
+                  >
                     {t("runePage.massEdit.noChange")}
                   </span>
                 ) : (
@@ -388,10 +471,19 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
 
         {/* Кнопки */}
         <div className="flex justify-end gap-3 pt-4 border-t border-gray-300 dark:border-gray-600">
-          <Button variant="secondary" onClick={onClose} isDarkTheme={isDarkTheme}>
+          <Button
+            variant="secondary"
+            onClick={onClose}
+            isDarkTheme={isDarkTheme}
+          >
             {t("runePage.massEdit.cancel")}
           </Button>
-          <Button variant="primary" onClick={handleApply} isDarkTheme={isDarkTheme} disabled={!hasChanges}>
+          <Button
+            variant="primary"
+            onClick={handleApply}
+            isDarkTheme={isDarkTheme}
+            disabled={!hasChanges}
+          >
             {t("runePage.massEdit.applyToRunes", { count: selectedRunes.size })}
           </Button>
         </div>
