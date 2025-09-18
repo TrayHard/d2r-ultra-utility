@@ -611,8 +611,16 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
     setup();
     return () => {
       if (unlisten) {
-        unlisten();
-        unlisten = null;
+        try {
+          unlisten();
+        } catch (err) {
+          console.warn(
+            "Drag&Drop unlisten failed (probably already removed)",
+            err
+          );
+        } finally {
+          unlisten = null;
+        }
       }
     };
   }, []); // Пустой массив зависимостей - эффект выполняется только один раз
