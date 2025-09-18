@@ -50,7 +50,7 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
 
   const filteredAndSortedRunes = useMemo(() => {
     let filtered = runes.filter((rune) =>
-      rune.toLowerCase().includes(searchQuery.toLowerCase()),
+      rune.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     return filtered.sort((a, b) => {
@@ -96,7 +96,7 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
   const handleRuneSelection = (
     rune: ERune,
     isSelected: boolean,
-    shiftKey: boolean = false,
+    shiftKey: boolean = false
   ) => {
     const newSelected = new Set(selectedRunes);
 
@@ -350,7 +350,10 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
               <Button
                 variant="secondary"
                 size="sm"
-                onClick={handleSelectAll}
+                onClick={() => {
+                  handleSelectAll();
+                  setIsMassEditModalOpen(true);
+                }}
                 isDarkTheme={isDarkTheme}
                 icon={mdiCheckAll}
                 iconSize={0.6}

@@ -7,6 +7,8 @@ import ColorPallet from "./ColorPallet.tsx";
 import TriStateSwitch, { TriState } from "./TriStateSwitch.tsx";
 import { RuneSettings } from "../../app/providers/SettingsContext.tsx";
 import { ERune } from "../../pages/runes/constants/runes.ts";
+import Icon from "@mdi/react";
+import { mdiPencilBoxMultiple } from "@mdi/js";
 
 interface MassEditModalProps {
   isOpen: boolean;
@@ -168,8 +170,13 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
         {/* Заголовок */}
         <div>
           <h2
-            className={`text-xl font-semibold ${isDarkTheme ? "text-white" : "text-gray-900"}`}
+            className={`text-xl font-semibold ${isDarkTheme ? "text-white" : "text-gray-900"} flex items-center gap-2`}
           >
+            <Icon
+              path={mdiPencilBoxMultiple}
+              size={1}
+              className={isDarkTheme ? "text-gray-300" : "text-gray-700"}
+            />
             {t("runePage.massEdit.modalTitle")}
           </h2>
           <p
