@@ -226,7 +226,10 @@
   background-color: #4b5563 !important;
 }
 
-.dark-theme .items-filters-input-number .ant-input-number-handler:hover .anticon {
+.dark-theme
+  .items-filters-input-number
+  .ant-input-number-handler:hover
+  .anticon {
   color: #ffffff !important;
 }
 
@@ -351,8 +354,6 @@
   box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.2) !important;
 }
 
-
-
 /* Dark theme for Select tags */
 .dark-theme .items-filters-select .ant-select-selection-item-remove {
   color: #9ca3af !important;
@@ -434,7 +435,9 @@
   border-color: #374151 !important;
 }
 
-.dark-theme .items-filters-input-number.ant-input-number-disabled .ant-input-number-input {
+.dark-theme
+  .items-filters-input-number.ant-input-number-disabled
+  .ant-input-number-input {
   background-color: #1f2937 !important;
   color: #6b7280 !important;
 }

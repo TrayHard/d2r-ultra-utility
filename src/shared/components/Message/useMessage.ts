@@ -1,6 +1,6 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef } from "react";
 
-export type MessageType = 'success' | 'error' | 'warning' | 'info';
+export type MessageType = "success" | "error" | "warning" | "info";
 
 export interface MessageData {
   id: string;
@@ -23,42 +23,46 @@ export const useMessage = () => {
   const timeoutRefs = useRef<Map<string, number>>(new Map());
   const mutedTypesRef = useRef<Set<MessageType>>(new Set());
 
-  const sendMessage = useCallback((message: string, settings?: MessageSettings) => {
-    const id = Date.now().toString() + Math.random().toString(36).substr(2, 9);
-    const duration = settings?.duration ?? 4000;
-    const currentType: MessageType = settings?.type ?? 'info';
+  const sendMessage = useCallback(
+    (message: string, settings?: MessageSettings) => {
+      const id =
+        Date.now().toString() + Math.random().toString(36).substr(2, 9);
+      const duration = settings?.duration ?? 4000;
+      const currentType: MessageType = settings?.type ?? "info";
 
-    // Suppress message if its type is muted
-    if (mutedTypesRef.current.has(currentType)) {
-      return '';
-    }
-    
-    const messageData: MessageData = {
-      id,
-      type: currentType,
-      title: settings?.title,
-      message,
-      duration,
-      color: settings?.color
-    };
+      // Suppress message if its type is muted
+      if (mutedTypesRef.current.has(currentType)) {
+        return "";
+      }
 
-    setMessages(prev => [...prev, messageData]);
+      const messageData: MessageData = {
+        id,
+        type: currentType,
+        title: settings?.title,
+        message,
+        duration,
+        color: settings?.color,
+      };
 
-    // Автоматическое удаление сообщения
-    if (duration > 0) {
-      const timeout = setTimeout(() => {
-        removeMessage(id);
-      }, duration);
-      
-      timeoutRefs.current.set(id, timeout);
-    }
+      setMessages((prev) => [...prev, messageData]);
 
-    return id;
-  }, []);
+      // Автоматическое удаление сообщения
+      if (duration > 0) {
+        const timeout = setTimeout(() => {
+          removeMessage(id);
+        }, duration);
+
+        timeoutRefs.current.set(id, timeout);
+      }
+
+      return id;
+    },
+    [],
+  );
 
   const removeMessage = useCallback((id: string) => {
-    setMessages(prev => prev.filter(msg => msg.id !== id));
-    
+    setMessages((prev) => prev.filter((msg) => msg.id !== id));
+
     // Очищаем таймер если он есть
     const timeout = timeoutRefs.current.get(id);
     if (timeout) {
@@ -69,9 +73,9 @@ export const useMessage = () => {
 
   const clearAllMessages = useCallback(() => {
     // Очищаем все таймеры
-    timeoutRefs.current.forEach(timeout => clearTimeout(timeout));
+    timeoutRefs.current.forEach((timeout) => clearTimeout(timeout));
     timeoutRefs.current.clear();
-    
+
     setMessages([]);
   }, []);
 
@@ -84,21 +88,33 @@ export const useMessage = () => {
   }, []);
 
   // Удобные методы для разных типов сообщений
-  const sendSuccess = useCallback((message: string, title?: string, duration?: number) => {
-    return sendMessage(message, { type: 'success', title, duration });
-  }, [sendMessage]);
+  const sendSuccess = useCallback(
+    (message: string, title?: string, duration?: number) => {
+      return sendMessage(message, { type: "success", title, duration });
+    },
+    [sendMessage],
+  );
 
-  const sendError = useCallback((message: string, title?: string, duration?: number) => {
-    return sendMessage(message, { type: 'error', title, duration });
-  }, [sendMessage]);
+  const sendError = useCallback(
+    (message: string, title?: string, duration?: number) => {
+      return sendMessage(message, { type: "error", title, duration });
+    },
+    [sendMessage],
+  );
 
-  const sendWarning = useCallback((message: string, title?: string, duration?: number) => {
-    return sendMessage(message, { type: 'warning', title, duration });
-  }, [sendMessage]);
+  const sendWarning = useCallback(
+    (message: string, title?: string, duration?: number) => {
+      return sendMessage(message, { type: "warning", title, duration });
+    },
+    [sendMessage],
+  );
 
-  const sendInfo = useCallback((message: string, title?: string, duration?: number) => {
-    return sendMessage(message, { type: 'info', title, duration });
-  }, [sendMessage]);
+  const sendInfo = useCallback(
+    (message: string, title?: string, duration?: number) => {
+      return sendMessage(message, { type: "info", title, duration });
+    },
+    [sendMessage],
+  );
 
   return {
     messages,
@@ -110,6 +126,6 @@ export const useMessage = () => {
     removeMessage,
     clearAllMessages,
     muteTypes,
-    unmute
+    unmute,
   };
-}; 
+};

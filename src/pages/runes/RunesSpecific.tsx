@@ -50,7 +50,7 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
 
   const filteredAndSortedRunes = useMemo(() => {
     let filtered = runes.filter((rune) =>
-      rune.toLowerCase().includes(searchQuery.toLowerCase())
+      rune.toLowerCase().includes(searchQuery.toLowerCase()),
     );
 
     return filtered.sort((a, b) => {
@@ -96,7 +96,7 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
   const handleRuneSelection = (
     rune: ERune,
     isSelected: boolean,
-    shiftKey: boolean = false
+    shiftKey: boolean = false,
   ) => {
     const newSelected = new Set(selectedRunes);
 
@@ -434,8 +434,8 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
                                 ? "bg-yellow-900/30 border-yellow-400"
                                 : "bg-yellow-50 border-yellow-400"
                               : isDarkTheme
-                              ? "bg-gray-800 border-gray-700 hover:bg-gray-750"
-                              : "bg-white border-gray-200 hover:bg-gray-50"
+                                ? "bg-gray-800 border-gray-700 hover:bg-gray-750"
+                                : "bg-white border-gray-200 hover:bg-gray-50"
                           }
                       `}
                     >

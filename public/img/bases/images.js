@@ -1,6 +1,6 @@
-const https = require('https');
-const fs = require('fs');
-const path = require('path');
+const https = require("https");
+const fs = require("fs");
+const path = require("path");
 
 const urls = [
   "https://diablo2.io/styles/zulu/theme/images/items/rondache_graphic.png",
@@ -294,14 +294,18 @@ const urls = [
 
 urls.forEach((url, index, array) => {
   const file = fs.createWriteStream(path.basename(url));
-  https.get(url, response => {
-    response.pipe(file);
-    file.on('finish', () => {
-      file.close();
-      console.log(`Downloaded ${index+1}/${array.length}: ${path.basename(url)}`);
+  https
+    .get(url, (response) => {
+      response.pipe(file);
+      file.on("finish", () => {
+        file.close();
+        console.log(
+          `Downloaded ${index + 1}/${array.length}: ${path.basename(url)}`,
+        );
+      });
+    })
+    .on("error", (err) => {
+      fs.unlinkSync(path.basename(url));
+      console.error(`Error downloading ${url}:`, err.message);
     });
-  }).on('error', err => {
-    fs.unlinkSync(path.basename(url));
-    console.error(`Error downloading ${url}:`, err.message);
-  });
 });

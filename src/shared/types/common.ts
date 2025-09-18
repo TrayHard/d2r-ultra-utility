@@ -1,6 +1,7 @@
 import { z } from "zod";
 
-export const itemRunesSchema = z.array(z.object({
+export const itemRunesSchema = z.array(
+  z.object({
     id: z.number(),
     Key: z.string(),
     enUS: z.string(),
@@ -16,7 +17,7 @@ export const itemRunesSchema = z.array(z.object({
     ptBR: z.string(),
     ruRU: z.string(),
     zhCN: z.string(),
-}));
+  }),
+);
 
 export type TItemRunes = z.infer<typeof itemRunesSchema>;
-

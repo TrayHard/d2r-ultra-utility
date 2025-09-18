@@ -52,8 +52,8 @@ const UpdateButton: React.FC<UpdateButtonProps> = ({ isDarkTheme }) => {
   const tooltipTitle = isUpdating
     ? t("update.downloading", "Downloading update...")
     : updateAvailable
-    ? t("update.available", "Update available - Click to install")
-    : t("update.upToDate", "Up to date");
+      ? t("update.available", "Update available - Click to install")
+      : t("update.upToDate", "Up to date");
 
   return (
     <Tooltip title={tooltipTitle} placement="bottom">
@@ -83,8 +83,8 @@ const UpdateButton: React.FC<UpdateButtonProps> = ({ isDarkTheme }) => {
                   ? "text-green-500"
                   : "text-green-600"
                 : isDarkTheme
-                ? "text-gray-400"
-                : "text-gray-500")
+                  ? "text-gray-400"
+                  : "text-gray-500")
             }
           />
         )}

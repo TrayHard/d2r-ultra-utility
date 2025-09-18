@@ -40,8 +40,6 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
   onReadAll,
   onApplyAll,
 }) => {
-  
-
   // Обертки для функций, которые ожидает ProfileManager
   const handleProfileCreate = (name: string) => {
     onProfileCreate(name, settings);

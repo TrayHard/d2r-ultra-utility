@@ -134,7 +134,7 @@ urls.forEach((url, index, array) => {
       file.on("finish", () => {
         file.close();
         console.log(
-          `Downloaded ${index + 1}/${array.length}: ${path.basename(url)}`
+          `Downloaded ${index + 1}/${array.length}: ${path.basename(url)}`,
         );
       });
     })

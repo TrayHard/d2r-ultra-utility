@@ -229,11 +229,11 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
                                   ? "bg-blue-600 text-white cursor-not-allowed"
                                   : "bg-blue-500 text-white cursor-not-allowed"
                                 : isDarkTheme
-                                ? "bg-green-600 text-white hover:bg-green-700"
-                                : "bg-green-500 text-white hover:bg-green-600"
+                                  ? "bg-green-600 text-white hover:bg-green-700"
+                                  : "bg-green-500 text-white hover:bg-green-600"
                               : isDarkTheme
-                              ? "bg-gray-600 text-gray-200 hover:bg-gray-500"
-                              : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                                ? "bg-gray-600 text-gray-200 hover:bg-gray-500"
+                                : "bg-gray-200 text-gray-800 hover:bg-gray-300"
                           } ${isRequired ? "opacity-90" : "cursor-pointer"}`}
                         >
                           {locale.label}
@@ -341,8 +341,8 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
                                 ? "bg-blue-600 text-white"
                                 : "bg-blue-500 text-white"
                               : isDarkTheme
-                              ? "bg-gray-600 text-gray-200 hover:bg-gray-500"
-                              : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                                ? "bg-gray-600 text-gray-200 hover:bg-gray-500"
+                                : "bg-gray-200 text-gray-800 hover:bg-gray-300"
                           } cursor-pointer`}
                         >
                           {t(`common.appLanguageLabels.${language.value}`)}
@@ -374,7 +374,9 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
               </h3>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className={isDarkTheme ? "text-gray-300" : "text-gray-700"}>
+                  <span
+                    className={isDarkTheme ? "text-gray-300" : "text-gray-700"}
+                  >
                     {t("settings.appVersion")}
                   </span>
                   <span className="font-mono text-sm text-gray-300">

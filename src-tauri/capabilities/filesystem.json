@@ -1,131 +1,129 @@
 {
-    "$schema": "../gen/schemas/desktop-schema.json",
-    "identifier": "filesystem-cap",
-    "description": "Filesystem access for main window",
-    "windows": [
-        "main"
-    ],
-    "permissions": [
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "filesystem-cap",
+  "description": "Filesystem access for main window",
+  "windows": ["main"],
+  "permissions": [
+    {
+      "identifier": "fs:scope",
+      "allow": [
         {
-            "identifier": "fs:scope",
-            "allow": [
-                {
-                    "path": "$APPDATA"
-                },
-                {
-                    "path": "$APPDATA/**/*"
-                },
-                {
-                    "path": "$HOME/**/*"
-                },
-                { "path": "A:/**/*" },
-                { "path": "B:/**/*" },
-                { "path": "C:/**/*" },
-                { "path": "D:/**/*" },
-                { "path": "E:/**/*" },
-                { "path": "F:/**/*" },
-                { "path": "G:/**/*" },
-                { "path": "H:/**/*" },
-                { "path": "I:/**/*" },
-                { "path": "J:/**/*" },
-                { "path": "K:/**/*" },
-                { "path": "L:/**/*" },
-                { "path": "M:/**/*" },
-                { "path": "N:/**/*" },
-                { "path": "O:/**/*" },
-                { "path": "P:/**/*" },
-                { "path": "Q:/**/*" },
-                { "path": "R:/**/*" },
-                { "path": "S:/**/*" },
-                { "path": "T:/**/*" },
-                { "path": "U:/**/*" },
-                { "path": "V:/**/*" },
-                { "path": "W:/**/*" },
-                { "path": "X:/**/*" },
-                { "path": "Y:/**/*" },
-                { "path": "Z:/**/*" }
-            ]
+          "path": "$APPDATA"
         },
         {
-            "identifier": "fs:allow-app-write",
-            "allow": [
-                {
-                    "path": "$APPDATA"
-                },
-                {
-                    "path": "$APPDATA/**/*"
-                },
-                {
-                    "path": "$HOME/**/*"
-                },
-                { "path": "A:/**/*" },
-                { "path": "B:/**/*" },
-                { "path": "C:/**/*" },
-                { "path": "D:/**/*" },
-                { "path": "E:/**/*" },
-                { "path": "F:/**/*" },
-                { "path": "G:/**/*" },
-                { "path": "H:/**/*" },
-                { "path": "I:/**/*" },
-                { "path": "J:/**/*" },
-                { "path": "K:/**/*" },
-                { "path": "L:/**/*" },
-                { "path": "M:/**/*" },
-                { "path": "N:/**/*" },
-                { "path": "O:/**/*" },
-                { "path": "P:/**/*" },
-                { "path": "Q:/**/*" },
-                { "path": "R:/**/*" },
-                { "path": "S:/**/*" },
-                { "path": "T:/**/*" },
-                { "path": "U:/**/*" },
-                { "path": "V:/**/*" },
-                { "path": "W:/**/*" },
-                { "path": "X:/**/*" },
-                { "path": "Y:/**/*" },
-                { "path": "Z:/**/*" }
-            ]
+          "path": "$APPDATA/**/*"
         },
-        
         {
-            "identifier": "fs:allow-rename",
-            "allow": [
-                {
-                    "path": "$APPDATA"
-                },
-                {
-                    "path": "$APPDATA/**/*"
-                },
-                {
-                    "path": "$HOME/**/*"
-                },
-                { "path": "A:/**/*" },
-                { "path": "B:/**/*" },
-                { "path": "C:/**/*" },
-                { "path": "D:/**/*" },
-                { "path": "E:/**/*" },
-                { "path": "F:/**/*" },
-                { "path": "G:/**/*" },
-                { "path": "H:/**/*" },
-                { "path": "I:/**/*" },
-                { "path": "J:/**/*" },
-                { "path": "K:/**/*" },
-                { "path": "L:/**/*" },
-                { "path": "M:/**/*" },
-                { "path": "N:/**/*" },
-                { "path": "O:/**/*" },
-                { "path": "P:/**/*" },
-                { "path": "Q:/**/*" },
-                { "path": "R:/**/*" },
-                { "path": "S:/**/*" },
-                { "path": "T:/**/*" },
-                { "path": "U:/**/*" },
-                { "path": "V:/**/*" },
-                { "path": "W:/**/*" },
-                { "path": "X:/**/*" },
-                { "path": "Y:/**/*" },
-                { "path": "Z:/**/*" }
-            ]
-        }
-    ]
+          "path": "$HOME/**/*"
+        },
+        { "path": "A:/**/*" },
+        { "path": "B:/**/*" },
+        { "path": "C:/**/*" },
+        { "path": "D:/**/*" },
+        { "path": "E:/**/*" },
+        { "path": "F:/**/*" },
+        { "path": "G:/**/*" },
+        { "path": "H:/**/*" },
+        { "path": "I:/**/*" },
+        { "path": "J:/**/*" },
+        { "path": "K:/**/*" },
+        { "path": "L:/**/*" },
+        { "path": "M:/**/*" },
+        { "path": "N:/**/*" },
+        { "path": "O:/**/*" },
+        { "path": "P:/**/*" },
+        { "path": "Q:/**/*" },
+        { "path": "R:/**/*" },
+        { "path": "S:/**/*" },
+        { "path": "T:/**/*" },
+        { "path": "U:/**/*" },
+        { "path": "V:/**/*" },
+        { "path": "W:/**/*" },
+        { "path": "X:/**/*" },
+        { "path": "Y:/**/*" },
+        { "path": "Z:/**/*" }
+      ]
+    },
+    {
+      "identifier": "fs:allow-app-write",
+      "allow": [
+        {
+          "path": "$APPDATA"
+        },
+        {
+          "path": "$APPDATA/**/*"
+        },
+        {
+          "path": "$HOME/**/*"
+        },
+        { "path": "A:/**/*" },
+        { "path": "B:/**/*" },
+        { "path": "C:/**/*" },
+        { "path": "D:/**/*" },
+        { "path": "E:/**/*" },
+        { "path": "F:/**/*" },
+        { "path": "G:/**/*" },
+        { "path": "H:/**/*" },
+        { "path": "I:/**/*" },
+        { "path": "J:/**/*" },
+        { "path": "K:/**/*" },
+        { "path": "L:/**/*" },
+        { "path": "M:/**/*" },
+        { "path": "N:/**/*" },
+        { "path": "O:/**/*" },
+        { "path": "P:/**/*" },
+        { "path": "Q:/**/*" },
+        { "path": "R:/**/*" },
+        { "path": "S:/**/*" },
+        { "path": "T:/**/*" },
+        { "path": "U:/**/*" },
+        { "path": "V:/**/*" },
+        { "path": "W:/**/*" },
+        { "path": "X:/**/*" },
+        { "path": "Y:/**/*" },
+        { "path": "Z:/**/*" }
+      ]
+    },
+
+    {
+      "identifier": "fs:allow-rename",
+      "allow": [
+        {
+          "path": "$APPDATA"
+        },
+        {
+          "path": "$APPDATA/**/*"
+        },
+        {
+          "path": "$HOME/**/*"
+        },
+        { "path": "A:/**/*" },
+        { "path": "B:/**/*" },
+        { "path": "C:/**/*" },
+        { "path": "D:/**/*" },
+        { "path": "E:/**/*" },
+        { "path": "F:/**/*" },
+        { "path": "G:/**/*" },
+        { "path": "H:/**/*" },
+        { "path": "I:/**/*" },
+        { "path": "J:/**/*" },
+        { "path": "K:/**/*" },
+        { "path": "L:/**/*" },
+        { "path": "M:/**/*" },
+        { "path": "N:/**/*" },
+        { "path": "O:/**/*" },
+        { "path": "P:/**/*" },
+        { "path": "Q:/**/*" },
+        { "path": "R:/**/*" },
+        { "path": "S:/**/*" },
+        { "path": "T:/**/*" },
+        { "path": "U:/**/*" },
+        { "path": "V:/**/*" },
+        { "path": "W:/**/*" },
+        { "path": "X:/**/*" },
+        { "path": "Y:/**/*" },
+        { "path": "Z:/**/*" }
+      ]
+    }
+  ]
 }
