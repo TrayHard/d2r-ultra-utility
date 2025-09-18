@@ -140,7 +140,7 @@ const SortableProfileItem: React.FC<SortableProfileItemProps> = ({
             <span
               className={`truncate ${
                 isDarkTheme ? "text-gray-200" : "text-gray-800"
-              }`}
+              } baseModeProfileName`}
               onClick={() => onStartEditing(profile.id, profile.name)}
             >
               {profile.name}

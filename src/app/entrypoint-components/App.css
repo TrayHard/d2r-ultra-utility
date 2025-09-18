@@ -199,3 +199,16 @@ input:focus {
     transform: scaleX(0.9);
   }
 }
+
+.baseModeProfileName {
+  max-inline-size: 300px;
+}
+
+/* .profileManagerProfileName {
+} */
+.profileManagerProfileName span {
+  max-inline-size: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
