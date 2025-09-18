@@ -149,15 +149,15 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
 
   // Создаем опции для dropdown с заголовками секций
   const profileOptions = [];
-  
+
   // Добавляем секцию базовых профилей
   if (immutableProfiles.length > 0) {
     profileOptions.push({
-      value: 'baseProfilesHeader',
+      value: "baseProfilesHeader",
       label: t("profiles.baseProfiles"),
       isSectionHeader: true,
     });
-    
+
     immutableProfiles.forEach((profile) => {
       profileOptions.push({
         value: profile.id,
@@ -166,15 +166,15 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
       });
     });
   }
-  
+
   // Добавляем секцию пользовательских профилей
   if (profiles.length > 0) {
     profileOptions.push({
-      value: 'userProfilesHeader',
+      value: "userProfilesHeader",
       label: t("profiles.userProfiles"),
       isSectionHeader: true,
     });
-    
+
     profiles.forEach((profile) => {
       profileOptions.push({
         value: profile.id,
@@ -214,15 +214,23 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
         <Dropdown
           selectedValue={activeProfileId ?? ""}
           onSelect={(value) => {
-            if (value === 'baseProfilesHeader' || value === 'userProfilesHeader') return;
+            if (
+              value === "baseProfilesHeader" ||
+              value === "userProfilesHeader"
+            )
+              return;
             onProfileSelect(value);
           }}
           options={profileOptions}
           placeholder={t("profiles.selectProfile")}
           isDarkTheme={isDarkTheme}
-          className="min-w-[250px]"
+          className="min-w-[250px] profileManagerProfileName"
           onOptionRename={(value) => {
-            if (value === 'baseProfilesHeader' || value === 'userProfilesHeader') return;
+            if (
+              value === "baseProfilesHeader" ||
+              value === "userProfilesHeader"
+            )
+              return;
             const profile = allProfiles.find((p) => p.id === value);
             if (profile && !profile.isImmutable) {
               setRenameProfileId(profile.id);
@@ -231,7 +239,11 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
             }
           }}
           onOptionDelete={(value) => {
-            if (value === 'baseProfilesHeader' || value === 'userProfilesHeader') return;
+            if (
+              value === "baseProfilesHeader" ||
+              value === "userProfilesHeader"
+            )
+              return;
             const profile = allProfiles.find((p) => p.id === value);
             if (profile && !profile.isImmutable) {
               setDeleteProfileId(profile.id);
@@ -271,9 +283,13 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
               onClick={() => {
                 if (activeProfileId) {
                   onProfileDuplicate(activeProfileId);
-                  const duplicated = allProfiles.find((p) => p.id === activeProfileId);
+                  const duplicated = allProfiles.find(
+                    (p) => p.id === activeProfileId
+                  );
                   sendMessage(
-                    t("profiles.messages.profileDuplicated", { name: duplicated?.name }) || "Profile duplicated",
+                    t("profiles.messages.profileDuplicated", {
+                      name: duplicated?.name,
+                    }) || "Profile duplicated",
                     { type: "success", title: t("profiles.messages.success") }
                   );
                 }
@@ -510,7 +526,9 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
                     onProfileSave(activeProfileId, currentSettings);
                   }
                   sendMessage(
-                    t("profiles.messages.profileSaved", { name: activeProfile?.name }),
+                    t("profiles.messages.profileSaved", {
+                      name: activeProfile?.name,
+                    }),
                     { type: "success", title: t("profiles.messages.success") }
                   );
                 } catch (e) {
