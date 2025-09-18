@@ -76,20 +76,11 @@ button {
   color: #ffffff;
   background-color: #2d2d2d;
   transition: border-color 0.25s;
-  /* box-shadow: 0 2px 2px rgba(0, 0, 0, 0.4); */
 }
 
 button {
   cursor: pointer;
 }
-
-/* button:hover {
-  border-color: #396cd8;
-}
-button:active {
-  border-color: #396cd8;
-  background-color: #404040;
-} */
 
 input,
 button {
@@ -204,8 +195,6 @@ input:focus {
   max-inline-size: 300px;
 }
 
-/* .profileManagerProfileName {
-} */
 .profileManagerProfileName span {
   max-inline-size: 200px;
   overflow: hidden;
