@@ -50,8 +50,14 @@ const MainSpaceToolbar: React.FC<ToolbarProps> = ({
           <Tooltip
             title={
               appMode === "advanced"
-                ? (t("mode.switchToBasic", "Переключить в базовый режим") as string)
-                : (t("mode.switchToAdvanced", "Переключить в режим редактирования") as string)
+                ? (t(
+                    "mode.switchToBasic",
+                    "Переключить в базовый режим",
+                  ) as string)
+                : (t(
+                    "mode.switchToAdvanced",
+                    "Переключить в режим редактирования",
+                  ) as string)
             }
             placement="bottom"
           >
@@ -73,9 +79,7 @@ const MainSpaceToolbar: React.FC<ToolbarProps> = ({
         <div className="flex items-center space-x-4">
           {/* Theme Toggle */}
           <Tooltip
-            title={
-              isDarkTheme ? t("common.lightTheme") : t("common.darkTheme")
-            }
+            title={isDarkTheme ? t("common.lightTheme") : t("common.darkTheme")}
             placement="bottom"
           >
             <button

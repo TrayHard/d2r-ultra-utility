@@ -3,6 +3,7 @@
 ## Обзор
 
 В приложение добавлена система отладочного логирования, которая позволяет:
+
 - Собирать подробные логи работы приложения
 - Экспортировать логи для анализа разработчиками
 - Управлять режимом отладки через интерфейс
@@ -17,6 +18,7 @@
 ## Экспорт логов
 
 Когда отладочный режим включен, в настройках появляется раздел "Логи отладки" с:
+
 - Статистикой по количеству логов разных уровней
 - Кнопками экспорта в форматах JSON и текст
 - Кнопкой очистки логов
@@ -31,19 +33,27 @@
 ### Использование логгера в компонентах
 
 ```typescript
-import { useLogger } from '../shared/utils/logger';
+import { useLogger } from "../shared/utils/logger";
 
 const MyComponent = () => {
-  const logger = useLogger('MyComponent');
-  
+  const logger = useLogger("MyComponent");
+
   const handleAction = () => {
-    logger.info('User performed action', { actionType: 'click' }, 'handleAction');
-    
+    logger.info(
+      "User performed action",
+      { actionType: "click" },
+      "handleAction",
+    );
+
     try {
       // некоторая логика
-      logger.debug('Processing data', { dataSize: data.length }, 'handleAction');
+      logger.debug(
+        "Processing data",
+        { dataSize: data.length },
+        "handleAction",
+      );
     } catch (error) {
-      logger.error('Failed to process data', error, { data }, 'handleAction');
+      logger.error("Failed to process data", error, { data }, "handleAction");
     }
   };
 };
@@ -70,7 +80,7 @@ const MyComponent = () => {
 ```typescript
 interface LogEntry {
   timestamp: string;
-  level: 'debug' | 'info' | 'warn' | 'error';
+  level: "debug" | "info" | "warn" | "error";
   message: string;
   data?: any;
   component?: string;
@@ -93,6 +103,7 @@ interface LogEntry {
 ## Интеграция в существующий код
 
 Система логирования уже интегрирована в:
+
 - Управление настройками приложения
 - Загрузку и обработку файлов игры
 - Смену темы

@@ -76,8 +76,8 @@ const TriStateSwitch: React.FC<TriStateSwitchProps> = ({
         isActive
           ? "bg-red-400 shadow-inner"
           : isDarkTheme
-          ? "bg-gray-700 hover:bg-gray-600"
-          : "bg-gray-200 hover:bg-gray-300"
+            ? "bg-gray-700 hover:bg-gray-600"
+            : "bg-gray-200 hover:bg-gray-300"
       }`;
     } else if (blockValue === null) {
       // Центральный блок - без изменений (серый)
@@ -87,8 +87,8 @@ const TriStateSwitch: React.FC<TriStateSwitchProps> = ({
             ? "bg-gray-600 shadow-inner"
             : "bg-gray-400 shadow-inner"
           : isDarkTheme
-          ? "bg-gray-700 hover:bg-gray-600"
-          : "bg-gray-200 hover:bg-gray-300"
+            ? "bg-gray-700 hover:bg-gray-600"
+            : "bg-gray-200 hover:bg-gray-300"
       }`;
     } else {
       // Правый блок - включено
@@ -96,8 +96,8 @@ const TriStateSwitch: React.FC<TriStateSwitchProps> = ({
         isActive
           ? "bg-green-400 shadow-inner"
           : isDarkTheme
-          ? "bg-gray-700 hover:bg-gray-600"
-          : "bg-gray-200 hover:bg-gray-300"
+            ? "bg-gray-700 hover:bg-gray-600"
+            : "bg-gray-200 hover:bg-gray-300"
       }`;
     }
   };
@@ -175,7 +175,10 @@ const TriStateSwitch: React.FC<TriStateSwitchProps> = ({
       `}
     >
       {/* Левый блок - Выключено */}
-      <Tooltip title={tooltips?.off || t("triState.off") || "Выключено"} placement="top">
+      <Tooltip
+        title={tooltips?.off || t("triState.off") || "Выключено"}
+        placement="top"
+      >
         <div
           className={`${getBlockClasses(false, value === false)} border-r ${
             isDarkTheme ? "border-gray-600" : "border-gray-300"
@@ -187,7 +190,10 @@ const TriStateSwitch: React.FC<TriStateSwitchProps> = ({
       </Tooltip>
 
       {/* Центральный блок - Без изменений */}
-      <Tooltip title={tooltips?.noChange || t("triState.noChange") || "Без изменений"} placement="top">
+      <Tooltip
+        title={tooltips?.noChange || t("triState.noChange") || "Без изменений"}
+        placement="top"
+      >
         <div
           className={`${getBlockClasses(null, value === null)} border-r ${
             isDarkTheme ? "border-gray-600" : "border-gray-300"
@@ -199,7 +205,10 @@ const TriStateSwitch: React.FC<TriStateSwitchProps> = ({
       </Tooltip>
 
       {/* Правый блок - Включено */}
-      <Tooltip title={tooltips?.on || t("triState.on") || "Включено"} placement="top">
+      <Tooltip
+        title={tooltips?.on || t("triState.on") || "Включено"}
+        placement="top"
+      >
         <div
           className={getBlockClasses(true, value === true)}
           onClick={() => handleClick(true)}

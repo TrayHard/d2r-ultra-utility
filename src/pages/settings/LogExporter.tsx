@@ -49,7 +49,7 @@ const LogExporter: React.FC<LogExporterProps> = ({ isDarkTheme }) => {
         "Logs exported as text",
         { format: "text", filename: exportFileDefaultName },
         "LogExporter",
-        "exportLogsAsText"
+        "exportLogsAsText",
       );
     } catch (error) {
       logger.error(
@@ -57,7 +57,7 @@ const LogExporter: React.FC<LogExporterProps> = ({ isDarkTheme }) => {
         error as Error,
         undefined,
         "LogExporter",
-        "exportLogsAsText"
+        "exportLogsAsText",
       );
     } finally {
       setIsExporting(false);
@@ -71,7 +71,7 @@ const LogExporter: React.FC<LogExporterProps> = ({ isDarkTheme }) => {
         "Logs cleared by user",
         undefined,
         "LogExporter",
-        "clearLogs"
+        "clearLogs",
       );
     }
   };
@@ -113,7 +113,7 @@ const LogExporter: React.FC<LogExporterProps> = ({ isDarkTheme }) => {
         </div>
       </div>
 
-      {isDebugMode && 
+      {isDebugMode && (
         <>
           <div className="my-4">
             <div
@@ -122,7 +122,9 @@ const LogExporter: React.FC<LogExporterProps> = ({ isDarkTheme }) => {
               }`}
             >
               <div>
-                <span className={isDarkTheme ? "text-gray-300" : "text-gray-700"}>
+                <span
+                  className={isDarkTheme ? "text-gray-300" : "text-gray-700"}
+                >
                   {t("logs.total")}:
                 </span>
                 <span
@@ -205,7 +207,7 @@ const LogExporter: React.FC<LogExporterProps> = ({ isDarkTheme }) => {
             </Button>
           </div>
         </>
-      }
+      )}
 
       {/* Описание */}
       <div className="mt-3">

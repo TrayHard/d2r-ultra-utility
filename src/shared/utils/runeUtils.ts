@@ -1,4 +1,8 @@
-import { ERune, runeNumbers, runeHardcodedLocales } from "../../pages/runes/constants/runes.ts";
+import {
+  ERune,
+  runeNumbers,
+  runeHardcodedLocales,
+} from "../../pages/runes/constants/runes.ts";
 import { RuneSettings } from "../../app/providers/SettingsContext.tsx";
 import { colorCodes, MOD_ROOT } from "../constants.ts";
 
@@ -318,15 +322,18 @@ export const removeColorCodes = (text: string): string => {
 /**
  * Парсит строку с цветовыми кодами D2R и возвращает массив сегментов с цветами
  */
-export const parseColoredText = (text: string, getD2RColorStyle?: (colorCode: string) => string): Array<{
+export const parseColoredText = (
+  text: string,
+  getD2RColorStyle?: (colorCode: string) => string,
+): Array<{
   text: string;
   color: string;
 }> => {
   if (!text) return [];
-  
+
   const segments: Array<{ text: string; color: string }> = [];
   const colorCodeRegex = /ÿc([0-9a-zA-Z@:;MNOPQRSTAU])/g;
-  
+
   let lastIndex = 0;
   // D2R в тексте хранит коды вида ÿcX, где X — символ кода цвета.
   // В colorCodes значения — полные коды (например, "ÿc1").
@@ -340,31 +347,39 @@ export const parseColoredText = (text: string, getD2RColorStyle?: (colorCode: st
   // Текущий активный код цвета (символ кода). По умолчанию для рун используется orange (ÿc@)
   let currentCode: string | undefined = undefined;
   let match;
-  
+
   while ((match = colorCodeRegex.exec(text)) !== null) {
     // Добавляем текст до цветового кода
     if (match.index > lastIndex) {
       const textSegment = text.substring(lastIndex, match.index);
       if (textSegment) {
-        const colorName = (currentCode ? charToNameMap[currentCode] : undefined) ?? "orange";
-        segments.push({ text: textSegment, color: getD2RColorStyle?.(colorName) || "#FFA500" });
+        const colorName =
+          (currentCode ? charToNameMap[currentCode] : undefined) ?? "orange";
+        segments.push({
+          text: textSegment,
+          color: getD2RColorStyle?.(colorName) || "#FFA500",
+        });
       }
     }
-    
+
     // Обновляем текущий цвет
     currentCode = match[1];
     lastIndex = match.index + match[0].length;
   }
-  
+
   // Добавляем оставшийся текст
   if (lastIndex < text.length) {
     const textSegment = text.substring(lastIndex);
     if (textSegment) {
-      const colorName = (currentCode ? charToNameMap[currentCode] : undefined) ?? "orange";
-      segments.push({ text: textSegment, color: getD2RColorStyle?.(colorName) || "#FFA500" });
+      const colorName =
+        (currentCode ? charToNameMap[currentCode] : undefined) ?? "orange";
+      segments.push({
+        text: textSegment,
+        color: getD2RColorStyle?.(colorName) || "#FFA500",
+      });
     }
   }
-  
+
   // Если нет цветовых кодов, возвращаем весь текст с дефолтным цветом
   if (segments.length === 0) {
     segments.push({ text, color: getD2RColorStyle?.("orange") || "#FFA500" });
@@ -383,10 +398,14 @@ export const parseColoredText = (text: string, getD2RColorStyle?: (colorCode: st
       if (partText.length === 0) {
         // Пустой участок после перевода строки — считаем строкой с дефолтным цветом
         // Добавим пустую строку, чтобы white-space: pre-wrap сохранил высоту
-        finalSegments.push({ text: "", color: getD2RColorStyle?.("orange") || "#FFA500" });
+        finalSegments.push({
+          text: "",
+          color: getD2RColorStyle?.("orange") || "#FFA500",
+        });
       } else {
         // На новой строке цвет сбрасывается к orange, пока не встретится следующий код
-        const colorForThisLine = i === 0 ? seg.color : getD2RColorStyle?.("orange") || "#FFA500";
+        const colorForThisLine =
+          i === 0 ? seg.color : getD2RColorStyle?.("orange") || "#FFA500";
         finalSegments.push({ text: partText, color: colorForThisLine });
       }
     }
@@ -411,7 +430,7 @@ const getColorNameByCode = (colorCode: string): string => {
  */
 export const parseNumberingSettings = (
   text: string,
-  expectedRuneNumber: number
+  expectedRuneNumber: number,
 ): {
   show: boolean;
   dividerType: string;
@@ -455,7 +474,7 @@ export const parseNumberingSettings = (
       // Ищем (число) или цвет(число) или (цветчисло)
       regex: new RegExp(
         `(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\((ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?${expectedNumberStr}(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\)(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?`,
-        "g"
+        "g",
       ),
     },
     {
@@ -463,7 +482,7 @@ export const parseNumberingSettings = (
       // Ищем [число] или цвет[число] или [цветчисло]
       regex: new RegExp(
         `(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\[(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?${expectedNumberStr}(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\](ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?`,
-        "g"
+        "g",
       ),
     },
     {
@@ -471,7 +490,7 @@ export const parseNumberingSettings = (
       // Ищем |число| или цвет|цветчисло|
       regex: new RegExp(
         `(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\|(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\s*${expectedNumberStr}\\s*(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\|(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?`,
-        "g"
+        "g",
       ),
     },
   ];
@@ -638,20 +657,25 @@ export const parseBoxLimitersColor = (text: string): string => {
 export const generateFinalRuneName = (
   rune: ERune,
   settings: RuneSettings,
-  locale: keyof typeof settings.manualSettings.locales
+  locale: keyof typeof settings.manualSettings.locales,
 ): string => {
   // В ручном режиме возвращаем локаль как есть
   if (settings.mode === "manual") {
-    return settings.manualSettings.locales[locale] || settings.manualSettings.locales.enUS;
+    return (
+      settings.manualSettings.locales[locale] ||
+      settings.manualSettings.locales.enUS
+    );
   }
 
   // В автоматическом режиме генерируем финальное имя на основе захардкоженных локалей
   const hardcoded = runeHardcodedLocales[rune];
-  const rawBaseName = (hardcoded && (hardcoded[locale] || hardcoded.enUS)) || "";
+  const rawBaseName =
+    (hardcoded && (hardcoded[locale] || hardcoded.enUS)) || "";
   const baseName = removeColorCodes(rawBaseName);
 
   // Применяем цвет к имени руны
-  const colorCode = colorCodes[settings.autoSettings.color as keyof typeof colorCodes];
+  const colorCode =
+    colorCodes[settings.autoSettings.color as keyof typeof colorCodes];
   const coloredName = colorCode ? `${colorCode}${baseName}` : baseName;
 
   // Формируем финальное имя с нумерацией
@@ -663,9 +687,13 @@ export const generateFinalRuneName = (
 
     // Получаем коды цветов для разделителя и номера
     const dividerColorCode =
-      colorCodes[settings.autoSettings.numbering.dividerColor as keyof typeof colorCodes];
+      colorCodes[
+        settings.autoSettings.numbering.dividerColor as keyof typeof colorCodes
+      ];
     const numberColorCode =
-      colorCodes[settings.autoSettings.numbering.numberColor as keyof typeof colorCodes];
+      colorCodes[
+        settings.autoSettings.numbering.numberColor as keyof typeof colorCodes
+      ];
 
     // Формируем цветные разделители и номер
     const coloredNumber = numberColorCode
@@ -701,7 +729,9 @@ export const generateFinalRuneName = (
   const boxSize = settings.autoSettings.boxSize ?? 0;
   const boxLimiters = settings.autoSettings.boxLimiters ?? "~";
   const boxLimitersColorCode =
-    colorCodes[settings.autoSettings.boxLimitersColor as keyof typeof colorCodes] ?? "ÿc0";
+    colorCodes[
+      settings.autoSettings.boxLimitersColor as keyof typeof colorCodes
+    ] ?? "ÿc0";
 
   if (boxSize === 0) {
     // Normal - без изменений
@@ -729,7 +759,7 @@ export const generateFinalRuneName = (
 export const generateStructuredPreview = (
   rune: ERune,
   settings: RuneSettings,
-  locale: keyof typeof settings.manualSettings.locales
+  locale: keyof typeof settings.manualSettings.locales,
 ): {
   baseName: string;
   baseColor: string;
@@ -765,19 +795,30 @@ export const generateStructuredPreview = (
     numbering = settings.autoSettings.numbering;
   } else {
     // В ручном режиме используем manualSettings для локалей и дефолтные настройки для остального
-    rawBaseName = settings.manualSettings.locales[locale] || settings.manualSettings.locales.enUS;
+    rawBaseName =
+      settings.manualSettings.locales[locale] ||
+      settings.manualSettings.locales.enUS;
     baseColor = parseRuneTextColor(rawBaseName) || "white";
     // Определяем параметры бокса по содержимому строки (всегда парсим размер, даже без ограничителей)
-    const delimiterPattern = /^ÿc[0-9a-zA-Z@:;MNOPQRSTAU]([~\-_|.])\s*.*?\s*ÿc[0-9a-zA-Z@:;MNOPQRSTAU]\1$/;
+    const delimiterPattern =
+      /^ÿc[0-9a-zA-Z@:;MNOPQRSTAU]([~\-_|.])\s*.*?\s*ÿc[0-9a-zA-Z@:;MNOPQRSTAU]\1$/;
     hasBoxLimiters = delimiterPattern.test(rawBaseName);
     boxSize = parseRuneBoxSize(rawBaseName);
     boxLimiters = hasBoxLimiters ? parseBoxLimiters(rawBaseName) : "~";
-    boxLimitersColor = hasBoxLimiters ? parseBoxLimitersColor(rawBaseName) : "white";
-    numbering = { show: false, dividerType: "parentheses", dividerColor: "white", numberColor: "white" };
+    boxLimitersColor = hasBoxLimiters
+      ? parseBoxLimitersColor(rawBaseName)
+      : "white";
+    numbering = {
+      show: false,
+      dividerType: "parentheses",
+      dividerColor: "white",
+      numberColor: "white",
+    };
   }
 
   // В ручном режиме не обрезаем цвета, в автоматическом - обрезаем для применения собственных цветов
-  const baseName = settings.mode === "manual" ? rawBaseName : removeColorCodes(rawBaseName);
+  const baseName =
+    settings.mode === "manual" ? rawBaseName : removeColorCodes(rawBaseName);
 
   const result = {
     baseName,
@@ -835,7 +876,7 @@ export const generateStructuredPreview = (
 export const generatePreviewRuneName = (
   rune: ERune,
   settings: RuneSettings,
-  locale: keyof typeof settings.manualSettings.locales
+  locale: keyof typeof settings.manualSettings.locales,
 ): string => {
   // Генерируем финальное имя
   const finalName = generateFinalRuneName(rune, settings, locale);
@@ -849,14 +890,14 @@ export const generatePreviewRuneName = (
  */
 export const generateRuneHighlightData = async (
   rune: ERune,
-  settings: RuneSettings
+  settings: RuneSettings,
 ) => {
   try {
     // Получаем имя руны в формате snake_case
     const runeNameSnakeCase = `${rune}_rune`;
 
     console.log(
-      `Generating highlight data for rune: ${rune}, highlighted: ${settings.isHighlighted}`
+      `Generating highlight data for rune: ${rune}, highlighted: ${settings.isHighlighted}`,
     );
 
     // Используем встроенные шаблоны
@@ -867,18 +908,18 @@ export const generateRuneHighlightData = async (
     console.log(
       `Using ${
         settings.isHighlighted ? "highlighted" : "unhighlighted"
-      } template`
+      } template`,
     );
 
     // Заменяем все вхождения {runeName} на фактическое имя руны
     const processedText = templateText.replace(
       /{runeName}/g,
-      runeNameSnakeCase
+      runeNameSnakeCase,
     );
 
     console.log(
       `Processed template for ${rune}:`,
-      processedText.substring(0, 200) + "..."
+      processedText.substring(0, 200) + "...",
     );
 
     // Парсим JSON и возвращаем
@@ -931,7 +972,7 @@ export const GAME_PATHS = {
  */
 export const extractBaseRuneName = (
   text: string,
-  expectedRuneNumber: number
+  expectedRuneNumber: number,
 ): string => {
   if (!text) return text;
 
@@ -951,17 +992,17 @@ export const extractBaseRuneName = (
     // Скобки: (число) с возможными цветовыми кодами
     new RegExp(
       `\\s*(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\(\\s*(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?${expectedNumberStr}(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\s*\\)(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\s*`,
-      "g"
+      "g",
     ),
     // Квадратные скобки: [число] с возможными цветовыми кодами
     new RegExp(
       `\\s*(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\[\\s*(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?${expectedNumberStr}(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\s*\\](ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\s*`,
-      "g"
+      "g",
     ),
     // Пайп: | число | с возможными цветовыми кодами
     new RegExp(
       `\\s*(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\|\\s*(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?${expectedNumberStr}\\s*(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\|\\s*(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])?\\s*`,
-      "g"
+      "g",
     ),
   ];
 

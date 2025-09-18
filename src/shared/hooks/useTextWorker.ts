@@ -51,32 +51,37 @@ export const useTextWorker = (
   sendMessage?: (
     message: string,
     type?: "success" | "error" | "warning" | "info",
-    title?: string
+    title?: string,
   ) => void,
   t?: (key: string, options?: any) => string,
   getAllRuneSettings?: () => Record<ERune, RuneSettings>,
   allowedMode?: "basic" | "advanced" | null,
-  getCurrentMode?: () => "basic" | "advanced"
+  getCurrentMode?: () => "basic" | "advanced",
 ) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const logger = useLogger('TextWorker');
+  const logger = useLogger("TextWorker");
 
   const readLocales = useCallback(async () => {
-    logger.info('Starting to read runes locales', undefined, 'readLocales');
+    logger.info("Starting to read runes locales", undefined, "readLocales");
     setIsLoading(true);
     setError(null);
 
     try {
       // Получаем домашнюю директорию из настроек
       const settings = loadSavedSettings();
-      logger.debug('Loaded settings for runes', { settings }, 'readLocales');
-      
+      logger.debug("Loaded settings for runes", { settings }, "readLocales");
+
       if (!settings?.homeDirectory) {
         const errorMsg =
           t?.("messages.error.pathNotFound") ??
           "Путь к игре не найден в настройках";
-        logger.error('Home directory not found for runes', new Error(errorMsg), { settings }, 'readLocales');
+        logger.error(
+          "Home directory not found for runes",
+          new Error(errorMsg),
+          { settings },
+          "readLocales",
+        );
         throw new Error(errorMsg);
       }
 
@@ -85,18 +90,30 @@ export const useTextWorker = (
       const homeDir = settings.homeDirectory.replace(/[\/\\]+$/, ""); // убираем завершающие слеши
       const fullPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.RUNES_FILE}`;
 
-      logger.info('Reading runes file', { path: fullPath }, 'readLocales');
+      logger.info("Reading runes file", { path: fullPath }, "readLocales");
 
       // Читаем файл через Tauri API
       const fileContent = await readTextFile(fullPath);
-      logger.debug('Successfully read runes file', { contentLength: fileContent.length }, 'readLocales');
+      logger.debug(
+        "Successfully read runes file",
+        { contentLength: fileContent.length },
+        "readLocales",
+      );
 
       // Парсим JSON
       const localeData: LocaleItem[] = JSON.parse(fileContent);
-      logger.debug('Parsed runes locale data', { itemCount: localeData.length }, 'readLocales');
+      logger.debug(
+        "Parsed runes locale data",
+        { itemCount: localeData.length },
+        "readLocales",
+      );
 
       const parsedData = itemRunesSchema.parse(localeData);
-      logger.debug('Validated runes data schema', { validItemCount: parsedData.length }, 'readLocales');
+      logger.debug(
+        "Validated runes data schema",
+        { validItemCount: parsedData.length },
+        "readLocales",
+      );
 
       let processedRunes = 0;
       parsedData.forEach((item) => {
@@ -142,11 +159,15 @@ export const useTextWorker = (
         Object.values(allSettings).forEach((runeSettings) => {
           if (runeSettings.autoSettings?.numbering?.show) {
             dividerTypes[runeSettings.autoSettings.numbering.dividerType] =
-              (dividerTypes[runeSettings.autoSettings.numbering.dividerType] || 0) + 1;
+              (dividerTypes[runeSettings.autoSettings.numbering.dividerType] ||
+                0) + 1;
             dividerColors[runeSettings.autoSettings.numbering.dividerColor] =
-              (dividerColors[runeSettings.autoSettings.numbering.dividerColor] || 0) + 1;
+              (dividerColors[
+                runeSettings.autoSettings.numbering.dividerColor
+              ] || 0) + 1;
             numberColors[runeSettings.autoSettings.numbering.numberColor] =
-              (numberColors[runeSettings.autoSettings.numbering.numberColor] || 0) + 1;
+              (numberColors[runeSettings.autoSettings.numbering.numberColor] ||
+                0) + 1;
           }
         });
 
@@ -167,7 +188,12 @@ export const useTextWorker = (
 
       return localeData;
     } catch (err) {
-      logger.error('Failed to read runes locales', err as Error, { error: err instanceof Error ? err.message : String(err) }, 'readLocales');
+      logger.error(
+        "Failed to read runes locales",
+        err as Error,
+        { error: err instanceof Error ? err.message : String(err) },
+        "readLocales",
+      );
       const defaultErrorMsg =
         t?.("messages.error.unknownError") ??
         "Неизвестная ошибка при чтении файлов";
@@ -182,7 +208,11 @@ export const useTextWorker = (
       throw err;
     } finally {
       setIsLoading(false);
-      logger.info('Finished reading runes locales', { hasError: !!error }, 'readLocales');
+      logger.info(
+        "Finished reading runes locales",
+        { hasError: !!error },
+        "readLocales",
+      );
     }
   }, []);
 
@@ -221,8 +251,8 @@ export const useTextWorker = (
                   component.type === "VfxDefinitionComponent" &&
                   (component.filename?.includes("horadric_light") ||
                     component.filename?.includes("aura_fanatic") ||
-                    component.filename?.includes("valkriestart"))
-              )
+                    component.filename?.includes("valkriestart")),
+              ),
             ) ?? false;
 
           if (updateRuneSettings) {
@@ -236,12 +266,12 @@ export const useTextWorker = (
           console.log(
             `Loaded highlight settings for ${rune} rune: ${
               isHighlighted ? "highlighted" : "not highlighted"
-            }`
+            }`,
           );
         } catch (err) {
           console.warn(
             `Failed to read highlight settings for ${rune} rune:`,
-            err
+            err,
           );
           // Не прерываем процесс, если один файл не удалось прочитать
         }
@@ -287,30 +317,43 @@ export const useTextWorker = (
   }, [readLocales, checkHighlightings]);
 
   const applyChanges = useCallback(async () => {
-    logger.info('Starting to apply runes changes', undefined, 'applyChanges');
-    
+    logger.info("Starting to apply runes changes", undefined, "applyChanges");
+
     // Проверяем, разрешено ли применение изменений в текущем режиме
     if (allowedMode && getCurrentMode) {
       const currentMode = getCurrentMode();
       if (currentMode !== allowedMode) {
-        logger.warn('Skipping runes changes application - wrong mode', { currentMode, allowedMode }, 'applyChanges');
+        logger.warn(
+          "Skipping runes changes application - wrong mode",
+          { currentMode, allowedMode },
+          "applyChanges",
+        );
         return;
       }
     }
-    
+
     setIsLoading(true);
     setError(null);
 
     try {
       // Получаем домашнюю директорию из настроек
       const savedSettings = loadSavedSettings();
-      logger.debug('Loaded settings for applying runes changes', { settings: savedSettings }, 'applyChanges');
-      
+      logger.debug(
+        "Loaded settings for applying runes changes",
+        { settings: savedSettings },
+        "applyChanges",
+      );
+
       if (!savedSettings?.homeDirectory) {
         const errorMsg =
           t?.("messages.error.pathNotFound") ??
           "Путь к игре не найден в настройках";
-        logger.error('Home directory not found for applying runes changes', new Error(errorMsg), { settings: savedSettings }, 'applyChanges');
+        logger.error(
+          "Home directory not found for applying runes changes",
+          new Error(errorMsg),
+          { settings: savedSettings },
+          "applyChanges",
+        );
         throw new Error(errorMsg);
       }
 
@@ -323,14 +366,18 @@ export const useTextWorker = (
       const homeDir = savedSettings.homeDirectory.replace(/[\/\\]+$/, "");
 
       // 1. Применяем настройки к файлу локализации
-      logger.info('Applying localization changes', { homeDir }, 'applyChanges');
+      logger.info("Applying localization changes", { homeDir }, "applyChanges");
       await applyLocalizationChanges(homeDir, runeSettings);
 
       // 2. Применяем настройки к файлам подсветки рун
-      logger.info('Applying highlight changes', { homeDir }, 'applyChanges');
+      logger.info("Applying highlight changes", { homeDir }, "applyChanges");
       await applyHighlightChanges(homeDir, runeSettings);
 
-      logger.info('All runes changes applied successfully', undefined, 'applyChanges');
+      logger.info(
+        "All runes changes applied successfully",
+        undefined,
+        "applyChanges",
+      );
 
       // Отправляем сообщение об успехе
       const successTitle =
@@ -341,7 +388,12 @@ export const useTextWorker = (
 
       sendMessage?.(successMessage, "success", successTitle);
     } catch (err) {
-      logger.error('Failed to apply runes changes', err as Error, { error: err instanceof Error ? err.message : String(err) }, 'applyChanges');
+      logger.error(
+        "Failed to apply runes changes",
+        err as Error,
+        { error: err instanceof Error ? err.message : String(err) },
+        "applyChanges",
+      );
       const defaultErrorMsg =
         t?.("messages.error.unknownError") ??
         "Неизвестная ошибка при сохранении изменений";
@@ -355,7 +407,11 @@ export const useTextWorker = (
       throw err;
     } finally {
       setIsLoading(false);
-      logger.info('Finished applying runes changes', { hasError: !!error }, 'applyChanges');
+      logger.info(
+        "Finished applying runes changes",
+        { hasError: !!error },
+        "applyChanges",
+      );
     }
   }, [t, sendMessage, getAllRuneSettings, allowedMode, getCurrentMode]);
 
@@ -380,7 +436,9 @@ export const useTextWorker = (
       const updatedData = [...currentData];
 
       // Обновляем только выбранные локали из настроек приложения
-      const selectedLocales = (JSON.parse(localStorage.getItem(STORAGE_KEYS.APP_CONFIG) || '{}')?.selectedLocales) || ["enUS", "ruRU"]; 
+      const selectedLocales = JSON.parse(
+        localStorage.getItem(STORAGE_KEYS.APP_CONFIG) || "{}",
+      )?.selectedLocales || ["enUS", "ruRU"];
 
       Object.entries(runeSettings).forEach(([rune, settings]) => {
         const runeEnum = rune as ERune;
@@ -399,7 +457,9 @@ export const useTextWorker = (
 
               if (settings.mode === "manual") {
                 // В ручном режиме используем то, что пользователь ввел в инпуты
-                const manualText = settings.manualSettings.locales[locale] || settings.manualSettings.locales.enUS;
+                const manualText =
+                  settings.manualSettings.locales[locale] ||
+                  settings.manualSettings.locales.enUS;
                 // В игре строки отображаются в обратном порядке (нижняя выше), поэтому при записи реверсим порядок строк
                 const lines = manualText.split(/\r?\n/);
                 finalName = lines.reverse().join("\n");
@@ -430,7 +490,9 @@ export const useTextWorker = (
 
               if (settings.mode === "manual") {
                 // В ручном режиме используем то, что пользователь ввел в инпуты
-                const manualText = settings.manualSettings.locales[locale] || settings.manualSettings.locales.enUS;
+                const manualText =
+                  settings.manualSettings.locales[locale] ||
+                  settings.manualSettings.locales.enUS;
                 const lines = manualText.split(/\r?\n/);
                 finalName = lines.reverse().join("\n");
               } else {
@@ -459,21 +521,34 @@ export const useTextWorker = (
             return;
           } catch (err) {
             const isLast = attempt === maxAttempts - 1;
-            console.warn('Runes write attempt failed, retrying', path, attempt + 1, err);
+            console.warn(
+              "Runes write attempt failed, retrying",
+              path,
+              attempt + 1,
+              err,
+            );
             if (isLast) {
               try {
                 const results = await ensureWritable([path]);
                 const r = results[0];
-                console.warn('Attempted to ensure writable', { path, result: r });
+                console.warn("Attempted to ensure writable", {
+                  path,
+                  result: r,
+                });
               } catch (e) {
-                console.warn('ensureWritable invocation failed', path, e);
+                console.warn("ensureWritable invocation failed", path, e);
               }
               try {
                 await writeTextFile(path, content);
                 return;
               } catch (finalErr) {
-                const suggestion = t?.('messages.error.writePermissionSuggestion') || 'Could not write the file. Try running the app as Administrator or move the game to a folder where you have write permissions.';
-                const msg = (finalErr instanceof Error ? finalErr.message : String(finalErr)) + `\n${suggestion}`;
+                const suggestion =
+                  t?.("messages.error.writePermissionSuggestion") ||
+                  "Could not write the file. Try running the app as Administrator or move the game to a folder where you have write permissions.";
+                const msg =
+                  (finalErr instanceof Error
+                    ? finalErr.message
+                    : String(finalErr)) + `\n${suggestion}`;
                 throw new Error(msg);
               }
             }
@@ -486,7 +561,7 @@ export const useTextWorker = (
 
       console.log("Localization changes applied successfully");
     },
-    []
+    [],
   );
 
   // Функция для применения изменений к файлам подсветки рун
@@ -505,7 +580,7 @@ export const useTextWorker = (
           // Генерируем данные для подсветки
           const highlightData = await generateRuneHighlightData(
             runeEnum,
-            settings
+            settings,
           );
 
           // Записываем данные в файл
@@ -519,21 +594,34 @@ export const useTextWorker = (
                 return;
               } catch (err) {
                 const isLast = attempt === maxAttempts - 1;
-                console.warn('Highlight write attempt failed, retrying', path, attempt + 1, err);
+                console.warn(
+                  "Highlight write attempt failed, retrying",
+                  path,
+                  attempt + 1,
+                  err,
+                );
                 if (isLast) {
                   try {
                     const results = await ensureWritable([path]);
                     const r = results[0];
-                    console.warn('Attempted to ensure writable', { path, result: r });
+                    console.warn("Attempted to ensure writable", {
+                      path,
+                      result: r,
+                    });
                   } catch (e) {
-                    console.warn('ensureWritable invocation failed', path, e);
+                    console.warn("ensureWritable invocation failed", path, e);
                   }
                   try {
                     await writeTextFile(path, content);
                     return;
                   } catch (finalErr) {
-                    const suggestion = t?.('messages.error.writePermissionSuggestion') || 'Could not write the file. Try running the app as Administrator or move the game to a folder where you have write permissions.';
-                    const msg = (finalErr instanceof Error ? finalErr.message : String(finalErr)) + `\n${suggestion}`;
+                    const suggestion =
+                      t?.("messages.error.writePermissionSuggestion") ||
+                      "Could not write the file. Try running the app as Administrator or move the game to a folder where you have write permissions.";
+                    const msg =
+                      (finalErr instanceof Error
+                        ? finalErr.message
+                        : String(finalErr)) + `\n${suggestion}`;
                     throw new Error(msg);
                   }
                 }
@@ -548,7 +636,7 @@ export const useTextWorker = (
         } catch (err) {
           console.warn(
             `Failed to apply highlight settings for ${runeEnum} rune:`,
-            err
+            err,
           );
           // Не прерываем процесс, если один файл не удалось обработать
         }
@@ -556,7 +644,7 @@ export const useTextWorker = (
 
       console.log("Highlight changes applied successfully");
     },
-    []
+    [],
   );
 
   return {

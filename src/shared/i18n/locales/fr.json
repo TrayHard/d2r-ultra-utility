@@ -456,7 +456,7 @@
     }
   },
   "itemsPage": {
-    "settings": { 
+    "settings": {
       "title": "Paramètres des objets",
       "tooltips": {
         "enableItem": "Afficher dans le jeu",
@@ -485,7 +485,7 @@
       "noResults": "Aucun objet trouvé"
     }
   },
-  
+
   "mode": {
     "switchToBasic": "Basculer en mode basique",
     "switchToAdvanced": "Basculer en mode édition",
@@ -537,5 +537,3 @@
     }
   }
 }
-
-

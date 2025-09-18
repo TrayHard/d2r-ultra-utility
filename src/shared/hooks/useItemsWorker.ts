@@ -8,7 +8,11 @@ import {
   LocaleItem,
   loadSavedSettings,
 } from "../utils/commonUtils";
-import type { ItemSettings, ItemsSettings, PotionLevelSettings } from "../../app/providers/SettingsContext";
+import type {
+  ItemSettings,
+  ItemsSettings,
+  PotionLevelSettings,
+} from "../../app/providers/SettingsContext";
 
 // Маппинг ID качества предметов (для справки)
 // Low Quality (level 0): 1723, 1724, 1725, 20910 - сравниваются между собой
@@ -17,12 +21,12 @@ import type { ItemSettings, ItemsSettings, PotionLevelSettings } from "../../app
 type UpdateItemsLevelSettingsFunction = (
   item: "difficultyClassMarkers" | "qualityPrefixes",
   level: number,
-  settings: Partial<PotionLevelSettings>
+  settings: Partial<PotionLevelSettings>,
 ) => void;
 
 type UpdateItemSettingsFunction = (
   itemKey: string,
-  newSettings: Partial<ItemSettings>
+  newSettings: Partial<ItemSettings>,
 ) => void;
 
 export const useItemsWorker = (
@@ -31,18 +35,18 @@ export const useItemsWorker = (
   sendMessage?: (
     message: string,
     type?: "success" | "error" | "warning" | "info",
-    title?: string
+    title?: string,
   ) => void,
   t?: (key: string, options?: any) => string,
   getItemsSettings?: () => ItemsSettings,
   getSelectedLocales?: () => string[],
   items?: Array<{ key: string; id: number }>,
   allowedMode?: "basic" | "advanced" | null,
-  getCurrentMode?: () => "basic" | "advanced"
+  getCurrentMode?: () => "basic" | "advanced",
 ) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const logger = useLogger('ItemsWorker');
+  const logger = useLogger("ItemsWorker");
 
   // Функция для чтения настроек из файлов
   const readFromFiles = useCallback(async () => {
@@ -52,26 +56,44 @@ export const useItemsWorker = (
       !getSelectedLocales
     ) {
       const errorMsg = "Required functions not provided";
-      logger.error('Missing required dependencies for readFromFiles', new Error(errorMsg), {
-        hasUpdateItemsLevelSettings: !!updateItemsLevelSettings,
-        hasUpdateItemSettings: !!updateItemSettings,
-        hasGetSelectedLocales: !!getSelectedLocales
-      }, 'readFromFiles');
+      logger.error(
+        "Missing required dependencies for readFromFiles",
+        new Error(errorMsg),
+        {
+          hasUpdateItemsLevelSettings: !!updateItemsLevelSettings,
+          hasUpdateItemSettings: !!updateItemSettings,
+          hasGetSelectedLocales: !!getSelectedLocales,
+        },
+        "readFromFiles",
+      );
       throw new Error(errorMsg);
     }
 
-    logger.info('Starting to read items from files', undefined, 'readFromFiles');
+    logger.info(
+      "Starting to read items from files",
+      undefined,
+      "readFromFiles",
+    );
     setIsLoading(true);
     setError(null);
 
     try {
       // Загружаем сохраненные настройки
       const savedSettings = loadSavedSettings();
-      logger.debug('Loaded settings for items', { settings: savedSettings }, 'readFromFiles');
-      
+      logger.debug(
+        "Loaded settings for items",
+        { settings: savedSettings },
+        "readFromFiles",
+      );
+
       if (!savedSettings?.homeDirectory) {
         const errorMsg = "Game path not found in settings";
-        logger.error('Home directory not found for items', new Error(errorMsg), { settings: savedSettings }, 'readFromFiles');
+        logger.error(
+          "Home directory not found for items",
+          new Error(errorMsg),
+          { settings: savedSettings },
+          "readFromFiles",
+        );
         throw new Error(errorMsg);
       }
 
@@ -98,7 +120,7 @@ export const useItemsWorker = (
 
       console.log(`Loaded ${itemNamesData.length} items from item-names.json`);
       console.log(
-        `Loaded ${nameAffixesData.length} items from item-nameaffixes.json`
+        `Loaded ${nameAffixesData.length} items from item-nameaffixes.json`,
       );
 
       const selectedLocales = getSelectedLocales();
@@ -108,7 +130,7 @@ export const useItemsWorker = (
 
       // Superior level (1) - просто читаем ID 1727
       const superiorItem = nameAffixesData.find(
-        (dataItem) => dataItem.id === 1727
+        (dataItem) => dataItem.id === 1727,
       );
       if (superiorItem) {
         console.log("Processing Superior (ID 1727):", superiorItem);
@@ -156,8 +178,8 @@ export const useItemsWorker = (
       if (lowQualityItems.length > 0) {
         // Проверяем, одинаковы ли значения в каждой локали между всеми ID
         const allSameInAllLocales = SUPPORTED_LOCALES.every((locale) => {
-          const values = lowQualityItems.map((item) =>
-            item[locale] || "" // Сохраняем цветовые коды
+          const values = lowQualityItems.map(
+            (item) => item[locale] || "", // Сохраняем цветовые коды
           );
           const firstValue = values[0];
           return values.every((val) => val === firstValue);
@@ -165,7 +187,7 @@ export const useItemsWorker = (
 
         console.log(
           "All same in all locales for Low Quality:",
-          allSameInAllLocales
+          allSameInAllLocales,
         );
 
         const lowQualityLocales: PotionLevelSettings["locales"] = {
@@ -193,7 +215,7 @@ export const useItemsWorker = (
           });
           console.log(
             "Low Quality locales filled (values differ):",
-            lowQualityLocales
+            lowQualityLocales,
           );
         } else {
           console.log("Low Quality locales left empty (all values same)");
@@ -213,7 +235,7 @@ export const useItemsWorker = (
       if (items) {
         for (const item of items) {
           const itemData = itemNamesData.find(
-            (dataItem) => dataItem.id === item.id
+            (dataItem) => dataItem.id === item.id,
           );
           if (itemData) {
             const locales: ItemSettings["locales"] = {
@@ -240,10 +262,10 @@ export const useItemsWorker = (
 
             // Проверяем, пустые ли выбранные локали
             const selectedLocaleValues = selectedLocales.map(
-              (locale) => locales[locale as keyof typeof locales]
+              (locale) => locales[locale as keyof typeof locales],
             );
             const isEmpty = selectedLocaleValues.every(
-              (val) => !val || val.trim() === ""
+              (val) => !val || val.trim() === "",
             );
 
             // Enabled = true если не пустые, false если пустые
@@ -291,7 +313,7 @@ export const useItemsWorker = (
       }
 
       console.log(
-        `Processed ${processedPrefixes} quality prefixes and ${processedItems} items`
+        `Processed ${processedPrefixes} quality prefixes and ${processedItems} items`,
       );
 
       // Отправляем сообщение об успехе
@@ -337,11 +359,14 @@ export const useItemsWorker = (
     if (allowedMode && getCurrentMode) {
       const currentMode = getCurrentMode();
       if (currentMode !== allowedMode) {
-        console.log('Skipping items changes application - wrong mode', { currentMode, allowedMode });
+        console.log("Skipping items changes application - wrong mode", {
+          currentMode,
+          allowedMode,
+        });
         return;
       }
     }
-    
+
     if (
       !sendMessage ||
       !t ||
@@ -349,28 +374,41 @@ export const useItemsWorker = (
       !getSelectedLocales ||
       !items
     ) {
-      logger.warn('Missing required dependencies for applyChanges', {
-        hasSendMessage: !!sendMessage,
-        hasT: !!t,
-        hasGetItemsSettings: !!getItemsSettings,
-        hasGetSelectedLocales: !!getSelectedLocales,
-        hasItems: !!items
-      }, 'applyChanges');
+      logger.warn(
+        "Missing required dependencies for applyChanges",
+        {
+          hasSendMessage: !!sendMessage,
+          hasT: !!t,
+          hasGetItemsSettings: !!getItemsSettings,
+          hasGetSelectedLocales: !!getSelectedLocales,
+          hasItems: !!items,
+        },
+        "applyChanges",
+      );
       return;
     }
 
-    logger.info('Starting to apply items changes', undefined, 'applyChanges');
+    logger.info("Starting to apply items changes", undefined, "applyChanges");
     setIsLoading(true);
     setError(null);
 
     try {
       // Загружаем сохраненные настройки
       const savedSettings = loadSavedSettings();
-      logger.debug('Loaded settings for applying items changes', { settings: savedSettings }, 'applyChanges');
-      
+      logger.debug(
+        "Loaded settings for applying items changes",
+        { settings: savedSettings },
+        "applyChanges",
+      );
+
       if (!savedSettings?.homeDirectory) {
         const errorMsg = "Game path not found in settings";
-        logger.error('Home directory not found for applying items changes', new Error(errorMsg), { settings: savedSettings }, 'applyChanges');
+        logger.error(
+          "Home directory not found for applying items changes",
+          new Error(errorMsg),
+          { settings: savedSettings },
+          "applyChanges",
+        );
         throw new Error(errorMsg);
       }
 
@@ -383,16 +421,24 @@ export const useItemsWorker = (
       const itemNamesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.ITEMS_FILE}`;
       const nameAffixesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.NAMEAFFIXES_FILE}`;
 
-      logger.info('Reading items files', { itemNamesPath, nameAffixesPath }, 'readFromFiles');
+      logger.info(
+        "Reading items files",
+        { itemNamesPath, nameAffixesPath },
+        "readFromFiles",
+      );
 
       // Читаем файлы
       const itemNamesContent = await readTextFile(itemNamesPath);
       const nameAffixesContent = await readTextFile(nameAffixesPath);
-      
-      logger.debug('Successfully read items files', { 
-        itemNamesLength: itemNamesContent.length, 
-        nameAffixesLength: nameAffixesContent.length 
-      }, 'readFromFiles');
+
+      logger.debug(
+        "Successfully read items files",
+        {
+          itemNamesLength: itemNamesContent.length,
+          nameAffixesLength: nameAffixesContent.length,
+        },
+        "readFromFiles",
+      );
 
       const itemNamesData: LocaleItem[] = JSON.parse(itemNamesContent);
       const nameAffixesData: LocaleItem[] = JSON.parse(nameAffixesContent);
@@ -416,7 +462,7 @@ export const useItemsWorker = (
 
         // Находим локализацию предмета в item-names.json
         const itemLocale = updatedItemNamesData.find(
-          (locale) => locale.id === item.id
+          (locale) => locale.id === item.id,
         );
         if (!itemLocale) continue;
 
@@ -434,8 +480,8 @@ export const useItemsWorker = (
           baseItem.difficultyClass === "normal"
             ? 0
             : baseItem.difficultyClass === "exceptional"
-            ? 1
-            : 2;
+              ? 1
+              : 2;
 
         // Получаем маркер сложности из настроек
         const difficultyMarkers =
@@ -469,7 +515,7 @@ export const useItemsWorker = (
       // Если уровень отключен — очищаем выбранные локали.
       const superiorLevel = qualityPrefixes.levels[1];
       const superiorLocale = updatedNameAffixesData.find(
-        (locale) => locale.id === 1727
+        (locale) => locale.id === 1727,
       );
       if (superiorLocale) {
         if (superiorLevel?.enabled) {
@@ -509,7 +555,7 @@ export const useItemsWorker = (
         if (hasNonEmptyValues) {
           lowQualityIds.forEach((id) => {
             const prefixLocale = updatedNameAffixesData.find(
-              (locale) => locale.id === id
+              (locale) => locale.id === id,
             );
             if (prefixLocale) {
               for (const locale of selectedLocales) {
@@ -529,7 +575,7 @@ export const useItemsWorker = (
         // Отключено — пишем пустые строки для выбранных локалей во все связанные ID
         lowQualityIds.forEach((id) => {
           const prefixLocale = updatedNameAffixesData.find(
-            (locale) => locale.id === id
+            (locale) => locale.id === id,
           );
           if (prefixLocale) {
             for (const locale of selectedLocales) {
@@ -549,26 +595,43 @@ export const useItemsWorker = (
             return;
           } catch (err) {
             const isLast = attempt === maxAttempts - 1;
-            logger.warn('Write attempt failed, retrying', {
-              path,
-              attempt: attempt + 1,
-              maxAttempts,
-              error: err instanceof Error ? err.message : String(err),
-            }, 'applyChanges');
+            logger.warn(
+              "Write attempt failed, retrying",
+              {
+                path,
+                attempt: attempt + 1,
+                maxAttempts,
+                error: err instanceof Error ? err.message : String(err),
+              },
+              "applyChanges",
+            );
             if (isLast) {
               try {
                 const results = await ensureWritable([path]);
                 const r = results[0];
-                logger.warn('Attempted to ensure writable', { path, result: r }, 'applyChanges');
+                logger.warn(
+                  "Attempted to ensure writable",
+                  { path, result: r },
+                  "applyChanges",
+                );
               } catch (e) {
-                logger.warn('ensureWritable invocation failed', { path, error: e instanceof Error ? e.message : String(e) }, 'applyChanges');
+                logger.warn(
+                  "ensureWritable invocation failed",
+                  { path, error: e instanceof Error ? e.message : String(e) },
+                  "applyChanges",
+                );
               }
               try {
                 await writeTextFile(path, content);
                 return;
               } catch (finalErr) {
-                const suggestion = t?.('messages.error.writePermissionSuggestion') || 'Could not write the file. Try running the app as Administrator or move the game to a folder where you have write permissions.';
-                const msg = (finalErr instanceof Error ? finalErr.message : String(finalErr)) + `\n${suggestion}`;
+                const suggestion =
+                  t?.("messages.error.writePermissionSuggestion") ||
+                  "Could not write the file. Try running the app as Administrator or move the game to a folder where you have write permissions.";
+                const msg =
+                  (finalErr instanceof Error
+                    ? finalErr.message
+                    : String(finalErr)) + `\n${suggestion}`;
                 throw new Error(msg);
               }
             }
@@ -578,31 +641,50 @@ export const useItemsWorker = (
         }
       };
 
-      logger.info('Writing updated items files', { itemNamesPath, nameAffixesPath }, 'applyChanges');
-      await writeFileWithRetry(itemNamesPath, JSON.stringify(updatedItemNamesData, null, 2));
-      await writeFileWithRetry(nameAffixesPath, JSON.stringify(updatedNameAffixesData, null, 2));
+      logger.info(
+        "Writing updated items files",
+        { itemNamesPath, nameAffixesPath },
+        "applyChanges",
+      );
+      await writeFileWithRetry(
+        itemNamesPath,
+        JSON.stringify(updatedItemNamesData, null, 2),
+      );
+      await writeFileWithRetry(
+        nameAffixesPath,
+        JSON.stringify(updatedNameAffixesData, null, 2),
+      );
 
-      logger.info('Successfully wrote items files', undefined, 'applyChanges');
+      logger.info("Successfully wrote items files", undefined, "applyChanges");
 
       sendMessage(
         t("messages.success.itemsApplied") ||
           "Items settings applied successfully",
-        "success"
+        "success",
       );
     } catch (error) {
-      logger.error('Failed to apply items changes', error as Error, { error: error instanceof Error ? error.message : String(error) }, 'applyChanges');
+      logger.error(
+        "Failed to apply items changes",
+        error as Error,
+        { error: error instanceof Error ? error.message : String(error) },
+        "applyChanges",
+      );
       setError(
-        error instanceof Error ? error.message : "Unknown error occurred"
+        error instanceof Error ? error.message : "Unknown error occurred",
       );
       sendMessage(
         t("messages.error.itemsApplyFailed") ||
           "Failed to apply items settings",
-        "error"
+        "error",
       );
       throw error;
     } finally {
       setIsLoading(false);
-      logger.info('Finished applying items changes', { hasError: !!error }, 'applyChanges');
+      logger.info(
+        "Finished applying items changes",
+        { hasError: !!error },
+        "applyChanges",
+      );
     }
   }, [
     sendMessage,

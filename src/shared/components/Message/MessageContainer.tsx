@@ -1,12 +1,12 @@
-import React from 'react';
-import Message from './Message.tsx';
-import { MessageData } from './useMessage.ts';
+import React from "react";
+import Message from "./Message.tsx";
+import { MessageData } from "./useMessage.ts";
 
 interface MessageContainerProps {
   messages: MessageData[];
   isDarkTheme?: boolean;
   onClose: (id: string) => void;
-  position?: 'top' | 'bottom';
+  position?: "top" | "bottom";
   className?: string;
 }
 
@@ -14,32 +14,33 @@ const MessageContainer: React.FC<MessageContainerProps> = ({
   messages,
   isDarkTheme = true,
   onClose,
-  position = 'top',
-  className = ''
+  position = "top",
+  className = "",
 }) => {
   if (messages.length === 0) {
     return null;
   }
 
-  const positionClasses = position === 'top'
-    ? 'top-4 items-start'
-    : 'bottom-4 items-end';
+  const positionClasses =
+    position === "top" ? "top-4 items-start" : "bottom-4 items-end";
 
-  const orderClasses = position === 'top'
-    ? 'flex-col'
-    : 'flex-col-reverse';
+  const orderClasses = position === "top" ? "flex-col" : "flex-col-reverse";
 
   return (
-    <div className={`
+    <div
+      className={`
       fixed left-4 right-4 z-50 pointer-events-none
       ${positionClasses}
       ${className}
-    `}>
-      <div className={`
+    `}
+    >
+      <div
+        className={`
         flex w-full max-w-md mx-auto
         ${orderClasses}
         pointer-events-auto
-      `}>
+      `}
+      >
         {messages.map((message) => (
           <Message
             key={message.id}
