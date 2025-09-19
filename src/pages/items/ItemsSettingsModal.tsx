@@ -33,7 +33,7 @@ const ItemsSettingsModal: React.FC<ItemsSettingsModalProps> = ({
 
   // Получаем настройки предметов из контекста
   const difficultyClassMarkers = getItemsGroupSettings(
-    "difficultyClassMarkers",
+    "difficultyClassMarkers"
   );
   const qualityPrefixes = getItemsGroupSettings("qualityPrefixes");
 
@@ -45,7 +45,7 @@ const ItemsSettingsModal: React.FC<ItemsSettingsModalProps> = ({
   // Обработчики для коллапсов
   const handleCollapseToggle = (
     key: keyof typeof collapseStates,
-    isOpen: boolean,
+    isOpen: boolean
   ) => {
     setCollapseStates((prev) => ({ ...prev, [key]: isOpen }));
   };
@@ -53,7 +53,7 @@ const ItemsSettingsModal: React.FC<ItemsSettingsModalProps> = ({
   // Обработчики для настроек предметов
   const handleItemsTabChange = (
     itemType: "difficultyClassMarkers" | "qualityPrefixes",
-    tabIndex: number,
+    tabIndex: number
   ) => {
     updateItemsGroupSettings(itemType, { activeTab: tabIndex });
   };
@@ -61,7 +61,7 @@ const ItemsSettingsModal: React.FC<ItemsSettingsModalProps> = ({
   const handleItemsLevelToggle = (
     itemType: "difficultyClassMarkers" | "qualityPrefixes",
     level: number,
-    enabled: boolean,
+    enabled: boolean
   ) => {
     updateItemsLevelSettings(itemType, level, { enabled });
   };
@@ -70,7 +70,7 @@ const ItemsSettingsModal: React.FC<ItemsSettingsModalProps> = ({
     itemType: "difficultyClassMarkers" | "qualityPrefixes",
     level: number,
     locale: string,
-    value: string,
+    value: string
   ) => {
     const currentSettings = getItemsGroupSettings(itemType);
     const currentLevelSettings = currentSettings.levels[level];
@@ -128,7 +128,7 @@ const ItemsSettingsModal: React.FC<ItemsSettingsModalProps> = ({
           selectedLocales={selectedLocales}
           isDarkTheme={isDarkTheme}
           imagePaths={difficultyClassMarkers.levels.map((_, index) =>
-            getDifficultyClassImagePath(index),
+            getDifficultyClassImagePath(index)
           )}
           tooltips={getDifficultyClassTooltips()}
           headerIcon={getDifficultyClassImagePath(2)} // Elite as header icon
@@ -147,10 +147,11 @@ const ItemsSettingsModal: React.FC<ItemsSettingsModalProps> = ({
               "difficultyClassMarkers",
               level,
               locale,
-              value,
+              value
             )
           }
           hideToggle={true}
+          getBaselineGroup={(root) => root.items?.difficultyClassMarkers}
         />
 
         {/* Quality Prefixes */}
@@ -161,7 +162,7 @@ const ItemsSettingsModal: React.FC<ItemsSettingsModalProps> = ({
           selectedLocales={selectedLocales}
           isDarkTheme={isDarkTheme}
           imagePaths={qualityPrefixes.levels.map((_, index) =>
-            getQualityPrefixImagePath(index),
+            getQualityPrefixImagePath(index)
           )}
           tooltips={getQualityPrefixTooltips()}
           headerIcon={getQualityPrefixImagePath(1)} // Superior as header icon
@@ -176,6 +177,7 @@ const ItemsSettingsModal: React.FC<ItemsSettingsModalProps> = ({
           onLocaleChange={(level, locale, value) =>
             handleItemsLocaleChange("qualityPrefixes", level, locale, value)
           }
+          getBaselineGroup={(root) => root.items?.qualityPrefixes}
         />
       </div>
     </Modal>

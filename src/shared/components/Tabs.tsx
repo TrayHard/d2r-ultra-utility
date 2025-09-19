@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import UnsavedAsterisk from "./UnsavedAsterisk";
 
 export interface TabItem {
   id: string;
@@ -11,6 +12,7 @@ interface TabsProps {
   onTabChange: (tabId: string) => void;
   isDarkTheme?: boolean;
   className?: string;
+  indicators?: Record<string, boolean>;
 }
 
 const Tabs: React.FC<TabsProps> = ({
@@ -19,6 +21,7 @@ const Tabs: React.FC<TabsProps> = ({
   onTabChange,
   isDarkTheme = true,
   className = "",
+  indicators,
 }) => {
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
   const tabsRef = useRef<(HTMLButtonElement | null)[]>([]);
@@ -42,7 +45,7 @@ const Tabs: React.FC<TabsProps> = ({
             key={tab.id}
             ref={(el) => (tabsRef.current[index] = el)}
             onClick={() => onTabChange(tab.id)}
-            className={`px-6 py-3 text-sm font-medium transition-colors duration-200 focus:outline-none border-none bg-transparent shadow-none rounded-none ${
+            className={`relative px-6 py-3 text-sm font-medium transition-colors duration-200 focus:outline-none border-none bg-transparent shadow-none rounded-none ${
               activeTab === tab.id
                 ? isDarkTheme
                   ? "text-yellow-400"
@@ -53,6 +56,11 @@ const Tabs: React.FC<TabsProps> = ({
             }`}
           >
             {tab.label}
+            {indicators && indicators[tab.id] && (
+              <span className="absolute" style={{ right: 8, top: 6 }}>
+                <UnsavedAsterisk size={0.6} />
+              </span>
+            )}
           </button>
         ))}
 

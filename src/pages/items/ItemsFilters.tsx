@@ -4,6 +4,7 @@ import { EBaseType, ECharacterClass, allBaseTypes } from "./constants";
 import { Button as AntButton, Input, InputNumber, Select, Tooltip } from "antd";
 import { SearchOutlined, ReloadOutlined } from "@ant-design/icons";
 import "./ItemsTab.css";
+import UnsavedAsterisk from "../../shared/components/UnsavedAsterisk";
 
 interface ItemsFiltersProps {
   isDarkTheme: boolean;
@@ -27,6 +28,9 @@ interface ItemsFiltersProps {
   onToggleRelatedKind: (kind: string) => void;
   onToggleBaseType: (baseType: EBaseType) => void;
   filtersRef: React.RefObject<HTMLDivElement>;
+  unsavedOnly: boolean;
+  unsavedCount: number;
+  onToggleUnsavedOnly: () => void;
 }
 
 const ItemsFilters: React.FC<ItemsFiltersProps> = ({
@@ -51,6 +55,9 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
   onToggleRelatedKind,
   onToggleBaseType,
   filtersRef,
+  unsavedOnly,
+  unsavedCount,
+  onToggleUnsavedOnly,
 }) => {
   const { t } = useTranslation();
 
@@ -60,7 +67,7 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
     onToggle: (item: string) => void,
     getLabel: (item: string) => string,
     placeholder: string,
-    width: string = "w-48",
+    width: string = "w-48"
   ) => (
     <div className={width}>
       <Select
@@ -151,6 +158,40 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
           {t("itemsPage.filters.reset")}
         </AntButton>
 
+        <Tooltip
+          title={
+            unsavedCount > 0
+              ? `${unsavedCount} items unsaved in profile`
+              : "No unsaved changes"
+          }
+          placement="top"
+        >
+          <AntButton
+            onClick={onToggleUnsavedOnly}
+            type={unsavedOnly ? "primary" : "default"}
+            disabled={unsavedCount === 0}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 32,
+              height: 32,
+              padding: 0,
+            }}
+          >
+            <UnsavedAsterisk
+              size={0.65}
+              color={
+                unsavedCount > 0
+                  ? isDarkTheme
+                    ? "#F59E0B"
+                    : "#D97706"
+                  : "#9CA3AF"
+              }
+            />
+          </AntButton>
+        </Tooltip>
+
         <div className="w-70">
           <Input
             placeholder={t("itemsPage.filters.search")}
@@ -168,7 +209,7 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
           onToggleDifficultyClass,
           (item: string) => t(`itemsPage.filters.${item}`),
           t("itemsPage.filters.difficultyClass"),
-          "grow basis-48",
+          "grow basis-48"
         )}
 
         {renderTagSelect(
@@ -180,7 +221,7 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
               ? t("itemsPage.filters.anyClass")
               : t(`itemsPage.classes.${item.toLowerCase()}`),
           t("itemsPage.filters.limitedToClass"),
-          "grow basis-48",
+          "grow basis-48"
         )}
 
         <div className="flex gap-2">
@@ -233,7 +274,7 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
           onToggleWeight,
           (item: string) => t(`itemsPage.filters.${item}`),
           t("itemsPage.filters.weight"),
-          "w-32",
+          "w-32"
         )}
 
         {renderTagSelect(
@@ -242,7 +283,7 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
           onToggleRelatedKind,
           (item: string) => t(`itemsPage.relatedItems.${item}`) as string,
           t("itemsPage.filters.relatedItems"),
-          "w-48",
+          "w-48"
         )}
       </div>
 
