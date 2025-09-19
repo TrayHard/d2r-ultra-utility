@@ -2360,7 +2360,12 @@
     "linkedTo": ["coronet", "diadem", "tiara"],
     "uniques": [],
     "id": 20337,
-    "setItems": []
+    "setItems": [
+      {
+        "key": "naj_s_circlet",
+        "imgName": "najscirclet_graphic"
+      }
+    ]
   },
   {
     "key": "tiara",
