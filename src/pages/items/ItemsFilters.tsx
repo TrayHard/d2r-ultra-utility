@@ -174,7 +174,8 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
               display: "inline-flex",
               alignItems: "center",
               justifyContent: "center",
-              width: 32,
+              minWidth: 32,
+              maxWidth: 32,
               height: 32,
               padding: 0,
             }}
