@@ -30,6 +30,7 @@ interface ProfileManagerProps {
   onProfileDuplicate: (profileId: string) => void;
   onProfileExport: (profileId: string) => void;
   onProfileImport: (profileData: any) => void;
+  hasAnyChanges: boolean;
 }
 
 const ProfileManager: React.FC<ProfileManagerProps> = ({
@@ -46,6 +47,7 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
   onProfileDuplicate,
   onProfileExport,
   onProfileImport,
+  hasAnyChanges,
 }) => {
   const { t } = useTranslation();
   const { sendMessage } = useGlobalMessage();
@@ -73,7 +75,7 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
         {
           type: "success",
           title: t("profiles.messages.success"),
-        },
+        }
       );
     }
   };
@@ -89,7 +91,7 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
         {
           type: "success",
           title: t("profiles.messages.success"),
-        },
+        }
       );
     }
   };
@@ -105,7 +107,7 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
         {
           type: "success",
           title: t("profiles.messages.success"),
-        },
+        }
       );
     }
   };
@@ -264,7 +266,9 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
             <Button
               variant="info"
               onClick={() => activeProfileId && setShowSaveConfirm(true)}
-              disabled={!activeProfileId || activeProfile?.isImmutable}
+              disabled={
+                !activeProfileId || activeProfile?.isImmutable || !hasAnyChanges
+              }
               isDarkTheme={isDarkTheme}
               icon={mdiContentSave}
               size="sm"
@@ -284,13 +288,13 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
                 if (activeProfileId) {
                   onProfileDuplicate(activeProfileId);
                   const duplicated = allProfiles.find(
-                    (p) => p.id === activeProfileId,
+                    (p) => p.id === activeProfileId
                   );
                   sendMessage(
                     t("profiles.messages.profileDuplicated", {
                       name: duplicated?.name,
                     }) || "Profile duplicated",
-                    { type: "success", title: t("profiles.messages.success") },
+                    { type: "success", title: t("profiles.messages.success") }
                   );
                 }
               }}
@@ -529,7 +533,7 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
                     t("profiles.messages.profileSaved", {
                       name: activeProfile?.name,
                     }),
-                    { type: "success", title: t("profiles.messages.success") },
+                    { type: "success", title: t("profiles.messages.success") }
                   );
                 } catch (e) {
                   sendMessage(t("profiles.messages.saveError"), {

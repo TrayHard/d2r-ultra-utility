@@ -20,6 +20,7 @@ interface AppToolbarProps {
   onProfileImport: (data: any) => void;
   onReadAll: () => void;
   onApplyAll: () => void;
+  hasAnyChanges: boolean;
 }
 
 const AppToolbar: React.FC<AppToolbarProps> = ({
@@ -39,6 +40,7 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
   onProfileImport,
   onReadAll,
   onApplyAll,
+  hasAnyChanges,
 }) => {
   // Обертки для функций, которые ожидает ProfileManager
   const handleProfileCreate = (name: string) => {
@@ -76,6 +78,7 @@ const AppToolbar: React.FC<AppToolbarProps> = ({
           onProfileDuplicate={onProfileDuplicate}
           onProfileExport={onProfileExport}
           onProfileImport={onProfileImport}
+          hasAnyChanges={hasAnyChanges}
         />
 
         {/* Кнопки управления файлами */}

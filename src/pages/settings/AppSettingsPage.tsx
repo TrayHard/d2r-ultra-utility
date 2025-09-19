@@ -1,6 +1,7 @@
 import React from "react";
 import { Tooltip } from "antd";
 import { ReloadOutlined } from "@ant-design/icons";
+import Icon from "@mdi/react";
 import { useTranslation } from "react-i18next";
 import { useSettings } from "../../app/providers/SettingsContext";
 import { localeOptions, STORAGE_KEYS } from "../../shared/constants";
@@ -8,6 +9,8 @@ import Switcher from "../../shared/components/Switcher";
 import Button from "../../shared/components/Button";
 import LogExporter from "./LogExporter";
 import { getVersion } from "@tauri-apps/api/app";
+import UnsavedAsterisk from "../../shared/components/UnsavedAsterisk";
+import { mdiCogOutline } from "@mdi/js";
 // Removed unused updater/process imports
 
 interface AppSettingsPageProps {
@@ -133,7 +136,7 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
                     : "bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-900"
                 }`}
               >
-                ⚙️
+                <Icon path={mdiCogOutline} size={0.7} />
               </button>
             </Tooltip>
           </div>
@@ -300,17 +303,24 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
                     {t("common.themeSettingsDescription")}
                   </p>
 
-                  <Switcher
-                    checked={isCurrentlyDarkTheme}
-                    onChange={toggleTheme}
-                    label={
-                      isCurrentlyDarkTheme
-                        ? t("common.darkTheme")
-                        : t("common.lightTheme")
-                    }
-                    isDarkTheme={isDarkTheme}
-                    size="md"
-                  />
+                  <div className="flex gap-2">
+                    <p
+                      className={`text-sm ${isDarkTheme ? "text-gray-400" : "text-gray-600"}`}
+                    >
+                      {t("common.lightTheme")}
+                    </p>
+                    <Switcher
+                      checked={isCurrentlyDarkTheme}
+                      onChange={toggleTheme}
+                      isDarkTheme={isDarkTheme}
+                      size="md"
+                    />
+                    <p
+                      className={`text-sm ${isDarkTheme ? "text-gray-400" : "text-gray-600"}`}
+                    >
+                      {t("common.darkTheme")}
+                    </p>
+                  </div>
                 </div>
 
                 {/* Цвет индикатора несохранённых изменений */}
@@ -322,20 +332,20 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
                   >
                     {t("settings.asteriskColor")}
                   </p>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
                     <button
                       onClick={() => {
                         const def = "#F59E0B";
                         updateAppConfig({ asteriskColor: def });
                         setAsteriskHexInput(def);
                       }}
-                      className={`px-2 py-0 rounded border transition-colors ${
+                      className={`px-2 py-1 rounded border transition-colors ${
                         isDarkTheme
                           ? "bg-gray-700 border-gray-600 hover:bg-gray-600"
                           : "bg-gray-100 border-gray-300 hover:bg-gray-200"
                       }`}
-                      aria-label={t("common.reset")}
-                      title={t("common.reset")}
+                      aria-label={t("settings.resetDefault")}
+                      title={t("settings.resetDefault")}
                     >
                       <ReloadOutlined
                         className={
@@ -343,13 +353,15 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
                         }
                       />
                     </button>
+                    <UnsavedAsterisk size={1.2} />
                     <input
                       type="color"
                       value={appConfig?.asteriskColor || "#F59E0B"}
                       onChange={(e) =>
                         updateAppConfig({ asteriskColor: e.target.value })
                       }
-                      className="w-10 h-10 p-0 border rounded cursor-pointer"
+                      style={{ background: "none" }}
+                      className="w-9 h-10 p-0 border rounded cursor-pointer"
                       aria-label={t("settings.asteriskColor")}
                       title={t("settings.asteriskColor")}
                     />
@@ -458,7 +470,9 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
                   >
                     {t("settings.appVersion")}
                   </span>
-                  <span className="font-mono text-sm text-gray-300">
+                  <span
+                    className={`font-mono text-sm ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}
+                  >
                     {appVersion || "—"}
                   </span>
                 </div>
