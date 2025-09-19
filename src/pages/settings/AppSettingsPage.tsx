@@ -1,5 +1,6 @@
 import React from "react";
 import { Tooltip } from "antd";
+import { ReloadOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import { useSettings } from "../../app/providers/SettingsContext";
 import { localeOptions, STORAGE_KEYS } from "../../shared/constants";
@@ -29,6 +30,8 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
     getIsDarkTheme,
     toggleTheme,
     getGamePath,
+    appConfig,
+    updateAppConfig,
   } = useSettings();
 
   const selectedLocales = getSelectedLocales();
@@ -36,6 +39,18 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
   const isCurrentlyDarkTheme = getIsDarkTheme();
   const currentGamePath = getGamePath();
   const [appVersion, setAppVersion] = React.useState<string>("");
+  const [asteriskHexInput, setAsteriskHexInput] = React.useState<string>(
+    (typeof appConfig?.asteriskColor === "string" && appConfig.asteriskColor) ||
+      "#F59E0B"
+  );
+
+  React.useEffect(() => {
+    setAsteriskHexInput(
+      (typeof appConfig?.asteriskColor === "string" &&
+        appConfig.asteriskColor) ||
+        "#F59E0B"
+    );
+  }, [appConfig?.asteriskColor]);
 
   React.useEffect(() => {
     (async () => {
@@ -296,6 +311,70 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
                     isDarkTheme={isDarkTheme}
                     size="md"
                   />
+                </div>
+
+                {/* Цвет индикатора несохранённых изменений */}
+                <div>
+                  <p
+                    className={`text-sm mb-2 ${
+                      isDarkTheme ? "text-gray-400" : "text-gray-600"
+                    }`}
+                  >
+                    {t("settings.asteriskColor")}
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => {
+                        const def = "#F59E0B";
+                        updateAppConfig({ asteriskColor: def });
+                        setAsteriskHexInput(def);
+                      }}
+                      className={`px-2 py-0 rounded border transition-colors ${
+                        isDarkTheme
+                          ? "bg-gray-700 border-gray-600 hover:bg-gray-600"
+                          : "bg-gray-100 border-gray-300 hover:bg-gray-200"
+                      }`}
+                      aria-label={t("common.reset")}
+                      title={t("common.reset")}
+                    >
+                      <ReloadOutlined
+                        className={
+                          isDarkTheme ? "text-gray-200" : "text-gray-700"
+                        }
+                      />
+                    </button>
+                    <input
+                      type="color"
+                      value={appConfig?.asteriskColor || "#F59E0B"}
+                      onChange={(e) =>
+                        updateAppConfig({ asteriskColor: e.target.value })
+                      }
+                      className="w-10 h-10 p-0 border rounded cursor-pointer"
+                      aria-label={t("settings.asteriskColor")}
+                      title={t("settings.asteriskColor")}
+                    />
+                    <input
+                      type="text"
+                      value={asteriskHexInput}
+                      onChange={(e) => {
+                        const raw = e.target.value;
+                        setAsteriskHexInput(raw);
+                        let val = raw.trim();
+                        if (!val.startsWith("#")) val = `#${val}`;
+                        if (/^#[0-9a-fA-F]{6}$/.test(val)) {
+                          updateAppConfig({ asteriskColor: val });
+                        }
+                      }}
+                      maxLength={7}
+                      className={`px-2 py-1 rounded border text-sm font-mono ${
+                        isDarkTheme
+                          ? "bg-gray-700 text-gray-100 border-gray-600 placeholder-gray-400"
+                          : "bg-white text-gray-800 border-gray-300 placeholder-gray-400"
+                      }`}
+                      placeholder="#F59E0B"
+                      aria-label={t("settings.asteriskColor")}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
