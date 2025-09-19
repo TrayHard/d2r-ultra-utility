@@ -197,7 +197,9 @@
     "debugModeDisabled": "Debug mode is disabled",
     "debugModeWarning": "Debug mode will collect detailed information about application usage. Only enable if needed for troubleshooting.",
     "about": "About",
-    "appVersion": "App Version"
+    "appVersion": "App Version",
+    "asteriskColor": "Unsaved changes indicator color",
+    "resetDefault": "Reset to default"
   },
   "logs": {
     "title": "Debug Logs",

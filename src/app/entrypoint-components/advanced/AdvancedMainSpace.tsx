@@ -179,6 +179,13 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     getAppMode
   );
 
+  // Дебаунс настроек, чтобы тяжёлые сравнения выполнялись не чаще чем раз в 800мс
+  const [debouncedSettings, setDebouncedSettings] = useState(settings);
+  React.useEffect(() => {
+    const id = setTimeout(() => setDebouncedSettings(settings), 500);
+    return () => clearTimeout(id);
+  }, [settings]);
+
   // Определяем, какой хук использовать в зависимости от активного таба
   const isLoading =
     activeTab === "runes"
@@ -354,15 +361,16 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
 
     const hasCommonChanges =
       JSON.stringify(normalizeCommon(baseline)) !==
-      JSON.stringify(normalizeCommon(settings));
+      JSON.stringify(normalizeCommon(debouncedSettings));
     const hasItemsChanges =
       JSON.stringify(normalizeItems(baseline)) !==
-      JSON.stringify(normalizeItems(settings));
+      JSON.stringify(normalizeItems(debouncedSettings));
     const hasGemsChanges =
       JSON.stringify(normalizeGems(baseline)) !==
-      JSON.stringify(normalizeGems(settings));
+      JSON.stringify(normalizeGems(debouncedSettings));
     const hasRunesChanges =
-      JSON.stringify(baseline.runes) !== JSON.stringify(settings.runes);
+      JSON.stringify(baseline.runes) !==
+      JSON.stringify(debouncedSettings.runes);
 
     return {
       common: hasCommonChanges,
@@ -370,7 +378,9 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       runes: hasRunesChanges,
       gems: hasGemsChanges,
     } as Record<string, boolean>;
-  }, [baseline, settings]);
+  }, [baseline, debouncedSettings]);
+
+  const hasAnyChanges = Object.values(tabIndicators).some(Boolean);
 
   return (
     <div
@@ -396,6 +406,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
         onProfileImport={importProfile}
         onReadAll={() => setConfirmAction("readAll")}
         onApplyAll={() => setConfirmAction("applyAll")}
+        hasAnyChanges={hasAnyChanges}
       />
 
       {/* Error Display для всех табов */}
