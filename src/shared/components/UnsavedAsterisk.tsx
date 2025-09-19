@@ -1,6 +1,7 @@
 import React from "react";
 import Icon from "@mdi/react";
 import { mdiAsteriskCircleOutline } from "@mdi/js";
+import { useSettings } from "../../app/providers/SettingsContext";
 
 interface UnsavedAsteriskProps {
   size?: number;
@@ -15,8 +16,10 @@ const UnsavedAsterisk: React.FC<UnsavedAsteriskProps> = ({
   className,
   style,
   title,
-  color = "#F59E0B",
+  color,
 }) => {
+  const { appConfig } = useSettings();
+  const resolvedColor = color || appConfig?.asteriskColor || "#F59E0B";
   return (
     <span
       className={`asterisk-icon pointer-events-none select-none ${className ?? ""}`}
@@ -24,7 +27,7 @@ const UnsavedAsterisk: React.FC<UnsavedAsteriskProps> = ({
       aria-label={title || "Unsaved changes"}
       title={title}
     >
-      <Icon path={mdiAsteriskCircleOutline} size={size} color={color} />
+      <Icon path={mdiAsteriskCircleOutline} size={size} color={resolvedColor} />
     </span>
   );
 };
