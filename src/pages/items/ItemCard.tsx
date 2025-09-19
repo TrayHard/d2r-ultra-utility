@@ -8,6 +8,8 @@ import { ItemSettings, useSettings } from "../../app/providers/SettingsContext";
 import ColorHint from "../../shared/components/ColorHint";
 import { colorCodeToHex } from "../../shared/constants";
 import SymbolsHint from "../../shared/components/SymbolsHint";
+import UnsavedAsterisk from "../../shared/components/UnsavedAsterisk";
+import { useUnsavedChanges } from "../../shared/hooks/useUnsavedChanges";
 
 interface BaseItem {
   key: string;
@@ -71,7 +73,7 @@ const RelatedItemsBlock: React.FC<{
           </span>
         ) : (
           <React.Fragment key={index}>{part}</React.Fragment>
-        ),
+        )
       );
     } catch {
       return text;
@@ -130,7 +132,7 @@ const RelatedItemsBlock: React.FC<{
                   >
                     {highlightText(
                       (t(`itemsPage.uniques.${uniqueItem.key}`) as string) ||
-                        uniqueItem.key,
+                        uniqueItem.key
                     )}
                   </span>
                 </div>
@@ -178,7 +180,7 @@ const RelatedItemsBlock: React.FC<{
                   >
                     {highlightText(
                       (t(`itemsPage.setItems.${setItem.key}`) as string) ||
-                        setItem.key,
+                        setItem.key
                     )}
                   </span>
                 </div>
@@ -199,6 +201,7 @@ const ItemCard: React.FC<ItemCardProps> = ({
   const { t } = useTranslation();
   const { getSelectedLocales, getItemSettings, updateItemSettings } =
     useSettings();
+  const { baseline } = useUnsavedChanges();
 
   // Получаем настройки для выбранного предмета (даже если его нет)
   const settings = React.useMemo(() => {
@@ -251,7 +254,7 @@ const ItemCard: React.FC<ItemCardProps> = ({
         updateItemSettings(selectedItem.key, newSettings);
       }
     },
-    [selectedItem, updateItemSettings],
+    [selectedItem, updateItemSettings]
   );
 
   const handleEnabledChange = React.useCallback(
@@ -259,7 +262,7 @@ const ItemCard: React.FC<ItemCardProps> = ({
       setEnabled(checked);
       handleSettingChange({ enabled: checked });
     },
-    [handleSettingChange],
+    [handleSettingChange]
   );
 
   const handleShowDifficultyClassMarkerChange = React.useCallback(
@@ -267,7 +270,7 @@ const ItemCard: React.FC<ItemCardProps> = ({
       setShowDifficultyClassMarker(checked);
       handleSettingChange({ showDifficultyClassMarker: checked });
     },
-    [handleSettingChange],
+    [handleSettingChange]
   );
 
   const handleLanguageNameChange = React.useCallback(
@@ -279,7 +282,7 @@ const ItemCard: React.FC<ItemCardProps> = ({
       setLocales(newLocales);
       handleSettingChange({ locales: newLocales });
     },
-    [locales, handleSettingChange],
+    [locales, handleSettingChange]
   );
 
   // Функция для проверки, нужно ли показывать атрибут
@@ -344,7 +347,7 @@ const ItemCard: React.FC<ItemCardProps> = ({
           </span>
         ) : (
           <React.Fragment key={index}>{part}</React.Fragment>
-        ),
+        )
       );
     } catch {
       return text;
@@ -371,7 +374,7 @@ const ItemCard: React.FC<ItemCardProps> = ({
           style={currentColor ? { color: currentColor } : undefined}
         >
           {part}
-        </span>,
+        </span>
       );
     }
     return nodes;
@@ -413,7 +416,7 @@ const ItemCard: React.FC<ItemCardProps> = ({
                         )}
                         {shouldShowAttribute(
                           "reqStrength",
-                          selectedItem.reqStrength,
+                          selectedItem.reqStrength
                         ) && (
                           <div className="flex items-center justify-between gap-3 w-full">
                             <span className="opacity-80">
@@ -426,7 +429,7 @@ const ItemCard: React.FC<ItemCardProps> = ({
                         )}
                         {shouldShowAttribute(
                           "reqDexterity",
-                          selectedItem.reqDexterity,
+                          selectedItem.reqDexterity
                         ) && (
                           <div className="flex items-center justify-between gap-3 w-full">
                             <span className="opacity-80">
@@ -449,7 +452,7 @@ const ItemCard: React.FC<ItemCardProps> = ({
                         )}
                         {shouldShowAttribute(
                           "maxSockets",
-                          selectedItem.maxSockets,
+                          selectedItem.maxSockets
                         ) && (
                           <div className="flex items-center justify-between gap-3 w-full">
                             <span className="opacity-80">
@@ -467,7 +470,7 @@ const ItemCard: React.FC<ItemCardProps> = ({
                             </span>
                             <span className="font-semibold">
                               {t(
-                                `itemsPage.classes.${selectedItem.limitedToClass}`,
+                                `itemsPage.classes.${selectedItem.limitedToClass}`
                               ) || selectedItem.limitedToClass}
                             </span>
                           </div>
@@ -523,7 +526,7 @@ const ItemCard: React.FC<ItemCardProps> = ({
                 >
                   {highlightTitle(
                     (t(`itemsPage.bases.${selectedItem.key}`) as string) ||
-                      selectedItem.key,
+                      selectedItem.key
                   )}
                 </h3>
                 <p
@@ -585,7 +588,7 @@ const ItemCard: React.FC<ItemCardProps> = ({
                     title={t("itemsPage.settings.tooltips.enableItem")}
                     placement="top"
                   >
-                    <div>
+                    <div className="relative">
                       <Switcher
                         checked={enabled}
                         onChange={handleEnabledChange}
@@ -593,29 +596,60 @@ const ItemCard: React.FC<ItemCardProps> = ({
                         isDarkTheme={isDarkTheme}
                         size="md"
                       />
+                      {(() => {
+                        if (!selectedItem || !baseline) return null;
+                        const base = (baseline.items as any)?.items?.[
+                          selectedItem.key
+                        ];
+                        if (!base) return null;
+                        return base.enabled !== enabled ? (
+                          <span
+                            className="absolute"
+                            style={{ right: -8, top: -8 }}
+                          >
+                            <UnsavedAsterisk size={0.55} />
+                          </span>
+                        ) : null;
+                      })()}
                     </div>
                   </Tooltip>
                   <Tooltip
                     title={
                       <div style={{ textWrap: "pretty" }}>
                         {t(
-                          "itemsPage.settings.tooltips.showDifficultyClassMarkerSwitch",
+                          "itemsPage.settings.tooltips.showDifficultyClassMarkerSwitch"
                         )}
                       </div>
                     }
                     placement="top"
                   >
-                    <div>
+                    <div className="relative">
                       <Switcher
                         checked={showDifficultyClassMarker}
                         onChange={handleShowDifficultyClassMarkerChange}
                         label={t(
-                          "itemsPage.settings.showDifficultyClassMarker",
+                          "itemsPage.settings.showDifficultyClassMarker"
                         )}
                         isDarkTheme={isDarkTheme}
                         size="md"
                         disabled={!enabled}
                       />
+                      {(() => {
+                        if (!selectedItem || !baseline) return null;
+                        const base = (baseline.items as any)?.items?.[
+                          selectedItem.key
+                        ];
+                        if (!base) return null;
+                        return base.showDifficultyClassMarker !==
+                          showDifficultyClassMarker ? (
+                          <span
+                            className="absolute"
+                            style={{ right: -8, top: -8 }}
+                          >
+                            <UnsavedAsterisk size={0.55} />
+                          </span>
+                        ) : null;
+                      })()}
                     </div>
                   </Tooltip>
                 </div>
@@ -726,29 +760,49 @@ const ItemCard: React.FC<ItemCardProps> = ({
                         )}
                       </label>
                       <div className="flex-1 flex items-center space-x-2">
-                        <input
-                          type="text"
-                          value={locales[langCode as keyof typeof locales]}
-                          onChange={(e) =>
-                            handleLanguageNameChange(langCode, e.target.value)
-                          }
-                          onFocus={() => setFocusedLocale(langCode)}
-                          onBlur={() => setFocusedLocale(null)}
-                          placeholder={
-                            t(`runePage.controls.placeholders.${langCode}`) ||
-                            `Name in ${langCode}`
-                          }
-                          disabled={!enabled}
-                          className={`
-                            flex-1 px-3 py-2 text-sm rounded-lg border transition-all duration-200
-                            ${
-                              isDarkTheme
-                                ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
-                                : "bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
+                        <div className="relative flex-1">
+                          <input
+                            type="text"
+                            value={locales[langCode as keyof typeof locales]}
+                            onChange={(e) =>
+                              handleLanguageNameChange(langCode, e.target.value)
                             }
-                            ${!enabled ? "opacity-50 cursor-not-allowed" : ""}
-                          `}
-                        />
+                            onFocus={() => setFocusedLocale(langCode)}
+                            onBlur={() => setFocusedLocale(null)}
+                            placeholder={
+                              t(`runePage.controls.placeholders.${langCode}`) ||
+                              `Name in ${langCode}`
+                            }
+                            disabled={!enabled}
+                            className={`
+                              w-full px-3 py-2 text-sm rounded-lg border transition-all duration-200
+                              ${
+                                isDarkTheme
+                                  ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
+                                  : "bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
+                              }
+                              ${!enabled ? "opacity-50 cursor-not-allowed" : ""}
+                            `}
+                          />
+                          {(() => {
+                            if (!selectedItem || !baseline) return null;
+                            const base = (baseline.items as any)?.items?.[
+                              selectedItem.key
+                            ];
+                            if (!base) return null;
+                            const baseVal = (base.locales || {})[langCode];
+                            const curVal =
+                              locales[langCode as keyof typeof locales];
+                            return baseVal !== curVal ? (
+                              <span
+                                className="absolute"
+                                style={{ right: 12, top: 12 }}
+                              >
+                                <UnsavedAsterisk size={0.5} />
+                              </span>
+                            ) : null;
+                          })()}
+                        </div>
                         <div className="flex items-center gap-1">
                           <SymbolsHint isDarkTheme={isDarkTheme} />
                           <ColorHint isDarkTheme={isDarkTheme} />

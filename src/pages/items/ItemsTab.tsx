@@ -16,6 +16,8 @@ import {
   ItemSettings as ItemSettingsType,
 } from "../../app/providers/SettingsContext";
 import ItemsSettingsModal from "./ItemsSettingsModal";
+import { useUnsavedChanges } from "../../shared/hooks/useUnsavedChanges";
+// no direct use here
 
 import "./ItemsTab.css";
 
@@ -67,7 +69,9 @@ const ItemsTab: React.FC<ItemsTabProps> = ({ isDarkTheme }) => {
   const [lastSelectedItem, setLastSelectedItem] = useState<string | null>(null);
 
   // Доступ к обновлению настроек предметов
-  const { updateItemSettings } = useSettings();
+  const { updateItemSettings, getItemsSettings, getItemSettings } =
+    useSettings();
+  const { baseline } = useUnsavedChanges();
 
   // Фильтры
   const [selectedDifficultyClasses, setSelectedDifficultyClasses] = useState<
@@ -246,6 +250,96 @@ const ItemsTab: React.FC<ItemsTabProps> = ({ isDarkTheme }) => {
     sortOrder,
     t,
   ]);
+
+  // Unsaved logic: per-item changed vs baseline
+  const itemHasUnsaved = useMemo(() => {
+    const map = new Map<string, boolean>();
+    if (!baseline) return map;
+    const baseItems = ((baseline.items as any)?.items || {}) as Record<
+      string,
+      any
+    >;
+    const defaultItem = {
+      enabled: true,
+      showDifficultyClassMarker: false,
+      locales: {},
+    } as any;
+    for (const item of items) {
+      const cur = (getItemSettings(item.key) as any) || defaultItem;
+      const base =
+        (baseItems[item.key as keyof typeof baseItems] as any) || defaultItem;
+      let changed = false;
+      if (cur.enabled !== base.enabled) changed = true;
+      if (cur.showDifficultyClassMarker !== base.showDifficultyClassMarker)
+        changed = true;
+      if (!changed) {
+        const localeKeys = new Set<string>([
+          ...Object.keys(cur.locales || {}),
+          ...Object.keys((base.locales as any) || {}),
+        ]);
+        for (const loc of localeKeys) {
+          const cv = (cur.locales as any)?.[loc] ?? "";
+          const bv = (base.locales as any)?.[loc] ?? "";
+          if (cv !== bv) {
+            changed = true;
+            break;
+          }
+        }
+      }
+      map.set(item.key, changed);
+    }
+    return map;
+  }, [baseline, items, getItemSettings]);
+
+  const unsavedCount = useMemo(() => {
+    let c = 0;
+    for (const key of itemHasUnsaved.keys()) if (itemHasUnsaved.get(key)) c++;
+    return c;
+  }, [itemHasUnsaved]);
+
+  const [unsavedOnly, setUnsavedOnly] = useState(false);
+  const toggleUnsavedOnly = () =>
+    setUnsavedOnly((prev) => {
+      const next = !prev;
+      if (next) {
+        handleResetFilters();
+      }
+      return next;
+    });
+
+  const visibleItems = useMemo(() => {
+    const itemsList = filteredAndSortedItems;
+    if (!unsavedOnly) return itemsList;
+    return itemsList.filter((i) => itemHasUnsaved.get(i.key));
+  }, [filteredAndSortedItems, unsavedOnly, itemHasUnsaved]);
+
+  const itemsGlobalSettingsUnsaved = useMemo(() => {
+    if (!baseline) return false;
+    const current = getItemsSettings();
+    const base = baseline.items;
+    if (!base) return false;
+
+    const pickLevels = (g: any) =>
+      Array.isArray(g?.levels)
+        ? g.levels.map((lvl: any) => ({
+            enabled: !!lvl?.enabled,
+            locales: lvl?.locales || {},
+          }))
+        : [];
+
+    const normalize = (root: any) => ({
+      difficultyClassMarkers: pickLevels(root?.difficultyClassMarkers),
+      qualityPrefixes: pickLevels(root?.qualityPrefixes),
+    });
+
+    try {
+      const curNorm = normalize(current);
+      const baseNorm = normalize(base);
+      return JSON.stringify(curNorm) !== JSON.stringify(baseNorm);
+    } catch {
+      return false;
+    }
+  }, [baseline, getItemsSettings]);
 
   // Автоматически выбираем первый предмет только при первом открытии
   useEffect(() => {
@@ -432,12 +526,15 @@ const ItemsTab: React.FC<ItemsTabProps> = ({ isDarkTheme }) => {
         onToggleRelatedKind={toggleRelatedKind}
         onToggleBaseType={toggleBaseType}
         filtersRef={filtersRef}
+        unsavedOnly={unsavedOnly}
+        unsavedCount={unsavedCount}
+        onToggleUnsavedOnly={toggleUnsavedOnly}
       />
 
       <div className="grid grid-cols-[20rem_1fr]">
         <ItemsList
           isDarkTheme={isDarkTheme}
-          items={filteredAndSortedItems}
+          items={visibleItems}
           selectedItems={selectedItems}
           selectedItemForSettings={selectedItemForSettings}
           sortType={sortType}
@@ -450,6 +547,8 @@ const ItemsTab: React.FC<ItemsTabProps> = ({ isDarkTheme }) => {
           onOpenMassEditModal={() => setIsMassEditModalOpen(true)}
           onOpenSettingsModal={() => setIsSettingsModalOpen(true)}
           filtersRef={filtersRef}
+          itemHasUnsavedMap={itemHasUnsaved}
+          itemsSettingsUnsaved={itemsGlobalSettingsUnsaved}
         />
 
         <ItemCard
@@ -496,6 +595,18 @@ const ItemsTab: React.FC<ItemsTabProps> = ({ isDarkTheme }) => {
                     className={isDarkTheme ? "text-gray-400" : "text-gray-500"}
                   />
                 </button>
+              </div>
+
+              {/* Количество выделенных предметов под заголовком (курсив) */}
+              <div
+                className={`italic text-sm mb-3 ${
+                  isDarkTheme ? "text-gray-400" : "text-gray-500"
+                }`}
+              >
+                {t("itemsPage.massEdit.selectedCount", {
+                  count: selectedItems.size,
+                  defaultValue: "{{count}} selected",
+                })}
               </div>
 
               <div className="space-y-4">

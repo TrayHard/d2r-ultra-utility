@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSettings } from "../../app/providers/SettingsContext";
 import MultipleLeveledLocales from "../../shared/components/MultipleLeveledLocales";
+import { useUnsavedChanges } from "../../shared/hooks/useUnsavedChanges";
 
 interface GemsTabProps {
   isDarkTheme: boolean;
@@ -16,6 +17,7 @@ const GemsTab: React.FC<GemsTabProps> = ({ isDarkTheme }) => {
     updateGemLevelSettings,
   } = useSettings();
   const selectedLocales = getSelectedLocales();
+  const { baseline } = useUnsavedChanges();
 
   // Локальные состояния для коллапсов
   const [collapseStates, setCollapseStates] = useState({
@@ -53,7 +55,7 @@ const GemsTab: React.FC<GemsTabProps> = ({ isDarkTheme }) => {
   // Обработчики для коллапсов
   const handleCollapseToggle = (
     key: keyof typeof collapseStates,
-    isOpen: boolean,
+    isOpen: boolean
   ) => {
     setCollapseStates((prev) => ({ ...prev, [key]: isOpen }));
   };
@@ -68,7 +70,7 @@ const GemsTab: React.FC<GemsTabProps> = ({ isDarkTheme }) => {
       | "emeralds"
       | "rubies"
       | "diamonds",
-    tabIndex: number,
+    tabIndex: number
   ) => {
     updateGemGroupSettings(itemType, { activeTab: tabIndex });
   };
@@ -83,7 +85,7 @@ const GemsTab: React.FC<GemsTabProps> = ({ isDarkTheme }) => {
       | "rubies"
       | "diamonds",
     level: number,
-    enabled: boolean,
+    enabled: boolean
   ) => {
     updateGemLevelSettings(itemType, level, { enabled });
   };
@@ -99,7 +101,7 @@ const GemsTab: React.FC<GemsTabProps> = ({ isDarkTheme }) => {
       | "diamonds",
     level: number,
     locale: string,
-    value: string,
+    value: string
   ) => {
     const currentSettings = getGemGroupSettings(itemType);
     const currentLevelSettings = currentSettings.levels[level];
@@ -121,7 +123,7 @@ const GemsTab: React.FC<GemsTabProps> = ({ isDarkTheme }) => {
       | "emeralds"
       | "rubies"
       | "diamonds",
-    level: number,
+    level: number
   ): string => {
     // Маппинг типов камней к названиям файлов
     const gemFileNames = {
@@ -151,7 +153,7 @@ const GemsTab: React.FC<GemsTabProps> = ({ isDarkTheme }) => {
       | "emeralds"
       | "rubies"
       | "diamonds",
-    gemSettings: any,
+    gemSettings: any
   ) => {
     // Получаем иконку perfect качества (5-й уровень, индекс 4)
     const headerIcon = getGemImagePath(itemType, 4);
@@ -164,7 +166,7 @@ const GemsTab: React.FC<GemsTabProps> = ({ isDarkTheme }) => {
         selectedLocales={selectedLocales}
         isDarkTheme={isDarkTheme}
         imagePaths={gemSettings.levels.map((_: any, index: number) =>
-          getGemImagePath(itemType, index),
+          getGemImagePath(itemType, index)
         )}
         headerIcon={headerIcon}
         isOpen={collapseStates[itemType]}
@@ -175,6 +177,9 @@ const GemsTab: React.FC<GemsTabProps> = ({ isDarkTheme }) => {
         }
         onLocaleChange={(level, locale, value) =>
           handleGemLocaleChange(itemType, level, locale, value)
+        }
+        getBaselineGroup={(root) =>
+          root.gems?.[itemType as keyof typeof root.gems] as any
         }
       />
     );

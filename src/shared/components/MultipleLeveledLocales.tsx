@@ -6,6 +6,8 @@ import Collapse from "./Collapse";
 import Switch from "./Switch";
 import ColorHint from "./ColorHint";
 import SymbolsHint from "./SymbolsHint";
+import UnsavedAsterisk from "./UnsavedAsterisk";
+import { useUnsavedChanges } from "../hooks/useUnsavedChanges";
 import Icon from "@mdi/react";
 import {
   mdiEyeOutline,
@@ -16,6 +18,7 @@ import {
 import type {
   PotionGroupSettings,
   PotionLevelSettings,
+  AppSettings,
 } from "../../app/providers/SettingsContext";
 
 interface MultipleLeveledLocalesProps {
@@ -38,6 +41,10 @@ interface MultipleLeveledLocalesProps {
   showHighlightSwitch?: boolean; // Показать переключатель подсветки
   highlightEnabled?: boolean; // Состояние подсветки
   onHighlightToggle?: (enabled: boolean) => void; // Хендлер переключения подсветки
+  // Селектор baseline-группы из корневых настроек для сравнения
+  getBaselineGroup?: (root: AppSettings) => PotionGroupSettings;
+  // Переопределение активного уровня (UI-состояние, не из профиля)
+  activeTabIndexProp?: number;
 }
 
 const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
@@ -59,23 +66,28 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
   showHighlightSwitch = false,
   highlightEnabled,
   onHighlightToggle,
+  getBaselineGroup,
+  activeTabIndexProp,
 }) => {
   const { t } = useTranslation();
+  const { hasChanged, baseline } = useUnsavedChanges();
 
   // Текущее поле локали, находящееся в фокусе. По умолчанию предпросмотр берет enUS
   const [focusedLocale, setFocusedLocale] = React.useState<string | null>(null);
 
   // Проверяем activeTab - если он undefined или больше количества levels, ставим 0
   const activeTabIndex =
-    settings.activeTab >= 0 && settings.activeTab < settings.levels.length
-      ? settings.activeTab
-      : 0;
+    typeof activeTabIndexProp === "number"
+      ? Math.max(0, Math.min(activeTabIndexProp, settings.levels.length - 1))
+      : settings.activeTab >= 0 && settings.activeTab < settings.levels.length
+        ? settings.activeTab
+        : 0;
   const activeLevel = settings.levels[activeTabIndex];
 
   // Компонент для рендеринга инпутов локалей
   const renderLocaleInputs = (
     levelSettings: PotionLevelSettings,
-    level: number,
+    level: number
   ) => {
     return (
       <div className="space-y-3">
@@ -114,38 +126,53 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
                 )}
               </span>
               <div className="flex-1 flex items-center space-x-2">
-                <input
-                  type="text"
-                  value={
-                    levelSettings.locales[
-                      locale.value as keyof typeof levelSettings.locales
-                    ] ?? ""
-                  }
-                  onChange={(e) =>
-                    onLocaleChange(level, locale.value, e.target.value)
-                  }
-                  onFocus={() => setFocusedLocale(locale.value)}
-                  onBlur={() => setFocusedLocale(null)}
-                  disabled={!hideToggle && !levelSettings.enabled}
-                  placeholder={t(
-                    `runePage.controls.placeholders.${locale.value}`,
-                  )}
-                  className={`
-                    flex-1 px-3 py-2 rounded-md border transition-colors
-                    ${
-                      isDarkTheme
-                        ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                        : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
+                <div className="relative flex-1">
+                  <input
+                    type="text"
+                    value={
+                      levelSettings.locales[
+                        locale.value as keyof typeof levelSettings.locales
+                      ] ?? ""
                     }
-                    ${
-                      !hideToggle && !levelSettings.enabled
-                        ? "opacity-50 cursor-not-allowed"
-                        : isDarkTheme
-                          ? "focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
-                          : "focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
+                    onChange={(e) =>
+                      onLocaleChange(level, locale.value, e.target.value)
                     }
-                  `}
-                />
+                    onFocus={() => setFocusedLocale(locale.value)}
+                    onBlur={() => setFocusedLocale(null)}
+                    disabled={!hideToggle && !levelSettings.enabled}
+                    placeholder={t(
+                      `runePage.controls.placeholders.${locale.value}`
+                    )}
+                    className={`
+                      w-full pl-3 pr-8 py-2 rounded-md border transition-colors
+                      ${
+                        isDarkTheme
+                          ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                          : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
+                      }
+                      ${
+                        !hideToggle && !levelSettings.enabled
+                          ? "opacity-50 cursor-not-allowed"
+                          : isDarkTheme
+                            ? "focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
+                            : "focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
+                      }
+                    `}
+                  />
+                  {getBaselineGroup &&
+                    hasChanged(
+                      (root) =>
+                        getBaselineGroup(root).levels[level]?.locales[
+                          locale.value as keyof typeof levelSettings.locales
+                        ]
+                    ) && (
+                      <UnsavedAsterisk
+                        size={0.65}
+                        className="absolute"
+                        style={{ right: 12, top: 12 }}
+                      />
+                    )}
+                </div>
                 <div className="flex items-center gap-1">
                   <SymbolsHint isDarkTheme={isDarkTheme} />
                   <ColorHint isDarkTheme={isDarkTheme} />
@@ -177,11 +204,52 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
           style={currentColor ? { color: currentColor } : undefined}
         >
           {part}
-        </span>,
+        </span>
       );
     }
     return nodes;
   };
+
+  // Проверка изменений для конкретного уровня (игнорируем activeTab)
+  const levelHasChanges = (levelIndex: number): boolean => {
+    if (!getBaselineGroup || !baseline) return false;
+    const baseGroup = getBaselineGroup(baseline);
+    const baseLvl = baseGroup?.levels[levelIndex];
+    const curLvl = settings.levels[levelIndex];
+    if (!baseLvl || !curLvl) return false;
+    if (baseLvl.enabled !== curLvl.enabled) return true;
+    for (const loc of selectedLocales) {
+      const b = baseLvl.locales[loc as keyof typeof baseLvl.locales];
+      const c = curLvl.locales[loc as keyof typeof curLvl.locales];
+      if (b !== c) return true;
+    }
+    const bh = (baseLvl as any)?.highlight;
+    const ch = (curLvl as any)?.highlight;
+    if (bh !== undefined && bh !== ch) return true;
+    return false;
+  };
+
+  const groupHasChanges = (() => {
+    if (!getBaselineGroup || !baseline) return false;
+    const baseGroup = getBaselineGroup(baseline);
+    if (!baseGroup) return false;
+    const maxLevels = Math.max(baseGroup.levels.length, settings.levels.length);
+    for (let i = 0; i < maxLevels; i++) {
+      const baseLvl = baseGroup.levels[i];
+      const curLvl = settings.levels[i];
+      if (!baseLvl || !curLvl) continue;
+      if (baseLvl.enabled !== curLvl.enabled) return true;
+      for (const loc of selectedLocales) {
+        const b = baseLvl.locales[loc as keyof typeof baseLvl.locales];
+        const c = curLvl.locales[loc as keyof typeof curLvl.locales];
+        if (b !== c) return true;
+      }
+      const bh = (baseLvl as any)?.highlight;
+      const ch = (curLvl as any)?.highlight;
+      if (bh !== undefined && bh !== ch) return true;
+    }
+    return false;
+  })();
 
   return (
     <Collapse
@@ -190,6 +258,7 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
       isOpen={isOpen}
       onToggle={onToggle}
       icon={headerIcon}
+      rightAdornment={groupHasChanges ? <UnsavedAsterisk size={0.7} /> : null}
       containerClassName={`rounded-b-lg border p-4 ${
         isDarkTheme ? "bg-gray-800 border-gray-700" : "bg-white border-gray-300"
       }`}
@@ -197,18 +266,15 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
       {/* Табы с картинками */}
       <div className="flex space-x-2 mb-4 relative">
         {settings.levels.map((level, index) => {
-          const buttonContent = (
+          const tabButton = (
             <button
-              key={index}
               onClick={() => onTabChange(index)}
               className={`p-2 rounded-lg transition-all duration-200 border-2 ${
                 isDarkTheme
                   ? "border-gray-600 bg-gray-700/50 hover:border-gray-500"
                   : "border-gray-300 bg-gray-100/50 hover:border-gray-400"
               }`}
-              style={{
-                width: "65px",
-              }}
+              style={{ width: "65px" }}
             >
               <img
                 src={imagePaths[index]}
@@ -219,12 +285,25 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
             </button>
           );
 
+          const buttonWithIndicator = (
+            <div key={index} className="relative inline-block">
+              {tabButton}
+              {levelHasChanges(index) && (
+                <UnsavedAsterisk
+                  size={0.65}
+                  className="absolute"
+                  style={{ right: -6, top: -6 }}
+                />
+              )}
+            </div>
+          );
+
           return tooltips && tooltips[index] ? (
             <Tooltip key={index} title={tooltips[index]} placement="top">
-              {buttonContent}
+              {buttonWithIndicator}
             </Tooltip>
           ) : (
-            buttonContent
+            buttonWithIndicator
           );
         })}
 
@@ -255,7 +334,7 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
                     title={t("runePage.controls.toggleItemVisibilityTooltip")}
                     placement="top"
                   >
-                    <div>
+                    <div className="relative">
                       <Switch
                         enabled={activeLevel.enabled}
                         onChange={(enabled) =>
@@ -277,6 +356,18 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
                           />
                         }
                       />
+                      {getBaselineGroup &&
+                        hasChanged(
+                          (root) =>
+                            getBaselineGroup(root).levels[activeTabIndex]
+                              ?.enabled
+                        ) && (
+                          <UnsavedAsterisk
+                            size={0.65}
+                            className="absolute"
+                            style={{ right: -8, top: -8 }}
+                          />
+                        )}
                     </div>
                   </Tooltip>
                 )}
@@ -288,7 +379,7 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
                     }
                     placement="top"
                   >
-                    <div>
+                    <div className="relative">
                       <Switch
                         enabled={Boolean(highlightEnabled)}
                         onChange={(enabled) =>
@@ -310,6 +401,21 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
                           />
                         }
                       />
+                      {getBaselineGroup &&
+                        hasChanged(
+                          (root) =>
+                            (
+                              getBaselineGroup(root).levels[
+                                activeTabIndex
+                              ] as any
+                            )?.highlight
+                        ) && (
+                          <UnsavedAsterisk
+                            size={0.65}
+                            className="absolute"
+                            style={{ right: -8, top: -8 }}
+                          />
+                        )}
                     </div>
                   </Tooltip>
                 )}
@@ -367,27 +473,41 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
                   placement="top"
                 >
                   <div>
-                    <Switch
-                      enabled={activeLevel.enabled}
-                      onChange={(enabled) =>
-                        onLevelToggle(activeTabIndex, enabled)
-                      }
-                      isDarkTheme={isDarkTheme}
-                      onIcon={
-                        <Icon
-                          path={mdiEyeOutline}
-                          size={0.55}
-                          color="#16A34A"
-                        />
-                      }
-                      offIcon={
-                        <Icon
-                          path={mdiEyeOffOutline}
-                          size={0.55}
-                          color={isDarkTheme ? "#111827" : "#6B7280"}
-                        />
-                      }
-                    />
+                    <div className="relative w-fit">
+                      <Switch
+                        enabled={activeLevel.enabled}
+                        onChange={(enabled) =>
+                          onLevelToggle(activeTabIndex, enabled)
+                        }
+                        isDarkTheme={isDarkTheme}
+                        onIcon={
+                          <Icon
+                            path={mdiEyeOutline}
+                            size={0.55}
+                            color="#16A34A"
+                          />
+                        }
+                        offIcon={
+                          <Icon
+                            path={mdiEyeOffOutline}
+                            size={0.55}
+                            color={isDarkTheme ? "#111827" : "#6B7280"}
+                          />
+                        }
+                      />
+                      {getBaselineGroup &&
+                        hasChanged(
+                          (root) =>
+                            getBaselineGroup(root).levels[activeTabIndex]
+                              ?.enabled
+                        ) && (
+                          <UnsavedAsterisk
+                            size={0.65}
+                            className="absolute"
+                            style={{ right: -6, top: -6 }}
+                          />
+                        )}
+                    </div>
                   </div>
                 </Tooltip>
               </div>

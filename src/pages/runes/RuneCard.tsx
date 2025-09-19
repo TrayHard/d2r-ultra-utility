@@ -5,6 +5,8 @@ import { Select } from "antd";
 import ColorPallet from "../../shared/components/ColorPallet.tsx";
 import Switcher from "../../shared/components/Switcher.tsx";
 import Checkbox from "../../shared/components/Checkbox.tsx";
+import UnsavedAsterisk from "../../shared/components/UnsavedAsterisk";
+import { useUnsavedChanges } from "../../shared/hooks/useUnsavedChanges";
 import ColorHint from "../../shared/components/ColorHint.tsx";
 import SymbolsHint from "../../shared/components/SymbolsHint";
 import {
@@ -46,6 +48,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
 }) => {
   const { t } = useTranslation();
   const { getGeneralRuneSettings, getSelectedLocales } = useSettings();
+  const { baseline } = useUnsavedChanges();
 
   // Получаем общие настройки как дефолтные значения
   const generalSettings = getGeneralRuneSettings();
@@ -54,7 +57,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
   const mode = React.useMemo(() => settings?.mode ?? "auto", [settings?.mode]);
   const isHighlighted = React.useMemo(
     () => settings?.isHighlighted ?? false,
-    [settings?.isHighlighted],
+    [settings?.isHighlighted]
   );
 
   // Автоматические настройки
@@ -72,7 +75,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
         boxLimitersColor: generalSettings.boxLimitersColor,
         color: "white",
       },
-    [settings?.autoSettings, generalSettings],
+    [settings?.autoSettings, generalSettings]
   );
 
   // Ручные настройки
@@ -95,13 +98,13 @@ const RuneCard: React.FC<RuneCardProps> = ({
           zhCN: "",
         },
       },
-    [settings?.manualSettings],
+    [settings?.manualSettings]
   );
 
   // Получаем захардкоженные локали для автоматического режима
   const hardcodedLocales = React.useMemo(
     () => runeHardcodedLocales[rune],
-    [rune],
+    [rune]
   );
 
   // Состояние для выбранной локали предпросмотра
@@ -280,7 +283,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
   const localeOptions = React.useMemo(() => {
     const selectedLocales = getSelectedLocales();
     return allLocaleOptions.filter((option: { value: string; label: string }) =>
-      selectedLocales.includes(option.value),
+      selectedLocales.includes(option.value)
     );
   }, [getSelectedLocales]);
 
@@ -329,7 +332,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
     return generateStructuredPreview(
       rune,
       previewSettings as RuneSettings,
-      previewLocale as keyof typeof previewLocales,
+      previewLocale as keyof typeof previewLocales
     );
   }, [
     mode,
@@ -467,7 +470,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
                                       ...baseStyle,
                                       color:
                                         getD2RColorStyle?.(
-                                          previewData.boxLimitersColor,
+                                          previewData.boxLimitersColor
                                         ) || "#FFFFFF",
                                       position: "absolute",
                                       left: "0",
@@ -507,7 +510,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
                                         ) : (
                                           parseColoredText(
                                             line,
-                                            getD2RColorStyle,
+                                            getD2RColorStyle
                                           ).map((segment, segIdx) => (
                                             <span
                                               key={`seg-${lineIdx}-${segIdx}`}
@@ -526,7 +529,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
                                     style={{
                                       color:
                                         getD2RColorStyle?.(
-                                          previewData.baseColor,
+                                          previewData.baseColor
                                         ) || "#FFFFFF",
                                     }}
                                   >
@@ -544,7 +547,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
                                       style={{
                                         color:
                                           getD2RColorStyle?.(
-                                            previewData.numbering.dividerColor,
+                                            previewData.numbering.dividerColor
                                           ) || "#FFFFFF",
                                       }}
                                     >
@@ -556,7 +559,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
                                       style={{
                                         color:
                                           getD2RColorStyle?.(
-                                            previewData.numbering.numberColor,
+                                            previewData.numbering.numberColor
                                           ) || "#FFFFFF",
                                       }}
                                     >
@@ -568,7 +571,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
                                       style={{
                                         color:
                                           getD2RColorStyle?.(
-                                            previewData.numbering.dividerColor,
+                                            previewData.numbering.dividerColor
                                           ) || "#FFFFFF",
                                       }}
                                     >
@@ -587,7 +590,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
                                       ...baseStyle,
                                       color:
                                         getD2RColorStyle?.(
-                                          previewData.boxLimitersColor,
+                                          previewData.boxLimitersColor
                                         ) || "#FFFFFF",
                                       position: "absolute",
                                       right: "0",
@@ -609,13 +612,26 @@ const RuneCard: React.FC<RuneCardProps> = ({
 
             {/* Общая подсветка руны */}
             <div className={`mb-4 flex justify-center`}>
-              <Checkbox
-                checked={isHighlighted}
-                onChange={handleHighlightChange}
-                isDarkTheme={isDarkTheme}
-                size="lg"
-                label={t("runePage.controls.highlightRune")}
-              />
+              <div className="relative inline-flex">
+                <Checkbox
+                  checked={isHighlighted}
+                  onChange={handleHighlightChange}
+                  isDarkTheme={isDarkTheme}
+                  size="lg"
+                  label={t("runePage.controls.highlightRune")}
+                />
+                {(() => {
+                  if (!baseline) return null;
+                  const base = (baseline.runes as any)?.[rune];
+                  if (!base) return null;
+                  return (base.isHighlighted ?? false) !==
+                    (isHighlighted ?? false) ? (
+                    <span className="absolute" style={{ right: -10, top: -10 }}>
+                      <UnsavedAsterisk size={0.45} />
+                    </span>
+                  ) : null;
+                })()}
+              </div>
             </div>
 
             {/* Переключатель режимов под превью (grid центрирование) */}
@@ -627,7 +643,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
               >
                 {t("runePage.controls.autoMode")}
               </span>
-              <div className="justify-self-center">
+              <div className="justify-self-center relative">
                 <Switcher
                   checked={mode === "manual"}
                   onChange={(checked) =>
@@ -636,6 +652,16 @@ const RuneCard: React.FC<RuneCardProps> = ({
                   isDarkTheme={isDarkTheme}
                   size="md"
                 />
+                {(() => {
+                  if (!baseline) return null;
+                  const base = (baseline.runes as any)?.[rune];
+                  if (!base) return null;
+                  return (base.mode ?? "auto") !== (mode ?? "auto") ? (
+                    <span className="absolute" style={{ right: -10, top: -10 }}>
+                      <UnsavedAsterisk size={0.45} />
+                    </span>
+                  ) : null;
+                })()}
               </div>
               <span
                 className={`justify-self-start text-sm font-medium ${
@@ -674,12 +700,28 @@ const RuneCard: React.FC<RuneCardProps> = ({
                         >
                           {t("runePage.controls.color")}
                         </label>
-                        <ColorPallet
-                          isDarkTheme={isDarkTheme}
-                          value={autoSettings.color}
-                          onChange={handleAutoColorChange}
-                          size="sm"
-                        />
+                        <div className="relative inline-flex w-fit">
+                          <ColorPallet
+                            isDarkTheme={isDarkTheme}
+                            value={autoSettings.color}
+                            onChange={handleAutoColorChange}
+                            size="sm"
+                          />
+                          {(() => {
+                            if (!baseline) return null;
+                            const base = (baseline.runes as any)?.[rune];
+                            if (!base) return null;
+                            return (base.autoSettings?.color ?? "white") !==
+                              (autoSettings.color ?? "white") ? (
+                              <span
+                                className="absolute"
+                                style={{ right: -6, top: -6 }}
+                              >
+                                <UnsavedAsterisk size={0.4} />
+                              </span>
+                            ) : null;
+                          })()}
+                        </div>
                       </div>
                       <div>
                         <label
@@ -687,13 +729,29 @@ const RuneCard: React.FC<RuneCardProps> = ({
                         >
                           {t("runePage.controls.boxSize")}
                         </label>
-                        <Select
-                          options={sizeOptions}
-                          value={autoSettings.boxSize.toString()}
-                          onChange={(v) => handleAutoBoxSizeChange(String(v))}
-                          size="middle"
-                          style={{ minWidth: 140 }}
-                        />
+                        <div className="relative inline-flex w-fit">
+                          <Select
+                            options={sizeOptions}
+                            value={autoSettings.boxSize.toString()}
+                            onChange={(v) => handleAutoBoxSizeChange(String(v))}
+                            size="middle"
+                            style={{ minWidth: 140 }}
+                          />
+                          {(() => {
+                            if (!baseline) return null;
+                            const base = (baseline.runes as any)?.[rune];
+                            if (!base) return null;
+                            return (base.autoSettings?.boxSize ?? 0) !==
+                              (autoSettings.boxSize ?? 0) ? (
+                              <span
+                                className="absolute"
+                                style={{ right: -6, top: -6 }}
+                              >
+                                <UnsavedAsterisk size={0.4} />
+                              </span>
+                            ) : null;
+                          })()}
+                        </div>
                       </div>
                       <div>
                         <label
@@ -701,16 +759,32 @@ const RuneCard: React.FC<RuneCardProps> = ({
                         >
                           {t("runePage.controls.boxLimiters")}
                         </label>
-                        <Select
-                          options={boxLimitersOptions}
-                          value={autoSettings.boxLimiters}
-                          onChange={(v) =>
-                            handleAutoBoxLimitersChange(String(v))
-                          }
-                          size="middle"
-                          disabled={autoSettings.boxSize === 0}
-                          style={{ minWidth: 120 }}
-                        />
+                        <div className="relative inline-flex w-fit">
+                          <Select
+                            options={boxLimitersOptions}
+                            value={autoSettings.boxLimiters}
+                            onChange={(v) =>
+                              handleAutoBoxLimitersChange(String(v))
+                            }
+                            size="middle"
+                            disabled={autoSettings.boxSize === 0}
+                            style={{ minWidth: 120 }}
+                          />
+                          {(() => {
+                            if (!baseline) return null;
+                            const base = (baseline.runes as any)?.[rune];
+                            if (!base) return null;
+                            return (base.autoSettings?.boxLimiters ?? "") !==
+                              (autoSettings.boxLimiters ?? "") ? (
+                              <span
+                                className="absolute"
+                                style={{ right: -6, top: -6 }}
+                              >
+                                <UnsavedAsterisk size={0.35} />
+                              </span>
+                            ) : null;
+                          })()}
+                        </div>
                       </div>
                       <div className="h-[52px] flex flex-col justify-end">
                         <label
@@ -718,49 +792,96 @@ const RuneCard: React.FC<RuneCardProps> = ({
                         >
                           {t("runePage.controls.boxLimitersColor")}
                         </label>
-                        <ColorPallet
-                          isDarkTheme={isDarkTheme}
-                          value={autoSettings.boxLimitersColor}
-                          onChange={handleAutoBoxLimitersColorChange}
-                          size="sm"
-                          disabled={autoSettings.boxSize === 0}
-                        />
+                        <div className="relative inline-flex w-fit">
+                          <ColorPallet
+                            isDarkTheme={isDarkTheme}
+                            value={autoSettings.boxLimitersColor}
+                            onChange={handleAutoBoxLimitersColorChange}
+                            size="sm"
+                            disabled={autoSettings.boxSize === 0}
+                          />
+                          {(() => {
+                            if (!baseline) return null;
+                            const base = (baseline.runes as any)?.[rune];
+                            if (!base) return null;
+                            return (base.autoSettings?.boxLimitersColor ??
+                              "") !== (autoSettings.boxLimitersColor ?? "") ? (
+                              <span
+                                className="absolute"
+                                style={{ right: -6, top: -6 }}
+                              >
+                                <UnsavedAsterisk size={0.35} />
+                              </span>
+                            ) : null;
+                          })()}
+                        </div>
                       </div>
                     </div>
                   </div>
 
                   {/* Rune Number (в одну строку) */}
                   <div>
-                    <h4
-                      className={`text-sm font-semibold ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}
-                    >
-                      {t("runePage.controls.runeNumberTitle")}
-                    </h4>
-                    <div className="flex flex-wrap items-end gap-4">
-                      <div
-                        className={`h-[32px] flex items-center px-2 rounded-lg ${isDarkTheme ? "bg-gray-700/20" : "bg-gray-100/40"}`}
+                    <div className="flex items-center gap-2 mb-2 mt-4">
+                      <h4
+                        className={`text-sm font-semibold ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}
                       >
-                        <Checkbox
+                        {t("runePage.controls.runeNumberTitle")}
+                      </h4>
+                      <div className="relative inline-flex w-fit">
+                        <Switcher
                           checked={autoSettings.numbering.show}
                           onChange={handleAutoShowNumberChange}
                           isDarkTheme={isDarkTheme}
                           size="md"
-                          label={t("runePage.controls.showRuneNumber")}
                         />
+                        {(() => {
+                          if (!baseline) return null;
+                          const base = (baseline.runes as any)?.[rune];
+                          if (!base) return null;
+                          return (base.autoSettings?.numbering?.show ??
+                            false) !==
+                            (autoSettings.numbering?.show ?? false) ? (
+                            <span
+                              className="absolute"
+                              style={{ right: -6, top: -6 }}
+                            >
+                              <UnsavedAsterisk size={0.35} />
+                            </span>
+                          ) : null;
+                        })()}
                       </div>
+                    </div>
+                    <div className="flex flex-wrap items-end gap-4 mt-4">
                       <div className="h-[52px] flex flex-col justify-end">
                         <label
                           className={`block text-xs font-semibold mb-1 ${isDarkTheme ? "text-gray-300" : "text-gray-700"} ${!autoSettings.numbering.show ? "opacity-50" : ""}`}
                         >
                           {t("runePage.controls.numberColor")}
                         </label>
-                        <ColorPallet
-                          isDarkTheme={isDarkTheme}
-                          value={autoSettings.numbering.numberColor}
-                          onChange={handleAutoNumberColorChange}
-                          size="sm"
-                          disabled={!autoSettings.numbering.show}
-                        />
+                        <div className="relative inline-flex w-fit">
+                          <ColorPallet
+                            isDarkTheme={isDarkTheme}
+                            value={autoSettings.numbering.numberColor}
+                            onChange={handleAutoNumberColorChange}
+                            size="sm"
+                            disabled={!autoSettings.numbering.show}
+                          />
+                          {(() => {
+                            if (!baseline) return null;
+                            const base = (baseline.runes as any)?.[rune];
+                            if (!base) return null;
+                            return (base.autoSettings?.numbering?.numberColor ??
+                              "") !==
+                              (autoSettings.numbering?.numberColor ?? "") ? (
+                              <span
+                                className="absolute"
+                                style={{ right: -6, top: -6 }}
+                              >
+                                <UnsavedAsterisk size={0.35} />
+                              </span>
+                            ) : null;
+                          })()}
+                        </div>
                       </div>
                       <div className="h-[52px] flex flex-col justify-end">
                         <label
@@ -768,16 +889,33 @@ const RuneCard: React.FC<RuneCardProps> = ({
                         >
                           {t("runePage.controls.divider")}
                         </label>
-                        <Select
-                          options={dividerOptions}
-                          value={autoSettings.numbering.dividerType}
-                          onChange={(v) =>
-                            handleAutoDividerTypeChange(String(v))
-                          }
-                          size="middle"
-                          disabled={!autoSettings.numbering.show}
-                          style={{ minWidth: 70 }}
-                        />
+                        <div className="relative inline-flex w-fit">
+                          <Select
+                            options={dividerOptions}
+                            value={autoSettings.numbering.dividerType}
+                            onChange={(v) =>
+                              handleAutoDividerTypeChange(String(v))
+                            }
+                            size="middle"
+                            disabled={!autoSettings.numbering.show}
+                            style={{ minWidth: 70 }}
+                          />
+                          {(() => {
+                            if (!baseline) return null;
+                            const base = (baseline.runes as any)?.[rune];
+                            if (!base) return null;
+                            return (base.autoSettings?.numbering?.dividerType ??
+                              "") !==
+                              (autoSettings.numbering?.dividerType ?? "") ? (
+                              <span
+                                className="absolute"
+                                style={{ right: -6, top: -6 }}
+                              >
+                                <UnsavedAsterisk size={0.35} />
+                              </span>
+                            ) : null;
+                          })()}
+                        </div>
                       </div>
                       <div className="h-[52px] flex flex-col justify-end">
                         <label
@@ -785,13 +923,30 @@ const RuneCard: React.FC<RuneCardProps> = ({
                         >
                           {t("runePage.controls.dividerColor")}
                         </label>
-                        <ColorPallet
-                          isDarkTheme={isDarkTheme}
-                          value={autoSettings.numbering.dividerColor}
-                          onChange={handleAutoDividerColorChange}
-                          size="sm"
-                          disabled={!autoSettings.numbering.show}
-                        />
+                        <div className="relative inline-flex w-fit">
+                          <ColorPallet
+                            isDarkTheme={isDarkTheme}
+                            value={autoSettings.numbering.dividerColor}
+                            onChange={handleAutoDividerColorChange}
+                            size="sm"
+                            disabled={!autoSettings.numbering.show}
+                          />
+                          {(() => {
+                            if (!baseline) return null;
+                            const base = (baseline.runes as any)?.[rune];
+                            if (!base) return null;
+                            return (base.autoSettings?.numbering
+                              ?.dividerColor ?? "") !==
+                              (autoSettings.numbering?.dividerColor ?? "") ? (
+                              <span
+                                className="absolute"
+                                style={{ right: -6, top: -6 }}
+                              >
+                                <UnsavedAsterisk size={0.35} />
+                              </span>
+                            ) : null;
+                          })()}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -835,29 +990,53 @@ const RuneCard: React.FC<RuneCardProps> = ({
                           {t(`runePage.controls.languageLabels.${langCode}`)} (
                           {langCode})
                         </label>
-                        <div className="flex items-end space-x-2">
-                          <textarea
-                            value={
-                              manualSettings.locales[
-                                langCode as keyof typeof manualSettings.locales
-                              ]
-                            }
-                            onChange={(e) =>
-                              handleLanguageNameChange(langCode, e.target.value)
-                            }
-                            placeholder={t(
-                              `runePage.controls.placeholders.${langCode}`,
-                            )}
-                            rows={3}
-                            className={`
-                                flex-1 px-3 py-2 text-sm rounded-lg border transition-all duration-200 resize-vertical
-                                ${
-                                  isDarkTheme
-                                    ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
-                                    : "bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
-                                }
-                              `}
-                          />
+                        <div className="flex items-center space-x-2 w-full">
+                          <div className="relative flex-1">
+                            <textarea
+                              value={
+                                manualSettings.locales[
+                                  langCode as keyof typeof manualSettings.locales
+                                ]
+                              }
+                              onChange={(e) =>
+                                handleLanguageNameChange(
+                                  langCode,
+                                  e.target.value
+                                )
+                              }
+                              placeholder={t(
+                                `runePage.controls.placeholders.${langCode}`
+                              )}
+                              rows={3}
+                              className={`
+                                  w-full px-3 py-2 text-sm rounded-lg border transition-all duration-200 resize-vertical
+                                  ${
+                                    isDarkTheme
+                                      ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
+                                      : "bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
+                                  }
+                                `}
+                            />
+                            {(() => {
+                              if (!baseline) return null;
+                              const base = (baseline.runes as any)?.[rune];
+                              if (!base) return null;
+                              const baseVal = (base.manualSettings?.locales ||
+                                {})[langCode];
+                              const curVal =
+                                manualSettings.locales[
+                                  langCode as keyof typeof manualSettings.locales
+                                ];
+                              return baseVal !== curVal ? (
+                                <span
+                                  className="absolute"
+                                  style={{ right: 6, top: 6 }}
+                                >
+                                  <UnsavedAsterisk size={0.4} />
+                                </span>
+                              ) : null;
+                            })()}
+                          </div>
                           <div className="flex items-center gap-1">
                             <SymbolsHint isDarkTheme={isDarkTheme} />
                             <ColorHint isDarkTheme={isDarkTheme} />

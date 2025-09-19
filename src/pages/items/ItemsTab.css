@@ -457,3 +457,7 @@
   border-color: #374151 !important;
   color: #6b7280 !important;
 }
+
+.ant-btn-variant-solid .asterisk-icon svg path {
+  fill: #000 !important;
+}

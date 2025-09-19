@@ -14,6 +14,7 @@ import { useGemsWorker } from "../../../shared/hooks/useGemsWorker.ts";
 import { useItemsWorker } from "../../../shared/hooks/useItemsWorker.ts";
 import { useApplyAllWorker } from "../../../shared/hooks/useApplyAllWorker.ts";
 import basesData from "../../../pages/items/bases.json";
+import { useUnsavedChanges } from "../../../shared/hooks/useUnsavedChanges";
 // no storage keys needed here anymore
 
 interface MainSpaceProps {
@@ -71,7 +72,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     (
       message: string,
       type?: "success" | "error" | "warning" | "info",
-      title?: string,
+      title?: string
     ) => {
       if (isBulkLoading && type === "success") return;
       sendMessage(message, { type, title });
@@ -79,7 +80,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     t,
     () => settings.runes,
     "advanced", // разрешенный режим
-    getAppMode,
+    getAppMode
   );
 
   // Хук для обычных предметов
@@ -94,7 +95,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     (
       message: string,
       type?: "success" | "error" | "warning" | "info",
-      title?: string,
+      title?: string
     ) => {
       if (isBulkLoading && type === "success") return;
       sendMessage(message, { type, title });
@@ -102,7 +103,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     t,
     getCommonSettings,
     "advanced", // разрешенный режим
-    getAppMode,
+    getAppMode
   );
 
   // Хук для драгоценных камней
@@ -117,7 +118,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     (
       message: string,
       type?: "success" | "error" | "warning" | "info",
-      title?: string,
+      title?: string
     ) => {
       if (isBulkLoading && type === "success") return;
       sendMessage(message, { type, title });
@@ -125,14 +126,14 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     t,
     getGemSettings,
     "advanced", // разрешенный режим
-    getAppMode,
+    getAppMode
   );
 
   // Подготавливаем данные для хука предметов
   const itemsForWorker = useMemo(() => {
     // Фильтруем дубли по id
     const uniqueItems = (basesData as any[]).filter(
-      (item, index, arr) => arr.findIndex((i) => i.id === item.id) === index,
+      (item, index, arr) => arr.findIndex((i) => i.id === item.id) === index
     );
     return uniqueItems.map((item) => ({
       key: item.key,
@@ -152,7 +153,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     (
       message: string,
       type?: "success" | "error" | "warning" | "info",
-      title?: string,
+      title?: string
     ) => {
       if (isBulkLoading && type === "success") return;
       sendMessage(message, { type, title });
@@ -162,7 +163,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     getSelectedLocales,
     itemsForWorker,
     "advanced", // разрешенный режим
-    getAppMode,
+    getAppMode
   );
 
   // Единый агрегатор записи
@@ -175,7 +176,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     getAllSettings,
     getSelectedLocales,
     "advanced",
-    getAppMode,
+    getAppMode
   );
 
   // Определяем, какой хук использовать в зависимости от активного таба
@@ -224,7 +225,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     logger.info(
       "Starting bulk read operation for all file types",
       undefined,
-      "executeReadAll",
+      "executeReadAll"
     );
     setIsBulkLoading(true);
     muteTypes(["success"]);
@@ -252,20 +253,20 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
         "One or more read operations failed",
         new Error("Bulk read failure"),
         { details },
-        "executeReadAll",
+        "executeReadAll"
       );
     }
 
     logger.info(
       "Completed bulk read operation",
       { hasError, resultCount: results.length },
-      "executeReadAll",
+      "executeReadAll"
     );
 
     if (!hasError) {
       sendMessage(
         t("messages.success.allLoaded") || "All settings loaded successfully",
-        { type: "success", title: t("messages.success.filesLoaded") },
+        { type: "success", title: t("messages.success.filesLoaded") }
       );
     }
   }, [
@@ -283,13 +284,13 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     logger.info(
       "Starting aggregated apply operation",
       undefined,
-      "executeApplyAll",
+      "executeApplyAll"
     );
     await applyAllChanges();
     logger.info(
       "Completed aggregated apply operation",
       undefined,
-      "executeApplyAll",
+      "executeApplyAll"
     );
   }, [applyAllChanges, logger]);
 
@@ -310,6 +311,66 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     { id: "runes", label: t("tabs.runes") },
     { id: "gems", label: t("tabs.gems") },
   ];
+
+  // Индикаторы изменений по табам относительно активного профиля
+  const { baseline } = useUnsavedChanges();
+  const tabIndicators = React.useMemo(() => {
+    if (!baseline) return {} as Record<string, boolean>;
+
+    const pickLevels = (g: any) =>
+      Array.isArray(g?.levels)
+        ? g.levels.map((lvl: any) => ({
+            enabled: !!lvl?.enabled,
+            locales: lvl?.locales || {},
+            highlight: (lvl as any)?.highlight,
+          }))
+        : [];
+
+    const normalizeCommon = (root: any) => {
+      const c = root?.common || {};
+      const keys = Object.keys(c);
+      const out: Record<string, unknown> = {};
+      for (const k of keys) {
+        const grp = c[k];
+        if (grp && Array.isArray(grp.levels)) out[k] = pickLevels(grp);
+      }
+      return out;
+    };
+
+    const normalizeItems = (root: any) => {
+      const items = root?.items || {};
+      return {
+        difficultyClassMarkers: pickLevels(items.difficultyClassMarkers),
+        qualityPrefixes: pickLevels(items.qualityPrefixes),
+      };
+    };
+
+    const normalizeGems = (root: any) => {
+      const g = root?.gems || {};
+      const out: Record<string, unknown> = {};
+      for (const k of Object.keys(g)) out[k] = pickLevels(g[k]);
+      return out;
+    };
+
+    const hasCommonChanges =
+      JSON.stringify(normalizeCommon(baseline)) !==
+      JSON.stringify(normalizeCommon(settings));
+    const hasItemsChanges =
+      JSON.stringify(normalizeItems(baseline)) !==
+      JSON.stringify(normalizeItems(settings));
+    const hasGemsChanges =
+      JSON.stringify(normalizeGems(baseline)) !==
+      JSON.stringify(normalizeGems(settings));
+    const hasRunesChanges =
+      JSON.stringify(baseline.runes) !== JSON.stringify(settings.runes);
+
+    return {
+      common: hasCommonChanges,
+      items: hasItemsChanges,
+      runes: hasRunesChanges,
+      gems: hasGemsChanges,
+    } as Record<string, boolean>;
+  }, [baseline, settings]);
 
   return (
     <div
@@ -359,6 +420,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
         activeTab={activeTab}
         onTabChange={(tabId) => setActiveTab(tabId as TabType)}
         isDarkTheme={isDarkTheme}
+        indicators={tabIndicators}
       />
 
       {/* Tab Content */}
