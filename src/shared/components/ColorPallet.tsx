@@ -39,7 +39,10 @@ const ColorPallet: React.FC<ColorPalletProps> = ({
                 ? "border-gray-600 hover:border-yellow-400"
                 : "border-gray-300 hover:border-yellow-500"
             }`}
-            style={{ backgroundColor: getCssColorForCode(code), color: "#000" }}
+            style={{
+              backgroundColor: getCssColorForCode(code),
+              color: code === "ÿc6" || code === "ÿc;" ? "#fff" : "#000",
+            }}
             onClick={() => {
               onChange(name);
             }}
