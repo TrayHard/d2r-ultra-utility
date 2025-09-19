@@ -3,6 +3,8 @@ import { Tooltip } from "antd";
 import { useTranslation } from "react-i18next";
 import LanguageSwitch from "./LanguageSwitch.tsx";
 import UpdateButton from "./UpdateButton.tsx";
+import Icon from "@mdi/react";
+import { mdiCogOutline, mdiThemeLightDark } from "@mdi/js";
 
 interface ToolbarProps {
   onLanguageChange: () => void;
@@ -41,7 +43,7 @@ const MainSpaceToolbar: React.FC<ToolbarProps> = ({
                   : "bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-900"
               }`}
             >
-              ⚙️
+              <Icon path={mdiCogOutline} size={0.7} />
             </button>
           </Tooltip>
           {/* Update Button */}
@@ -52,11 +54,11 @@ const MainSpaceToolbar: React.FC<ToolbarProps> = ({
               appMode === "advanced"
                 ? (t(
                     "mode.switchToBasic",
-                    "Переключить в базовый режим",
+                    "Переключить в базовый режим"
                   ) as string)
                 : (t(
                     "mode.switchToAdvanced",
-                    "Переключить в режим редактирования",
+                    "Переключить в режим редактирования"
                   ) as string)
             }
             placement="bottom"
@@ -90,7 +92,8 @@ const MainSpaceToolbar: React.FC<ToolbarProps> = ({
                   : "bg-gray-100 hover:bg-gray-200 text-gray-700"
               }`}
             >
-              {isDarkTheme ? "🌞" : "🌙"}
+              <Icon path={mdiThemeLightDark} size={0.7} />
+              {/* {isDarkTheme ? "🌞" : "🌙"} */}
             </button>
           </Tooltip>
 
