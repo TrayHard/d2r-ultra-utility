@@ -18,7 +18,7 @@ import { logger } from "../../shared/utils/logger";
 const recommendedProfilesModules: Record<string, { default: unknown }> = {
   ...import.meta.glob(
     "../../shared/assets/profiles/recommendedProfiles/*.json",
-    { eager: true },
+    { eager: true }
   ),
   ...import.meta.glob("../../shared/assets/profiles/baseProfiles/*.json", {
     eager: true,
@@ -30,7 +30,7 @@ const defaultProfileModule: Record<string, { default: unknown }> = {
   }),
   ...import.meta.glob(
     "../../shared/assets/profiles/baseProfiles/d2r-profile-Default.json",
-    { eager: true },
+    { eager: true }
   ),
 };
 const userProfilesModules: Record<string, { default: unknown }> =
@@ -63,6 +63,7 @@ interface AppConfig {
   theme: "light" | "dark"; // Тема приложения
   debugMode: boolean; // Режим отладки для логирования
   appMode: "basic" | "advanced"; // Режим приложения
+  asteriskColor?: string; // Цвет индикатора несохранённых изменений
   // В будущем добавим другие глобальные настройки
 }
 
@@ -224,14 +225,14 @@ interface SettingsContextType {
   updateRuneSettings: (rune: ERune, newSettings: Partial<RuneSettings>) => void;
   updateMultipleRuneSettings: (
     runes: ERune[],
-    newSettings: Partial<RuneSettings>,
+    newSettings: Partial<RuneSettings>
   ) => void;
   resetRuneSettings: (rune: ERune) => void;
   resetMultipleRuneSettings: (runes: ERune[]) => void;
 
   // Setter'ы для общих настроек
   updateGeneralRuneSettings: (
-    newSettings: Partial<GeneralRuneSettings>,
+    newSettings: Partial<GeneralRuneSettings>
   ) => void;
   resetGeneralRuneSettings: () => void;
   applyGeneralRuneSettingsToAll: () => void;
@@ -252,7 +253,7 @@ interface SettingsContextType {
       | "largeCharms"
       | "grandCharms"
       | "gold"
-      | "keys",
+      | "keys"
   ) => CommonItemSettings;
   getPotionGroupSettings: (
     item:
@@ -264,7 +265,7 @@ interface SettingsContextType {
       | "uberKeys"
       | "essences"
       | "poisonPotions"
-      | "firePotions",
+      | "firePotions"
   ) => PotionGroupSettings;
   updateCommonItemSettings: (
     item:
@@ -281,7 +282,7 @@ interface SettingsContextType {
       | "grandCharms"
       | "gold"
       | "keys",
-    newSettings: Partial<CommonItemSettings>,
+    newSettings: Partial<CommonItemSettings>
   ) => void;
   updatePotionGroupSettings: (
     item:
@@ -294,7 +295,7 @@ interface SettingsContextType {
       | "essences"
       | "poisonPotions"
       | "firePotions",
-    newSettings: Partial<PotionGroupSettings>,
+    newSettings: Partial<PotionGroupSettings>
   ) => void;
   updatePotionLevelSettings: (
     item:
@@ -308,7 +309,7 @@ interface SettingsContextType {
       | "poisonPotions"
       | "firePotions",
     level: number,
-    newSettings: Partial<PotionLevelSettings>,
+    newSettings: Partial<PotionLevelSettings>
   ) => void;
   resetCommonSettings: () => void;
 
@@ -322,7 +323,7 @@ interface SettingsContextType {
       | "sapphires"
       | "emeralds"
       | "rubies"
-      | "diamonds",
+      | "diamonds"
   ) => PotionGroupSettings;
   updateGemGroupSettings: (
     item:
@@ -333,7 +334,7 @@ interface SettingsContextType {
       | "emeralds"
       | "rubies"
       | "diamonds",
-    newSettings: Partial<PotionGroupSettings>,
+    newSettings: Partial<PotionGroupSettings>
   ) => void;
   updateGemLevelSettings: (
     item:
@@ -345,23 +346,23 @@ interface SettingsContextType {
       | "rubies"
       | "diamonds",
     level: number,
-    newSettings: Partial<PotionLevelSettings>,
+    newSettings: Partial<PotionLevelSettings>
   ) => void;
   resetGemSettings: () => void;
 
   // Setter'ы для ItemsTab
   getItemsSettings: () => ItemsSettings;
   getItemsGroupSettings: (
-    item: "difficultyClassMarkers" | "qualityPrefixes",
+    item: "difficultyClassMarkers" | "qualityPrefixes"
   ) => PotionGroupSettings;
   updateItemsGroupSettings: (
     item: "difficultyClassMarkers" | "qualityPrefixes",
-    newSettings: Partial<PotionGroupSettings>,
+    newSettings: Partial<PotionGroupSettings>
   ) => void;
   updateItemsLevelSettings: (
     item: "difficultyClassMarkers" | "qualityPrefixes",
     level: number,
-    newSettings: Partial<PotionLevelSettings>,
+    newSettings: Partial<PotionLevelSettings>
   ) => void;
   resetItemsSettings: () => void;
 
@@ -369,7 +370,7 @@ interface SettingsContextType {
   getItemSettings: (itemKey: string) => ItemSettings;
   updateItemSettings: (
     itemKey: string,
-    newSettings: Partial<ItemSettings>,
+    newSettings: Partial<ItemSettings>
   ) => void;
   resetItemSettings: (itemKey: string) => void;
 
@@ -409,6 +410,7 @@ const getDefaultAppConfig = (): AppConfig => ({
   theme: "dark", // По умолчанию темная тема
   debugMode: false, // По умолчанию отладочный режим выключен
   appMode: "basic", // По умолчанию базовый режим
+  asteriskColor: "#F59E0B",
 });
 
 // Дефолтные общие настройки для рун
@@ -457,7 +459,7 @@ const cleanSettings = (oldCommon: any): CommonSettings => {
                   ? 3
                   : potionType === "essences"
                     ? 5
-                    : 5,
+                    : 5
         ),
         ...cleaned[potionType],
       };
@@ -510,11 +512,11 @@ const getDefaultPotionLevelSettings = (): PotionLevelSettings => ({
 
 // Дефолтные настройки для группы зелий
 const getDefaultPotionGroupSettings = (
-  levelCount: number,
+  levelCount: number
 ): PotionGroupSettings => ({
   enabled: false,
   levels: Array.from({ length: levelCount }, () =>
-    getDefaultPotionLevelSettings(),
+    getDefaultPotionLevelSettings()
   ),
   activeTab: 0,
 });
@@ -587,7 +589,7 @@ const migrateItemsSettings = (oldItems: any): ItemsSettings => {
             enabled: lvl?.enabled ?? false,
             locales:
               lvl?.locales || defaultItems.qualityPrefixes.levels[i]?.locales,
-          }),
+          })
         ),
       }
     : defaultItems.qualityPrefixes;
@@ -740,7 +742,7 @@ const migrateRuneSettings = (oldSettings: any): RuneSettings => {
 
 // Дефолтные настройки для руны (принимает общие настройки)
 const getDefaultRuneSettings = (
-  generalSettings?: GeneralRuneSettings,
+  generalSettings?: GeneralRuneSettings
 ): RuneSettings => {
   const defaultGeneral = generalSettings ?? getDefaultGeneralRuneSettings();
   return {
@@ -821,7 +823,7 @@ const prepareForExport = (profile: Profile): Profile => {
       if (exportProfile.settings.common[potionType]) {
         delete exportProfile.settings.common[potionType].activeTab;
       }
-    },
+    }
   );
 
   // Удаляем activeTab из всех драгоценных камней
@@ -893,7 +895,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   const setAppConfig = useCallback(
     (
       newConfigOrUpdater: AppConfig | ((prev: AppConfig) => AppConfig),
-      skipSave = false,
+      skipSave = false
     ) => {
       if (typeof newConfigOrUpdater === "function") {
         _setAppConfig((prev) => {
@@ -901,7 +903,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
           if (!skipSave && !isLoading) {
             localStorage.setItem(
               STORAGE_KEYS.APP_CONFIG,
-              JSON.stringify(newConfig),
+              JSON.stringify(newConfig)
             );
           }
           return newConfig;
@@ -910,13 +912,13 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         if (!skipSave && !isLoading) {
           localStorage.setItem(
             STORAGE_KEYS.APP_CONFIG,
-            JSON.stringify(newConfigOrUpdater),
+            JSON.stringify(newConfigOrUpdater)
           );
         }
         _setAppConfig(newConfigOrUpdater);
       }
     },
-    [isLoading],
+    [isLoading]
   );
 
   // Загрузка неизменяемых профилей из GitHub (raw) с фоллбеком на ассеты
@@ -954,17 +956,17 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
 
     // Собираем локальные источники как фоллбек
     const localRecommendedSources = Object.values(
-      recommendedProfilesModules,
+      recommendedProfilesModules
     ).map((m) => m.default);
     const localDefaultSources = Object.values(defaultProfileModule).map(
-      (m) => m.default,
+      (m) => m.default
     );
 
     // Помощник для миграции и сборки профиля
     const buildProfile = (
       src: RawProfile,
       index: number,
-      options: { isDefault?: boolean; fallbackName?: string },
+      options: { isDefault?: boolean; fallbackName?: string }
     ): Profile => {
       const name = (
         src?.name ||
@@ -992,7 +994,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
           Object.entries(runesObj).map(([key, value]) => [
             key,
             migrateRuneSettings(value),
-          ]),
+          ])
         ) as Record<ERune, RuneSettings>,
         generalRunes: getDefaultGeneralRuneSettings(),
         common: settingsObj["common"]
@@ -1067,7 +1069,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       if (byName.has(defaultKey)) {
         const src = byName.get(defaultKey)!;
         result.push(
-          buildProfile(src, 0, { isDefault: true, fallbackName: "Default" }),
+          buildProfile(src, 0, { isDefault: true, fallbackName: "Default" })
         );
         byName.delete(defaultKey);
       }
@@ -1100,7 +1102,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     const savedSettings = localStorage.getItem(STORAGE_KEYS.SETTINGS);
     const savedProfiles = localStorage.getItem(STORAGE_KEYS.PROFILES);
     const savedActiveProfileId = localStorage.getItem(
-      STORAGE_KEYS.ACTIVE_PROFILE,
+      STORAGE_KEYS.ACTIVE_PROFILE
     );
     const isFirstRun = !localStorage.getItem(STORAGE_KEYS.FIRST_RUN);
 
@@ -1147,7 +1149,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
             Object.entries(parsedSettings.runes).map(([key, value]) => [
               key,
               migrateRuneSettings(value),
-            ]),
+            ])
           ),
           common: parsedSettings.common
             ? cleanSettings(parsedSettings.common)
@@ -1179,7 +1181,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
               Object.entries(profile.settings.runes).map(([key, value]) => [
                 key,
                 migrateRuneSettings(value),
-              ]),
+              ])
             ),
             common: profile.settings.common
               ? cleanSettings(profile.settings.common)
@@ -1203,7 +1205,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         ) {
           setActiveProfileId(savedActiveProfileId);
           const activeProfile = migratedProfiles.find(
-            (p: Profile) => p.id === savedActiveProfileId,
+            (p: Profile) => p.id === savedActiveProfileId
           );
           if (activeProfile) {
             setSettings(activeProfile.settings);
@@ -1246,7 +1248,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
                 Object.entries(runesObj).map(([key, value]) => [
                   key,
                   migrateRuneSettings(value),
-                ]),
+                ])
               ) as Record<ERune, RuneSettings>,
               generalRunes: getDefaultGeneralRuneSettings(),
               common: settingsObj["common"]
@@ -1321,7 +1323,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
 
       return processedProfiles;
     },
-    [],
+    []
   );
 
   // Убираем старый useEffect для сохранения, так как теперь сохраняем в setAppConfig
@@ -1339,10 +1341,10 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     (updatedProfiles: Profile[]) => {
       localStorage.setItem(
         STORAGE_KEYS.PROFILES,
-        JSON.stringify(updatedProfiles),
+        JSON.stringify(updatedProfiles)
       );
     },
-    [],
+    []
   );
 
   // Сохранение активного профиля в localStorage
@@ -1354,7 +1356,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         localStorage.removeItem(STORAGE_KEYS.ACTIVE_PROFILE);
       }
     },
-    [],
+    []
   );
 
   // Эффект для переименования дублирующихся профилей после загрузки неизменяемых
@@ -1362,11 +1364,11 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     if (immutableProfiles.length > 0 && profiles.length > 0) {
       const processedProfiles = renameDuplicateProfiles(
         profiles,
-        immutableProfiles,
+        immutableProfiles
       );
       // Проверяем, были ли изменения (сравниваем по именам)
       const hasChanges = processedProfiles.some(
-        (profile, index) => profile.name !== profiles[index]?.name,
+        (profile, index) => profile.name !== profiles[index]?.name
       );
 
       if (hasChanges) {
@@ -1385,11 +1387,11 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   useEffect(() => {
     if (!activeProfileId && immutableProfiles.length > 0) {
       const savedActiveProfileId = localStorage.getItem(
-        STORAGE_KEYS.ACTIVE_PROFILE,
+        STORAGE_KEYS.ACTIVE_PROFILE
       );
       if (savedActiveProfileId) {
         const immutable = immutableProfiles.find(
-          (p) => p.id === savedActiveProfileId,
+          (p) => p.id === savedActiveProfileId
         );
         if (immutable) {
           setSettings(immutable.settings);
@@ -1404,7 +1406,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     if (isLoading) return;
     if (activeProfileId) return;
     const savedActiveProfileId = localStorage.getItem(
-      STORAGE_KEYS.ACTIVE_PROFILE,
+      STORAGE_KEYS.ACTIVE_PROFILE
     );
     if (savedActiveProfileId) return;
 
@@ -1412,7 +1414,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     if (all.length === 0) return;
 
     const defaultByName = all.find(
-      (p) => (p.name || "").trim().toLowerCase() === "default",
+      (p) => (p.name || "").trim().toLowerCase() === "default"
     );
     const toActivate = defaultByName || all[0];
     if (!toActivate) return;
@@ -1434,29 +1436,29 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
 
   const getSelectedLocales = useCallback(
     () => appConfig.selectedLocales,
-    [appConfig.selectedLocales],
+    [appConfig.selectedLocales]
   );
 
   const getAppMode = useCallback(() => appConfig.appMode, [appConfig.appMode]);
 
   const getAppLanguage = useCallback(
     () => appConfig.appLanguage,
-    [appConfig.appLanguage],
+    [appConfig.appLanguage]
   );
 
   const getGamePath = useCallback(
     () => appConfig.gamePath,
-    [appConfig.gamePath],
+    [appConfig.gamePath]
   );
 
   const getTheme = useCallback(() => appConfig.theme, [appConfig.theme]);
   const getIsDarkTheme = useCallback(
     () => appConfig.theme === "dark",
-    [appConfig.theme],
+    [appConfig.theme]
   );
   const getDebugMode = useCallback(
     () => appConfig.debugMode,
-    [appConfig.debugMode],
+    [appConfig.debugMode]
   );
 
   const updateAppConfig = useCallback(
@@ -1466,7 +1468,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         ...config,
       }));
     },
-    [setAppConfig],
+    [setAppConfig]
   );
 
   const updateSelectedLocales = useCallback(
@@ -1479,7 +1481,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         return newConfig;
       });
     },
-    [setAppConfig],
+    [setAppConfig]
   );
 
   const updateAppLanguage = useCallback(
@@ -1492,7 +1494,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       // Переключаем язык в i18n
       i18n.changeLanguage(mapAppLanguageToI18n(language));
     },
-    [setAppConfig, mapAppLanguageToI18n],
+    [setAppConfig, mapAppLanguageToI18n]
   );
 
   const updateGamePath = useCallback(
@@ -1502,7 +1504,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         gamePath: path,
       }));
     },
-    [setAppConfig],
+    [setAppConfig]
   );
 
   const updateTheme = useCallback(
@@ -1512,7 +1514,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         theme: theme,
       }));
     },
-    [setAppConfig],
+    [setAppConfig]
   );
 
   const updateAppMode = useCallback(
@@ -1522,7 +1524,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         appMode: mode,
       }));
     },
-    [setAppConfig],
+    [setAppConfig]
   );
 
   const toggleTheme = useCallback(() => {
@@ -1536,7 +1538,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         `Theme changed from ${prev.theme} to ${newTheme}`,
         { oldTheme: prev.theme, newTheme },
         "SettingsContext",
-        "toggleTheme",
+        "toggleTheme"
       );
       return {
         ...prev,
@@ -1552,7 +1554,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         `App mode changed from ${prev.appMode} to ${newMode}`,
         { oldMode: prev.appMode, newMode },
         "SettingsContext",
-        "toggleAppMode",
+        "toggleAppMode"
       );
       return {
         ...prev,
@@ -1573,10 +1575,10 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         `Debug mode ${enabled ? "enabled" : "disabled"}`,
         { debugMode: enabled },
         "SettingsContext",
-        "updateDebugMode",
+        "updateDebugMode"
       );
     },
-    [setAppConfig],
+    [setAppConfig]
   );
 
   const toggleDebugMode = useCallback(() => {
@@ -1588,7 +1590,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         `Debug mode toggled to ${newDebugMode ? "enabled" : "disabled"}`,
         { debugMode: newDebugMode },
         "SettingsContext",
-        "toggleDebugMode",
+        "toggleDebugMode"
       );
       return {
         ...prev,
@@ -1614,7 +1616,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     (rune: ERune): RuneSettings => {
       return settings.runes[rune] ?? getDefaultRuneSettings();
     },
-    [settings.runes],
+    [settings.runes]
   );
 
   // Получить общие настройки рун
@@ -1636,7 +1638,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         },
       }));
     },
-    [],
+    []
   );
 
   // Массовое обновление настроек рун
@@ -1657,7 +1659,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         };
       });
     },
-    [],
+    []
   );
 
   // Сброс настроек руны к дефолтным
@@ -1715,7 +1717,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         },
       }));
     },
-    [],
+    []
   );
 
   // Сброс общих настроек рун к дефолтным
@@ -1775,7 +1777,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
           {
             originalName: name,
             newName: finalName,
-          },
+          }
         );
       }
 
@@ -1800,7 +1802,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       immutableProfiles,
       saveProfilesToLocalStorage,
       saveActiveProfileToLocalStorage,
-    ],
+    ]
   );
 
   // Сохранить профиль
@@ -1816,7 +1818,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       const updatedProfiles = profiles.map((profile) =>
         profile.id === profileId
           ? { ...profile, settings, modifiedAt: new Date().toISOString() }
-          : profile,
+          : profile
       );
       setProfiles(updatedProfiles);
       saveProfilesToLocalStorage(updatedProfiles);
@@ -1826,7 +1828,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         setSettings(settings);
       }
     },
-    [profiles, activeProfileId, saveProfilesToLocalStorage],
+    [profiles, activeProfileId, saveProfilesToLocalStorage]
   );
 
   // Загрузить профиль
@@ -1844,7 +1846,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         localStorage.removeItem(STORAGE_KEYS.SETTINGS);
       }
     },
-    [profiles, immutableProfiles, saveActiveProfileToLocalStorage],
+    [profiles, immutableProfiles, saveActiveProfileToLocalStorage]
   );
 
   // Переименовать профиль
@@ -1862,12 +1864,12 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       const updatedProfiles = profiles.map((profile) =>
         profile.id === profileId
           ? { ...profile, name: newName, modifiedAt: new Date().toISOString() }
-          : profile,
+          : profile
       );
       setProfiles(updatedProfiles);
       saveProfilesToLocalStorage(updatedProfiles);
     },
-    [profiles, saveProfilesToLocalStorage],
+    [profiles, saveProfilesToLocalStorage]
   );
 
   // Изменить порядок пользовательских профилей
@@ -1890,7 +1892,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         newOrder: profileIds,
       });
     },
-    [profiles, saveProfilesToLocalStorage],
+    [profiles, saveProfilesToLocalStorage]
   );
 
   // Дублировать профиль
@@ -1908,8 +1910,8 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       // Генерируем уникальное имя для дубликата
       const allExistingNames = new Set(
         [...profiles, ...immutableProfiles].map((p) =>
-          (p.name || "").trim().toLowerCase(),
-        ),
+          (p.name || "").trim().toLowerCase()
+        )
       );
 
       let duplicateName = `${profileToDuplicate.name} (Copy)`;
@@ -1940,10 +1942,10 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       setSettings(newProfile.settings);
 
       logger.debug(
-        `Профиль продублирован и активирован: ${profileToDuplicate.name} -> ${newProfile.name}`,
+        `Профиль продублирован и активирован: ${profileToDuplicate.name} -> ${newProfile.name}`
       );
     },
-    [profiles, immutableProfiles, saveProfilesToLocalStorage, logger],
+    [profiles, immutableProfiles, saveProfilesToLocalStorage, logger]
   );
 
   // Удалить профиль
@@ -1957,7 +1959,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       }
 
       const updatedProfiles = profiles.filter(
-        (profile) => profile.id !== profileId,
+        (profile) => profile.id !== profileId
       );
       setProfiles(updatedProfiles);
       saveProfilesToLocalStorage(updatedProfiles);
@@ -1978,7 +1980,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
                 Object.entries(parsedSettings.runes).map(([key, value]) => [
                   key,
                   migrateRuneSettings(value),
-                ]),
+                ])
               ),
               common: parsedSettings.common
                 ? {
@@ -2008,7 +2010,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       activeProfileId,
       saveProfilesToLocalStorage,
       saveActiveProfileToLocalStorage,
-    ],
+    ]
   );
 
   // Экспортировать профиль
@@ -2032,7 +2034,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         linkElement.click();
       }
     },
-    [profiles, immutableProfiles],
+    [profiles, immutableProfiles]
   );
 
   // Импортировать профиль
@@ -2047,8 +2049,8 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         // Генерируем уникальное имя среди всех профилей (пользовательских и неизменяемых)
         const allExistingNames = new Set(
           [...profiles, ...immutableProfiles].map((p) =>
-            (p.name || "").trim().toLowerCase(),
-          ),
+            (p.name || "").trim().toLowerCase()
+          )
         );
         const baseName = (profileData.name as string).trim();
         let finalName = baseName || "Безымянный профиль";
@@ -2071,7 +2073,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
             Object.entries(profileData.settings.runes).map(([key, value]) => [
               key,
               migrateRuneSettings(value),
-            ]),
+            ])
           ),
           common: profileData.settings.common
             ? cleanSettings(profileData.settings.common)
@@ -2100,13 +2102,13 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         throw error;
       }
     },
-    [profiles, immutableProfiles, saveProfilesToLocalStorage],
+    [profiles, immutableProfiles, saveProfilesToLocalStorage]
   );
 
   // Методы для работы с CommonSettings
   const getCommonSettings = useCallback(
     () => settings.common,
-    [settings.common],
+    [settings.common]
   );
 
   const getCommonItemSettings = useCallback(
@@ -2124,11 +2126,11 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         | "largeCharms"
         | "grandCharms"
         | "gold"
-        | "keys",
+        | "keys"
     ) => {
       return settings.common[item];
     },
-    [settings.common],
+    [settings.common]
   );
 
   const getPotionGroupSettings = useCallback(
@@ -2142,11 +2144,11 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         | "uberKeys"
         | "essences"
         | "poisonPotions"
-        | "firePotions",
+        | "firePotions"
     ) => {
       return settings.common[item];
     },
-    [settings.common],
+    [settings.common]
   );
 
   const updateCommonItemSettings = useCallback(
@@ -2165,7 +2167,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         | "grandCharms"
         | "gold"
         | "keys",
-      newSettings: Partial<CommonItemSettings>,
+      newSettings: Partial<CommonItemSettings>
     ) => {
       setSettings((prevSettings) => ({
         ...prevSettings,
@@ -2178,7 +2180,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         },
       }));
     },
-    [],
+    []
   );
 
   const updatePotionGroupSettings = useCallback(
@@ -2193,7 +2195,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         | "essences"
         | "poisonPotions"
         | "firePotions",
-      newSettings: Partial<PotionGroupSettings>,
+      newSettings: Partial<PotionGroupSettings>
     ) => {
       setSettings((prevSettings) => ({
         ...prevSettings,
@@ -2206,7 +2208,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         },
       }));
     },
-    [],
+    []
   );
 
   const updatePotionLevelSettings = useCallback(
@@ -2222,7 +2224,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         | "poisonPotions"
         | "firePotions",
       level: number,
-      newSettings: Partial<PotionLevelSettings>,
+      newSettings: Partial<PotionLevelSettings>
     ) => {
       setSettings((prevSettings) => ({
         ...prevSettings,
@@ -2231,13 +2233,13 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
           [item]: {
             ...prevSettings.common[item],
             levels: prevSettings.common[item].levels.map((lvl, index) =>
-              index === level ? { ...lvl, ...newSettings } : lvl,
+              index === level ? { ...lvl, ...newSettings } : lvl
             ),
           },
         },
       }));
     },
-    [],
+    []
   );
 
   const resetCommonSettings = useCallback(() => {
@@ -2264,14 +2266,14 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         | "sapphires"
         | "emeralds"
         | "rubies"
-        | "diamonds",
+        | "diamonds"
     ) => {
       if (!settings.gems) {
         return getDefaultGemSettings()[item];
       }
       return settings.gems[item];
     },
-    [settings.gems],
+    [settings.gems]
   );
 
   const updateGemGroupSettings = useCallback(
@@ -2284,7 +2286,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         | "emeralds"
         | "rubies"
         | "diamonds",
-      newSettings: Partial<PotionGroupSettings>,
+      newSettings: Partial<PotionGroupSettings>
     ) => {
       setSettings((prevSettings) => ({
         ...prevSettings,
@@ -2297,7 +2299,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         },
       }));
     },
-    [],
+    []
   );
 
   const updateGemLevelSettings = useCallback(
@@ -2311,7 +2313,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         | "rubies"
         | "diamonds",
       level: number,
-      newSettings: Partial<PotionLevelSettings>,
+      newSettings: Partial<PotionLevelSettings>
     ) => {
       setSettings((prevSettings) => {
         const defaultGemSettings = getDefaultGemSettings();
@@ -2333,14 +2335,14 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
             [item]: {
               ...currentItemSettings,
               levels: currentLevels.map((lvl, index) =>
-                index === level ? { ...lvl, ...newSettings } : lvl,
+                index === level ? { ...lvl, ...newSettings } : lvl
               ),
             },
           },
         };
       });
     },
-    [],
+    []
   );
 
   const resetGemSettings = useCallback(() => {
@@ -2365,13 +2367,13 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       }
       return settings.items[item];
     },
-    [settings.items],
+    [settings.items]
   );
 
   const updateItemsGroupSettings = useCallback(
     (
       item: "difficultyClassMarkers" | "qualityPrefixes",
-      newSettings: Partial<PotionGroupSettings>,
+      newSettings: Partial<PotionGroupSettings>
     ) => {
       setSettings((prevSettings) => ({
         ...prevSettings,
@@ -2384,14 +2386,14 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         },
       }));
     },
-    [],
+    []
   );
 
   const updateItemsLevelSettings = useCallback(
     (
       item: "difficultyClassMarkers" | "qualityPrefixes",
       level: number,
-      newSettings: Partial<PotionLevelSettings>,
+      newSettings: Partial<PotionLevelSettings>
     ) => {
       setSettings((prevSettings) => {
         const defaultItemsSettings = getDefaultItemsSettings();
@@ -2413,14 +2415,14 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
             [item]: {
               ...currentItemSettings,
               levels: currentLevels.map((lvl, index) =>
-                index === level ? { ...lvl, ...newSettings } : lvl,
+                index === level ? { ...lvl, ...newSettings } : lvl
               ),
             },
           },
         };
       });
     },
-    [],
+    []
   );
 
   const resetItemsSettings = useCallback(() => {
@@ -2442,7 +2444,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       }
       return settings.items.items[itemKey];
     },
-    [settings.items],
+    [settings.items]
   );
 
   const updateItemSettings = useCallback(
@@ -2485,7 +2487,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         };
       });
     },
-    [],
+    []
   );
 
   const resetItemSettings = useCallback((itemKey: string) => {
