@@ -10,6 +10,8 @@ import { mdiEyeOutline, mdiEyeOffOutline } from "@mdi/js";
 import MultipleLeveledLocales from "../../shared/components/MultipleLeveledLocales";
 import ColorHint from "../../shared/components/ColorHint";
 import SymbolsHint from "../../shared/components/SymbolsHint";
+import UnsavedAsterisk from "../../shared/components/UnsavedAsterisk";
+import { useUnsavedChanges } from "../../shared/hooks/useUnsavedChanges";
 import type {
   CommonItemSettings,
   PotionGroupSettings,
@@ -32,6 +34,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
     updatePotionLevelSettings,
   } = useSettings();
   const selectedLocales = getSelectedLocales();
+  const { baseline } = useUnsavedChanges();
 
   // Состояние для отслеживания фокуса в полях локалей
   const [focusedLocale, setFocusedLocale] = useState<string | null>(null);
@@ -172,7 +175,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
   // Обработчики для коллапсов
   const handleCollapseToggle = (
     key: keyof typeof collapseStates,
-    isOpen: boolean,
+    isOpen: boolean
   ) => {
     setCollapseStates((prev) => ({ ...prev, [key]: isOpen }));
   };
@@ -194,7 +197,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
       | "gold"
       | "keys",
     locale: string,
-    value: string,
+    value: string
   ) => {
     const currentSettings = getCommonItemSettings(itemType);
     updateCommonItemSettings(itemType, {
@@ -225,7 +228,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
           style={currentColor ? { color: currentColor } : undefined}
         >
           {part}
-        </span>,
+        </span>
       );
     }
     return nodes;
@@ -240,7 +243,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
       | "poisonPotions"
       | "firePotions",
     level: number,
-    enabled: boolean,
+    enabled: boolean
   ) => {
     updatePotionLevelSettings(itemType, level, { enabled });
   };
@@ -252,7 +255,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
       | "rejuvenationPotions"
       | "poisonPotions"
       | "firePotions",
-    tabIndex: number,
+    tabIndex: number
   ) => {
     updatePotionGroupSettings(itemType, { activeTab: tabIndex });
   };
@@ -270,7 +273,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
       | "essences",
     level: number,
     locale: string,
-    value: string,
+    value: string
   ) => {
     const currentSettings = getPotionGroupSettings(itemType);
     const currentLevelSettings = currentSettings.levels[level];
@@ -299,8 +302,9 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
       | "grandCharms"
       | "gold"
       | "keys",
-    toggleHandler: (enabled: boolean) => void,
+    toggleHandler: (enabled: boolean) => void
   ) => {
+    const base = baseline ? (baseline as any).common?.[itemType] : null;
     const showGenderCodeHintForItemType =
       itemType === "amulets" ||
       itemType === "rings" ||
@@ -317,7 +321,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
               title={t("runePage.controls.toggleItemVisibilityTooltip")}
               placement="top"
             >
-              <div>
+              <div className="relative">
                 <Switch
                   enabled={itemSettings.enabled}
                   onChange={(enabled) => toggleHandler(enabled)}
@@ -333,6 +337,13 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
                     />
                   }
                 />
+                {base && base.enabled !== itemSettings.enabled && (
+                  <UnsavedAsterisk
+                    size={0.55}
+                    className="absolute"
+                    style={{ right: -6, top: -6 }}
+                  />
+                )}
               </div>
             </Tooltip>
           </div>
@@ -416,7 +427,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
                     <>{locale.label}:</>
                   )}
                 </span>
-                <div className="flex-1 flex items-center space-x-2">
+                <div className="flex-1 flex items-center space-x-2 relative">
                   <input
                     type="text"
                     value={
@@ -431,7 +442,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
                     onBlur={() => setFocusedLocale(null)}
                     disabled={!itemSettings.enabled}
                     placeholder={t(
-                      `runePage.controls.placeholders.${locale.value}`,
+                      `runePage.controls.placeholders.${locale.value}`
                     )}
                     className={`
                       flex-1 px-3 py-2 rounded-md border transition-colors
@@ -449,6 +460,19 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
                       }
                     `}
                   />
+                  {base &&
+                    base.locales?.[
+                      locale.value as keyof typeof base.locales
+                    ] !==
+                      itemSettings.locales[
+                        locale.value as keyof typeof itemSettings.locales
+                      ] && (
+                      <UnsavedAsterisk
+                        size={0.55}
+                        className="absolute"
+                        style={{ right: 6, top: 6 }}
+                      />
+                    )}
                   <div className="flex items-center gap-1">
                     <SymbolsHint isDarkTheme={isDarkTheme} />
                     <ColorHint isDarkTheme={isDarkTheme} />
@@ -478,7 +502,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
       | "largeCharms"
       | "grandCharms"
       | "gold"
-      | "keys",
+      | "keys"
   ): string => {
     const imagePaths = {
       arrows: "/img/common/arrows.png",
@@ -506,7 +530,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
       | "rejuvenationPotions"
       | "poisonPotions"
       | "firePotions",
-    level: number,
+    level: number
   ): string => {
     const imagePaths = {
       healthPotions: [
@@ -555,7 +579,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
       | "gold"
       | "keys",
     itemSettings: CommonItemSettings,
-    toggleHandler: (enabled: boolean) => void,
+    toggleHandler: (enabled: boolean) => void
   ) => (
     <Collapse
       title={t(`commonPage.${titleKey}`)}
@@ -564,6 +588,19 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
       iconClassName={itemSettings.enabled ? "opacity-100" : "opacity-30"}
       isOpen={collapseStates[titleKey]}
       onToggle={(isOpen) => handleCollapseToggle(titleKey, isOpen)}
+      rightAdornment={(() => {
+        const base = baseline ? (baseline as any).common?.[titleKey] : null;
+        if (!base) return null;
+        if (base.enabled !== itemSettings.enabled)
+          return <UnsavedAsterisk size={0.7} />;
+        for (const loc of selectedLocales) {
+          const b = base.locales?.[loc as keyof typeof base.locales];
+          const c =
+            itemSettings.locales?.[loc as keyof typeof itemSettings.locales];
+          if (b !== c) return <UnsavedAsterisk size={0.7} />;
+        }
+        return null;
+      })()}
     >
       {renderLocaleInputs(itemSettings, titleKey, toggleHandler)}
     </Collapse>
@@ -577,7 +614,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
       | "rejuvenationPotions"
       | "poisonPotions"
       | "firePotions",
-    potionSettings: PotionGroupSettings,
+    potionSettings: PotionGroupSettings
   ) => {
     // Получаем иконку для заголовка: для HP/MP - 5-й уровень (индекс 4), для реджувенации - 2-й уровень (индекс 1)
     const headerIconIndex =
@@ -596,7 +633,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
         selectedLocales={selectedLocales}
         isDarkTheme={isDarkTheme}
         imagePaths={potionSettings.levels.map((_, index) =>
-          getPotionImagePath(itemType, index),
+          getPotionImagePath(itemType, index)
         )}
         headerIcon={headerIcon}
         isOpen={collapseStates[itemType]}
@@ -608,6 +645,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
         onLocaleChange={(level, locale, value) =>
           handlePotionLocaleChange(itemType, level, locale, value)
         }
+        getBaselineGroup={(root) => root.common[itemType]}
       />
     );
   };
@@ -617,7 +655,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
     itemType: "identify" | "portal" | "uberKeys" | "essences",
     potionSettings: PotionGroupSettings,
     imagePaths: string[],
-    headerIcon: string,
+    headerIcon: string
   ) => {
     const activeIndex =
       potionSettings.activeTab >= 0 &&
@@ -658,6 +696,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
                 })
             : undefined
         }
+        getBaselineGroup={(root) => root.common[itemType]}
       />
     );
   };
@@ -711,7 +750,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
               "/img/common/scroll_identify.png",
               "/img/common/book_identify.png",
             ],
-            "/img/common/book_identify.png",
+            "/img/common/book_identify.png"
           )}
 
         {/* Порталы (свиток/том) */}
@@ -720,7 +759,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
             "portal",
             portal,
             ["/img/common/scroll_portal.png", "/img/common/book_portal.png"],
-            "/img/common/book_portal.png",
+            "/img/common/book_portal.png"
           )}
 
         {/* Зелья выносливости */}
@@ -728,7 +767,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
           renderItemSection(
             "staminaPotions",
             staminaPotions,
-            handleStaminaPotionsToggle,
+            handleStaminaPotionsToggle
           )}
 
         {/* Противоядия */}
@@ -740,7 +779,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
           renderItemSection(
             "thawingPotions",
             thawingPotions,
-            handleThawingPotionsToggle,
+            handleThawingPotionsToggle
           )}
 
         {/* Золото */}
@@ -776,7 +815,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
           renderItemSection(
             "smallCharms",
             smallCharms,
-            handleSmallCharmsToggle,
+            handleSmallCharmsToggle
           )}
 
         {/* Большие обереги */}
@@ -784,7 +823,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
           renderItemSection(
             "largeCharms",
             largeCharms,
-            handleLargeCharmsToggle,
+            handleLargeCharmsToggle
           )}
 
         {/* Великие обереги */}
@@ -792,7 +831,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
           renderItemSection(
             "grandCharms",
             grandCharms,
-            handleGrandCharmsToggle,
+            handleGrandCharmsToggle
           )}
 
         {/* Убер-ключи */}
@@ -805,7 +844,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
               "/img/common/key_of_hate.png",
               "/img/common/key_of_destruction.png",
             ],
-            "/img/common/key_of_terror.png",
+            "/img/common/key_of_terror.png"
           )}
 
         {/* Эссенции и токен */}
@@ -820,7 +859,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
               "/img/common/essence_destruction.png",
               "/img/common/token.png",
             ],
-            "/img/common/token.png",
+            "/img/common/token.png"
           )}
       </div>
     </div>
