@@ -159,6 +159,10 @@
   "common": {
     "loading": "Загрузка...",
     "applying": "Применение...",
+    "selectFile": "Выбрать файл",
+    "useThisFile": "Использовать этот файл",
+    "cancel": "Отмена",
+    "retryAutoSearch": "Повторить автопоиск D2R.exe",
     "themeSettings": "Настройки темы",
     "themeSettingsDescription": "Выберите предпочитаемую тему для приложения.",
     "darkTheme": "Темная тема",
@@ -179,6 +183,30 @@
     "required": "обязательный",
     "noLanguagesSelected": "Дополнительные языки не выбраны",
     "settingsMovedMessage": "Настройки приложения теперь доступны через кнопку-шестерёнку в верхней панели."
+  },
+  "startup": {
+    "searching": "Поиск D2R.exe...",
+    "notFoundAuto": "Папка с игрой не найдена автоматически. Пожалуйста, укажите путь к D2R.exe вручную!",
+    "selectedFile": "Выбранный файл:",
+    "noFilesFoundWith": "Файлы с именем \"{{name}}\" не найдены. Попробуйте другое имя!",
+    "foundCount": "Найден{{suffix}} {{count}} файл с именем \"{{name}}\":",
+    "manual": {
+      "enterFileFirst": "Сначала выберите файл!"
+    },
+    "pathSelection": {
+      "title": "Выберите путь к D2R.exe"
+    }
+  },
+  "progress": {
+    "searchingTitle": "Поиск файлов...",
+    "foundFiles": "Найден{{suffix}} {{count}} файл",
+    "processing": "Обработка..."
+  },
+  "pathSelector": {
+    "title": "Найдено несколько расположений D2R.exe!",
+    "subtitle": "Выберите, какое использовать:",
+    "selectThis": "Выбрать",
+    "cancelAndManual": "Отмена и ручной поиск"
   },
   "buttons": {
     "changePath": "Сменить путь",
@@ -307,7 +335,12 @@
       "sizes": {
         "Normal": "Обычный",
         "Medium": "Средний",
-        "Large": "Большой"
+        "Large": "Большой",
+        "Exceptional": "Exceptional",
+        "Elite": "Elite",
+        "light": "Light",
+        "medium": "Medium",
+        "heavy": "Heavy"
       },
       "colors": {
         "white": "Белый",
