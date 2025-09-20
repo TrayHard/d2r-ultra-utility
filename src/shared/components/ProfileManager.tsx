@@ -65,6 +65,16 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
   const allProfiles = [...immutableProfiles, ...profiles];
   const activeProfile = allProfiles.find((p) => p.id === activeProfileId);
 
+  const isSaveDisabled =
+    !activeProfileId || activeProfile?.isImmutable || !hasAnyChanges;
+  const saveTooltipTitle = isSaveDisabled
+    ? activeProfile?.isImmutable
+      ? t("profiles.tooltips.saveDisabledImmutable")
+      : !hasAnyChanges
+        ? t("profiles.tooltips.saveDisabledNoChanges")
+        : t("profiles.saveProfile")
+    : t("profiles.saveProfile");
+
   const handleCreateProfile = () => {
     if (newProfileName.trim()) {
       onProfileCreate(newProfileName.trim(), currentSettings);
@@ -259,16 +269,14 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
         <div className="flex items-center gap-2">
           {/* Save Profile Button */}
           <Tooltip
-            title={t("profiles.saveProfile")}
+            title={saveTooltipTitle}
             placement="top"
             mouseEnterDelay={0.3}
           >
             <Button
               variant="info"
               onClick={() => activeProfileId && setShowSaveConfirm(true)}
-              disabled={
-                !activeProfileId || activeProfile?.isImmutable || !hasAnyChanges
-              }
+              disabled={isSaveDisabled}
               isDarkTheme={isDarkTheme}
               icon={mdiContentSave}
               size="sm"
