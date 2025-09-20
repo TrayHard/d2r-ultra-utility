@@ -6,6 +6,7 @@ import ColorPallet from "../../shared/components/ColorPallet.tsx";
 import Switcher from "../../shared/components/Switcher.tsx";
 import Checkbox from "../../shared/components/Checkbox.tsx";
 import UnsavedAsterisk from "../../shared/components/UnsavedAsterisk";
+import DebouncedTextarea from "../../shared/components/DebouncedTextarea";
 import { useUnsavedChanges } from "../../shared/hooks/useUnsavedChanges";
 import ColorHint from "../../shared/components/ColorHint.tsx";
 import SymbolsHint from "../../shared/components/SymbolsHint";
@@ -992,17 +993,14 @@ const RuneCard: React.FC<RuneCardProps> = ({
                         </label>
                         <div className="flex items-center space-x-2 w-full">
                           <div className="relative flex-1">
-                            <textarea
+                            <DebouncedTextarea
                               value={
                                 manualSettings.locales[
                                   langCode as keyof typeof manualSettings.locales
                                 ]
                               }
-                              onChange={(e) =>
-                                handleLanguageNameChange(
-                                  langCode,
-                                  e.target.value
-                                )
+                              onChange={(v) =>
+                                handleLanguageNameChange(langCode, v)
                               }
                               placeholder={t(
                                 `runePage.controls.placeholders.${langCode}`

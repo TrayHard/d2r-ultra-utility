@@ -9,6 +9,7 @@ import ColorHint from "../../shared/components/ColorHint";
 import { colorCodeToHex } from "../../shared/constants";
 import SymbolsHint from "../../shared/components/SymbolsHint";
 import UnsavedAsterisk from "../../shared/components/UnsavedAsterisk";
+import DebouncedInput from "../../shared/components/DebouncedInput";
 import { useUnsavedChanges } from "../../shared/hooks/useUnsavedChanges";
 
 interface BaseItem {
@@ -761,11 +762,11 @@ const ItemCard: React.FC<ItemCardProps> = ({
                       </label>
                       <div className="flex-1 flex items-center space-x-2">
                         <div className="relative flex-1">
-                          <input
+                          <DebouncedInput
                             type="text"
                             value={locales[langCode as keyof typeof locales]}
-                            onChange={(e) =>
-                              handleLanguageNameChange(langCode, e.target.value)
+                            onChange={(v) =>
+                              handleLanguageNameChange(langCode, v)
                             }
                             onFocus={() => setFocusedLocale(langCode)}
                             onBlur={() => setFocusedLocale(null)}

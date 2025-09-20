@@ -152,7 +152,10 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
       <div className="flex items-center gap-2 mb-4">
         <AntButton
           icon={<ReloadOutlined />}
-          onClick={onResetFilters}
+          onClick={() => {
+            onResetFilters();
+            if (unsavedOnly) onToggleUnsavedOnly();
+          }}
           type="default"
         >
           {t("itemsPage.filters.reset")}
