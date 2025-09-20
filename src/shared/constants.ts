@@ -172,6 +172,7 @@ export const STORAGE_KEYS = {
   LEGACY_LANGUAGE: "language",
   STARTUP_DONT_ASK: "d2r-startup-load-dont-ask",
   FIRST_RUN: "d2r-first-run",
+  DEBUG_MODE: "isDebugMode",
 } as const;
 
 // Ключи для sessionStorage

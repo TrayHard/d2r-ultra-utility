@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { useLogger } from "../../shared/utils/logger";
 import ProgressBar from "../../shared/components/ProgressBar.tsx";
 import CustomTitleBar from "../../widgets/CustomTitleBar.tsx";
+import StartupLanguageSwitch from "../../widgets/Toolbar/StartupLanguageSwitch.tsx";
 import { STORAGE_KEYS } from "../../shared/constants.ts";
 
 import PathSelector from "../../widgets/Toolbar/PathSelector.tsx";
@@ -73,6 +75,10 @@ type AppState =
 function App() {
   const logger = useLogger("App");
   const [appState, setAppState] = useState<AppState>("loading");
+  const isDebugMode = Number(
+    localStorage.getItem(STORAGE_KEYS.DEBUG_MODE) || 0
+  );
+  const { t } = useTranslation();
 
   // Тестовое логирование при инициализации
   React.useEffect(() => {
@@ -103,6 +109,15 @@ function App() {
   useEffect(() => {
     const checkSavedPath = async () => {
       logger.info("App starting up", { appState }, "checkSavedPath");
+      if (isDebugMode) {
+        logger.info(
+          "Debug mode enabled - forcing search screen",
+          undefined,
+          "checkSavedPath"
+        );
+        startAutoSearch();
+        return;
+      }
       const savedFilePath = loadSavedPath();
       const savedHomeDir = loadSavedHomeDirectory();
 
@@ -188,7 +203,7 @@ function App() {
     setSearchProgress({
       current: 0,
       total: 100,
-      message: "Searching for D2R.exe...",
+      message: "startup.searching",
       found_count: 0,
     });
 
@@ -198,24 +213,41 @@ function App() {
       });
       setFoundPaths(result ?? []);
 
-      if (result && result.length > 0) {
-        if (result.length === 1) {
-          // Нашли один путь, сохраняем автоматически
+      switch (isDebugMode) {
+        case 1:
           handlePathSelect(result[0]);
-        } else {
-          // Нашли несколько путей, показываем выбор
+          break;
+        case 2:
           setAppState("path-selection");
-        }
-      } else {
-        // Ничего не нашли, переходим к ручному поиску
-        setAppState("manual-input");
+          break;
+        case 3:
+          setIsSearching(false);
+          setAppState("manual-input");
+          break;
+        default:
+          if (result && result.length > 0) {
+            if (result.length === 1) {
+              // Нашли один путь, сохраняем автоматически
+              handlePathSelect(result[0]);
+            } else {
+              // Нашли несколько путей, показываем выбор
+              setAppState("path-selection");
+            }
+          } else {
+            // Ничего не нашли, переходим к ручному поиску
+            setAppState("manual-input");
+          }
       }
     } catch (error) {
       console.error("Auto search failed:", error);
       setFoundPaths([]);
-      setAppState("manual-input");
+      if (!isDebugMode) {
+        setAppState("manual-input");
+      }
     } finally {
-      setIsSearching(false);
+      if (!isDebugMode) {
+        setIsSearching(false);
+      }
     }
   };
 
@@ -259,19 +291,24 @@ function App() {
       console.error("Error opening file dialog:", error);
       // Пользователь просто отменил выбор файла - это нормально
       if (error !== "No file selected") {
-        alert("Ошибка при выборе файла!");
+        alert(t("messages.error.unknownError"));
       }
     }
   };
 
   const handleManualSearch = async () => {
-    if (!manualFileName.trim()) {
-      alert("Выбери файл!");
+    // Если пользователь выбрал файл через диалог — используем его сразу
+    if (manualFilePath.trim()) {
+      handlePathSelect(manualFilePath.trim());
       return;
     }
 
-    // Используем полный путь если есть, иначе имя файла
-    const fileToAdd = manualFilePath.trim() || manualFileName;
+    // Иначе — прежнее поведение (поддержка сценария ручного ввода)
+    if (!manualFileName.trim()) {
+      alert(t("startup.manual.enterFileFirst"));
+      return;
+    }
+    const fileToAdd = manualFileName.trim();
     setManualResults([fileToAdd]);
   };
 
@@ -285,7 +322,7 @@ function App() {
     });
   };
 
-  // Если показываем WorkSpace, не добавляем дополнительные стили
+  // Если путь сохранён, сразу показываем WorkSpace (включая debug-режим)
   if (appState === "saved-path" && savedPath && homeDirectory) {
     return (
       <div className="h-screen flex flex-col bg-gradient-to-br from-gray-900 to-black">
@@ -298,21 +335,24 @@ function App() {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-gradient-to-br from-gray-800 to-black pt-9">
+    <div className="h-screen flex flex-col pt-9 bg-gradient-to-tr from-gray-900/50 via-gray-800 to-gray-900">
       <CustomTitleBar />
       <main className="flex-1 flex flex-col justify-center items-center text-center p-8 mt-9">
+        <div className="w-full flex justify-end mb-4">
+          <StartupLanguageSwitch isDarkTheme={true} />
+        </div>
         {/* Прогрессбар показываем когда идет поиск */}
         {(isSearching || appState === "loading") && (
           <ProgressBar
             progress={searchProgress.current}
-            message={searchProgress.message}
+            message={t(searchProgress.message)}
             foundCount={searchProgress.found_count}
             isActive={true}
           />
         )}
 
-        {/* Показываем выбор из найденных путей */}
-        {appState === "path-selection" && foundPaths.length > 0 && (
+        {/* Показываем выбор из найденных путей (только если вариантов больше одного) */}
+        {appState === "path-selection" && foundPaths.length > 1 && (
           <PathSelector
             paths={foundPaths}
             onPathSelect={handlePathSelect}
@@ -325,41 +365,43 @@ function App() {
           <div className="max-w-2xl w-full">
             <div className="bg-yellow-900 border border-yellow-600 rounded-lg p-4 mb-6">
               <p className="text-yellow-200 mb-4">
-                D2R.exe not found automatically. Please search for it manually:
+                {t("startup.notFoundAuto")}
               </p>
             </div>
 
             <div className="flex flex-col gap-4 mb-8">
-              <div className="flex gap-4">
+              <div className="flex justify-center gap-4">
                 <button
                   type="button"
                   onClick={handleOpenFileDialog}
                   disabled={isSearching}
-                  className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200 font-medium disabled:bg-gray-600"
+                  className="px-6 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors duration-200 font-medium disabled:bg-gray-600"
                 >
-                  Select File
+                  {t("common.selectFile")}
                 </button>
-                <button
-                  type="button"
-                  onClick={handleManualSearch}
-                  disabled={!manualFileName.trim()}
-                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium disabled:bg-gray-600 disabled:cursor-not-allowed"
-                >
-                  Use This File
-                </button>
+                {manualFileName.trim() && (
+                  <button
+                    type="button"
+                    onClick={handleManualSearch}
+                    disabled={!manualFileName.trim()}
+                    className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium disabled:bg-gray-600 disabled:cursor-not-allowed"
+                  >
+                    {t("common.useThisFile")}
+                  </button>
+                )}
                 {isSearching && (
                   <button
                     type="button"
                     onClick={handleCancel}
                     className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 font-medium"
                   >
-                    Cancel
+                    {t("common.cancel")}
                   </button>
                 )}
               </div>
               {manualFileName && (
                 <div className="text-gray-300">
-                  Selected file:{" "}
+                  {t("startup.selectedFile")}{" "}
                   <span className="font-mono text-blue-400">
                     {manualFilePath || manualFileName}
                   </span>
@@ -367,23 +409,15 @@ function App() {
               )}
             </div>
 
-            <div className="flex gap-4 justify-center mb-8">
-              <button
-                onClick={startAutoSearch}
-                disabled={isSearching}
-                className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 font-medium disabled:bg-gray-600"
-              >
-                Retry Auto Search for D2R.exe
-              </button>
-            </div>
-
             {/* Результаты ручного поиска */}
             {!isSearching && manualResults.length > 0 && (
               <div className="max-w-4xl w-full mt-8">
                 <h3 className="text-lg font-semibold mb-4 text-gray-200">
-                  Found {manualResults.length} file
-                  {manualResults.length !== 1 ? "s" : ""} named "
-                  {manualFileName}":
+                  {t("startup.foundCount", {
+                    count: manualResults.length,
+                    suffix: manualResults.length !== 1 ? "s" : "",
+                    name: manualFileName,
+                  })}
                 </h3>
                 <div className="bg-gray-800 p-6 rounded-lg text-left shadow-lg border border-gray-700 max-h-96 overflow-y-auto">
                   <ul className="space-y-2">
@@ -400,7 +434,7 @@ function App() {
                             onClick={() => handlePathSelect(path)}
                             className="ml-4 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition-colors text-sm flex-shrink-0"
                           >
-                            Use This
+                            {t("common.useThisFile")}
                           </button>
                         )}
                       </li>
@@ -413,12 +447,12 @@ function App() {
             {!isSearching &&
               manualResults.length === 0 &&
               searchProgress.current === 100 &&
-              manualFileName.trim() && (
+              manualFileName.trim() &&
+              !manualFilePath.trim() && (
                 <div className="max-w-2xl w-full mt-4">
                   <div className="bg-red-900 border border-red-600 rounded-lg p-4">
                     <p className="text-red-200">
-                      No files found with name "{manualFileName}". Try a
-                      different filename!
+                      {t("startup.noFilesFoundWith", { name: manualFileName })}
                     </p>
                   </div>
                 </div>

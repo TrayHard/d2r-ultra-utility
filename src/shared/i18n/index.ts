@@ -58,6 +58,11 @@ import { STORAGE_KEYS } from "../constants";
 
 const getSavedLanguage = () => {
   try {
+    // 1) Пробуем короткий ключ из LEGACY_LANGUAGE (en, ru, ...)
+    const legacy = localStorage.getItem(STORAGE_KEYS.LEGACY_LANGUAGE);
+    if (legacy) {
+      return legacy;
+    }
     const savedAppConfig = localStorage.getItem(STORAGE_KEYS.APP_CONFIG);
     if (savedAppConfig) {
       const parsedAppConfig = JSON.parse(savedAppConfig);

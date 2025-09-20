@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 interface ProgressBarProps {
   progress: number;
@@ -14,13 +15,14 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   isActive,
 }) => {
   if (!isActive) return null;
+  const { t } = useTranslation();
 
   return (
     <div className="w-full max-w-2xl mx-auto mb-6">
       <div className="bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-700">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-gray-200">
-            Searching files...
+          <span className="text-sm font-medium text-gray-2 00">
+            {t("progress.searchingTitle")}
           </span>
           <span className="text-sm text-gray-300">{progress}%</span>
         </div>
@@ -34,11 +36,14 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
           </div>
         </div>
 
-        <div className="text-sm text-gray-300 mb-1">{message}</div>
+        <div className="text-sm text-gray-300 mb-1">{t(message)}</div>
 
         {foundCount > 0 && (
           <div className="text-sm font-semibold text-green-400">
-            Found {foundCount} file{foundCount !== 1 ? "s" : ""}
+            {t("progress.foundFiles", {
+              count: foundCount,
+              suffix: foundCount !== 1 ? "s" : "",
+            })}
           </div>
         )}
 
@@ -54,7 +59,9 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
               style={{ animationDelay: "0.2s" }}
             ></div>
           </div>
-          <span className="ml-2 text-xs text-gray-400">Processing...</span>
+          <span className="ml-2 text-xs text-gray-400">
+            {t("progress.processing")}
+          </span>
         </div>
       </div>
     </div>

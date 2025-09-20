@@ -159,6 +159,10 @@
   "common": {
     "loading": "Loading...",
     "applying": "Applying...",
+    "selectFile": "Select File",
+    "useThisFile": "Use This File",
+    "cancel": "Cancel",
+    "retryAutoSearch": "Retry Auto Search for D2R.exe",
     "themeSettings": "Theme Settings",
     "themeSettingsDescription": "Choose your preferred theme for the application.",
     "darkTheme": "Dark Theme",
@@ -179,6 +183,30 @@
     "required": "required",
     "noLanguagesSelected": "No additional languages selected",
     "settingsMovedMessage": "App settings are now available through the gear button in the top panel."
+  },
+  "startup": {
+    "searching": "Searching for D2R.exe...",
+    "notFoundAuto": "D2R.exe not found automatically. Please search for it manually:",
+    "selectedFile": "Selected file:",
+    "noFilesFoundWith": "No files found with name \"{{name}}\". Try a different filename!",
+    "foundCount": "Found {{count}} file{{suffix}} named \"{{name}}\":",
+    "manual": {
+      "enterFileFirst": "Please choose a file first!"
+    },
+    "pathSelection": {
+      "title": "Select path to D2R.exe"
+    }
+  },
+  "progress": {
+    "searchingTitle": "Searching files...",
+    "foundFiles": "Found {{count}} file{{suffix}}",
+    "processing": "Processing..."
+  },
+  "pathSelector": {
+    "title": "Multiple D2R.exe locations found!",
+    "subtitle": "Please select which one you want to use:",
+    "selectThis": "Select This",
+    "cancelAndManual": "Cancel & Search Manually"
   },
   "buttons": {
     "changePath": "Change Path",
