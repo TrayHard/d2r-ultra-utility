@@ -179,12 +179,20 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     getAppMode
   );
 
-  // Дебаунс настроек, чтобы тяжёлые сравнения выполнялись не чаще чем раз в 800мс
-  const [debouncedSettings, setDebouncedSettings] = useState(settings);
+  // Дебаунс настроек только для активного профиля, чтобы избежать мигания индикаторов при переключении профилей
+  const { activeProfileId: currentProfileId } = useSettings();
+  const [debounced, setDebounced] = useState({
+    settings,
+    profileId: currentProfileId,
+  });
   React.useEffect(() => {
-    const id = setTimeout(() => setDebouncedSettings(settings), 500);
+    const pid = currentProfileId;
+    const id = setTimeout(
+      () => setDebounced({ settings, profileId: pid }),
+      500
+    );
     return () => clearTimeout(id);
-  }, [settings]);
+  }, [settings, currentProfileId]);
 
   // Определяем, какой хук использовать в зависимости от активного таба
   const isLoading =
@@ -324,12 +332,22 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
   const tabIndicators = React.useMemo(() => {
     if (!baseline) return {} as Record<string, boolean>;
 
+    // Если дебаунсированные настройки соответствуют другому профилю, чем baseline, не показываем индикаторы (во избежание мигания)
+    if (
+      (debounced as any)?.profileId &&
+      activeProfileId &&
+      (debounced as any).profileId !== activeProfileId
+    ) {
+      return {} as Record<string, boolean>;
+    }
+
     const pickLevels = (g: any) =>
       Array.isArray(g?.levels)
         ? g.levels.map((lvl: any) => ({
             enabled: !!lvl?.enabled,
             locales: lvl?.locales || {},
-            highlight: (lvl as any)?.highlight,
+            // Нормализуем highlight к булю, чтобы undefined и false считались одинаково
+            highlight: !!(lvl as any)?.highlight,
           }))
         : [];
 
@@ -339,16 +357,35 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       const out: Record<string, unknown> = {};
       for (const k of keys) {
         const grp = c[k];
-        if (grp && Array.isArray(grp.levels)) out[k] = pickLevels(grp);
+        if (!grp) continue;
+        if (Array.isArray(grp.levels)) {
+          out[k] = pickLevels(grp);
+        } else {
+          out[k] = {
+            enabled: !!grp.enabled,
+            locales: grp.locales || {},
+          };
+        }
       }
       return out;
     };
 
     const normalizeItems = (root: any) => {
       const items = root?.items || {};
+      const itemsMap = items?.items || {};
+      const normalizedItems: Record<string, unknown> = {};
+      for (const key of Object.keys(itemsMap)) {
+        const it = itemsMap[key] || {};
+        normalizedItems[key] = {
+          enabled: !!it.enabled,
+          showDifficultyClassMarker: !!it.showDifficultyClassMarker,
+          locales: it.locales || {},
+        };
+      }
       return {
         difficultyClassMarkers: pickLevels(items.difficultyClassMarkers),
         qualityPrefixes: pickLevels(items.qualityPrefixes),
+        items: normalizedItems,
       };
     };
 
@@ -361,16 +398,16 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
 
     const hasCommonChanges =
       JSON.stringify(normalizeCommon(baseline)) !==
-      JSON.stringify(normalizeCommon(debouncedSettings));
+      JSON.stringify(normalizeCommon((debounced as any).settings));
     const hasItemsChanges =
       JSON.stringify(normalizeItems(baseline)) !==
-      JSON.stringify(normalizeItems(debouncedSettings));
+      JSON.stringify(normalizeItems((debounced as any).settings));
     const hasGemsChanges =
       JSON.stringify(normalizeGems(baseline)) !==
-      JSON.stringify(normalizeGems(debouncedSettings));
+      JSON.stringify(normalizeGems((debounced as any).settings));
     const hasRunesChanges =
       JSON.stringify(baseline.runes) !==
-      JSON.stringify(debouncedSettings.runes);
+      JSON.stringify((debounced as any).settings.runes);
 
     return {
       common: hasCommonChanges,
@@ -378,7 +415,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       runes: hasRunesChanges,
       gems: hasGemsChanges,
     } as Record<string, boolean>;
-  }, [baseline, debouncedSettings]);
+  }, [baseline, debounced, activeProfileId]);
 
   const hasAnyChanges = Object.values(tabIndicators).some(Boolean);
 
