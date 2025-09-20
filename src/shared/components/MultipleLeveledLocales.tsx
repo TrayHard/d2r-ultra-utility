@@ -7,6 +7,7 @@ import Switch from "./Switch";
 import ColorHint from "./ColorHint";
 import SymbolsHint from "./SymbolsHint";
 import UnsavedAsterisk from "./UnsavedAsterisk";
+import DebouncedInput from "./DebouncedInput";
 import { useUnsavedChanges } from "../hooks/useUnsavedChanges";
 import Icon from "@mdi/react";
 import {
@@ -127,16 +128,14 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
               </span>
               <div className="flex-1 flex items-center space-x-2">
                 <div className="relative flex-1">
-                  <input
+                  <DebouncedInput
                     type="text"
                     value={
                       levelSettings.locales[
                         locale.value as keyof typeof levelSettings.locales
                       ] ?? ""
                     }
-                    onChange={(e) =>
-                      onLocaleChange(level, locale.value, e.target.value)
-                    }
+                    onChange={(v) => onLocaleChange(level, locale.value, v)}
                     onFocus={() => setFocusedLocale(locale.value)}
                     onBlur={() => setFocusedLocale(null)}
                     disabled={!hideToggle && !levelSettings.enabled}
@@ -223,9 +222,9 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
       const c = curLvl.locales[loc as keyof typeof curLvl.locales];
       if (b !== c) return true;
     }
-    const bh = (baseLvl as any)?.highlight;
-    const ch = (curLvl as any)?.highlight;
-    if (bh !== undefined && bh !== ch) return true;
+    const bh = !!((baseLvl as any)?.highlight ?? false);
+    const ch = !!((curLvl as any)?.highlight ?? false);
+    if (bh !== ch) return true;
     return false;
   };
 
@@ -244,9 +243,9 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
         const c = curLvl.locales[loc as keyof typeof curLvl.locales];
         if (b !== c) return true;
       }
-      const bh = (baseLvl as any)?.highlight;
-      const ch = (curLvl as any)?.highlight;
-      if (bh !== undefined && bh !== ch) return true;
+      const bh = !!((baseLvl as any)?.highlight ?? false);
+      const ch = !!((curLvl as any)?.highlight ?? false);
+      if (bh !== ch) return true;
     }
     return false;
   })();
@@ -401,21 +400,23 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
                           />
                         }
                       />
-                      {getBaselineGroup &&
-                        hasChanged(
-                          (root) =>
-                            (
-                              getBaselineGroup(root).levels[
-                                activeTabIndex
-                              ] as any
-                            )?.highlight
-                        ) && (
+                      {(() => {
+                        if (!getBaselineGroup || !baseline) return null;
+                        const baseLvl = getBaselineGroup(baseline).levels[
+                          activeTabIndex
+                        ] as any;
+                        const curLvl = settings.levels[activeTabIndex] as any;
+                        const baseVal = !!(baseLvl?.highlight ?? false);
+                        const curVal = !!(curLvl?.highlight ?? false);
+                        const changed = baseVal !== curVal;
+                        return changed ? (
                           <UnsavedAsterisk
                             size={0.65}
                             className="absolute"
                             style={{ right: -8, top: -8 }}
                           />
-                        )}
+                        ) : null;
+                      })()}
                     </div>
                   </Tooltip>
                 )}

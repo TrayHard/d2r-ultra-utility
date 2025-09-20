@@ -11,6 +11,7 @@ import MultipleLeveledLocales from "../../shared/components/MultipleLeveledLocal
 import ColorHint from "../../shared/components/ColorHint";
 import SymbolsHint from "../../shared/components/SymbolsHint";
 import UnsavedAsterisk from "../../shared/components/UnsavedAsterisk";
+import DebouncedInput from "../../shared/components/DebouncedInput";
 import { useUnsavedChanges } from "../../shared/hooks/useUnsavedChanges";
 import type {
   CommonItemSettings,
@@ -428,15 +429,15 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
                   )}
                 </span>
                 <div className="flex-1 flex items-center space-x-2 relative">
-                  <input
+                  <DebouncedInput
                     type="text"
                     value={
                       itemSettings.locales[
                         locale.value as keyof typeof itemSettings.locales
                       ] ?? ""
                     }
-                    onChange={(e) =>
-                      handleLocaleChange(itemType, locale.value, e.target.value)
+                    onChange={(v) =>
+                      handleLocaleChange(itemType, locale.value, v)
                     }
                     onFocus={() => setFocusedLocale(locale.value)}
                     onBlur={() => setFocusedLocale(null)}
