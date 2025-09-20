@@ -55,7 +55,7 @@ const savePath = (filePath: string) => {
       d2rPath: filePath,
       homeDirectory: homeDirectory,
       savedAt: new Date().toISOString(),
-    }),
+    })
   );
 };
 
@@ -82,7 +82,7 @@ function App() {
         timestamp: new Date().toISOString(),
         userAgent: navigator.userAgent,
       },
-      "init",
+      "init"
     );
   }, [logger]);
   const [savedPath, setSavedPath] = useState<string | null>(null);
@@ -110,7 +110,7 @@ function App() {
         logger.info(
           "Found saved path, using existing configuration",
           { savedFilePath, savedHomeDir },
-          "checkSavedPath",
+          "checkSavedPath"
         );
         // Для Tauri приложения просто проверяем что путь есть в настройках
         // Полную проверку существования файла делать не будем, чтобы не усложнять
@@ -123,7 +123,7 @@ function App() {
       logger.info(
         "No saved path found, starting auto search",
         undefined,
-        "checkSavedPath",
+        "checkSavedPath"
       );
       // Нет сохраненного пути, запускаем автопоиск
       startAutoSearch();
@@ -134,7 +134,7 @@ function App() {
 
   // Подписка на события прогресса
   useEffect(() => {
-    let unlisten: (() => void) | null = null;
+    let unlisten: (() => void | Promise<void>) | null = null;
 
     const setupListener = async () => {
       unlisten = await listen<SearchProgress>("search_progress", (event) => {
@@ -146,12 +146,36 @@ function App() {
 
     return () => {
       if (unlisten) {
+        const dispose = unlisten;
         try {
-          unlisten();
+          const internals = (
+            window as unknown as {
+              __TAURI_INTERNALS__?: {
+                event?: { unregisterListener?: unknown };
+              };
+            }
+          ).__TAURI_INTERNALS__;
+          const canUnregister =
+            typeof internals?.event?.unregisterListener === "function";
+          if (!canUnregister) {
+            return;
+          }
+          const maybePromise = dispose();
+          if (
+            maybePromise &&
+            typeof (maybePromise as any).then === "function"
+          ) {
+            (maybePromise as Promise<void>).catch((err) => {
+              console.warn(
+                "search_progress unlisten failed (probably already removed)",
+                err
+              );
+            });
+          }
         } catch (err) {
           console.warn(
             "search_progress unlisten failed (probably already removed)",
-            err,
+            err
           );
         }
       }
