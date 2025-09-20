@@ -455,6 +455,10 @@
     "rename": "Rename",
     "delete": "Delete",
     "cancel": "Cancel",
+    "tooltips": {
+      "saveDisabledImmutable": "Selected profile cannot be edited",
+      "saveDisabledNoChanges": "Make changes to save them to the profile"
+    },
     "saveConfirmation": "Save changes to profile \"{{name}}\"?",
     "deleteConfirmation": "Are you sure you want to delete profile \"{{name}}\"? This action cannot be undone.",
     "messages": {
