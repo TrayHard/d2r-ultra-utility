@@ -1,6 +1,6 @@
 # Diablo II Ultra Utility
 
-Desktop application to enhance your Diablo II Resurrected playing experience.
+Desktop application to enhance your Diablo II Resurrected playing experience. Right now it works only for [Blizzless mod](https://www.nexusmods.com/diablo2resurrected/mods/808?tab=description).
 
 ## Features:
 
