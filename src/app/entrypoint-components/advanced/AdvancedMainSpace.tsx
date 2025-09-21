@@ -167,7 +167,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
   );
 
   // Единый агрегатор записи
-  const { applyAllChanges } = useApplyAllWorker(
+  const { isLoading: isApplyAllLoading, applyAllChanges } = useApplyAllWorker(
     (message, opts) => {
       if (isBulkLoading && opts?.type === "success") return;
       sendMessage(message, { type: opts?.type, title: opts?.title });
@@ -425,6 +425,27 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
         error ? "grid-rows-[auto_auto_44px_1fr]" : "grid-rows-[auto_44px_1fr]"
       } ${isDarkTheme ? "bg-gray-900" : "bg-gray-50"}`}
     >
+      {isApplyAllLoading && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm"
+          style={{
+            backgroundColor: isDarkTheme
+              ? "rgba(17,24,39,0.6)"
+              : "rgba(243,244,246,0.6)",
+          }}
+        >
+          <div className="flex flex-col items-center gap-4">
+            <div className="w-12 h-12 border-4 border-gray-300 border-t-yellow-500 rounded-full animate-spin"></div>
+            <div
+              className={`text-lg font-medium ${
+                isDarkTheme ? "text-white" : "text-gray-900"
+              }`}
+            >
+              {t("basicMainSpace.applying")}
+            </div>
+          </div>
+        </div>
+      )}
       {/* AppToolbar - показывается на всех вкладках */}
       <AppToolbar
         isDarkTheme={isDarkTheme}
