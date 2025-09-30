@@ -1724,6 +1724,13 @@
         "line3": "You can also disable loot filters at any time (button at the bottom)."
       },
       "close": "Close"
+    },
+    "update": {
+      "tooltipUpdateProfile": "Update profile from {{from}} to {{to}}",
+      "tooltipUpToDate": "Up to date ({{version}}).",
+      "updatingOverlay": "Updating loot filter",
+      "updateActionAria": "Update profile",
+      "upToDateAria": "Version is up to date"
     }
   }
 }

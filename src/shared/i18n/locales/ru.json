@@ -11,7 +11,12 @@
     "available": "Доступно обновление - Нажмите для установки",
     "downloading": "Скачивание обновления...",
     "installing": "Установка обновления...",
-    "upToDate": "Актуальная версия"
+    "upToDate": "Актуальная версия",
+    "tooltipUpdateProfile": "Обновить профиль с {{from}} до {{to}} версии",
+    "tooltipUpToDate": "Версия актуальная ({{version}}).",
+    "updatingOverlay": "Обновляем лутфильтр",
+    "updateActionAria": "Обновить профиль",
+    "upToDateAria": "Версия актуальная"
   },
   "feedback": {
     "title": "Обратная связь",
@@ -1724,6 +1729,13 @@
         "line3": "Также Вы можете отключить лутфильтры в любой момент (кнопка снизу)."
       },
       "close": "Закрыть"
+    },
+    "update": {
+      "tooltipUpdateProfile": "Обновить профиль с {{from}} до {{to}} версии",
+      "tooltipUpToDate": "Версия актуальная ({{version}}).",
+      "updatingOverlay": "Обновляем лутфильтр",
+      "updateActionAria": "Обновить профиль",
+      "upToDateAria": "Версия актуальная"
     }
   }
 }

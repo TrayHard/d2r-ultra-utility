@@ -188,6 +188,7 @@ interface Profile {
   modifiedAt: string;
   isImmutable?: boolean; // Флаг для неизменяемых (встроенных) профилей
   isDefault?: boolean; // Флаг для Default профиля в корне
+  version?: string; // Версия профиля (для immutable обязательно)
 }
 
 // Интерфейс для контекста
@@ -399,6 +400,12 @@ interface SettingsContextType {
   // Неизменяемые профили
   immutableProfiles: Profile[];
   getImmutableProfiles: () => Profile[];
+  getImmutableProfileUpdateInfo: (
+    profileId: string
+  ) => { hasUpdate: boolean; currentVersion: string; remoteVersion: string };
+  updateImmutableProfile: (
+    profileId: string
+  ) => Promise<{ from: string; to: string; updated: boolean }>;
 
   // Deprecated (для обратной совместимости)
   resetSelectedLocales: () => void;
@@ -923,46 +930,16 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     [isLoading]
   );
 
-  // Загрузка неизменяемых профилей из GitHub (raw) с фоллбеком на ассеты
+  // Принцип версионирования: используем ТОЛЬКО version из JSON (формат X.Y)
+
+  // Состояние: удалённые версии и профили для сравнения (по имени, lower-case)
+  const [immutableRemoteByName, setImmutableRemoteByName] = useState<Record<string, Profile>>({});
+
+  // Загрузка неизменяемых профилей: локальные ассеты как источник, удалённые — только для версии/обновления
   const loadImmutableProfiles = useCallback(async () => {
     const now = Date.now();
 
-    // Используем raw-ссылки, чтобы получать актуальные версии из репозитория
-    const RAW_BASE =
-      "https://raw.githubusercontent.com/TrayHard/d2r-ultra-utility/master/src/shared/assets/profiles";
-    const urls = {
-      default: `${RAW_BASE}/d2r-profile-Default.json`,
-      blizzless: `${RAW_BASE}/recommendedProfiles/d2r-profile-Blizzless.json`,
-      minimalistic: `${RAW_BASE}/recommendedProfiles/d2r-profile-Minimalistic.json`,
-    } as const;
-
-    type RawProfile = { id?: string; name?: string; settings?: unknown };
-
-    const fetchJson = async (url: string): Promise<RawProfile | null> => {
-      try {
-        const response = await fetch(url, { cache: "no-store" });
-        if (!response.ok) return null;
-        const data = (await response.json()) as RawProfile;
-        return data ?? null;
-      } catch (_) {
-        return null;
-      }
-    };
-
-    const [remoteDefault, remoteBlizzless, remoteMinimalistic] =
-      await Promise.all([
-        fetchJson(urls.default),
-        fetchJson(urls.blizzless),
-        fetchJson(urls.minimalistic),
-      ]);
-
-    // Собираем локальные источники как фоллбек
-    const localRecommendedSources = Object.values(
-      recommendedProfilesModules
-    ).map((m) => m.default);
-    const localDefaultSources = Object.values(defaultProfileModule).map(
-      (m) => m.default
-    );
+    type RawProfile = { id?: string; name?: string; settings?: unknown; version?: string };
 
     // Помощник для миграции и сборки профиля
     const buildProfile = (
@@ -1010,6 +987,10 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
           : getDefaultItemsSettings(),
       };
 
+      // Версия: используем ТОЛЬКО то, что пришло в JSON и соответствует X.Y
+      const rawVersion = (src?.version ?? "").toString().trim();
+      const calculatedVersion = /^\d+\.\d+$/.test(rawVersion) ? rawVersion : "";
+
       return {
         id: profileId,
         name,
@@ -1018,80 +999,145 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         modifiedAt: new Date().toISOString(),
         isImmutable: true,
         isDefault: options.isDefault || false,
+        version: calculatedVersion || undefined,
       };
     };
 
     try {
-      // 1) Формируем remote данные
-      const remoteRecommendedRaw: RawProfile[] = [];
-      if (remoteBlizzless) remoteRecommendedRaw.push(remoteBlizzless);
-      if (remoteMinimalistic) remoteRecommendedRaw.push(remoteMinimalistic);
-      const remoteDefaultRaw: RawProfile[] = remoteDefault
-        ? [remoteDefault]
-        : [];
+      // 1) Локальные ассеты — формируем список immutable профилей
+      const localRecommendedSources = Object.values(
+        recommendedProfilesModules
+      ).map((m) => m.default);
+      const localDefaultSources = Object.values(defaultProfileModule).map(
+        (m) => m.default
+      );
 
-      // 2) Фоллбек на локальные ассеты, если чего-то нет
-      const localRecommendedRaw: RawProfile[] =
-        localRecommendedSources as RawProfile[];
+      const localRecommendedRaw: RawProfile[] = localRecommendedSources as RawProfile[];
       const localDefaultRaw: RawProfile[] = localDefaultSources as RawProfile[];
 
-      // Дедуп по имени (нормализуем к нижнему регистру), приоритет remote
-      const byName = new Map<string, RawProfile & { __isDefault?: boolean }>();
+      const byNameLocal = new Map<string, RawProfile & { __isDefault?: boolean }>();
       const normalize = (v?: string) => (v || "").trim().toLowerCase();
 
-      // Рекомендуемые
-      remoteRecommendedRaw.forEach((p) => {
-        byName.set(normalize(p?.name), p);
-      });
+      if (localDefaultRaw[0]) {
+        const p = localDefaultRaw[0];
+        byNameLocal.set(normalize(p?.name || "Default"), { ...p, __isDefault: true });
+      }
       localRecommendedRaw.forEach((p) => {
         const key = normalize(p?.name);
-        if (!byName.has(key)) byName.set(key, p);
+        if (!byNameLocal.has(key)) byNameLocal.set(key, p);
       });
 
-      // Default
-      if (remoteDefaultRaw[0]) {
-        const p = remoteDefaultRaw[0];
-        byName.set(normalize(p?.name || "Default"), {
-          ...p,
-          __isDefault: true,
-        });
-      } else if (localDefaultRaw[0]) {
-        const p = localDefaultRaw[0];
-        byName.set(normalize(p?.name || "Default"), {
-          ...p,
-          __isDefault: true,
-        });
-      }
-
-      // 3) Строим итоговые профили
-      const result: Profile[] = [];
-
-      // Сначала Default, если присутствует
+      const localResult: Profile[] = [];
       const defaultKey = normalize("Default");
-      if (byName.has(defaultKey)) {
-        const src = byName.get(defaultKey)!;
-        result.push(
+      if (byNameLocal.has(defaultKey)) {
+        const src = byNameLocal.get(defaultKey)!;
+        localResult.push(
           buildProfile(src, 0, { isDefault: true, fallbackName: "Default" })
         );
-        byName.delete(defaultKey);
+        byNameLocal.delete(defaultKey);
       }
-
-      // Остальные рекомендуемые
       let idx = 1;
-      for (const [, src] of byName) {
-        result.push(buildProfile(src, idx, { isDefault: false }));
+      for (const [, src] of byNameLocal) {
+        localResult.push(buildProfile(src, idx, { isDefault: false }));
         idx++;
       }
 
-      setImmutableProfiles(result);
-      logger.info("Загружены неизменяемые профили (remote + fallback)", {
-        count: result.length,
+      setImmutableProfiles(localResult);
+      logger.info("Загружены неизменяемые профили (локальные ассеты)", {
+        count: localResult.length,
+      });
+
+      // 2) Параллельно подтягиваем удалённые версии для сравнения
+      const RAW_BASE =
+        "https://raw.githubusercontent.com/TrayHard/d2r-ultra-utility/master/src/shared/assets/profiles";
+      const urls = {
+        default: `${RAW_BASE}/d2r-profile-Default.json`,
+        blizzless: `${RAW_BASE}/recommendedProfiles/d2r-profile-Blizzless.json`,
+        minimalistic: `${RAW_BASE}/recommendedProfiles/d2r-profile-Minimalistic.json`,
+      } as const;
+
+      const fetchJson = async (url: string): Promise<RawProfile | null> => {
+        try {
+          const response = await fetch(url, { cache: "no-store" });
+          if (!response.ok) return null;
+          const data = (await response.json()) as RawProfile;
+          return data ?? null;
+        } catch (_) {
+          return null;
+        }
+      };
+
+      const [remoteDefault, remoteBlizzless, remoteMinimalistic] = await Promise.all([
+        fetchJson(urls.default),
+        fetchJson(urls.blizzless),
+        fetchJson(urls.minimalistic),
+      ]);
+
+      const byNameRemote: Record<string, Profile> = {};
+      const pushRemote = (raw: RawProfile | null, index: number, opts: { isDefault?: boolean; fallbackName?: string }) => {
+        if (!raw) return;
+        const p = buildProfile(raw, index, opts);
+        byNameRemote[normalize(p.name)] = p;
+      };
+      pushRemote(remoteDefault, 0, { isDefault: true, fallbackName: "Default" });
+      pushRemote(remoteBlizzless, 1, {});
+      pushRemote(remoteMinimalistic, 2, {});
+
+      setImmutableRemoteByName(byNameRemote);
+      logger.info("Подтянуты удалённые версии immutable профилей", {
+        count: Object.keys(byNameRemote).length,
       });
     } catch (error) {
       logger.error("Ошибка загрузки неизменяемых профилей", error as Error);
       setImmutableProfiles([]);
+      setImmutableRemoteByName({});
     }
   }, []);
+
+  // Информация об обновлении immutable профиля
+  const getImmutableProfileUpdateInfo = useCallback(
+    (profileId: string) => {
+      const all = immutableProfiles;
+      const target = all.find((p) => p.id === profileId);
+      if (!target) return { hasUpdate: false, currentVersion: "", remoteVersion: "" };
+      const normalize = (v?: string) => (v || "").trim().toLowerCase();
+      const remote = immutableRemoteByName[normalize(target.name)];
+      const currentVersion = target.version || "";
+      const remoteVersion = remote?.version || "";
+      const hasUpdate = !!remote && !!remoteVersion && remoteVersion !== currentVersion;
+      return { hasUpdate, currentVersion, remoteVersion };
+    },
+    [immutableProfiles, immutableRemoteByName]
+  );
+
+  // Обновить immutable профиль до удалённой версии (по нажатию пользователя)
+  const updateImmutableProfile = useCallback(
+    async (profileId: string) => {
+      const normalize = (v?: string) => (v || "").trim().toLowerCase();
+      const current = immutableProfiles.find((p) => p.id === profileId);
+      if (!current) return { from: "", to: "", updated: false } as const;
+      const remote = immutableRemoteByName[normalize(current.name)];
+      if (!remote) return { from: current.version || "", to: current.version || "", updated: false } as const;
+
+      const from = current.version || "";
+      const to = remote.version || "";
+      if (from === to) return { from, to, updated: false } as const;
+
+      const updatedList = immutableProfiles.map((p) =>
+        p.id === profileId
+          ? {
+            ...p,
+            settings: remote.settings,
+            version: remote.version,
+            modifiedAt: new Date().toISOString(),
+          }
+          : p
+      );
+      setImmutableProfiles(updatedList);
+      return { from, to, updated: true } as const;
+    },
+    [immutableProfiles, immutableRemoteByName]
+  );
 
   // Получить неизменяемые профили
   const getImmutableProfiles = useCallback(() => {
@@ -2599,6 +2645,8 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     // Неизменяемые профили
     immutableProfiles,
     getImmutableProfiles,
+    getImmutableProfileUpdateInfo,
+    updateImmutableProfile,
 
     // Deprecated
     resetSelectedLocales,
