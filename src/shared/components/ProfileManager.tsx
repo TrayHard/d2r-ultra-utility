@@ -8,6 +8,8 @@ import {
   mdiFileExport,
   mdiCheck,
   mdiContentDuplicate,
+  mdiLock,
+  mdiLockOpenVariant,
 } from "@mdi/js";
 import Button from "./Button";
 import Dropdown from "./Dropdown";
@@ -15,6 +17,8 @@ import Modal from "./Modal";
 import { useGlobalMessage } from "./Message/MessageProvider";
 import { Profile } from "../../app/providers/SettingsContext";
 import { Tooltip } from "antd";
+import Icon from "@mdi/react";
+import { STORAGE_KEYS } from "../constants";
 
 interface ProfileManagerProps {
   isDarkTheme: boolean;
@@ -65,10 +69,18 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
   const allProfiles = [...immutableProfiles, ...profiles];
   const activeProfile = allProfiles.find((p) => p.id === activeProfileId);
 
+  const isAdmin = (() => {
+    try {
+      return localStorage.getItem(STORAGE_KEYS.ADMIN_MODE) === "1";
+    } catch {
+      return false;
+    }
+  })();
+
   const isSaveDisabled =
-    !activeProfileId || activeProfile?.isImmutable || !hasAnyChanges;
+    !activeProfileId || (activeProfile?.isImmutable && !isAdmin) || !hasAnyChanges;
   const saveTooltipTitle = isSaveDisabled
-    ? activeProfile?.isImmutable
+    ? activeProfile?.isImmutable && !isAdmin
       ? t("profiles.tooltips.saveDisabledImmutable")
       : !hasAnyChanges
         ? t("profiles.tooltips.saveDisabledNoChanges")
@@ -173,8 +185,8 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
     immutableProfiles.forEach((profile) => {
       profileOptions.push({
         value: profile.id,
-        label: `🔒 ${profile.name}`,
-        readonly: true,
+        label: <div className="flex items-center gap-2"><Icon path={isAdmin ? mdiLockOpenVariant : mdiLock} size={0.7} /> {profile.name}</div>,
+        readonly: !isAdmin,
       });
     });
   }
@@ -199,18 +211,16 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
   return (
     <div className="flex flex-col items-start justify-start gap-1">
       <div
-        className={`text-xs font-semibold uppercase tracking-wide ${
-          isDarkTheme ? "text-gray-300" : "text-gray-700"
-        }`}
+        className={`text-xs font-semibold uppercase tracking-wide ${isDarkTheme ? "text-gray-300" : "text-gray-700"
+          }`}
       >
         {t("profiles.sectionTitle")}
       </div>
       <div
-        className={`flex items-center gap-2 flex-wrap rounded-md h-[80px] p-4 ${
-          isDarkTheme
-            ? "bg-gray-800 border border-gray-700"
-            : "bg-gray-100 border border-gray-200"
-        }`}
+        className={`flex items-center gap-2 flex-wrap rounded-md h-[80px] p-4 ${isDarkTheme
+          ? "bg-gray-800 border border-gray-700"
+          : "bg-gray-100 border border-gray-200"
+          }`}
       >
         {/* Create Profile Button */}
         <Button
@@ -244,7 +254,7 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
             )
               return;
             const profile = allProfiles.find((p) => p.id === value);
-            if (profile && !profile.isImmutable) {
+            if (profile && (!profile.isImmutable || isAdmin)) {
               setRenameProfileId(profile.id);
               setNewProfileName(profile.name);
               setShowRenameModal(true);
@@ -257,7 +267,7 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
             )
               return;
             const profile = allProfiles.find((p) => p.id === value);
-            if (profile && !profile.isImmutable) {
+            if (profile && (!profile.isImmutable || isAdmin)) {
               setDeleteProfileId(profile.id);
               setShowDeleteModal(true);
             }
@@ -369,9 +379,8 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
         <div className="space-y-4">
           <div>
             <label
-              className={`block text-sm font-medium mb-1 ${
-                isDarkTheme ? "text-gray-300" : "text-gray-700"
-              }`}
+              className={`block text-sm font-medium mb-1 ${isDarkTheme ? "text-gray-300" : "text-gray-700"
+                }`}
             >
               {t("profiles.profileName")}
             </label>
@@ -381,11 +390,10 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
               onChange={(e) => setNewProfileName(e.target.value)}
               placeholder={t("profiles.enterProfileName")}
               maxLength={30}
-              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                isDarkTheme
-                  ? "bg-gray-700 border-gray-600 text-white"
-                  : "bg-white border-gray-300 text-gray-900"
-              }`}
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${isDarkTheme
+                ? "bg-gray-700 border-gray-600 text-white"
+                : "bg-white border-gray-300 text-gray-900"
+                }`}
               onKeyPress={(e) => e.key === "Enter" && handleCreateProfile()}
             />
           </div>
@@ -423,9 +431,8 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
         <div className="space-y-4">
           <div>
             <label
-              className={`block text-sm font-medium mb-1 ${
-                isDarkTheme ? "text-gray-300" : "text-gray-700"
-              }`}
+              className={`block text-sm font-medium mb-1 ${isDarkTheme ? "text-gray-300" : "text-gray-700"
+                }`}
             >
               {t("profiles.profileName")}
             </label>
@@ -435,11 +442,10 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
               onChange={(e) => setNewProfileName(e.target.value)}
               placeholder={t("profiles.enterProfileName")}
               maxLength={25}
-              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                isDarkTheme
-                  ? "bg-gray-700 border-gray-600 text-white"
-                  : "bg-white border-gray-300 text-gray-900"
-              }`}
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${isDarkTheme
+                ? "bg-gray-700 border-gray-600 text-white"
+                : "bg-white border-gray-300 text-gray-900"
+                }`}
               onKeyPress={(e) => e.key === "Enter" && handleRenameProfile()}
             />
           </div>
@@ -476,9 +482,8 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
       >
         <div className="space-y-4">
           <p
-            className={`text-sm ${
-              isDarkTheme ? "text-gray-300" : "text-gray-600"
-            }`}
+            className={`text-sm ${isDarkTheme ? "text-gray-300" : "text-gray-600"
+              }`}
           >
             {t("profiles.deleteConfirmation", {
               name: allProfiles.find((p) => p.id === deleteProfileId)?.name,
@@ -515,9 +520,8 @@ const ProfileManager: React.FC<ProfileManagerProps> = ({
       >
         <div className="space-y-4">
           <p
-            className={`text-sm ${
-              isDarkTheme ? "text-gray-300" : "text-gray-600"
-            }`}
+            className={`text-sm ${isDarkTheme ? "text-gray-300" : "text-gray-600"
+              }`}
           >
             {t("profiles.saveConfirmation", { name: activeProfile?.name })}
           </p>

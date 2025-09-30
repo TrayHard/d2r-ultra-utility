@@ -173,6 +173,7 @@ export const STORAGE_KEYS = {
   STARTUP_DONT_ASK: "d2r-startup-load-dont-ask",
   FIRST_RUN: "d2r-first-run",
   DEBUG_MODE: "isDebugMode",
+  ADMIN_MODE: "isAdmin",
 } as const;
 
 // Ключи для sessionStorage

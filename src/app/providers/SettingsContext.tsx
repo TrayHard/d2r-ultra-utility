@@ -201,6 +201,8 @@ interface SettingsContextType {
   getTheme: () => "light" | "dark";
   getIsDarkTheme: () => boolean;
   getDebugMode: () => boolean;
+  // Admin mode (bypass immutable restrictions)
+  getIsAdmin: () => boolean;
   isThemeChanging: boolean;
 
   // Setter'ы для настроек приложения
@@ -582,16 +584,16 @@ const migrateItemsSettings = (oldItems: any): ItemsSettings => {
   const oldQuality = oldItems?.qualityPrefixes;
   const migratedQuality: PotionGroupSettings = oldQuality
     ? {
-        enabled: oldQuality.enabled ?? false,
-        activeTab: oldQuality.activeTab ?? 0,
-        levels: (oldQuality.levels || defaultItems.qualityPrefixes.levels).map(
-          (lvl: PotionLevelSettings, i: number) => ({
-            enabled: lvl?.enabled ?? false,
-            locales:
-              lvl?.locales || defaultItems.qualityPrefixes.levels[i]?.locales,
-          })
-        ),
-      }
+      enabled: oldQuality.enabled ?? false,
+      activeTab: oldQuality.activeTab ?? 0,
+      levels: (oldQuality.levels || defaultItems.qualityPrefixes.levels).map(
+        (lvl: PotionLevelSettings, i: number) => ({
+          enabled: lvl?.enabled ?? false,
+          locales:
+            lvl?.locales || defaultItems.qualityPrefixes.levels[i]?.locales,
+        })
+      ),
+    }
     : defaultItems.qualityPrefixes;
 
   return {
@@ -985,7 +987,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
 
       const runesObj =
         typeof settingsObj["runes"] === "object" &&
-        settingsObj["runes"] !== null
+          settingsObj["runes"] !== null
           ? (settingsObj["runes"] as Record<string, unknown>)
           : {};
 
@@ -1239,7 +1241,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
 
             const runesObj =
               typeof settingsObj["runes"] === "object" &&
-              settingsObj["runes"] !== null
+                settingsObj["runes"] !== null
                 ? (settingsObj["runes"] as Record<string, unknown>)
                 : {};
 
@@ -1460,6 +1462,15 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     () => appConfig.debugMode,
     [appConfig.debugMode]
   );
+
+  // Чтение флага isAdmin из localStorage (1 = включено)
+  const getIsAdmin = useCallback(() => {
+    try {
+      return localStorage.getItem(STORAGE_KEYS.ADMIN_MODE) === "1";
+    } catch {
+      return false;
+    }
+  }, []);
 
   const updateAppConfig = useCallback(
     (config: Partial<AppConfig>) => {
@@ -1810,7 +1821,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     (profileId: string, settings: AppSettings) => {
       // Проверяем, что это не неизменяемый профиль
       const profileToSave = profiles.find((p) => p.id === profileId);
-      if (profileToSave?.isImmutable) {
+      if (profileToSave?.isImmutable && !getIsAdmin()) {
         logger.warn("Попытка сохранить неизменяемый профиль", { profileId });
         return;
       }
@@ -1854,7 +1865,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     (profileId: string, newName: string) => {
       // Проверяем, что это не неизменяемый профиль
       const profileToRename = profiles.find((p) => p.id === profileId);
-      if (profileToRename?.isImmutable) {
+      if (profileToRename?.isImmutable && !getIsAdmin()) {
         logger.warn("Попытка переименовать неизменяемый профиль", {
           profileId,
         });
@@ -1953,7 +1964,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     (profileId: string) => {
       // Проверяем, что это не неизменяемый профиль
       const profileToDelete = profiles.find((p) => p.id === profileId);
-      if (profileToDelete?.isImmutable) {
+      if (profileToDelete?.isImmutable && !getIsAdmin()) {
         logger.warn("Попытка удалить неизменяемый профиль", { profileId });
         return;
       }
@@ -1984,9 +1995,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
               ),
               common: parsedSettings.common
                 ? {
-                    ...getDefaultCommonSettings(),
-                    ...parsedSettings.common,
-                  }
+                  ...getDefaultCommonSettings(),
+                  ...parsedSettings.common,
+                }
                 : getDefaultCommonSettings(),
               gems: parsedSettings.gems
                 ? parsedSettings.gems
@@ -2513,6 +2524,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     getTheme,
     getIsDarkTheme,
     getDebugMode,
+    getIsAdmin,
     isThemeChanging,
     updateAppConfig,
     updateAppMode,

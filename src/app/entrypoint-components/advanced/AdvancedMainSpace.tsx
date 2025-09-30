@@ -15,7 +15,7 @@ import { useItemsWorker } from "../../../shared/hooks/useItemsWorker.ts";
 import { useApplyAllWorker } from "../../../shared/hooks/useApplyAllWorker.ts";
 import basesData from "../../../pages/items/bases.json";
 import { useUnsavedChanges } from "../../../shared/hooks/useUnsavedChanges";
-// no storage keys needed here anymore
+import { STORAGE_KEYS } from "../../../shared/constants";
 
 interface MainSpaceProps {
   isDarkTheme: boolean;
@@ -226,7 +226,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
           ? readGemsFromFiles
           : activeTab === "items"
             ? readItemsFromFiles
-            : () => {};
+            : () => { };
   const applyChanges =
     activeTab === "runes"
       ? applyRunesChanges
@@ -236,7 +236,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
           ? applyGemsChanges
           : activeTab === "items"
             ? applyItemsChanges
-            : () => {};
+            : () => { };
 
   const executeReadAll = useCallback(async () => {
     logger.info(
@@ -299,7 +299,15 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
 
   const allProfiles = useMemo(() => [...immutableProfiles, ...profiles], [immutableProfiles, profiles]);
   const activeProfile = useMemo(() => allProfiles.find((p: any) => p.id === activeProfileId), [allProfiles, activeProfileId]);
-  const isActiveProfileImmutable = !!activeProfile?.isImmutable;
+  // Разрешаем сохранять в immutable при admin=1
+  const isAdmin = (() => {
+    try {
+      return localStorage.getItem(STORAGE_KEYS.ADMIN_MODE) === "1";
+    } catch {
+      return false;
+    }
+  })();
+  const isActiveProfileImmutable = !!activeProfile?.isImmutable && !isAdmin;
 
   const executeApplyAll = useCallback(async () => {
     logger.info(
@@ -384,11 +392,11 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     const pickLevels = (g: any) =>
       Array.isArray(g?.levels)
         ? g.levels.map((lvl: any) => ({
-            enabled: !!lvl?.enabled,
-            locales: lvl?.locales || {},
-            // Нормализуем highlight к булю, чтобы undefined и false считались одинаково
-            highlight: !!(lvl as any)?.highlight,
-          }))
+          enabled: !!lvl?.enabled,
+          locales: lvl?.locales || {},
+          // Нормализуем highlight к булю, чтобы undefined и false считались одинаково
+          highlight: !!(lvl as any)?.highlight,
+        }))
         : [];
 
     const normalizeCommon = (root: any) => {
@@ -461,9 +469,8 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
 
   return (
     <div
-      className={`flex-1 grid ${
-        error ? "grid-rows-[auto_auto_44px_1fr]" : "grid-rows-[auto_44px_1fr]"
-      } ${isDarkTheme ? "bg-gray-900" : "bg-gray-50"}`}
+      className={`flex-1 grid ${error ? "grid-rows-[auto_auto_44px_1fr]" : "grid-rows-[auto_44px_1fr]"
+        } ${isDarkTheme ? "bg-gray-900" : "bg-gray-50"}`}
     >
       {(isApplyAllLoading || isBulkLoading || isReadingCurrentLoading) && (
         <div
@@ -477,9 +484,8 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
           <div className="flex flex-col items-center gap-4">
             <div className="w-12 h-12 border-4 border-gray-300 border-t-yellow-500 rounded-full animate-spin"></div>
             <div
-              className={`text-lg font-medium ${
-                isDarkTheme ? "text-white" : "text-gray-900"
-              }`}
+              className={`text-lg font-medium ${isDarkTheme ? "text-white" : "text-gray-900"
+                }`}
             >
               {isApplyAllLoading ? t("basicMainSpace.applying") : t("common.loading")}
             </div>
@@ -512,10 +518,9 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
         <div
           className={`
             mx-4 mt-4 px-4 py-2 rounded-lg border
-            ${
-              isDarkTheme
-                ? "bg-red-900/50 border-red-700 text-red-300"
-                : "bg-red-50 border-red-300 text-red-700"
+            ${isDarkTheme
+              ? "bg-red-900/50 border-red-700 text-red-300"
+              : "bg-red-50 border-red-300 text-red-700"
             }
           `}
         >
@@ -558,13 +563,12 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       >
         <div className="space-y-4">
           <p
-            className={`text-sm ${
-              isDarkTheme ? "text-gray-300" : "text-gray-600"
-            }`}
+            className={`text-sm ${isDarkTheme ? "text-gray-300" : "text-gray-600"
+              }`}
           >
             {confirmAction === "readAll" || confirmAction === "readCurrent"
               ? t("runePage.textWorker.readConfirmMessage") ||
-                "Вы уверены, что хотите прочитать настройки из файлов? Текущие несохраненные изменения в настройках могут быть перезаписаны."
+              "Вы уверены, что хотите прочитать настройки из файлов? Текущие несохраненные изменения в настройках могут быть перезаписаны."
               : t("runePage.confirmModal.message")}
           </p>
           {(confirmAction === "applyAll" || confirmAction === "applyCurrent") && (
