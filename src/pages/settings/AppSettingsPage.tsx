@@ -28,8 +28,6 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
   const {
     getSelectedLocales,
     updateSelectedLocales,
-    getAppLanguage,
-    updateAppLanguage,
     getIsDarkTheme,
     toggleTheme,
     getGamePath,
@@ -38,7 +36,6 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
   } = useSettings();
 
   const selectedLocales = getSelectedLocales();
-  const currentAppLanguage = getAppLanguage();
   const isCurrentlyDarkTheme = getIsDarkTheme();
   const currentGamePath = getGamePath();
   const [appVersion, setAppVersion] = React.useState<string>("");
@@ -74,20 +71,7 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
     } catch {}
   }
 
-  // Доступные языки для интерфейса приложения
-  const appLanguageOptions = [
-    { value: "enUS", label: "English" },
-    { value: "ruRU", label: "Русский" },
-    { value: "deDE", label: "Deutsch" },
-    { value: "ukUA", label: "Українська" },
-    { value: "plPL", label: "Polski" },
-    { value: "esES", label: "Español" },
-    { value: "frFR", label: "Français" },
-  ];
-
-  const handleAppLanguageChange = (language: string) => {
-    updateAppLanguage(language);
-  };
+  //
 
   const handleLocaleToggle = (localeCode: string) => {
     if (localeCode === "enUS") {
@@ -386,60 +370,6 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
                       placeholder="#F59E0B"
                       aria-label={t("settings.asteriskColor")}
                     />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Настройки языка приложения */}
-            <div
-              className={`p-6 rounded-lg border ${
-                isDarkTheme
-                  ? "bg-gray-800 border-gray-700"
-                  : "bg-white border-gray-200"
-              }`}
-            >
-              <h3
-                className={`text-xl font-semibold mb-4 ${
-                  isDarkTheme ? "text-white" : "text-gray-900"
-                }`}
-              >
-                {t("common.appLanguageSettings")}
-              </h3>
-              <div className="space-y-4">
-                <div>
-                  <p
-                    className={`text-sm mb-4 ${
-                      isDarkTheme ? "text-gray-400" : "text-gray-600"
-                    }`}
-                  >
-                    {t("common.appLanguageSettingsDescription")}
-                  </p>
-
-                  <div className="flex flex-wrap gap-2">
-                    {appLanguageOptions.map((language) => {
-                      const isSelected = currentAppLanguage === language.value;
-
-                      return (
-                        <button
-                          key={language.value}
-                          onClick={() =>
-                            handleAppLanguageChange(language.value)
-                          }
-                          className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                            isSelected
-                              ? isDarkTheme
-                                ? "bg-blue-600 text-white"
-                                : "bg-blue-500 text-white"
-                              : isDarkTheme
-                                ? "bg-gray-600 text-gray-200 hover:bg-gray-500"
-                                : "bg-gray-200 text-gray-800 hover:bg-gray-300"
-                          } cursor-pointer`}
-                        >
-                          {t(`common.appLanguageLabels.${language.value}`)}
-                        </button>
-                      );
-                    })}
                   </div>
                 </div>
               </div>
