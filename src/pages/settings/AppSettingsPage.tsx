@@ -10,7 +10,7 @@ import Button from "../../shared/components/Button";
 import LogExporter from "./LogExporter";
 import { getVersion } from "@tauri-apps/api/app";
 import UnsavedAsterisk from "../../shared/components/UnsavedAsterisk";
-import { mdiCogOutline } from "@mdi/js";
+import { mdiCogOutline, mdiFolderOpen } from "@mdi/js";
 // Removed unused updater/process imports
 
 interface AppSettingsPageProps {
@@ -31,6 +31,7 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
     getIsDarkTheme,
     toggleTheme,
     getGamePath,
+    getAppMode,
     appConfig,
     updateAppConfig,
   } = useSettings();
@@ -38,17 +39,19 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
   const selectedLocales = getSelectedLocales();
   const isCurrentlyDarkTheme = getIsDarkTheme();
   const currentGamePath = getGamePath();
+  const appMode = getAppMode();
+  const isAdvancedMode = appMode === "advanced";
   const [appVersion, setAppVersion] = React.useState<string>("");
   const [asteriskHexInput, setAsteriskHexInput] = React.useState<string>(
     (typeof appConfig?.asteriskColor === "string" && appConfig.asteriskColor) ||
-      "#F59E0B"
+    "#F59E0B"
   );
 
   React.useEffect(() => {
     setAsteriskHexInput(
       (typeof appConfig?.asteriskColor === "string" &&
         appConfig.asteriskColor) ||
-        "#F59E0B"
+      "#F59E0B"
     );
   }, [appConfig?.asteriskColor]);
 
@@ -57,7 +60,7 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
       try {
         const v = await getVersion();
         setAppVersion(v);
-      } catch {}
+      } catch { }
     })();
   }, []);
   let displayedGamePath = currentGamePath;
@@ -68,7 +71,7 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
         const saved = JSON.parse(savedRaw);
         displayedGamePath = saved?.homeDirectory || saved?.d2rPath || "";
       }
-    } catch {}
+    } catch { }
   }
 
   //
@@ -96,17 +99,15 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
 
   return (
     <div
-      className={`h-full flex flex-col ${
-        isDarkTheme ? "bg-gray-900" : "bg-gray-100"
-      }`}
+      className={`h-full flex flex-col ${isDarkTheme ? "bg-gray-900" : "bg-gray-100"
+        }`}
     >
       {/* Заголовок с кнопкой назад */}
       <div
-        className={`shadow-lg border-b px-3 py-1 elevation-4 ${
-          isDarkTheme
-            ? "bg-gray-800 border-gray-700"
-            : "bg-white border-gray-200"
-        }`}
+        className={`shadow-lg border-b px-3 py-1 elevation-4 ${isDarkTheme
+          ? "bg-gray-800 border-gray-700"
+          : "bg-white border-gray-200"
+          }`}
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
@@ -114,11 +115,10 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
             <Tooltip title={t("buttons.back")} placement="bottom">
               <button
                 onClick={onBack}
-                className={`p-1 rounded-full transition-all duration-200 text-sm hover:scale-110 ${
-                  isDarkTheme
-                    ? "bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white"
-                    : "bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-900"
-                }`}
+                className={`p-1 rounded-full transition-all duration-200 text-sm hover:scale-110 ${isDarkTheme
+                  ? "bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white"
+                  : "bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-900"
+                  }`}
               >
                 <Icon path={mdiCogOutline} size={0.7} />
               </button>
@@ -133,99 +133,96 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
           <div className="space-y-6">
             {/* Настройки пути */}
             <div
-              className={`p-6 rounded-lg border ${
-                isDarkTheme
-                  ? "bg-gray-800 border-gray-700"
-                  : "bg-white border-gray-200"
-              }`}
+              className={`p-6 rounded-lg border ${isDarkTheme
+                ? "bg-gray-800 border-gray-700"
+                : "bg-white border-gray-200"
+                }`}
             >
               <h3
-                className={`text-xl font-semibold mb-4 ${
-                  isDarkTheme ? "text-white" : "text-gray-900"
-                }`}
+                className={`text-xl font-semibold mb-4 ${isDarkTheme ? "text-white" : "text-gray-900"
+                  }`}
               >
                 {t("settings.pathSettings")}
               </h3>
               <div className="space-y-4">
                 <div>
                   <p
-                    className={`text-sm mb-4 ${
-                      isDarkTheme ? "text-gray-400" : "text-gray-600"
-                    }`}
+                    className={`text-sm mb-4 ${isDarkTheme ? "text-gray-400" : "text-gray-600"
+                      }`}
                   >
                     {t("settings.pathSettingsDescription")}
                   </p>
 
-                  <div className="mb-4">
-                    <p
-                      className={`text-sm mb-2 ${
-                        isDarkTheme ? "text-gray-300" : "text-gray-700"
+                  <p
+                    className={`text-xs mb-2 ${isDarkTheme ? "text-gray-300" : "text-gray-700"
                       }`}
-                    >
-                      {t("settings.currentPath")}
-                    </p>
+                  >
+                    {t("settings.currentPath")}
+                  </p>
+                  <div className="flex justify-between items-center gap-2 mb-4">
                     <div
-                      className={`font-mono text-xs break-all p-2 rounded border ${
-                        isDarkTheme
-                          ? "bg-gray-700 text-gray-100 border-gray-600"
-                          : "bg-gray-100 text-gray-800 border-gray-300"
-                      }`}
+                      className={`font-mono text-xs truncate overflow-hidden break-all p-2 rounded border flex-1 ${isDarkTheme
+                        ? "bg-gray-700 text-gray-100 border-gray-600"
+                        : "bg-gray-100 text-gray-800 border-gray-300"
+                        }`}
+                      title={displayedGamePath && displayedGamePath.length > 0
+                        ? displayedGamePath + "\\D2R.exe"
+                        : t("settings.pathNotSet")}
                     >
                       {displayedGamePath && displayedGamePath.length > 0
                         ? displayedGamePath + "\\D2R.exe"
                         : t("settings.pathNotSet")}
                     </div>
+
+                    <Button
+                      onClick={onChangePathClick}
+                      variant="primary"
+                      size="md"
+                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                      title={t("buttons.changePath")}
+                    >
+                      <Icon path={mdiFolderOpen} size={0.7} />
+                    </Button>
                   </div>
 
-                  <Button
-                    onClick={onChangePathClick}
-                    variant="primary"
-                    size="md"
-                    className="bg-red-600 hover:bg-red-700 text-white"
-                  >
-                    {t("buttons.changePath")}
-                  </Button>
                 </div>
               </div>
             </div>
 
-            {/* Настройка языков */}
-            <div
-              className={`p-6 rounded-lg border ${
-                isDarkTheme
+            {/* Настройка языков (только в расширенном режиме) */}
+            {isAdvancedMode && (
+              <div
+                className={`p-6 rounded-lg border ${isDarkTheme
                   ? "bg-gray-800 border-gray-700"
                   : "bg-white border-gray-200"
-              }`}
-            >
-              <h3
-                className={`text-xl font-semibold mb-4 ${
-                  isDarkTheme ? "text-white" : "text-gray-900"
-                }`}
+                  }`}
               >
-                {t("common.languageSettings")}
-              </h3>
-              <div className="space-y-4">
-                <div>
-                  <p
-                    className={`text-sm mb-4 ${
-                      isDarkTheme ? "text-gray-400" : "text-gray-600"
+                <h3
+                  className={`text-xl font-semibold mb-4 ${isDarkTheme ? "text-white" : "text-gray-900"
                     }`}
-                  >
-                    {t("common.languageSettingsDescription")}
-                  </p>
+                >
+                  {t("common.languageSettings")}
+                </h3>
+                <div className="space-y-4">
+                  <div>
+                    <p
+                      className={`text-sm mb-4 ${isDarkTheme ? "text-gray-400" : "text-gray-600"
+                        }`}
+                    >
+                      {t("common.languageSettingsDescription")}
+                    </p>
 
-                  <div className="flex flex-wrap gap-2">
-                    {localeOptions.map((locale) => {
-                      const isSelected = selectedLocales.includes(locale.value);
-                      const isRequired = locale.value === "enUS";
+                    <div className="flex flex-wrap gap-2">
+                      {localeOptions.map((locale) => {
+                        const isSelected = selectedLocales.includes(locale.value);
+                        const isRequired = locale.value === "enUS";
 
-                      return (
-                        <button
-                          key={locale.value}
-                          onClick={() => handleLocaleToggle(locale.value)}
-                          disabled={isRequired}
-                          className={`px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                            isSelected
+                        return (
+                          <button
+                            key={locale.value}
+                            onClick={() => handleLocaleToggle(locale.value)}
+                            disabled={isRequired}
+                            className={`px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 ${isSelected
                               ? isRequired
                                 ? isDarkTheme
                                   ? "bg-blue-600 text-white cursor-not-allowed"
@@ -236,174 +233,160 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
                               : isDarkTheme
                                 ? "bg-gray-600 text-gray-200 hover:bg-gray-500"
                                 : "bg-gray-200 text-gray-800 hover:bg-gray-300"
-                          } ${isRequired ? "opacity-90" : "cursor-pointer"}`}
-                        >
-                          {locale.label}
-                          {isRequired && (
-                            <span className="ml-1 text-xs opacity-75">
-                              ({t("common.required")})
-                            </span>
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
+                              } ${isRequired ? "opacity-90" : "cursor-pointer"}`}
+                          >
+                            {locale.label}
+                            {isRequired && (
+                              <span className="ml-1 text-xs opacity-75">
+                                ({t("common.required")})
+                              </span>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
 
-                  {selectedLocales.length === 0 && (
-                    <p
-                      className={`text-sm mt-3 ${
-                        isDarkTheme ? "text-gray-400" : "text-gray-500"
-                      }`}
-                    >
-                      {t("common.noLanguagesSelected")}
-                    </p>
-                  )}
+                    {selectedLocales.length === 0 && (
+                      <p
+                        className={`text-sm mt-3 ${isDarkTheme ? "text-gray-400" : "text-gray-500"
+                          }`}
+                      >
+                        {t("common.noLanguagesSelected")}
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
-            {/* Настройки темы */}
-            <div
-              className={`p-6 rounded-lg border ${
-                isDarkTheme
+            {/* Настройки темы (только в расширенном режиме) */}
+            {isAdvancedMode && (
+              <div
+                className={`p-6 rounded-lg border ${isDarkTheme
                   ? "bg-gray-800 border-gray-700"
                   : "bg-white border-gray-200"
-              }`}
-            >
-              <h3
-                className={`text-xl font-semibold mb-4 ${
-                  isDarkTheme ? "text-white" : "text-gray-900"
-                }`}
+                  }`}
               >
-                {t("common.themeSettings")}
-              </h3>
-              <div className="space-y-4">
-                <div>
-                  <p
-                    className={`text-sm mb-4 ${
-                      isDarkTheme ? "text-gray-400" : "text-gray-600"
+                <h3
+                  className={`text-xl font-semibold mb-4 ${isDarkTheme ? "text-white" : "text-gray-900"
                     }`}
-                  >
-                    {t("common.themeSettingsDescription")}
-                  </p>
+                >
+                  {t("common.themeSettings")}
+                </h3>
+                <div className="space-y-4">
+                  <div>
+                    <p
+                      className={`text-sm mb-4 ${isDarkTheme ? "text-gray-400" : "text-gray-600"
+                        }`}
+                    >
+                      {t("common.themeSettingsDescription")}
+                    </p>
 
-                  <div className="flex gap-2">
-                    <p
-                      className={`text-sm ${isDarkTheme ? "text-gray-400" : "text-gray-600"}`}
-                    >
-                      {t("common.lightTheme")}
-                    </p>
-                    <Switcher
-                      checked={isCurrentlyDarkTheme}
-                      onChange={toggleTheme}
-                      isDarkTheme={isDarkTheme}
-                      size="md"
-                    />
-                    <p
-                      className={`text-sm ${isDarkTheme ? "text-gray-400" : "text-gray-600"}`}
-                    >
-                      {t("common.darkTheme")}
-                    </p>
+                    <div className="flex gap-2">
+                      <p
+                        className={`text-sm ${isDarkTheme ? "text-gray-400" : "text-gray-600"}`}
+                      >
+                        {t("common.lightTheme")}
+                      </p>
+                      <Switcher
+                        checked={isCurrentlyDarkTheme}
+                        onChange={toggleTheme}
+                        isDarkTheme={isDarkTheme}
+                        size="md"
+                      />
+                      <p
+                        className={`text-sm ${isDarkTheme ? "text-gray-400" : "text-gray-600"}`}
+                      >
+                        {t("common.darkTheme")}
+                      </p>
+                    </div>
                   </div>
-                </div>
 
-                {/* Цвет индикатора несохранённых изменений */}
-                <div>
-                  <p
-                    className={`text-sm mb-2 ${
-                      isDarkTheme ? "text-gray-400" : "text-gray-600"
-                    }`}
-                  >
-                    {t("settings.asteriskColor")}
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => {
-                        const def = "#F59E0B";
-                        updateAppConfig({ asteriskColor: def });
-                        setAsteriskHexInput(def);
-                      }}
-                      className={`px-2 py-1 rounded border transition-colors ${
-                        isDarkTheme
+                  {/* Цвет индикатора несохранённых изменений */}
+                  <div>
+                    <p
+                      className={`text-sm mb-2 ${isDarkTheme ? "text-gray-400" : "text-gray-600"
+                        }`}
+                    >
+                      {t("settings.asteriskColor")}
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => {
+                          const def = "#F59E0B";
+                          updateAppConfig({ asteriskColor: def });
+                          setAsteriskHexInput(def);
+                        }}
+                        className={`px-2 py-1 rounded border transition-colors ${isDarkTheme
                           ? "bg-gray-700 border-gray-600 hover:bg-gray-600"
                           : "bg-gray-100 border-gray-300 hover:bg-gray-200"
-                      }`}
-                      aria-label={t("settings.resetDefault")}
-                      title={t("settings.resetDefault")}
-                    >
-                      <ReloadOutlined
-                        className={
-                          isDarkTheme ? "text-gray-200" : "text-gray-700"
+                          }`}
+                        aria-label={t("settings.resetDefault")}
+                        title={t("settings.resetDefault")}
+                      >
+                        <ReloadOutlined
+                          className={
+                            isDarkTheme ? "text-gray-200" : "text-gray-700"
+                          }
+                        />
+                      </button>
+                      <UnsavedAsterisk size={1.2} />
+                      <input
+                        type="color"
+                        value={appConfig?.asteriskColor || "#F59E0B"}
+                        onChange={(e) =>
+                          updateAppConfig({ asteriskColor: e.target.value })
                         }
+                        style={{ background: "none" }}
+                        className="w-9 h-10 p-0 border rounded cursor-pointer"
+                        aria-label={t("settings.asteriskColor")}
+                        title={t("settings.asteriskColor")}
                       />
-                    </button>
-                    <UnsavedAsterisk size={1.2} />
-                    <input
-                      type="color"
-                      value={appConfig?.asteriskColor || "#F59E0B"}
-                      onChange={(e) =>
-                        updateAppConfig({ asteriskColor: e.target.value })
-                      }
-                      style={{ background: "none" }}
-                      className="w-9 h-10 p-0 border rounded cursor-pointer"
-                      aria-label={t("settings.asteriskColor")}
-                      title={t("settings.asteriskColor")}
-                    />
-                    <input
-                      type="text"
-                      value={asteriskHexInput}
-                      onChange={(e) => {
-                        const raw = e.target.value;
-                        setAsteriskHexInput(raw);
-                        let val = raw.trim();
-                        if (!val.startsWith("#")) val = `#${val}`;
-                        if (/^#[0-9a-fA-F]{6}$/.test(val)) {
-                          updateAppConfig({ asteriskColor: val });
-                        }
-                      }}
-                      maxLength={7}
-                      className={`px-2 py-1 rounded border text-sm font-mono ${
-                        isDarkTheme
+                      <input
+                        type="text"
+                        value={asteriskHexInput}
+                        onChange={(e) => {
+                          const raw = e.target.value;
+                          setAsteriskHexInput(raw);
+                          let val = raw.trim();
+                          if (!val.startsWith("#")) val = `#${val}`;
+                          if (/^#[0-9a-fA-F]{6}$/.test(val)) {
+                            updateAppConfig({ asteriskColor: val });
+                          }
+                        }}
+                        maxLength={7}
+                        className={`px-2 py-1 rounded border text-sm font-mono ${isDarkTheme
                           ? "bg-gray-700 text-gray-100 border-gray-600 placeholder-gray-400"
                           : "bg-white text-gray-800 border-gray-300 placeholder-gray-400"
-                      }`}
-                      placeholder="#F59E0B"
-                      aria-label={t("settings.asteriskColor")}
-                    />
+                          }`}
+                        placeholder="#F59E0B"
+                        aria-label={t("settings.asteriskColor")}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Экспорт логов */}
             <LogExporter isDarkTheme={isDarkTheme} />
 
             {/* О приложении / версия */}
             <div
-              className={`p-6 rounded-lg border ${
-                isDarkTheme
-                  ? "bg-gray-800 border-gray-700"
-                  : "bg-white border-gray-200"
-              }`}
-            >
-              <h3
-                className={`text-xl font-semibold mb-4 ${
-                  isDarkTheme ? "text-white" : "text-gray-900"
+              className={`p-2 rounded-lg border ${isDarkTheme
+                ? "bg-gray-800 border-gray-700"
+                : "bg-white border-gray-200"
                 }`}
-              >
-                {t("settings.about")}
-              </h3>
-              <div className="space-y-2">
+            >
+              <div className="space-y-1 text-sm flex flex-col items-center">
+                <div className="flex">
+                  <span className={`${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}>Made by <a href="https://github.com/TrayHard" target="_blank" rel="noopener noreferrer">TrayHard</a>, posted on <a href="https://github.com/TrayHard/d2r-ultra-utility" target="_blank" rel="noopener noreferrer">GitHub</a></span>
+                </div>
                 <div className="flex items-center justify-between">
-                  <span
-                    className={isDarkTheme ? "text-gray-300" : "text-gray-700"}
-                  >
-                    {t("settings.appVersion")}
-                  </span>
                   <span
                     className={`font-mono text-sm ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}
                   >
-                    {appVersion || "—"}
+                    v.{appVersion || "—"}
                   </span>
                 </div>
               </div>

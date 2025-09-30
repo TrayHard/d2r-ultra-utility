@@ -13,6 +13,14 @@
     "installing": "Instalowanie aktualizacji...",
     "upToDate": "Aktualne"
   },
+  "feedback": {
+    "title": "Opinie",
+    "help": {
+      "part1": "Jeśli znalazłeś problem lub masz pytanie, proszę ",
+      "linkText": "otwórz zgłoszenie",
+      "part2": ". W niektórych przypadkach możemy poprosić o dołączenie logów. Możesz je wyeksportować poniżej:"
+    }
+  },
   "descriptions": {
     "common": "Ogólne narzędzia i funkcje",
     "items": "Zarządzanie i analiza przedmiotów",
@@ -445,11 +453,6 @@
     "pathNotSet": "Ścieżka nie ustawiona",
     "about": "O aplikacji",
     "appVersion": "Wersja aplikacji",
-    "debugMode": "Debug Mode",
-    "debugModeDescription": "Enable debug mode to collect detailed logs for troubleshooting. These logs can be exported and sent to developers for support.",
-    "debugModeEnabled": "Debug mode is enabled",
-    "debugModeDisabled": "Debug mode is disabled",
-    "debugModeWarning": "Debug mode will collect detailed information about application usage. Only enable if needed for troubleshooting.",
     "asteriskColor": "Unsaved changes indicator color",
     "resetDefault": "Reset to default"
   },

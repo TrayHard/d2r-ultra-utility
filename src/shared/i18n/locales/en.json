@@ -13,6 +13,14 @@
     "installing": "Installing update...",
     "upToDate": "Up to date"
   },
+  "feedback": {
+    "title": "Feedback",
+    "help": {
+      "part1": "If you found a problem or have a question, please ",
+      "linkText": "open an issue",
+      "part2": ". In some cases we may ask you to attach logs. You can export them below:"
+    }
+  },
   "descriptions": {
     "common": "Common utilities and tools",
     "items": "Item management and analysis",
@@ -216,14 +224,9 @@
   "settings": {
     "appSettings": "App Settings",
     "pathSettings": "Path Settings",
-    "pathSettingsDescription": "Manage the path to your D2R game directory (specifically to D2R.exe).",
+    "pathSettingsDescription": "Define the path to your D2R game directory (specifically to D2R.exe).",
     "currentPath": "Current path",
     "pathNotSet": "Path is not set",
-    "debugMode": "Debug Mode",
-    "debugModeDescription": "Enable debug mode to collect detailed logs for troubleshooting. These logs can be exported and sent to developers for support.",
-    "debugModeEnabled": "Debug mode is enabled",
-    "debugModeDisabled": "Debug mode is disabled",
-    "debugModeWarning": "Debug mode will collect detailed information about application usage. Only enable if needed for troubleshooting.",
     "about": "About",
     "appVersion": "App Version",
     "asteriskColor": "Unsaved changes indicator color",
