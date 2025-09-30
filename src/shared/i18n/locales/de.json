@@ -13,6 +13,14 @@
     "installing": "Update wird installiert...",
     "upToDate": "Aktuell"
   },
+  "feedback": {
+    "title": "Feedback",
+    "help": {
+      "part1": "Wenn Sie ein Problem gefunden haben oder eine Frage haben, bitte ",
+      "linkText": "eröffnen Sie ein Ticket",
+      "part2": ". In manchen Fällen bitten wir Sie, Logs anzuhängen. Sie können diese unten exportieren:"
+    }
+  },
   "startup": {
     "searching": "Nach D2R.exe wird gesucht...",
     "notFoundAuto": "D2R.exe wurde nicht automatisch gefunden. Bitte suchen Sie die Datei manuell:",
@@ -84,11 +92,6 @@
     "pathNotSet": "Pfad nicht festgelegt",
     "about": "Info",
     "appVersion": "App-Version",
-    "debugMode": "Debug Mode",
-    "debugModeDescription": "Enable debug mode to collect detailed logs for troubleshooting. These logs can be exported and sent to developers for support.",
-    "debugModeEnabled": "Debug mode is enabled",
-    "debugModeDisabled": "Debug mode is disabled",
-    "debugModeWarning": "Debug mode will collect detailed information about application usage. Only enable if needed for troubleshooting.",
     "asteriskColor": "Unsaved changes indicator color",
     "resetDefault": "Reset to default"
   },

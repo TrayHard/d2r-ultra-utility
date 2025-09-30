@@ -13,6 +13,14 @@
     "installing": "Instalando actualización...",
     "upToDate": "Actualizado"
   },
+  "feedback": {
+    "title": "Comentarios",
+    "help": {
+      "part1": "Si encontraste un problema o tienes alguna pregunta, por favor ",
+      "linkText": "abre un issue",
+      "part2": ". En algunos casos podemos pedirte adjuntar logs. Puedes exportarlos abajo:"
+    }
+  },
   "descriptions": {
     "common": "Utilidades y herramientas comunes",
     "items": "Gestión y análisis de objetos",
@@ -435,11 +443,6 @@
     "pathNotSet": "Ruta no configurada",
     "about": "Acerca de",
     "appVersion": "Versión de la app",
-    "debugMode": "Debug Mode",
-    "debugModeDescription": "Enable debug mode to collect detailed logs for troubleshooting. These logs can be exported and sent to developers for support.",
-    "debugModeEnabled": "Debug mode is enabled",
-    "debugModeDisabled": "Debug mode is disabled",
-    "debugModeWarning": "Debug mode will collect detailed information about application usage. Only enable if needed for troubleshooting.",
     "asteriskColor": "Unsaved changes indicator color",
     "resetDefault": "Reset to default"
   },

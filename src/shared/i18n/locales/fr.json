@@ -13,6 +13,14 @@
     "installing": "Installation de la mise à jour...",
     "upToDate": "À jour"
   },
+  "feedback": {
+    "title": "Retour d'expérience",
+    "help": {
+      "part1": "Si vous avez trouvé un problème ou avez une question, veuillez ",
+      "linkText": "ouvrir un ticket",
+      "part2": ". Dans certains cas, nous pourrons vous demander de joindre des journaux. Vous pouvez les exporter ci‑dessous :"
+    }
+  },
   "descriptions": {
     "common": "Utilitaires et outils généraux",
     "items": "Gestion et analyse des objets",
@@ -445,11 +453,6 @@
     "pathNotSet": "Chemin non défini",
     "about": "À propos",
     "appVersion": "Version de l'app",
-    "debugMode": "Debug Mode",
-    "debugModeDescription": "Enable debug mode to collect detailed logs for troubleshooting. These logs can be exported and sent to developers for support.",
-    "debugModeEnabled": "Debug mode is enabled",
-    "debugModeDisabled": "Debug mode is disabled",
-    "debugModeWarning": "Debug mode will collect detailed information about application usage. Only enable if needed for troubleshooting.",
     "asteriskColor": "Unsaved changes indicator color",
     "resetDefault": "Reset to default"
   },

@@ -13,6 +13,14 @@
     "installing": "Встановлення оновлення...",
     "upToDate": "Актуальна версія"
   },
+  "feedback": {
+    "title": "Зворотний зв'язок",
+    "help": {
+      "part1": "Якщо ви знайшли проблему або маєте питання, будь ласка ",
+      "linkText": "створіть звернення",
+      "part2": ". У деяких випадках ми можемо попросити додати логи. Експортувати їх можна нижче:"
+    }
+  },
   "descriptions": {
     "common": "Загальні утиліти та інструменти",
     "items": "Керування та аналіз предметів",
@@ -197,11 +205,6 @@
     "pathNotSet": "Шлях не задано",
     "about": "Про застосунок",
     "appVersion": "Версія застосунку",
-    "debugMode": "Debug Mode",
-    "debugModeDescription": "Enable debug mode to collect detailed logs for troubleshooting. These logs can be exported and sent to developers for support.",
-    "debugModeEnabled": "Debug mode is enabled",
-    "debugModeDisabled": "Debug mode is disabled",
-    "debugModeWarning": "Debug mode will collect detailed information about application usage. Only enable if needed for troubleshooting.",
     "asteriskColor": "Unsaved changes indicator color",
     "resetDefault": "Reset to default"
   },
