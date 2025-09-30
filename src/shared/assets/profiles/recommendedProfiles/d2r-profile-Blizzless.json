@@ -3046,7 +3046,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Breast Plate",
-            "ruRU": "[fs]кираса",
+            "ruRU": "[ms]нагрудник",
             "zhTW": "胸鎧",
             "deDE": "[ms]Brustpanzer",
             "esES": "[fs]Coraza blindada",
@@ -3095,7 +3095,7 @@
             "esMX": "[ms]Gran hauberto",
             "jaJP": "グレート・ホーバーク",
             "ptBR": "[fs]Grande Cota de Malha",
-            "zhCN": "大链甲衫"
+            "zhCN": "大半身甲"
           }
         },
         "chain_mail": {
@@ -3114,7 +3114,7 @@
             "esMX": "[fs]Cota de malla",
             "jaJP": "チェイン・メイル",
             "ptBR": "[fs]Cota de Malha",
-            "zhCN": "锁子甲"
+            "zhCN": "锁链甲"
           }
         },
         "mesh_armor": {
@@ -3437,7 +3437,7 @@
             "esMX": "[ms]Pellejo de vermis",
             "jaJP": "ウィルムハイド",
             "ptBR": "[ms]Couro de Serpe",
-            "zhCN": "龙皮"
+            "zhCN": "龙皮甲"
           }
         },
         "light_plate": {
@@ -3540,7 +3540,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Hellforge Plate",
-            "ruRU": "[pl]латы из Адской кузни",
+            "ruRU": "[pl]латы из адской кузни",
             "zhTW": "地獄鍛甲",
             "deDE": "[fs]Höllenschmiedenplattenrüstung",
             "esES": "[fs]Coraza de la Fragua del Infierno",
@@ -3768,7 +3768,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Balrog Skin",
-            "ruRU": "[fs]Балрогова шкура",
+            "ruRU": "[fs]балрогова шкура",
             "zhTW": "炎魔皮板甲",
             "deDE": "[ns]Balrogleder",
             "esES": "[fs]Piel de Balrog",
@@ -4155,7 +4155,7 @@
             "frFR": "[mp]Manchons lourds",
             "itIT": "[mp]Bracciali Pesanti",
             "koKR": "헤비 브레이서",
-            "plPL": "[ms]Ciężkie Karwasze",
+            "plPL": "[nl]Ciężkie Karwasze",
             "esMX": "[mp]Brazales pesados",
             "jaJP": "ヘビーブレイサー",
             "ptBR": "[fp]Braçadeiras Pesadas",
@@ -4566,7 +4566,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "            Diadem            ",
-            "ruRU": "            Диадема            ",
+            "ruRU": "[fs]            Диадема            ",
             "zhTW": "權冠",
             "deDE": "[ns]Diadem",
             "esES": "[fs]Diadema",
@@ -4881,7 +4881,7 @@
             "esMX": "[fs]Cabeza demoníaca",
             "jaJP": "デーモンヘッド",
             "ptBR": "[fs]Cabeça Demoníaca",
-            "zhCN": "恶魔头"
+            "zhCN": "恶魔面甲"
           }
         },
         "skull_cap": {
@@ -4927,7 +4927,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Hydraskull",
-            "ruRU": "[ms]гидровый череп",
+            "ruRU": "[ms]череп гидры",
             "zhTW": "多頭蛇顱盔",
             "deDE": "[ms]Hydraschädel",
             "esES": "[ms]Cráneo de hidra",
@@ -5364,7 +5364,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Griffon Headdress",
-            "ruRU": "[ms]грифоний головной убор",
+            "ruRU": "[fs]грифонья маска",
             "zhTW": "獅鷲獸頭飾",
             "deDE": "[ms]Greifenkopfschmuck",
             "esES": "[ms]Tocado de grifo",
@@ -5573,7 +5573,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Javelin",
-            "ruRU": "[ms]дротик",
+            "ruRU": "[ms]ассегай",
             "zhTW": "標槍",
             "deDE": "[ms]Wurfspieß",
             "esES": "[fs]Jabalina",
@@ -5592,7 +5592,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "War Javelin",
-            "ruRU": "[ns]воинское копьецо",
+            "ruRU": "[ms]воинский ассегай",
             "zhTW": "征戰標槍",
             "deDE": "[ms]Kriegswurfspieß",
             "esES": "[fs]Jabalina de guerra",
@@ -5611,7 +5611,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Hyperion Javelin",
-            "ruRU": "[ms]гиперионский дротик",
+            "ruRU": "[ms]гиперионский ассегай",
             "zhTW": "亥伯龍標槍",
             "deDE": "[ms]Hyperionwurfspieß",
             "esES": "[fs]Jabalina de Hiperión",
@@ -5630,7 +5630,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Maiden Javelin",
-            "ruRU": "[ms]девичий дротик",
+            "ruRU": "[ms]девичий ассегай",
             "zhTW": "女戰標槍",
             "deDE": "[ms]Jungfernwurfspieß",
             "esES": "[fs]Jabalina doncella",
@@ -5649,7 +5649,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Ceremonial Javelin",
-            "ruRU": "[ms]ритуальный дротик",
+            "ruRU": "[ms]ритуальный ассегай",
             "zhTW": "儀禮標槍",
             "deDE": "[ms]Zeremonialwurfspieß",
             "esES": "[fs]Jabalina ceremonial",
@@ -5668,7 +5668,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Matriarchal Javelin",
-            "ruRU": "[ms]матриарший дротик",
+            "ruRU": "[ms]матриарший ассегай",
             "zhTW": "女傑標槍",
             "deDE": "[ms]Matriarchenwurfspieß",
             "esES": "[fs]Jabalina matriarcal",
@@ -5782,7 +5782,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Balrog Spear",
-            "ruRU": "[ns]Балрогово копье",
+            "ruRU": "[ns]балрогово копье",
             "zhTW": "炎魔長矛",
             "deDE": "[ms]Balrogspeer",
             "esES": "[fs]Lanza de Balrog",
@@ -6238,7 +6238,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Blade Barrier",
-            "ruRU": "[fs]клинковая ограда",
+            "ruRU": "[ms]клинковый барьер",
             "zhTW": "刀刃刺盾",
             "deDE": "[fs]Klingenbarriere",
             "esES": "[fs]Barrera tajante",
@@ -6509,7 +6509,7 @@
             "deDE": "[fs]Akaranrondache",
             "esES": "[fs]Rodela de Akaran",
             "frFR": "[fs]Rondache d’Akaran",
-            "itIT": "[ms]Rondaccia di Akarat",
+            "itIT": "[fs]Rondaccia di Akarat",
             "koKR": "아카란 론다쉬",
             "plPL": "[fs]Akarańska Rodela",
             "esMX": "[fs]Rodela de Akara",
@@ -6553,7 +6553,7 @@
             "esMX": "[fs]Adarga",
             "jaJP": "タージ",
             "ptBR": "[fs]Targa",
-            "zhCN": "臂盾"
+            "zhCN": "小盾"
           }
         },
         "akaran_targe": {
@@ -6566,7 +6566,7 @@
             "deDE": "Akarantarge",
             "esES": "[fs]Adarga de Akaran",
             "frFR": "[fs]Targe d’Akaran",
-            "itIT": "[ms]Targa di Akarat",
+            "itIT": "[fs]Targa di Akarat",
             "koKR": "아카란 타아지",
             "plPL": "[fs]Akarańska Tarża",
             "esMX": "[fs]Adarga de Akara",
@@ -6599,7 +6599,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Demon Head",
-            "ruRU": "[fs]демонская голова",
+            "ruRU": "[fs]голова демона",
             "zhTW": "惡魔頭顱",
             "deDE": "[ms]Dämonenkopf",
             "esES": "[fs]Cabeza de demonio",
@@ -6656,7 +6656,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Gargoyle Head",
-            "ruRU": "[fs]горгулья голова",
+            "ruRU": "[fs]голова горгульи",
             "zhTW": "石像鬼頭顱",
             "deDE": "[ms]Gargoylekopf",
             "esES": "[fs]Cabeza de gárgola",
@@ -6770,7 +6770,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Unraveller Head",
-            "ruRU": "[fs]разматывателева голова",
+            "ruRU": "[fs]голова развоплотителя",
             "zhTW": "解繃者頭顱",
             "deDE": "[ms]Zersetzerkopf",
             "esES": "[fs]Cabeza de desenredador",
@@ -6800,7 +6800,7 @@
             "esMX": "[ms]Trofeo de sacristán",
             "jaJP": "セクストン・トロフィー",
             "ptBR": "[ms]Troféu Sexton",
-            "zhCN": "教堂司事法器"
+            "zhCN": "司事法器"
           }
         },
         "overseer_skull": {
@@ -6827,7 +6827,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Zombie Head",
-            "ruRU": "[fs]зомбякова голова",
+            "ruRU": "[fs]голова зомби",
             "zhTW": "殭屍頭顱",
             "deDE": "[ms]Zombiekopf",
             "esES": "[fs]Cabeza de zombi",
@@ -6865,7 +6865,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Hellspawn Skull",
-            "ruRU": "[ms]череп отродья Тьмы",
+            "ruRU": "[ms]череп отродья тьмы",
             "zhTW": "地獄爪牙顱骨",
             "deDE": "[ms]Höllenbrutschädel",
             "esES": "[ms]Cráneo del averno",
@@ -6990,7 +6990,7 @@
             "esMX": "[fs]Decapitadora",
             "jaJP": "ディキャピテイター",
             "ptBR": "[ms]Decapitador",
-            "zhCN": "刽子手之斧"
+            "zhCN": "斩首斧"
           }
         },
         "broad_axe": {
@@ -7028,7 +7028,7 @@
             "esMX": "[fs]Hacha barbada",
             "jaJP": "ビアデッド・アックス",
             "ptBR": "[ms]Machado Farpado",
-            "zhCN": "芒刺斧"
+            "zhCN": "钩斧"
           }
         },
         "silver_edged_axe": {
@@ -7104,7 +7104,7 @@
             "esMX": "[fs]Hacha de Ettin",
             "jaJP": "エッティン・アックス",
             "ptBR": "[ms]Machado de Ettin",
-            "zhCN": "双头巨人斧"
+            "zhCN": "双头斧"
           }
         },
         "giant_axe": {
@@ -7435,7 +7435,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Berserker Axe",
-            "ruRU": "Секира берсерка",
+            "ruRU": "[fs]секира берсерка",
             "zhTW": "狂戰斧",
             "deDE": "[fs]Berserkeraxt",
             "esES": "[fs]Hacha de berserker",
@@ -7446,7 +7446,7 @@
             "esMX": "[fs]Hacha del vesánico",
             "jaJP": "バーサーカー・アックス",
             "ptBR": "[ms]Machado do Berserker",
-            "zhCN": "狂战士战斧"
+            "zhCN": "狂战斧"
           }
         },
         "club": {
@@ -7492,7 +7492,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Truncheon",
-            "ruRU": "[ms]буздыган",
+            "ruRU": "[fs]укрепленная дубинка",
             "zhTW": "打擊棍",
             "deDE": "[ms]Schlagstock",
             "esES": "[fs]Tranca",
@@ -7541,7 +7541,7 @@
             "esMX": "[ms]Garrote con púas",
             "jaJP": "バーブド・クラブ",
             "ptBR": "[fs]Clava Farpada",
-            "zhCN": "钉刺尖棒"
+            "zhCN": "尖刺棒"
           }
         },
         "tyrant_club": {
@@ -7725,7 +7725,7 @@
             "deDE": "[fs]Mithrilspitze",
             "esES": "[fs]Puya de mithril",
             "frFR": "[ms]Poinçon de Mithril",
-            "itIT": "[fs]Punteruolo di Mithril",
+            "itIT": "[ms]Punteruolo di Mithril",
             "koKR": "미스릴 포인트",
             "plPL": "[ms]Mithrilowy Szpikulec",
             "esMX": "[fs]Punta de mithril",
@@ -7872,7 +7872,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Martel de Fer",
-            "ruRU": "[ms]мартель-де-фер",
+            "ruRU": "[ms]Мартель-де-фер",
             "zhTW": "長柄戰鎚",
             "deDE": "[ms]Eisenhammer",
             "esES": "[ms]Martel de fer",
@@ -7902,7 +7902,7 @@
             "esMX": "[ms]Mazo de rayo",
             "jaJP": "サンダー・モール",
             "ptBR": "[ms]Malho Trovejante",
-            "zhCN": "雷霆之锤"
+            "zhCN": "雷锤"
           }
         },
         "maul": {
@@ -8143,7 +8143,7 @@
             "deDE": "Axthände",
             "esES": "[fp]Manos de hachuela",
             "frFR": "[mp]Gants tranchants",
-            "itIT": "Mani d'Accetta",
+            "itIT": "[fp]Mani d'Accetta",
             "koKR": "해칫 핸즈",
             "plPL": "[nl]Naręczne Topory",
             "esMX": "[fp]Manos de hachuela",
@@ -8252,7 +8252,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Scissors Katar",
-            "ruRU": "[ms]катар-ножницы",
+            "ruRU": "[pl]катар-ножницы",
             "zhTW": "剪刃",
             "deDE": "[ms]Scherenkatar",
             "esES": "[ms]Katar tijera",
@@ -8271,7 +8271,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Scissors Quhab",
-            "ruRU": "[ms]кухаб-ножницы",
+            "ruRU": "[pl]кухаб-ножницы",
             "zhTW": "格鬥剪刃",
             "deDE": "[ns]Scherenquhab",
             "esES": "[ms]Quhab tijera",
@@ -8290,7 +8290,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Scissors Suwayyah",
-            "ruRU": "[fs]сувайя-ножницы",
+            "ruRU": "[pl]сувайя-ножницы",
             "zhTW": "穿擊剪刃",
             "deDE": "[ns]Scherensuwayyah",
             "esES": "[ms]Suwayyah tijera",
@@ -8415,7 +8415,7 @@
             "esMX": "[ms]Flagelo",
             "jaJP": "スコージ",
             "ptBR": "[ms]Flagelo",
-            "zhCN": "天罚之锤"
+            "zhCN": "鞭锤"
           }
         },
         "mace": {
@@ -8575,7 +8575,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Ogre Axe",
-            "ruRU": "[ms]устрашающий топор",
+            "ruRU": "[ms]топор людоеда",
             "zhTW": "巨魔斧",
             "deDE": "[fs]Ogeraxt",
             "esES": "[fs]Hacha de ogro",
@@ -8681,7 +8681,7 @@
             "esMX": "[fs]Partesana",
             "jaJP": "パルチザン",
             "ptBR": "[fs]Partesana",
-            "zhCN": "游侠戟"
+            "zhCN": "双刃矛戟"
           }
         },
         "cryptic_axe": {
@@ -8727,7 +8727,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Bill",
-            "ruRU": "[fs]кирка",
+            "ruRU": "[ms]билл",
             "zhTW": "長柄鍥",
             "deDE": "[fs]Pinne",
             "esES": "[ms]Hocino",
@@ -8757,7 +8757,7 @@
             "esMX": "[fs]Archa colosal",
             "jaJP": "コロッサス・ヴォウジェ",
             "ptBR": "[fs]Voulge Colossal",
-            "zhCN": "巨型斧戟"
+            "zhCN": "巨神戟"
           }
         },
         "war_scythe": {
@@ -8803,7 +8803,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Giant Thresher",
-            "ruRU": "[ms]огромный цеп",
+            "ruRU": "[ms]гигантский жнец",
             "zhTW": "巨型斬鐮",
             "deDE": "[ms]Riesendrescher",
             "esES": "[fs]Trilladora gigante",
@@ -8841,7 +8841,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Thresher",
-            "ruRU": "[ms]цеп",
+            "ruRU": "[ms]жнец",
             "zhTW": "斬鐮",
             "deDE": "[ms]Drescher",
             "esES": "[fs]Trilladora",
@@ -8879,7 +8879,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Holy Water Sprinkler",
-            "ruRU": "[ms]источник святой воды",
+            "ruRU": "[ns]кропило",
             "zhTW": "聖水禮杖",
             "deDE": "[ms]Weihwasserstab",
             "esES": "[ms]Hisopo de agua bendita",
@@ -8890,7 +8890,7 @@
             "esMX": "[ms]Rociador de agua bendita",
             "jaJP": "ホーリー・セプター",
             "ptBR": "[ms]Aspersor de Água Benta",
-            "zhCN": "圣水喷杖"
+            "zhCN": "圣水礼杖"
           }
         },
         "seraph_rod": {
@@ -9080,7 +9080,7 @@
             "esMX": "[fs]Atrapahombres",
             "jaJP": "マンキャッチャー",
             "ptBR": "[fs]Apanhadora",
-            "zhCN": "捕人枪"
+            "zhCN": "捕人叉"
           }
         },
         "maiden_pike": {
@@ -9335,7 +9335,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Yari",
-            "ruRU": "[ms]яри",
+            "ruRU": "[ns]яри",
             "zhTW": "三尖槍",
             "deDE": "[fs]Yari",
             "esES": "[ms]Yari",
@@ -9650,7 +9650,7 @@
             "esMX": "[ms]Báculo",
             "jaJP": "ウォーキング・スティック",
             "ptBR": "[fs]Bengala",
-            "zhCN": "拐杖"
+            "zhCN": "手杖"
           }
         },
         "war_staff": {
@@ -9849,7 +9849,7 @@
           "locales": {
             "enUS": "Dacian Falx",
             "ruRU": "[ms]дакийский фалькс",
-            "zhTW": "達西安鐮刀",
+            "zhTW": "達西安長刀",
             "deDE": "[fs]dakische Sichel",
             "esES": "[fs]Falx dacia",
             "frFR": "[fs]Faux de Dacian",
@@ -10011,7 +10011,7 @@
             "esMX": "[fs]Espada flamígera",
             "jaJP": "フランベルジュ",
             "ptBR": "[fs]Flambérgia",
-            "zhCN": "蛇形剑"
+            "zhCN": "焰刃剑"
           }
         },
         "zweihander": {
@@ -10049,7 +10049,7 @@
             "esMX": "[fs]Espada colosal",
             "jaJP": "コロッサス・ソード",
             "ptBR": "[fs]Espada Colossal",
-            "zhCN": "巨神之剑"
+            "zhCN": "巨神剑"
           }
         },
         "giant_sword": {
@@ -10095,7 +10095,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Balrog Blade",
-            "ruRU": "[ms]Балрогов клинок",
+            "ruRU": "[ms]балрогов клинок",
             "zhTW": "炎魔之刃",
             "deDE": "[fs]Balrogklinge",
             "esES": "[fs]Espada de Balrog",
@@ -10163,7 +10163,7 @@
             "esMX": "[fs]Hoja colosal",
             "jaJP": "コロッサス・ブレイド",
             "ptBR": "[fs]Lâmina Colossal",
-            "zhCN": "巨神之刃"
+            "zhCN": "巨神刃"
           }
         },
         "long_sword": {
@@ -10551,7 +10551,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Lich Wand",
-            "ruRU": "[ms]некромантский жезл",
+            "ruRU": "[ms]жезл лича",
             "zhTW": "巫妖魔杖",
             "deDE": "[ms]Lichstab",
             "esES": "[fs]Vara de exánime",
@@ -11265,7 +11265,7 @@
             "esMX": "[ms]Arco de cuerno",
             "jaJP": "スタッグ・ボウ",
             "ptBR": "[ms]Arco Cervídeo",
-            "zhCN": "猎鹿之弓"
+            "zhCN": "猎鹿弓"
           }
         },
         "ashwood_bow": {
@@ -11417,7 +11417,7 @@
             "esMX": "[fs]Ballesta colosal",
             "jaJP": "コロッサス・クロスボウ",
             "ptBR": "[fs]Besta Colossal",
-            "zhCN": "神臂弩"
+            "zhCN": "巨神弩"
           }
         },
         "light_crossbow": {
@@ -11672,7 +11672,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Jared's Stone",
-            "ruRU": "Камень Джареда",
+            "ruRU": "[ms]камень Джареда",
             "zhTW": "傑瑞德之石",
             "deDE": "Jareds Stein",
             "esES": "Piedra de Jared",
@@ -11881,7 +11881,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Hurlbat",
-            "ruRU": "[ms]метательная бита",
+            "ruRU": "[ms]метательный топор",
             "zhTW": "投斧",
             "deDE": "[fs]Saufeder",
             "esES": "[ms]Hurlbat",
@@ -11938,7 +11938,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "War Dart",
-            "ruRU": "[ms]воинский дротик",
+            "ruRU": "[ms]воинский кинжал",
             "zhTW": "征戰飛鏢",
             "deDE": "[ms]Kriegspfeil",
             "esES": "[ms]Dardo de guerra",
@@ -11995,7 +11995,7 @@
           "showDifficultyClassMarker": false,
           "locales": {
             "enUS": "Battle Dart",
-            "ruRU": "[ms]боевой дротик",
+            "ruRU": "[ms]боевой кинжал",
             "zhTW": "戰鬥飛鏢",
             "deDE": "[ms]Kurzpfeil",
             "esES": "[ms]Dardo de batalla",
