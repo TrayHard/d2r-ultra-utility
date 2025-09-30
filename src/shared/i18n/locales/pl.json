@@ -368,7 +368,8 @@
       "title": "Potwierdź zastosowanie",
       "message": "Czy na pewno chcesz zastosować zmiany do plików? Tego działania nie można cofnąć.",
       "cancel": "Anuluj",
-      "confirm": "Zastosuj"
+      "confirm": "Zastosuj",
+      "saveToProfile": "Zapisz te zmiany w profilu"
     }
   },
   "files": {

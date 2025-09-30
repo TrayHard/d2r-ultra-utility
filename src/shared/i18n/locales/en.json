@@ -433,7 +433,8 @@
       "title": "Confirm Apply",
       "message": "Are you sure you want to apply changes to files? This action cannot be undone.",
       "cancel": "Cancel",
-      "confirm": "Apply"
+      "confirm": "Apply",
+      "saveToProfile": "Save these changes to the profile"
     }
   },
   "profiles": {

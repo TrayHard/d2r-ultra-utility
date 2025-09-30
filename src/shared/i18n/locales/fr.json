@@ -368,7 +368,8 @@
       "title": "Confirmer l'application",
       "message": "Êtes-vous sûr de vouloir appliquer les modifications aux fichiers ? Cette action est irréversible.",
       "cancel": "Annuler",
-      "confirm": "Appliquer"
+      "confirm": "Appliquer",
+      "saveToProfile": "Enregistrer ces modifications dans le profil"
     }
   },
   "files": {
@@ -403,7 +404,7 @@
       "itemsApplied": "Items settings applied successfully"
     },
     "error": {
-      "writePermissionSuggestion": "Impossible d’écrire le fichier. Exécutez l’application en tant qu’administrateur ou déplacez le jeu dans un dossier avec des droits d’écriture.",
+      "writePermissionSuggestion": "Impossible d'écrire le fichier. Exécutez l'application en tant qu'administrateur ou déplacez le jeu dans un dossier avec des droits d'écriture.",
       "fileLoadError": "File loading error",
       "pathNotFound": "Game path not found in settings",
       "unknownError": "Unknown error while reading files",
