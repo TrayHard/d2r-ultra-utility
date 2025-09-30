@@ -421,7 +421,8 @@
       "title": "Anwendung bestätigen",
       "message": "Sicher, dass Änderungen in Dateien angewendet werden? Diese Aktion kann nicht rückgängig gemacht werden.",
       "cancel": "Abbrechen",
-      "confirm": "Anwenden"
+      "confirm": "Anwenden",
+      "saveToProfile": "Diese Änderungen im Profil speichern"
     }
   },
   "profiles": {

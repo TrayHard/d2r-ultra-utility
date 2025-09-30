@@ -30,6 +30,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
   >(null);
   const [isBulkLoading, setIsBulkLoading] = useState(false);
   const [isReadingCurrentLoading, setIsReadingCurrentLoading] = useState(false);
+  const [saveToProfile, setSaveToProfile] = useState(true);
 
   // Хуки для работы с настройками
   const {
@@ -296,6 +297,10 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     t,
   ]);
 
+  const allProfiles = useMemo(() => [...immutableProfiles, ...profiles], [immutableProfiles, profiles]);
+  const activeProfile = useMemo(() => allProfiles.find((p: any) => p.id === activeProfileId), [allProfiles, activeProfileId]);
+  const isActiveProfileImmutable = !!activeProfile?.isImmutable;
+
   const executeApplyAll = useCallback(async () => {
     logger.info(
       "Starting aggregated apply operation",
@@ -303,12 +308,19 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       "executeApplyAll"
     );
     await applyAllChanges();
+    try {
+      if (saveToProfile && activeProfileId && !isActiveProfileImmutable) {
+        await saveProfile(activeProfileId, settings);
+      }
+    } catch (e) {
+      // swallow errors on optional profile save to not block applying to game files
+    }
     logger.info(
       "Completed aggregated apply operation",
       undefined,
       "executeApplyAll"
     );
-  }, [applyAllChanges, logger]);
+  }, [applyAllChanges, logger, saveToProfile, activeProfileId, isActiveProfileImmutable, saveProfile, settings]);
 
   const handleConfirm = async () => {
     const action = confirmAction;
@@ -326,10 +338,27 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       }
     } else if (action === "applyCurrent") {
       await applyChanges();
+      try {
+        if (saveToProfile && activeProfileId && !isActiveProfileImmutable) {
+          await saveProfile(activeProfileId, settings);
+        }
+      } catch (e) {
+        // swallow errors on optional profile save
+      }
     }
   };
 
   const handleCancel = () => setConfirmAction(null);
+
+  // Reset checkbox default state on modal open depending on profile mutability
+  React.useEffect(() => {
+    if (confirmAction === "applyAll" || confirmAction === "applyCurrent") {
+      setSaveToProfile(!isActiveProfileImmutable);
+    }
+    if (confirmAction === null) {
+      setSaveToProfile(true);
+    }
+  }, [confirmAction, isActiveProfileImmutable]);
 
   const tabs: TabItem[] = [
     { id: "common", label: t("tabs.common") },
@@ -538,6 +567,20 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
                 "Вы уверены, что хотите прочитать настройки из файлов? Текущие несохраненные изменения в настройках могут быть перезаписаны."
               : t("runePage.confirmModal.message")}
           </p>
+          {(confirmAction === "applyAll" || confirmAction === "applyCurrent") && (
+            <label className="flex items-center gap-2 select-none">
+              <input
+                type="checkbox"
+                className="w-4 h-4"
+                checked={saveToProfile && !isActiveProfileImmutable}
+                onChange={(e) => setSaveToProfile(e.target.checked)}
+                disabled={isActiveProfileImmutable}
+              />
+              <span className={`text-sm ${isDarkTheme ? "text-gray-200" : "text-gray-800"}`}>
+                {t("runePage.confirmModal.saveToProfile")}
+              </span>
+            </label>
+          )}
           <div className="flex justify-end gap-2">
             <Button
               variant="secondary"

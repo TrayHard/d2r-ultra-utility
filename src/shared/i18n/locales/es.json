@@ -368,7 +368,8 @@
       "title": "Confirmar aplicación",
       "message": "¿Seguro que deseas aplicar cambios a los archivos? Esta acción no se puede deshacer.",
       "cancel": "Cancelar",
-      "confirm": "Aplicar"
+      "confirm": "Aplicar",
+      "saveToProfile": "Guardar estos cambios en el perfil"
     }
   },
   "files": {
