@@ -338,7 +338,7 @@ function App() {
     <div className="h-screen flex flex-col pt-9 bg-gradient-to-tr from-gray-900/50 via-gray-800 to-gray-900">
       <CustomTitleBar />
       <main className="flex-1 flex flex-col justify-center items-center text-center p-8 mt-9">
-        <div className="w-full flex justify-end mb-4">
+        <div className="w-full flex justify-center mb-4">
           <StartupLanguageSwitch isDarkTheme={true} />
         </div>
         {/* Прогрессбар показываем когда идет поиск */}
