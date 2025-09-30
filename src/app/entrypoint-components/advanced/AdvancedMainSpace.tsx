@@ -29,6 +29,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     null | "readAll" | "applyAll" | "readCurrent" | "applyCurrent"
   >(null);
   const [isBulkLoading, setIsBulkLoading] = useState(false);
+  const [isReadingCurrentLoading, setIsReadingCurrentLoading] = useState(false);
 
   // Хуки для работы с настройками
   const {
@@ -309,13 +310,23 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     );
   }, [applyAllChanges, logger]);
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     const action = confirmAction;
     setConfirmAction(null);
-    if (action === "readAll") executeReadAll();
-    else if (action === "applyAll") executeApplyAll();
-    else if (action === "readCurrent") readFromFiles();
-    else if (action === "applyCurrent") applyChanges();
+    if (action === "readAll") {
+      await executeReadAll();
+    } else if (action === "applyAll") {
+      await executeApplyAll();
+    } else if (action === "readCurrent") {
+      try {
+        setIsReadingCurrentLoading(true);
+        await readFromFiles();
+      } finally {
+        setIsReadingCurrentLoading(false);
+      }
+    } else if (action === "applyCurrent") {
+      await applyChanges();
+    }
   };
 
   const handleCancel = () => setConfirmAction(null);
@@ -425,7 +436,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
         error ? "grid-rows-[auto_auto_44px_1fr]" : "grid-rows-[auto_44px_1fr]"
       } ${isDarkTheme ? "bg-gray-900" : "bg-gray-50"}`}
     >
-      {isApplyAllLoading && (
+      {(isApplyAllLoading || isBulkLoading || isReadingCurrentLoading) && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm"
           style={{
@@ -441,7 +452,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
                 isDarkTheme ? "text-white" : "text-gray-900"
               }`}
             >
-              {t("basicMainSpace.applying")}
+              {isApplyAllLoading ? t("basicMainSpace.applying") : t("common.loading")}
             </div>
           </div>
         </div>
