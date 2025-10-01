@@ -1027,7 +1027,8 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         if (!byNameLocal.has(key)) byNameLocal.set(key, p);
       });
 
-      const localResult: Profile[] = [];
+      // Применяем локальные ассеты
+      let localResult: Profile[] = [];
       const defaultKey = normalize("Default");
       if (byNameLocal.has(defaultKey)) {
         const src = byNameLocal.get(defaultKey)!;
@@ -1041,6 +1042,27 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         localResult.push(buildProfile(src, idx, { isDefault: false }));
         idx++;
       }
+
+      // 1.1) Применяем локальные оверрайды (если пользователь обновлял immutable ранее)
+      try {
+        const rawOverrides = localStorage.getItem(STORAGE_KEYS.IMMUTABLE_OVERRIDES);
+        if (rawOverrides) {
+          const overrides = JSON.parse(rawOverrides) as Record<string, { version?: string; settings?: AppSettings }>;
+          const norm = (v?: string) => (v || "").trim().toLowerCase();
+          localResult = localResult.map((p) => {
+            const ov = overrides[norm(p.name)];
+            if (ov && ov.settings && typeof ov.settings === "object") {
+              return {
+                ...p,
+                settings: ov.settings,
+                version: typeof ov.version === "string" && /^\d+\.\d+$/.test(ov.version) ? ov.version : p.version,
+                modifiedAt: new Date().toISOString(),
+              } as Profile;
+            }
+            return p;
+          });
+        }
+      } catch { }
 
       setImmutableProfiles(localResult);
       logger.info("Загружены неизменяемые профили (локальные ассеты)", {
@@ -1134,6 +1156,19 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
           : p
       );
       setImmutableProfiles(updatedList);
+
+      // Сохраняем оверрайд в localStorage, чтобы изменения переживали перезапуск
+      try {
+        const key = STORAGE_KEYS.IMMUTABLE_OVERRIDES;
+        const raw = localStorage.getItem(key);
+        const overrides = raw ? (JSON.parse(raw) as Record<string, { version?: string; settings?: AppSettings }>) : {};
+        const norm = (v?: string) => (v || "").trim().toLowerCase();
+        overrides[norm(current.name)] = {
+          version: remote.version,
+          settings: remote.settings as AppSettings,
+        };
+        localStorage.setItem(key, JSON.stringify(overrides));
+      } catch { }
       return { from, to, updated: true } as const;
     },
     [immutableProfiles, immutableRemoteByName]

@@ -8,25 +8,7 @@ interface StartupLanguageSwitchProps {
   className?: string;
 }
 
-const mapAppLanguageToI18n = (appLanguage?: string) => {
-  switch (appLanguage) {
-    case "ruRU":
-      return "ru";
-    case "deDE":
-      return "de";
-    case "ukUA":
-      return "uk";
-    case "plPL":
-      return "pl";
-    case "esES":
-      return "es";
-    case "frFR":
-      return "fr";
-    case "enUS":
-    default:
-      return "en";
-  }
-};
+// removed unused mapAppLanguageToI18n
 
 const mapI18nToAppLanguage = (lng?: string) => {
   const short = (lng || "en").split("-")[0];
@@ -90,7 +72,7 @@ const StartupLanguageSwitch: React.FC<StartupLanguageSwitchProps> = ({
           JSON.stringify({ appLanguage: appLang })
         );
       }
-    } catch {}
+    } catch { }
   };
 
   return (
