@@ -6,7 +6,7 @@
     "runes": {
       "el": {
         "mode": "manual",
-        "isHighlighted": false,
+        "isHighlighted": true,
         "autoSettings": {
           "numbering": {
             "show": false,

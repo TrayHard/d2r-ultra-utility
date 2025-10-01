@@ -174,6 +174,7 @@ export const STORAGE_KEYS = {
   FIRST_RUN: "d2r-first-run",
   DEBUG_MODE: "isDebugMode",
   ADMIN_MODE: "isAdmin",
+  IMMUTABLE_OVERRIDES: "d2r-immutable-overrides",
 } as const;
 
 // Ключи для sessionStorage

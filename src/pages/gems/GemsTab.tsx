@@ -17,7 +17,7 @@ const GemsTab: React.FC<GemsTabProps> = ({ isDarkTheme }) => {
     updateGemLevelSettings,
   } = useSettings();
   const selectedLocales = getSelectedLocales();
-  const { baseline } = useUnsavedChanges();
+  useUnsavedChanges();
 
   // Локальные состояния для коллапсов
   const [collapseStates, setCollapseStates] = useState({
