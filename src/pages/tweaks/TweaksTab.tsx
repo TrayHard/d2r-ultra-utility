@@ -77,14 +77,14 @@ const TweaksTab: React.FC<TweaksTabProps> = ({ isDarkTheme }) => {
 
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <label
-              className={`text-sm font-medium ${
-                isDarkTheme ? "text-gray-300" : "text-gray-700"
-              }`}
-            >
-              {t("tweaksPage.encyclopediaLanguage.label") ||
-                "Язык внутриигровой энциклопедии"}
-            </label>
+          <label
+            className={`text-sm font-medium ${
+              isDarkTheme ? "text-gray-300" : "text-gray-700"
+            }`}
+          >
+            {t("tweaksPage.encyclopediaLanguage.label") ||
+              "Язык внутриигровой энциклопедии"}
+          </label>
             {hasEncyclopediaLanguageChanged && <UnsavedAsterisk size={0.55} />}
           </div>
           <select

@@ -3,12 +3,18 @@ export class BitReader {
   public bits: Uint8Array;
   public offset = 0;
 
-  public static fromBuffer(buffer: Buffer): BitReader {
-    const view = new Uint8Array(
-      buffer.buffer,
-      buffer.byteOffset,
-      buffer.byteLength
-    );
+  // Accepts ArrayBuffer or any ArrayBufferView-like (e.g. Uint8Array, Node Buffer)
+  public static fromBuffer(
+    src: ArrayBuffer | { buffer: ArrayBufferLike; byteOffset: number; byteLength: number } | Uint8Array
+  ): BitReader {
+    let view: Uint8Array;
+    if (src instanceof ArrayBuffer) {
+      view = new Uint8Array(src);
+    } else if (src instanceof Uint8Array) {
+      view = src;
+    } else {
+      view = new Uint8Array(src.buffer, src.byteOffset, src.byteLength);
+    }
     const copy = view.slice();
     return new BitReader(copy.buffer);
   }
@@ -56,7 +62,7 @@ export class BitReader {
       const hasBit = (this.bits[this.offset + i] ?? 0) !== 0;
       if (hasBit) {
         const mask = (1 << bitIndex) & 0xff;
-        const prev = bytes.at(byteIndex) ?? 0;
+        const prev = byteIndex < bytes.length ? bytes[byteIndex] : 0;
         bytes[byteIndex] = prev | mask;
       }
       bitIndex++;
