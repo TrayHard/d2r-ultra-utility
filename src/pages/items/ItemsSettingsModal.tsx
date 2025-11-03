@@ -151,6 +151,7 @@ const ItemsSettingsModal: React.FC<ItemsSettingsModalProps> = ({
             )
           }
           hideToggle={true}
+          getBaselineGroup={(root) => root.items?.difficultyClassMarkers}
         />
 
         {/* Quality Prefixes */}
@@ -176,6 +177,7 @@ const ItemsSettingsModal: React.FC<ItemsSettingsModalProps> = ({
           onLocaleChange={(level, locale, value) =>
             handleItemsLocaleChange("qualityPrefixes", level, locale, value)
           }
+          getBaselineGroup={(root) => root.items?.qualityPrefixes}
         />
       </div>
     </Modal>

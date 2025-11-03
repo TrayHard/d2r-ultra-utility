@@ -4,6 +4,8 @@
     "items": "Предметы",
     "runes": "Руны",
     "gems": "Камни",
+    "stash": "Переименование сундука",
+    "tweaks": "Настройки игры",
     "other": "Прочее"
   },
   "update": {
@@ -12,6 +14,14 @@
     "downloading": "Скачивание обновления...",
     "installing": "Установка обновления...",
     "upToDate": "Актуальная версия"
+  },
+  "feedback": {
+    "title": "Обратная связь",
+    "help": {
+      "part1": "Если вы нашли какую-то проблему или у вас есть вопрос, пожалуйста ",
+      "linkText": "напишите нам",
+      "part2": ". В некоторых случаях мы можем попросить приложить логи. Взять их можно ниже:"
+    }
   },
   "descriptions": {
     "common": "Общие утилиты и инструменты",
@@ -159,6 +169,10 @@
   "common": {
     "loading": "Загрузка...",
     "applying": "Применение...",
+    "selectFile": "Выбрать файл",
+    "useThisFile": "Использовать этот файл",
+    "cancel": "Отмена",
+    "retryAutoSearch": "Повторить автопоиск D2R.exe",
     "themeSettings": "Настройки темы",
     "themeSettingsDescription": "Выберите предпочитаемую тему для приложения.",
     "darkTheme": "Темная тема",
@@ -180,6 +194,30 @@
     "noLanguagesSelected": "Дополнительные языки не выбраны",
     "settingsMovedMessage": "Настройки приложения теперь доступны через кнопку-шестерёнку в верхней панели."
   },
+  "startup": {
+    "searching": "Поиск D2R.exe...",
+    "notFoundAuto": "Папка с игрой не найдена автоматически. Пожалуйста, укажите путь к D2R.exe вручную!",
+    "selectedFile": "Выбранный файл:",
+    "noFilesFoundWith": "Файлы с именем \"{{name}}\" не найдены. Попробуйте другое имя!",
+    "foundCount": "Найден{{suffix}} {{count}} файл с именем \"{{name}}\":",
+    "manual": {
+      "enterFileFirst": "Сначала выберите файл!"
+    },
+    "pathSelection": {
+      "title": "Выберите путь к D2R.exe"
+    }
+  },
+  "progress": {
+    "searchingTitle": "Поиск файлов...",
+    "foundFiles": "Найден{{suffix}} {{count}} файл",
+    "processing": "Обработка..."
+  },
+  "pathSelector": {
+    "title": "Найдено несколько расположений D2R.exe!",
+    "subtitle": "Выберите, какое использовать:",
+    "selectThis": "Выбрать",
+    "cancelAndManual": "Отмена и ручной поиск"
+  },
   "buttons": {
     "changePath": "Сменить путь",
     "back": "Назад",
@@ -191,13 +229,10 @@
     "pathSettingsDescription": "Управление путем к папке с игрой D2R (конкретно к D2R.exe).",
     "currentPath": "Текущий путь",
     "pathNotSet": "Путь не задан",
-    "debugMode": "Режим отладки",
-    "debugModeDescription": "Включите режим отладки для сбора подробных логов для устранения неполадок. Эти логи можно экспортировать и отправить разработчикам для поддержки.",
-    "debugModeEnabled": "Режим отладки включен",
-    "debugModeDisabled": "Режим отладки выключен",
-    "debugModeWarning": "Режим отладки будет собирать подробную информацию об использовании приложения. Включайте только при необходимости устранения неполадок.",
     "about": "О приложении",
-    "appVersion": "Версия приложения"
+    "appVersion": "Версия приложения",
+    "asteriskColor": "Цвет маркера несохранённых изменений",
+    "resetDefault": "Сбросить по умолчанию"
   },
   "logs": {
     "title": "Логи отладки",
@@ -305,7 +340,12 @@
       "sizes": {
         "Normal": "Обычный",
         "Medium": "Средний",
-        "Large": "Большой"
+        "Large": "Большой",
+        "Exceptional": "Exceptional",
+        "Elite": "Elite",
+        "light": "Light",
+        "medium": "Medium",
+        "heavy": "Heavy"
       },
       "colors": {
         "white": "Белый",
@@ -398,7 +438,8 @@
       "title": "Подтверждение применения",
       "message": "Вы уверены, что хотите применить изменения к файлам? Это действие нельзя отменить. Не забудьте перезапустить игру после применения изменений.",
       "cancel": "Отмена",
-      "confirm": "Применить"
+      "confirm": "Применить",
+      "saveToProfile": "Сохранить эти изменения в профиле"
     }
   },
   "profiles": {
@@ -420,6 +461,10 @@
     "rename": "Переименовать",
     "delete": "Удалить",
     "cancel": "Отмена",
+    "tooltips": {
+      "saveDisabledImmutable": "Выбранный профиль нельзя редактировать",
+      "saveDisabledNoChanges": "Внесите изменения, чтобы сохранить их в профиле"
+    },
     "deleteConfirmation": "Вы уверены, что хотите удалить профиль \"{{name}}\"? Это действие нельзя отменить.",
     "saveConfirmation": "Сохранить изменения в профиль \"{{name}}\"?",
     "messages": {
@@ -716,7 +761,7 @@
       "cryptic_sword": "Таинственный меч",
       "crystal_sword": "Кристаллический меч",
       "crystalline_globe": "Кристальный шар",
-      "cudgel": "Утяжеленная дубина",
+      "cudgel": "Палица",
       "cuirass": "Кираса",
       "cutlass": "Абордажная сабля",
       "dacian_falx": "Дакийский фалькс",
@@ -1040,7 +1085,7 @@
       "tomb_wand": "Могильный жезл",
       "totemic_mask": "Тотемная маска",
       "tower_shield": "Осадный щит",
-      "trellised_armor": "Сетчатый доспех",
+      "trellised_armor": "Решётчатый доспех",
       "trident": "Трезубец",
       "troll_belt": "Троллий пояс",
       "troll_nest": "Троллье гнездо",
@@ -1048,7 +1093,7 @@
       "tulwar": "Тальвар",
       "tusk_sword": "Бивенный меч",
       "twin_axe": "Двойной топор",
-      "two_handed_sword": "Two-handed Sword",
+      "two_handed_sword": "Двуручный меч",
       "tyrant_club": "Тираническая дубина",
       "unearthed_wand": "Выкопанный жезл",
       "unraveller_head": "Голова развоплотителя",
@@ -1126,7 +1171,7 @@
       "blackleach_blade": "Клинок чернососа",
       "blackoak_shield": "Щит черного дуба",
       "blacktongue": "Черноуст",
-      "blade_of_ali_baba": "Blade Of Ali Baba",
+      "blade_of_ali_baba": "Клинок Али-Бабы",
       "bladebone": "Косторез",
       "bladebuckle": "Лезвийный ремень",
       "blastbark": "Ветвь разрушения",
@@ -1252,7 +1297,7 @@
       "hellplague": "Чумная погибель",
       "hellrack": "Адский пригвоздитель",
       "hellslayer": "Адский истребитель",
-      "herald_of_zakarum": "Herald Of Zakarum",
+      "herald_of_zakarum": "Глашатай Закарума",
       "hexfire": "Проклятое пламя",
       "highlord_s_wrath": "Гнев верховного лорда",
       "homunculus": "Гомункул",
@@ -1417,7 +1462,7 @@
       "the_eye_of_etlich": "Глаз Этлиха",
       "the_face_of_horror": "Лик ужаса",
       "the_fetid_sprinkler": "Окропитель нечисти",
-      "the_gavel_of_pain": "The Gavel Of Pain",
+      "the_gavel_of_pain": "Молот боли",
       "the_general_s_tan_do_li_ga": "Кистень генерала Тан До Ли Га",
       "the_gladiator_s_bane": "Погибель гладиатора",
       "the_gnasher": "Острый клык",
@@ -1681,6 +1726,39 @@
         "line3": "Также Вы можете отключить лутфильтры в любой момент (кнопка снизу)."
       },
       "close": "Закрыть"
+    },
+    "update": {
+      "tooltipUpdateProfile": "Обновить профиль с {{from}} до {{to}} версии",
+      "tooltipUpToDate": "Версия профиля актуальная ({{version}})",
+      "updatingOverlay": "Обновляем лутфильтр",
+      "updateActionAria": "Обновить профиль",
+      "upToDateAria": "Версия актуальная"
+    }
+  },
+  "tweaksPage": {
+    "encyclopediaEnabled": {
+      "label": "Включить внутриигровую энциклопедию"
+    },
+    "encyclopediaLanguage": {
+      "label": "Язык внутриигровой энциклопедии",
+      "options": {
+        "en": "Английский",
+        "ru": "Русский"
+      }
+    },
+    "skipIntroVideos": {
+      "label": "Выключить вступительные видеоролики"
+    },
+    "stashRename": {
+      "label": "Общие вкладки сундука"
+    },
+    "sharedStashFix": {
+      "label": "Оффлайн: фикс вкладок сундука",
+      "applyButton": "Применить фикс",
+      "revertButton": "Откатить",
+      "applied": "Фикс применен успешно",
+      "restored": "Файл восстановлен из бэкапа",
+      "notNeeded": "Вкладки сундука уже расширены"
     }
   }
 }

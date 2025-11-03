@@ -15,9 +15,11 @@ const UpdateButton: React.FC<UpdateButtonProps> = ({ isDarkTheme }) => {
   const [updateAvailable, setUpdateAvailable] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
 
-  // Проверка обновлений при монтировании компонента
+  // Проверка обновлений при монтировании компонента и далее каждые 20 минут
   useEffect(() => {
     checkForUpdates();
+    const intervalId = setInterval(checkForUpdates, 20 * 60 * 1000);
+    return () => clearInterval(intervalId);
   }, []);
 
   const checkForUpdates = async () => {
@@ -50,8 +52,8 @@ const UpdateButton: React.FC<UpdateButtonProps> = ({ isDarkTheme }) => {
   const tooltipTitle = isUpdating
     ? t("update.downloading", "Downloading update...")
     : updateAvailable
-    ? t("update.available", "Update available - Click to install")
-    : t("update.upToDate", "Up to date");
+      ? t("update.available", "Update available - Click to install")
+      : t("update.upToDate", "Up to date");
 
   return (
     <Tooltip title={tooltipTitle} placement="bottom">
@@ -60,9 +62,7 @@ const UpdateButton: React.FC<UpdateButtonProps> = ({ isDarkTheme }) => {
         disabled={!updateAvailable || isUpdating}
         className={`p-1 rounded-full transition-all duration-200 ${
           updateAvailable ? "hover:scale-110" : ""
-        } ${
-          isUpdating ? "opacity-75 cursor-not-allowed" : ""
-        } bg-transparent`}
+        } ${isUpdating ? "opacity-75 cursor-not-allowed" : ""} bg-transparent`}
         aria-label={tooltipTitle}
       >
         {isUpdating ? (
@@ -77,10 +77,14 @@ const UpdateButton: React.FC<UpdateButtonProps> = ({ isDarkTheme }) => {
             path={mdiDownload}
             size={0.9}
             className={
-              `${updateAvailable ? 'animate-bounce' : ''} ` +
+              `${updateAvailable ? "animate-bounce" : ""} ` +
               (updateAvailable
-                ? (isDarkTheme ? 'text-green-500' : 'text-green-600')
-                : (isDarkTheme ? 'text-gray-400' : 'text-gray-500'))
+                ? isDarkTheme
+                  ? "text-green-500"
+                  : "text-green-600"
+                : isDarkTheme
+                  ? "text-gray-400"
+                  : "text-gray-500")
             }
           />
         )}

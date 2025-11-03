@@ -68,7 +68,7 @@ export const loadSavedSettings = () => {
 // Функция для создания финального имени предмета
 export const generateFinalItemName = (
   settings: CommonItemSettings,
-  locale: keyof CommonItemSettings["locales"]
+  locale: keyof CommonItemSettings["locales"],
 ): string => {
   const rawName = settings.locales[locale] || settings.locales.enUS;
   return rawName; // Сохраняем цветовые коды
@@ -77,7 +77,7 @@ export const generateFinalItemName = (
 // Функция для создания финального имени зелья
 export const generateFinalPotionName = (
   settings: PotionLevelSettings,
-  locale: keyof PotionLevelSettings["locales"]
+  locale: keyof PotionLevelSettings["locales"],
 ): string => {
   const rawName = settings.locales[locale] || settings.locales.enUS;
   return rawName; // Сохраняем цветовые коды
@@ -86,7 +86,7 @@ export const generateFinalPotionName = (
 // Функция для создания финального имени драгоценного камня
 export const generateFinalGemName = (
   settings: PotionLevelSettings,
-  locale: keyof PotionLevelSettings["locales"]
+  locale: keyof PotionLevelSettings["locales"],
 ): string => {
   const rawName = settings.locales[locale] || settings.locales.enUS;
   return rawName; // Сохраняем цветовые коды
@@ -348,7 +348,10 @@ const UNHIGHLIGHTED_KEY_TEMPLATE = `{
 /**
  * Генерирует данные для файла подсветки убер-ключа на основе шаблонов
  */
-export const generateKeyHighlightData = (_keyName: string, isHighlighted: boolean) => {
+export const generateKeyHighlightData = (
+  _keyName: string,
+  isHighlighted: boolean,
+) => {
   try {
     // Используем встроенные шаблоны
     const templateText = isHighlighted

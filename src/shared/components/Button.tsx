@@ -31,7 +31,7 @@ const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const baseClasses =
-    "flex items-center justify-center font-medium rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 min-w-0 max-w-full overflow-hidden shrink";
+    "flex items-center justify-center font-medium rounded-lg border transition-colors focus:outline-none min-w-0 max-w-full overflow-hidden shrink";
 
   // Adjust gap based on whether we have both icon and text
   const hasIcon = icon || isLoading;
@@ -109,9 +109,7 @@ const Button: React.FC<ButtonProps> = ({
     >
       {iconPosition === "left" && renderIcon()}
       {hasText ? (
-        <span className={`truncate min-w-0 flex-1`}>
-          {children}
-        </span>
+        <span className={`truncate min-w-0 flex-1`}>{children}</span>
       ) : null}
       {iconPosition === "right" && renderIcon()}
     </button>

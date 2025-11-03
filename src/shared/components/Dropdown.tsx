@@ -168,8 +168,8 @@ const Dropdown: React.FC<DropdownProps> = ({
           disabled
             ? "opacity-50 cursor-not-allowed"
             : isDarkTheme
-            ? "bg-gray-700 border-gray-600 text-gray-200 hover:bg-gray-600"
-            : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
+              ? "bg-gray-700 border-gray-600 text-gray-200 hover:bg-gray-600"
+              : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
         } ${!disabled && isOpen ? "ring-2 ring-blue-500" : ""} ${
           isDarkTheme
             ? "bg-gray-700 border-gray-600 text-gray-200"
@@ -258,10 +258,12 @@ const Dropdown: React.FC<DropdownProps> = ({
                         ? "bg-gray-500 text-white"
                         : "bg-blue-500 text-white"
                       : isDarkTheme
-                      ? "text-gray-200 hover:bg-gray-600"
-                      : "text-gray-700 hover:bg-gray-100"
+                        ? "text-gray-200 hover:bg-gray-600"
+                        : "text-gray-700 hover:bg-gray-100"
                   } ${
-                    optionDisabled ? "opacity-75 cursor-not-allowed" : "cursor-pointer"
+                    optionDisabled
+                      ? "opacity-75 cursor-not-allowed"
+                      : "cursor-pointer"
                   }`}
                 >
                   <span className="flex items-center gap-2">
@@ -288,7 +290,9 @@ const Dropdown: React.FC<DropdownProps> = ({
                             onOptionRename(option.value);
                           }}
                           className={`p-1 rounded hover:opacity-90 ${
-                            isDarkTheme ? "text-gray-200 hover:bg-gray-500" : "text-gray-700 hover:bg-gray-200"
+                            isDarkTheme
+                              ? "text-gray-200 hover:bg-gray-500"
+                              : "text-gray-700 hover:bg-gray-200"
                           }`}
                         >
                           <Icon path={mdiRename} size={0.7} />
@@ -303,7 +307,9 @@ const Dropdown: React.FC<DropdownProps> = ({
                             onOptionDelete(option.value);
                           }}
                           className={`p-1 rounded hover:opacity-90 ${
-                            isDarkTheme ? "text-gray-200 hover:bg-gray-500" : "text-gray-700 hover:bg-gray-200"
+                            isDarkTheme
+                              ? "text-gray-200 hover:bg-gray-500"
+                              : "text-gray-700 hover:bg-gray-200"
                           }`}
                         >
                           <Icon path={mdiDelete} size={0.7} />

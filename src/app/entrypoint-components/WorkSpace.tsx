@@ -15,7 +15,13 @@ interface WorkSpaceProps {
 }
 
 const WorkSpaceContent: React.FC<WorkSpaceProps> = ({ onChangeClick }) => {
-  const { getIsDarkTheme, toggleTheme, isThemeChanging, getAppMode, toggleAppMode } = useSettings();
+  const {
+    getIsDarkTheme,
+    toggleTheme,
+    isThemeChanging,
+    getAppMode,
+    toggleAppMode,
+  } = useSettings();
   const [showSettings, setShowSettings] = useState(false);
 
   const isDarkTheme = getIsDarkTheme();
@@ -36,7 +42,7 @@ const WorkSpaceContent: React.FC<WorkSpaceProps> = ({ onChangeClick }) => {
     const updateWindowForMode = async () => {
       try {
         const window = getCurrentWindow();
-        
+
         if (appMode === "basic") {
           // Базовый режим: 600x700, фиксированный размер
           await window.setResizable(false);

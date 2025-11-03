@@ -3,14 +3,21 @@ import { useTranslation } from "react-i18next";
 import { EBaseType } from "./constants";
 import basesData from "./bases.json";
 import Icon from "@mdi/react";
-import { mdiClose } from "@mdi/js";
+import { mdiClose, mdiPencilBoxMultiple } from "@mdi/js";
 import Button from "../../shared/components/Button";
 import ItemsFilters from "./ItemsFilters";
 import ItemsList from "./ItemsList";
 import ItemCard from "./ItemCard";
-import TriStateSwitch, { TriState } from "../../shared/components/TriStateSwitch";
-import { useSettings, ItemSettings as ItemSettingsType } from "../../app/providers/SettingsContext";
+import TriStateSwitch, {
+  TriState,
+} from "../../shared/components/TriStateSwitch";
+import {
+  useSettings,
+  ItemSettings as ItemSettingsType,
+} from "../../app/providers/SettingsContext";
 import ItemsSettingsModal from "./ItemsSettingsModal";
+import { useUnsavedChanges } from "../../shared/hooks/useUnsavedChanges";
+// no direct use here
 
 import "./ItemsTab.css";
 
@@ -48,9 +55,7 @@ type ItemSettings = ItemSettingsType;
 type SortType = "type" | "name" | "level";
 type SortOrder = "asc" | "desc";
 
-const ItemsTab: React.FC<ItemsTabProps> = ({
-  isDarkTheme,
-}) => {
+const ItemsTab: React.FC<ItemsTabProps> = ({ isDarkTheme }) => {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [sortType, setSortType] = useState<SortType>("type");
@@ -64,7 +69,9 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
   const [lastSelectedItem, setLastSelectedItem] = useState<string | null>(null);
 
   // Доступ к обновлению настроек предметов
-  const { updateItemSettings } = useSettings();
+  const { updateItemSettings, getItemsSettings, getItemSettings } =
+    useSettings();
+  const { baseline } = useUnsavedChanges();
 
   // Фильтры
   const [selectedDifficultyClasses, setSelectedDifficultyClasses] = useState<
@@ -244,6 +251,96 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
     t,
   ]);
 
+  // Unsaved logic: per-item changed vs baseline
+  const itemHasUnsaved = useMemo(() => {
+    const map = new Map<string, boolean>();
+    if (!baseline) return map;
+    const baseItems = ((baseline.items as any)?.items || {}) as Record<
+      string,
+      any
+    >;
+    const defaultItem = {
+      enabled: true,
+      showDifficultyClassMarker: false,
+      locales: {},
+    } as any;
+    for (const item of items) {
+      const cur = (getItemSettings(item.key) as any) || defaultItem;
+      const base =
+        (baseItems[item.key as keyof typeof baseItems] as any) || defaultItem;
+      let changed = false;
+      if (cur.enabled !== base.enabled) changed = true;
+      if (cur.showDifficultyClassMarker !== base.showDifficultyClassMarker)
+        changed = true;
+      if (!changed) {
+        const localeKeys = new Set<string>([
+          ...Object.keys(cur.locales || {}),
+          ...Object.keys((base.locales as any) || {}),
+        ]);
+        for (const loc of localeKeys) {
+          const cv = (cur.locales as any)?.[loc] ?? "";
+          const bv = (base.locales as any)?.[loc] ?? "";
+          if (cv !== bv) {
+            changed = true;
+            break;
+          }
+        }
+      }
+      map.set(item.key, changed);
+    }
+    return map;
+  }, [baseline, items, getItemSettings]);
+
+  const unsavedCount = useMemo(() => {
+    let c = 0;
+    for (const key of itemHasUnsaved.keys()) if (itemHasUnsaved.get(key)) c++;
+    return c;
+  }, [itemHasUnsaved]);
+
+  const [unsavedOnly, setUnsavedOnly] = useState(false);
+  const toggleUnsavedOnly = () =>
+    setUnsavedOnly((prev) => {
+      const next = !prev;
+      if (next) {
+        handleResetFilters();
+      }
+      return next;
+    });
+
+  const visibleItems = useMemo(() => {
+    const itemsList = filteredAndSortedItems;
+    if (!unsavedOnly) return itemsList;
+    return itemsList.filter((i) => itemHasUnsaved.get(i.key));
+  }, [filteredAndSortedItems, unsavedOnly, itemHasUnsaved]);
+
+  const itemsGlobalSettingsUnsaved = useMemo(() => {
+    if (!baseline) return false;
+    const current = getItemsSettings();
+    const base = baseline.items;
+    if (!base) return false;
+
+    const pickLevels = (g: any) =>
+      Array.isArray(g?.levels)
+        ? g.levels.map((lvl: any) => ({
+            enabled: !!lvl?.enabled,
+            locales: lvl?.locales || {},
+          }))
+        : [];
+
+    const normalize = (root: any) => ({
+      difficultyClassMarkers: pickLevels(root?.difficultyClassMarkers),
+      qualityPrefixes: pickLevels(root?.qualityPrefixes),
+    });
+
+    try {
+      const curNorm = normalize(current);
+      const baseNorm = normalize(base);
+      return JSON.stringify(curNorm) !== JSON.stringify(baseNorm);
+    } catch {
+      return false;
+    }
+  }, [baseline, getItemsSettings]);
+
   // Автоматически выбираем первый предмет только при первом открытии
   useEffect(() => {
     if (
@@ -326,7 +423,8 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
 
   // Состояния TriState для массового редактирования
   const [massEnabled, setMassEnabled] = useState<TriState>(null);
-  const [massShowDifficultyMarker, setMassShowDifficultyMarker] = useState<TriState>(null);
+  const [massShowDifficultyMarker, setMassShowDifficultyMarker] =
+    useState<TriState>(null);
 
   const resetMassEditStates = () => {
     setMassEnabled(null);
@@ -337,7 +435,8 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
     // Собираем изменения из TriState и переданных настроек (если будут расширяться)
     const updates: Partial<ItemSettings> = { ...newSettings };
     if (massEnabled !== null) updates.enabled = massEnabled;
-    if (massShowDifficultyMarker !== null) updates.showDifficultyClassMarker = massShowDifficultyMarker;
+    if (massShowDifficultyMarker !== null)
+      updates.showDifficultyClassMarker = massShowDifficultyMarker;
 
     if (Object.keys(updates).length === 0) {
       return;
@@ -400,7 +499,7 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
 
   const selectedItem =
     items.find((item) => item.key === selectedItemForSettings) ?? null;
-  
+
   const filtersRef = useRef<HTMLDivElement>(null);
 
   return (
@@ -427,12 +526,15 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
         onToggleRelatedKind={toggleRelatedKind}
         onToggleBaseType={toggleBaseType}
         filtersRef={filtersRef}
+        unsavedOnly={unsavedOnly}
+        unsavedCount={unsavedCount}
+        onToggleUnsavedOnly={toggleUnsavedOnly}
       />
 
       <div className="grid grid-cols-[20rem_1fr]">
         <ItemsList
           isDarkTheme={isDarkTheme}
-          items={filteredAndSortedItems}
+          items={visibleItems}
           selectedItems={selectedItems}
           selectedItemForSettings={selectedItemForSettings}
           sortType={sortType}
@@ -445,6 +547,8 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
           onOpenMassEditModal={() => setIsMassEditModalOpen(true)}
           onOpenSettingsModal={() => setIsSettingsModalOpen(true)}
           filtersRef={filtersRef}
+          itemHasUnsavedMap={itemHasUnsaved}
+          itemsSettingsUnsaved={itemsGlobalSettingsUnsaved}
         />
 
         <ItemCard
@@ -467,8 +571,13 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
                 <h3
                   className={`text-lg font-semibold ${
                     isDarkTheme ? "text-white" : "text-gray-900"
-                  }`}
+                  } flex items-center gap-2`}
                 >
+                  <Icon
+                    path={mdiPencilBoxMultiple}
+                    size={0.9}
+                    className={isDarkTheme ? "text-gray-300" : "text-gray-700"}
+                  />
                   {t("itemsPage.massEdit.modalTitle")}
                 </h3>
                 <button
@@ -488,11 +597,27 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
                 </button>
               </div>
 
+              {/* Количество выделенных предметов под заголовком (курсив) */}
+              <div
+                className={`italic text-sm mb-3 ${
+                  isDarkTheme ? "text-gray-400" : "text-gray-500"
+                }`}
+              >
+                {t("itemsPage.massEdit.selectedCount", {
+                  count: selectedItems.size,
+                  defaultValue: "{{count}} selected",
+                })}
+              </div>
+
               <div className="space-y-4">
                 {/* Переключатель Enabled */}
-                <div className={`p-3 rounded-lg ${isDarkTheme ? "bg-gray-800" : "bg-gray-50"}`}>
+                <div
+                  className={`p-3 rounded-lg ${isDarkTheme ? "bg-gray-800" : "bg-gray-50"}`}
+                >
                   <div className="flex items-center justify-between">
-                    <span className={`text-sm font-medium ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}>
+                    <span
+                      className={`text-sm font-medium ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}
+                    >
                       {t("itemsPage.settings.enableItem")}
                     </span>
                     <TriStateSwitch
@@ -505,9 +630,13 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
                 </div>
 
                 {/* Переключатель Show Difficulty Class Marker */}
-                <div className={`p-3 rounded-lg ${isDarkTheme ? "bg-gray-800" : "bg-gray-50"}`}>
+                <div
+                  className={`p-3 rounded-lg ${isDarkTheme ? "bg-gray-800" : "bg-gray-50"}`}
+                >
                   <div className="flex items-center justify-between">
-                    <span className={`text-sm font-medium ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}>
+                    <span
+                      className={`text-sm font-medium ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}
+                    >
                       {t("itemsPage.settings.showDifficultyClassMarker")}
                     </span>
                     <TriStateSwitch
@@ -539,7 +668,9 @@ const ItemsTab: React.FC<ItemsTabProps> = ({
                     resetMassEditStates();
                   }}
                   isDarkTheme={isDarkTheme}
-                  disabled={massEnabled === null && massShowDifficultyMarker === null}
+                  disabled={
+                    massEnabled === null && massShowDifficultyMarker === null
+                  }
                 >
                   {t("itemsPage.massEdit.apply")}
                 </Button>

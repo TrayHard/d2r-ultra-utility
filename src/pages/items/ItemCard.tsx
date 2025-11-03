@@ -8,6 +8,9 @@ import { ItemSettings, useSettings } from "../../app/providers/SettingsContext";
 import ColorHint from "../../shared/components/ColorHint";
 import { colorCodeToHex } from "../../shared/constants";
 import SymbolsHint from "../../shared/components/SymbolsHint";
+import UnsavedAsterisk from "../../shared/components/UnsavedAsterisk";
+import DebouncedInput from "../../shared/components/DebouncedInput";
+import { useUnsavedChanges } from "../../shared/hooks/useUnsavedChanges";
 
 interface BaseItem {
   key: string;
@@ -48,7 +51,8 @@ const RelatedItemsBlock: React.FC<{
     return null;
   }
 
-  const escapeRegExp = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const escapeRegExp = (str: string) =>
+    str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
   const highlightText = (text: string): React.ReactNode => {
     const query = (searchQuery ?? "").trim();
@@ -60,7 +64,11 @@ const RelatedItemsBlock: React.FC<{
         index % 2 === 1 ? (
           <span
             key={index}
-            className={isDarkTheme ? "bg-yellow-300 text-black" : "bg-yellow-600 text-black"}
+            className={
+              isDarkTheme
+                ? "bg-yellow-300 text-black"
+                : "bg-yellow-600 text-black"
+            }
           >
             {part}
           </span>
@@ -186,10 +194,15 @@ const RelatedItemsBlock: React.FC<{
   );
 };
 
-const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQuery }) => {
+const ItemCard: React.FC<ItemCardProps> = ({
+  isDarkTheme,
+  selectedItem,
+  searchQuery,
+}) => {
   const { t } = useTranslation();
   const { getSelectedLocales, getItemSettings, updateItemSettings } =
     useSettings();
+  const { baseline } = useUnsavedChanges();
 
   // Получаем настройки для выбранного предмета (даже если его нет)
   const settings = React.useMemo(() => {
@@ -313,7 +326,8 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
     );
   }
 
-  const escapeRegExp = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const escapeRegExp = (str: string) =>
+    str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const highlightTitle = (text: string): React.ReactNode => {
     const query = (searchQuery ?? "").trim();
     if (!query) return text;
@@ -322,7 +336,16 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
       const parts = text.split(regex);
       return parts.map((part, index) =>
         index % 2 === 1 ? (
-          <span key={index} className={isDarkTheme ? "bg-yellow-300 text-black" : "bg-yellow-600 text-black"}>{part}</span>
+          <span
+            key={index}
+            className={
+              isDarkTheme
+                ? "bg-yellow-300 text-black"
+                : "bg-yellow-600 text-black"
+            }
+          >
+            {part}
+          </span>
         ) : (
           <React.Fragment key={index}>{part}</React.Fragment>
         )
@@ -347,7 +370,10 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
         continue;
       }
       nodes.push(
-        <span key={`p-${i}`} style={currentColor ? { color: currentColor } : undefined}>
+        <span
+          key={`p-${i}`}
+          style={currentColor ? { color: currentColor } : undefined}
+        >
           {part}
         </span>
       );
@@ -381,38 +407,73 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
                       <div className="space-y-1 w-[200px]">
                         {shouldShowAttribute("reqLvl", selectedItem.reqLvl) && (
                           <div className="flex items-center justify-between gap-3 w-full">
-                            <span className="opacity-80">{t("itemsPage.filters.reqLevel")}</span>
-                            <span className="font-semibold">{selectedItem.reqLvl}</span>
+                            <span className="opacity-80">
+                              {t("itemsPage.filters.reqLevel")}
+                            </span>
+                            <span className="font-semibold">
+                              {selectedItem.reqLvl}
+                            </span>
                           </div>
                         )}
-                        {shouldShowAttribute("reqStrength", selectedItem.reqStrength) && (
+                        {shouldShowAttribute(
+                          "reqStrength",
+                          selectedItem.reqStrength
+                        ) && (
                           <div className="flex items-center justify-between gap-3 w-full">
-                            <span className="opacity-80">{t("itemsPage.filters.reqStrength")}</span>
-                            <span className="font-semibold">{selectedItem.reqStrength}</span>
+                            <span className="opacity-80">
+                              {t("itemsPage.filters.reqStrength")}
+                            </span>
+                            <span className="font-semibold">
+                              {selectedItem.reqStrength}
+                            </span>
                           </div>
                         )}
-                        {shouldShowAttribute("reqDexterity", selectedItem.reqDexterity) && (
+                        {shouldShowAttribute(
+                          "reqDexterity",
+                          selectedItem.reqDexterity
+                        ) && (
                           <div className="flex items-center justify-between gap-3 w-full">
-                            <span className="opacity-80">{t("itemsPage.filters.reqDexterity")}</span>
-                            <span className="font-semibold">{selectedItem.reqDexterity}</span>
+                            <span className="opacity-80">
+                              {t("itemsPage.filters.reqDexterity")}
+                            </span>
+                            <span className="font-semibold">
+                              {selectedItem.reqDexterity}
+                            </span>
                           </div>
                         )}
                         {shouldShowAttribute("weight", selectedItem.weight) && (
                           <div className="flex items-center justify-between gap-3 w-full">
-                            <span className="opacity-80">{t("itemsPage.filters.weight")}</span>
-                            <span className="font-semibold">{t(`itemsPage.filters.${selectedItem.weight}`)}</span>
+                            <span className="opacity-80">
+                              {t("itemsPage.filters.weight")}
+                            </span>
+                            <span className="font-semibold">
+                              {t(`itemsPage.filters.${selectedItem.weight}`)}
+                            </span>
                           </div>
                         )}
-                        {shouldShowAttribute("maxSockets", selectedItem.maxSockets) && (
+                        {shouldShowAttribute(
+                          "maxSockets",
+                          selectedItem.maxSockets
+                        ) && (
                           <div className="flex items-center justify-between gap-3 w-full">
-                            <span className="opacity-80">{t("itemsPage.maxSockets") || "Max Sockets"}</span>
-                            <span className="font-semibold">{selectedItem.maxSockets}</span>
+                            <span className="opacity-80">
+                              {t("itemsPage.maxSockets") || "Max Sockets"}
+                            </span>
+                            <span className="font-semibold">
+                              {selectedItem.maxSockets}
+                            </span>
                           </div>
                         )}
                         {selectedItem.limitedToClass && (
                           <div className="flex items-center justify-between gap-3 w-full">
-                            <span className="opacity-80">{t("itemsPage.filters.limitedToClass")}</span>
-                            <span className="font-semibold">{t(`itemsPage.classes.${selectedItem.limitedToClass}`) || selectedItem.limitedToClass}</span>
+                            <span className="opacity-80">
+                              {t("itemsPage.filters.limitedToClass")}
+                            </span>
+                            <span className="font-semibold">
+                              {t(
+                                `itemsPage.classes.${selectedItem.limitedToClass}`
+                              ) || selectedItem.limitedToClass}
+                            </span>
                           </div>
                         )}
                       </div>
@@ -489,22 +550,22 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
                             ? "#374151"
                             : "#f3f4f6"
                           : isDarkTheme
-                          ? "#1f2937"
-                          : "#e5e7eb",
+                            ? "#1f2937"
+                            : "#e5e7eb",
                         color: enabled
                           ? isDarkTheme
                             ? "#e5e7eb"
                             : "#374151"
                           : isDarkTheme
-                          ? "#6b7280"
-                          : "#9ca3af",
+                            ? "#6b7280"
+                            : "#9ca3af",
                         borderColor: enabled
                           ? isDarkTheme
                             ? "#4b5563"
                             : "#d1d5db"
                           : isDarkTheme
-                          ? "#374151"
-                          : "#d1d5db",
+                            ? "#374151"
+                            : "#d1d5db",
                         opacity: enabled ? 1 : 0.5,
                       }}
                     />
@@ -524,8 +585,11 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
                 `}
               >
                 <div className="flex justify-between items-center gap-4">
-                  <Tooltip title={t("itemsPage.settings.tooltips.enableItem")} placement="top">
-                    <div>
+                  <Tooltip
+                    title={t("itemsPage.settings.tooltips.enableItem")}
+                    placement="top"
+                  >
+                    <div className="relative">
                       <Switcher
                         checked={enabled}
                         onChange={handleEnabledChange}
@@ -533,18 +597,60 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
                         isDarkTheme={isDarkTheme}
                         size="md"
                       />
+                      {(() => {
+                        if (!selectedItem || !baseline) return null;
+                        const base = (baseline.items as any)?.items?.[
+                          selectedItem.key
+                        ];
+                        if (!base) return null;
+                        return base.enabled !== enabled ? (
+                          <span
+                            className="absolute"
+                            style={{ right: -8, top: -8 }}
+                          >
+                            <UnsavedAsterisk size={0.55} />
+                          </span>
+                        ) : null;
+                      })()}
                     </div>
                   </Tooltip>
-                  <Tooltip title={<div style={{ textWrap: "pretty" }}>{t("itemsPage.settings.tooltips.showDifficultyClassMarkerSwitch")}</div>} placement="top">
-                    <div>
+                  <Tooltip
+                    title={
+                      <div style={{ textWrap: "pretty" }}>
+                        {t(
+                          "itemsPage.settings.tooltips.showDifficultyClassMarkerSwitch"
+                        )}
+                      </div>
+                    }
+                    placement="top"
+                  >
+                    <div className="relative">
                       <Switcher
                         checked={showDifficultyClassMarker}
                         onChange={handleShowDifficultyClassMarkerChange}
-                        label={t("itemsPage.settings.showDifficultyClassMarker")}
+                        label={t(
+                          "itemsPage.settings.showDifficultyClassMarker"
+                        )}
                         isDarkTheme={isDarkTheme}
                         size="md"
                         disabled={!enabled}
                       />
+                      {(() => {
+                        if (!selectedItem || !baseline) return null;
+                        const base = (baseline.items as any)?.items?.[
+                          selectedItem.key
+                        ];
+                        if (!base) return null;
+                        return base.showDifficultyClassMarker !==
+                          showDifficultyClassMarker ? (
+                          <span
+                            className="absolute"
+                            style={{ right: -8, top: -8 }}
+                          >
+                            <UnsavedAsterisk size={0.55} />
+                          </span>
+                        ) : null;
+                      })()}
                     </div>
                   </Tooltip>
                 </div>
@@ -605,9 +711,8 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
                         // 1) Если есть фокус — показываем фокусную локаль
                         if (focusedLocale) {
                           const text =
-                            locales[
-                              focusedLocale as keyof typeof locales
-                            ] || "";
+                            locales[focusedLocale as keyof typeof locales] ||
+                            "";
                           return renderColoredText(text);
                         }
                         // 2) По умолчанию всегда берём enUS, если он есть
@@ -617,9 +722,7 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
                         // 3) Иначе берём первую из выбранных локалей, если она есть
                         const firstSelected = languageCodes[0];
                         const fallbackText = firstSelected
-                          ? locales[
-                              firstSelected as keyof typeof locales
-                            ] || ""
+                          ? locales[firstSelected as keyof typeof locales] || ""
                           : "";
                         return renderColoredText(fallbackText);
                       })()}
@@ -648,7 +751,9 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
                               style={{ textDecoration: "underline dotted" }}
                             >
                               ruRU:
-                              <span className="pointer-events-none absolute -top-1 opacity-50 text-[10px]">?</span>
+                              <span className="pointer-events-none absolute -top-1 opacity-50 text-[10px]">
+                                ?
+                              </span>
                             </span>
                           </Tooltip>
                         ) : (
@@ -656,29 +761,49 @@ const ItemCard: React.FC<ItemCardProps> = ({ isDarkTheme, selectedItem, searchQu
                         )}
                       </label>
                       <div className="flex-1 flex items-center space-x-2">
-                        <input
-                          type="text"
-                          value={locales[langCode as keyof typeof locales]}
-                          onChange={(e) =>
-                            handleLanguageNameChange(langCode, e.target.value)
-                          }
-                          onFocus={() => setFocusedLocale(langCode)}
-                          onBlur={() => setFocusedLocale(null)}
-                          placeholder={
-                            t(`runePage.controls.placeholders.${langCode}`) ||
-                            `Name in ${langCode}`
-                          }
-                          disabled={!enabled}
-                          className={`
-                            flex-1 px-3 py-2 text-sm rounded-lg border transition-all duration-200
-                            ${
-                              isDarkTheme
-                                ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
-                                : "bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
+                        <div className="relative flex-1">
+                          <DebouncedInput
+                            type="text"
+                            value={locales[langCode as keyof typeof locales]}
+                            onChange={(v) =>
+                              handleLanguageNameChange(langCode, v)
                             }
-                            ${!enabled ? "opacity-50 cursor-not-allowed" : ""}
-                          `}
-                        />
+                            onFocus={() => setFocusedLocale(langCode)}
+                            onBlur={() => setFocusedLocale(null)}
+                            placeholder={
+                              t(`runePage.controls.placeholders.${langCode}`) ||
+                              `Name in ${langCode}`
+                            }
+                            disabled={!enabled}
+                            className={`
+                              w-full px-3 py-2 text-sm rounded-lg border transition-all duration-200
+                              ${
+                                isDarkTheme
+                                  ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
+                                  : "bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
+                              }
+                              ${!enabled ? "opacity-50 cursor-not-allowed" : ""}
+                            `}
+                          />
+                          {(() => {
+                            if (!selectedItem || !baseline) return null;
+                            const base = (baseline.items as any)?.items?.[
+                              selectedItem.key
+                            ];
+                            if (!base) return null;
+                            const baseVal = (base.locales || {})[langCode];
+                            const curVal =
+                              locales[langCode as keyof typeof locales];
+                            return baseVal !== curVal ? (
+                              <span
+                                className="absolute"
+                                style={{ right: 12, top: 12 }}
+                              >
+                                <UnsavedAsterisk size={0.5} />
+                              </span>
+                            ) : null;
+                          })()}
+                        </div>
                         <div className="flex items-center gap-1">
                           <SymbolsHint isDarkTheme={isDarkTheme} />
                           <ColorHint isDarkTheme={isDarkTheme} />
