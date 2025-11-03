@@ -1751,6 +1751,14 @@
     },
     "stashRename": {
       "label": "Shared stash names"
+    },
+    "sharedStashFix": {
+      "label": "Offline: fix shared stashes",
+      "applyButton": "Apply fix",
+      "revertButton": "Revert",
+      "applied": "Fix applied successfully",
+      "restored": "File restored from backup",
+      "notNeeded": "Shared stash seems already fixed"
     }
   }
 }

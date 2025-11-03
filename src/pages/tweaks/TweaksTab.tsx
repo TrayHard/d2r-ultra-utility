@@ -5,6 +5,9 @@ import UnsavedAsterisk from "../../shared/components/UnsavedAsterisk.tsx";
 import Switcher from "../../shared/components/Switcher.tsx";
 import DebouncedInput from "../../shared/components/DebouncedInput.tsx";
 import { useTranslation } from "react-i18next";
+import { useSharedStashFix } from "../../shared/hooks/useSharedStashFix";
+import { useGlobalMessage } from "../../shared/components/Message/MessageProvider.tsx";
+import Button from "../../shared/components/Button.tsx";
 
 interface TweaksTabProps {
   isDarkTheme: boolean;
@@ -15,6 +18,8 @@ const TweaksTab: React.FC<TweaksTabProps> = ({ isDarkTheme }) => {
   const { getTweaksSettings, updateTweaksSettings } = useSettings();
   const tweaks = getTweaksSettings();
   const { baseline } = useUnsavedChanges();
+  const { sendMessage } = useGlobalMessage();
+  const { isLoading, applyFix } = useSharedStashFix(sendMessage, t);
 
   const baseEncyclopediaEnabled: boolean = useMemo(() => {
     return (baseline as any)?.tweaks?.encyclopediaEnabled ?? true;
@@ -37,6 +42,10 @@ const TweaksTab: React.FC<TweaksTabProps> = ({ isDarkTheme }) => {
 
   const slotsCount = 7;
   const slotWidthPercent = 100 / slotsCount;
+
+  const baseStashRename: string[] = useMemo(() => {
+    return ((baseline as any)?.tweaks?.stashRename || []).slice(0, slotsCount);
+  }, [baseline]);
 
   return (
     <div className="p-8 max-w-3xl mx-auto space-y-8">
@@ -66,20 +75,18 @@ const TweaksTab: React.FC<TweaksTabProps> = ({ isDarkTheme }) => {
           />
         </div>
 
-        <div className="flex flex-col gap-2">
-          <label
-            className={`text-sm font-medium ${
-              isDarkTheme ? "text-gray-300" : "text-gray-700"
-            }`}
-          >
-            {t("tweaksPage.encyclopediaLanguage.label") ||
-              "Язык внутриигровой энциклопедии"}
-            {hasEncyclopediaLanguageChanged && (
-              <span className="ml-2">
-                <UnsavedAsterisk size={0.55} />
-              </span>
-            )}
-          </label>
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <label
+              className={`text-sm font-medium ${
+                isDarkTheme ? "text-gray-300" : "text-gray-700"
+              }`}
+            >
+              {t("tweaksPage.encyclopediaLanguage.label") ||
+                "Язык внутриигровой энциклопедии"}
+            </label>
+            {hasEncyclopediaLanguageChanged && <UnsavedAsterisk size={0.55} />}
+          </div>
           <select
             value={tweaks.encyclopediaLanguage}
             onChange={(e) =>
@@ -89,7 +96,7 @@ const TweaksTab: React.FC<TweaksTabProps> = ({ isDarkTheme }) => {
             }
             disabled={!tweaks.encyclopediaEnabled}
             className={`
-              w-full max-w-xs px-3 py-2 rounded-md border transition-colors
+              w-[130px] max-w-xs px-3 py-2 rounded-md border transition-colors
               ${
                 isDarkTheme
                   ? "bg-gray-700 border-gray-600 text-white"
@@ -148,8 +155,15 @@ const TweaksTab: React.FC<TweaksTabProps> = ({ isDarkTheme }) => {
               <div className="absolute inset-0">
                 {(tweaks.stashRename || []).slice(0, slotsCount).map((value: string, idx: number) => {
                   const leftPercent = idx * slotWidthPercent;
+                  const baseValue = (baseStashRename || [])[idx] || "";
+                  const isChanged = (value || "") !== baseValue;
                   return (
                     <div key={idx} className="absolute top-0 h-full" style={{ left: `${leftPercent}%`, width: `${slotWidthPercent}%` }}>
+                      {isChanged && (
+                        <div className="absolute -top-2 left-1/2 -translate-x-1/2 transform pointer-events-none z-10">
+                          <UnsavedAsterisk size={0.55} />
+                        </div>
+                      )}
                       <DebouncedInput
                         type="text"
                         value={value}
@@ -167,6 +181,29 @@ const TweaksTab: React.FC<TweaksTabProps> = ({ isDarkTheme }) => {
                 })}
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Shared stash fix */}
+        <div className="flex items-center justify-between gap-4">
+          <label
+            className={`text-sm font-medium ${
+              isDarkTheme ? "text-gray-300" : "text-gray-700"
+            }`}
+          >
+            {t("tweaksPage.sharedStashFix.label") ||
+              "Оффлайн: фикс вкладок сундука"}
+          </label>
+          <div className="flex gap-2">
+            <Button
+              variant="primary"
+              size="md"
+              isLoading={isLoading}
+              isDarkTheme={isDarkTheme}
+              onClick={applyFix}
+            >
+              {t("tweaksPage.sharedStashFix.applyButton") || "Применить фикс"}
+            </Button>
           </div>
         </div>
       </div>

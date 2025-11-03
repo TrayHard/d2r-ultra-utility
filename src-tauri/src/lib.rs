@@ -274,7 +274,9 @@ pub fn run() {
             set_selected_file,
             open_file_dialog,
             ensure_writable,
-            ensure_dir
+            ensure_dir,
+            get_user_profile,
+            append_bytes_to_file
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -406,4 +408,38 @@ async fn ensure_dir(paths: Vec<String>) -> Result<Vec<String>, String> {
         created.push(p);
     }
     Ok(created)
+}
+
+#[tauri::command]
+fn get_user_profile() -> Result<String, String> {
+    #[cfg(target_os = "windows")]
+    {
+        match env::var("USERPROFILE") {
+            Ok(path) => Ok(path),
+            Err(_) => Err("Could not get USERPROFILE environment variable".to_string()),
+        }
+    }
+    #[cfg(not(target_os = "windows"))]
+    {
+        match env::var("HOME") {
+            Ok(path) => Ok(path),
+            Err(_) => Err("Could not get HOME environment variable".to_string()),
+        }
+    }
+}
+
+#[tauri::command]
+fn append_bytes_to_file(path: String, bytes: Vec<u8>) -> Result<(), String> {
+    use std::fs::OpenOptions;
+    use std::io::Write;
+
+    let mut file = OpenOptions::new()
+        .append(true)
+        .open(&path)
+        .map_err(|e| format!("Failed to open file for append: {}", e))?;
+
+    file.write_all(&bytes)
+        .map_err(|e| format!("Failed to write bytes: {}", e))?;
+
+    Ok(())
 }
