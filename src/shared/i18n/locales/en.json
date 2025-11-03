@@ -4,6 +4,8 @@
     "items": "Items",
     "runes": "Runes",
     "gems": "Gems",
+    "stash": "Stash Rename",
+    "tweaks": "Tweaks",
     "other": "Other"
   },
   "update": {
@@ -12,6 +14,14 @@
     "downloading": "Downloading update...",
     "installing": "Installing update...",
     "upToDate": "Up to date"
+  },
+  "feedback": {
+    "title": "Feedback",
+    "help": {
+      "part1": "If you found a problem or have a question, please ",
+      "linkText": "open an issue",
+      "part2": ". In some cases we may ask you to attach logs. You can export them below:"
+    }
   },
   "descriptions": {
     "common": "Common utilities and tools",
@@ -159,6 +169,10 @@
   "common": {
     "loading": "Loading...",
     "applying": "Applying...",
+    "selectFile": "Select File",
+    "useThisFile": "Use This File",
+    "cancel": "Cancel",
+    "retryAutoSearch": "Retry Auto Search for D2R.exe",
     "themeSettings": "Theme Settings",
     "themeSettingsDescription": "Choose your preferred theme for the application.",
     "darkTheme": "Dark Theme",
@@ -180,6 +194,30 @@
     "noLanguagesSelected": "No additional languages selected",
     "settingsMovedMessage": "App settings are now available through the gear button in the top panel."
   },
+  "startup": {
+    "searching": "Searching for D2R.exe...",
+    "notFoundAuto": "D2R.exe not found automatically. Please search for it manually:",
+    "selectedFile": "Selected file:",
+    "noFilesFoundWith": "No files found with name \"{{name}}\". Try a different filename!",
+    "foundCount": "Found {{count}} file{{suffix}} named \"{{name}}\":",
+    "manual": {
+      "enterFileFirst": "Please choose a file first!"
+    },
+    "pathSelection": {
+      "title": "Select path to D2R.exe"
+    }
+  },
+  "progress": {
+    "searchingTitle": "Searching files...",
+    "foundFiles": "Found {{count}} file{{suffix}}",
+    "processing": "Processing..."
+  },
+  "pathSelector": {
+    "title": "Multiple D2R.exe locations found!",
+    "subtitle": "Please select which one you want to use:",
+    "selectThis": "Select This",
+    "cancelAndManual": "Cancel & Search Manually"
+  },
   "buttons": {
     "changePath": "Change Path",
     "back": "Back",
@@ -188,16 +226,13 @@
   "settings": {
     "appSettings": "App Settings",
     "pathSettings": "Path Settings",
-    "pathSettingsDescription": "Manage the path to your D2R game directory (specifically to D2R.exe).",
+    "pathSettingsDescription": "Define the path to your D2R game directory (specifically to D2R.exe).",
     "currentPath": "Current path",
     "pathNotSet": "Path is not set",
-    "debugMode": "Debug Mode",
-    "debugModeDescription": "Enable debug mode to collect detailed logs for troubleshooting. These logs can be exported and sent to developers for support.",
-    "debugModeEnabled": "Debug mode is enabled",
-    "debugModeDisabled": "Debug mode is disabled",
-    "debugModeWarning": "Debug mode will collect detailed information about application usage. Only enable if needed for troubleshooting.",
     "about": "About",
-    "appVersion": "App Version"
+    "appVersion": "App Version",
+    "asteriskColor": "Unsaved changes indicator color",
+    "resetDefault": "Reset to default"
   },
   "logs": {
     "title": "Debug Logs",
@@ -403,7 +438,8 @@
       "title": "Confirm Apply",
       "message": "Are you sure you want to apply changes to files? This action cannot be undone.",
       "cancel": "Cancel",
-      "confirm": "Apply"
+      "confirm": "Apply",
+      "saveToProfile": "Save these changes to the profile"
     }
   },
   "profiles": {
@@ -425,6 +461,10 @@
     "rename": "Rename",
     "delete": "Delete",
     "cancel": "Cancel",
+    "tooltips": {
+      "saveDisabledImmutable": "Selected profile cannot be edited",
+      "saveDisabledNoChanges": "Make changes to save them to the profile"
+    },
     "saveConfirmation": "Save changes to profile \"{{name}}\"?",
     "deleteConfirmation": "Are you sure you want to delete profile \"{{name}}\"? This action cannot be undone.",
     "messages": {
@@ -1686,6 +1726,39 @@
         "line3": "You can also disable loot filters at any time (button at the bottom)."
       },
       "close": "Close"
+    },
+    "update": {
+      "tooltipUpdateProfile": "Update profile from {{from}} to {{to}}",
+      "tooltipUpToDate": "Profile is up to date ({{version}})",
+      "updatingOverlay": "Updating loot filter",
+      "updateActionAria": "Update profile",
+      "upToDateAria": "Version is up to date"
+    }
+  },
+  "tweaksPage": {
+    "encyclopediaEnabled": {
+      "label": "Enable in-game encyclopedia"
+    },
+    "encyclopediaLanguage": {
+      "label": "In-game encyclopedia language",
+      "options": {
+        "en": "English",
+        "ru": "Russian"
+      }
+    },
+    "skipIntroVideos": {
+      "label": "Skip intro videos"
+    },
+    "stashRename": {
+      "label": "Shared stash names"
+    },
+    "sharedStashFix": {
+      "label": "Offline: fix shared stashes",
+      "applyButton": "Apply fix",
+      "revertButton": "Revert",
+      "applied": "Fix applied successfully",
+      "restored": "File restored from backup",
+      "notNeeded": "Shared stash seems already fixed"
     }
   }
 }

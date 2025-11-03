@@ -3,6 +3,8 @@ import { Tooltip } from "antd";
 import { useTranslation } from "react-i18next";
 import LanguageSwitch from "./LanguageSwitch.tsx";
 import UpdateButton from "./UpdateButton.tsx";
+import Icon from "@mdi/react";
+import { mdiCogOutline, mdiThemeLightDark } from "@mdi/js";
 
 interface ToolbarProps {
   onLanguageChange: () => void;
@@ -41,7 +43,7 @@ const MainSpaceToolbar: React.FC<ToolbarProps> = ({
                   : "bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-900"
               }`}
             >
-              ⚙️
+              <Icon path={mdiCogOutline} size={0.7} />
             </button>
           </Tooltip>
           {/* Update Button */}
@@ -50,8 +52,14 @@ const MainSpaceToolbar: React.FC<ToolbarProps> = ({
           <Tooltip
             title={
               appMode === "advanced"
-                ? (t("mode.switchToBasic", "Переключить в базовый режим") as string)
-                : (t("mode.switchToAdvanced", "Переключить в режим редактирования") as string)
+                ? (t(
+                    "mode.switchToBasic",
+                    "Переключить в базовый режим"
+                  ) as string)
+                : (t(
+                    "mode.switchToAdvanced",
+                    "Переключить в режим редактирования"
+                  ) as string)
             }
             placement="bottom"
           >
@@ -73,9 +81,7 @@ const MainSpaceToolbar: React.FC<ToolbarProps> = ({
         <div className="flex items-center space-x-4">
           {/* Theme Toggle */}
           <Tooltip
-            title={
-              isDarkTheme ? t("common.lightTheme") : t("common.darkTheme")
-            }
+            title={isDarkTheme ? t("common.lightTheme") : t("common.darkTheme")}
             placement="bottom"
           >
             <button
@@ -86,7 +92,8 @@ const MainSpaceToolbar: React.FC<ToolbarProps> = ({
                   : "bg-gray-100 hover:bg-gray-200 text-gray-700"
               }`}
             >
-              {isDarkTheme ? "🌞" : "🌙"}
+              <Icon path={mdiThemeLightDark} size={0.7} />
+              {/* {isDarkTheme ? "🌞" : "🌙"} */}
             </button>
           </Tooltip>
 

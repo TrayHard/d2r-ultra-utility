@@ -20,6 +20,8 @@ import MassEditModal from "../../shared/components/MassEditModal.tsx";
 import { RuneSettings } from "../../app/providers/SettingsContext.tsx";
 import highlightedBg from "../../shared/assets/runes/highlighted.png";
 import unhighlightedBg from "../../shared/assets/runes/unhighlighted.png";
+import { useUnsavedChanges } from "../../shared/hooks/useUnsavedChanges";
+import UnsavedAsterisk from "../../shared/components/UnsavedAsterisk";
 
 interface RunesSpecificProps {
   isDarkTheme: boolean;
@@ -44,6 +46,7 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
     useState<ERune | null>(null);
   const [isMassEditModalOpen, setIsMassEditModalOpen] = useState(false);
   const [lastSelectedRune, setLastSelectedRune] = useState<ERune | null>(null);
+  const { baseline } = useUnsavedChanges();
 
   // Флаг для отслеживания первого открытия
   const isFirstLoadRef = useRef(true);
@@ -350,7 +353,10 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
               <Button
                 variant="secondary"
                 size="sm"
-                onClick={handleSelectAll}
+                onClick={() => {
+                  handleSelectAll();
+                  setIsMassEditModalOpen(true);
+                }}
                 isDarkTheme={isDarkTheme}
                 icon={mdiCheckAll}
                 iconSize={0.6}
@@ -420,6 +426,64 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
                 const runeImagePath = `/img/runes/${rune}_rune.webp`;
                 const isSelected = selectedRunes.has(rune);
                 const isSelectedForSettings = selectedRuneForSettings === rune;
+                const hasUnsaved = (() => {
+                  if (!baseline) return false;
+                  const base = (baseline.runes as any)?.[rune];
+                  const cur = getRuneSettings(rune);
+                  if (!base || !cur) return false;
+                  if ((base.mode ?? "auto") !== (cur.mode ?? "auto"))
+                    return true;
+                  if (
+                    (base.isHighlighted ?? false) !==
+                    (cur.isHighlighted ?? false)
+                  )
+                    return true;
+                  // manual locales diff
+                  const langs = new Set([
+                    ...Object.keys(base.manualSettings?.locales || {}),
+                    ...Object.keys(cur.manualSettings?.locales || {}),
+                  ]);
+                  for (const l of langs) {
+                    const bv =
+                      base.manualSettings?.locales?.[
+                        l as keyof typeof base.manualSettings.locales
+                      ] ?? "";
+                    const cv =
+                      cur.manualSettings?.locales?.[
+                        l as keyof typeof cur.manualSettings.locales
+                      ] ?? "";
+                    if (bv !== cv) return true;
+                  }
+                  // auto settings (basic subset)
+                  const bAuto = base.autoSettings || {};
+                  const cAuto = cur.autoSettings || {};
+                  if (bAuto.boxSize !== cAuto.boxSize) return true;
+                  if (bAuto.boxLimiters !== cAuto.boxLimiters) return true;
+                  if (bAuto.boxLimitersColor !== cAuto.boxLimitersColor)
+                    return true;
+                  if (bAuto.color !== cAuto.color) return true;
+                  if (
+                    (bAuto.numbering?.show ?? false) !==
+                    (cAuto.numbering?.show ?? false)
+                  )
+                    return true;
+                  if (
+                    (bAuto.numbering?.dividerType ?? "") !==
+                    (cAuto.numbering?.dividerType ?? "")
+                  )
+                    return true;
+                  if (
+                    (bAuto.numbering?.dividerColor ?? "") !==
+                    (cAuto.numbering?.dividerColor ?? "")
+                  )
+                    return true;
+                  if (
+                    (bAuto.numbering?.numberColor ?? "") !==
+                    (cAuto.numbering?.numberColor ?? "")
+                  )
+                    return true;
+                  return false;
+                })();
 
                 return (
                   <div key={rune} className="flex items-center gap-2 mb-2">
@@ -434,8 +498,8 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
                                 ? "bg-yellow-900/30 border-yellow-400"
                                 : "bg-yellow-50 border-yellow-400"
                               : isDarkTheme
-                              ? "bg-gray-800 border-gray-700 hover:bg-gray-750"
-                              : "bg-white border-gray-200 hover:bg-gray-50"
+                                ? "bg-gray-800 border-gray-700 hover:bg-gray-750"
+                                : "bg-white border-gray-200 hover:bg-gray-50"
                           }
                       `}
                     >
@@ -461,7 +525,7 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
                       </div>
 
                       {/* Имя руны и уровень */}
-                      <div className="flex-1 min-w-0">
+                      <div className="flex-1 min-w-0 relative">
                         <div
                           className={`font-medium ${
                             isDarkTheme ? "text-white" : "text-gray-900"
@@ -477,6 +541,14 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
                           ({minLevel === 0 ? "Any Level" : `Level ${minLevel}+`}
                           )
                         </div>
+                        {hasUnsaved && (
+                          <span
+                            className="absolute"
+                            style={{ right: 10, top: 10 }}
+                          >
+                            <UnsavedAsterisk size={0.65} />
+                          </span>
+                        )}
                       </div>
                     </div>
 

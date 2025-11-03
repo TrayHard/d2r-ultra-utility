@@ -13,8 +13,8 @@
     "windows": [
       {
         "title": "Diablo II Ultra Utility",
-        "width": 1280,
-        "height": 800,
+        "width": 600,
+        "height": 751,
         "decorations": false,
         "resizable": true,
         "minimizable": true,

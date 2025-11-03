@@ -1,7 +1,22 @@
 {
   "id": "1755805059989",
   "name": "Default",
+  "version": "1.0",
   "settings": {
+    "tweaks": {
+      "encyclopediaEnabled": true,
+      "encyclopediaLanguage": "en",
+      "skipIntroVideos": false,
+      "stashRename": [
+        "@shared",
+        "@shared",
+        "@shared",
+        "@shared",
+        "@shared",
+        "@shared",
+        "@shared"
+      ]
+    },
     "runes": {
       "el": {
         "mode": "manual",

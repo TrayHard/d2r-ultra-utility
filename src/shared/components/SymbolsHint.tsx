@@ -14,7 +14,11 @@ const SymbolsHint: React.FC<SymbolsHintProps> = ({ isDarkTheme }) => {
 
   const tooltipContent = (
     <div className="w-full p-2 overflow-x-hidden">
-      <Flex wrap="wrap" gap={8} className="max-h-64 overflow-y-auto overflow-x-hidden">
+      <Flex
+        wrap="wrap"
+        gap={8}
+        className="max-h-64 overflow-y-auto overflow-x-hidden"
+      >
         {diabloSymbols.map((symbol) => (
           <Tooltip
             key={symbol}
@@ -32,7 +36,7 @@ const SymbolsHint: React.FC<SymbolsHintProps> = ({ isDarkTheme }) => {
                 navigator.clipboard.writeText(symbol);
                 message.success(
                   t("runePage.controls.symbolsHint.copied", { symbol }) ||
-                    `Copied ${symbol} to clipboard`
+                    `Copied ${symbol} to clipboard`,
                 );
               }}
               style={{ fontSize: "32px", height: "60px" }}

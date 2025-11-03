@@ -1,0 +1,215 @@
+import React, { useMemo } from "react";
+import { useSettings } from "../../app/providers/SettingsContext.tsx";
+import { useUnsavedChanges } from "../../shared/hooks/useUnsavedChanges";
+import UnsavedAsterisk from "../../shared/components/UnsavedAsterisk.tsx";
+import Switcher from "../../shared/components/Switcher.tsx";
+import DebouncedInput from "../../shared/components/DebouncedInput.tsx";
+import { useTranslation } from "react-i18next";
+import { useSharedStashFix } from "../../shared/hooks/useSharedStashFix";
+import { useGlobalMessage } from "../../shared/components/Message/MessageProvider.tsx";
+import Button from "../../shared/components/Button.tsx";
+
+interface TweaksTabProps {
+  isDarkTheme: boolean;
+}
+
+const TweaksTab: React.FC<TweaksTabProps> = ({ isDarkTheme }) => {
+  const { t } = useTranslation();
+  const { getTweaksSettings, updateTweaksSettings } = useSettings();
+  const tweaks = getTweaksSettings();
+  const { baseline } = useUnsavedChanges();
+  const { sendMessage } = useGlobalMessage();
+  const { isLoading, applyFix } = useSharedStashFix(sendMessage, t);
+
+  const baseEncyclopediaEnabled: boolean = useMemo(() => {
+    return (baseline as any)?.tweaks?.encyclopediaEnabled ?? true;
+  }, [baseline]);
+
+  const baseEncyclopediaLanguage: "en" | "ru" = useMemo(() => {
+    return (baseline as any)?.tweaks?.encyclopediaLanguage || "en";
+  }, [baseline]);
+
+  const hasEncyclopediaEnabledChanged =
+    baseEncyclopediaEnabled !== tweaks.encyclopediaEnabled;
+
+  const hasEncyclopediaLanguageChanged =
+    baseEncyclopediaLanguage !== tweaks.encyclopediaLanguage;
+
+  const baseSkipIntro: boolean = useMemo(() => {
+    return (baseline as any)?.tweaks?.skipIntroVideos ?? false;
+  }, [baseline]);
+  const hasSkipIntroChanged = baseSkipIntro !== tweaks.skipIntroVideos;
+
+  const slotsCount = 7;
+  const slotWidthPercent = 100 / slotsCount;
+
+  const baseStashRename: string[] = useMemo(() => {
+    return ((baseline as any)?.tweaks?.stashRename || []).slice(0, slotsCount);
+  }, [baseline]);
+
+  return (
+    <div className="p-8 max-w-3xl mx-auto space-y-8">
+      {/* Чтение/применение выполняется глобальными кнопками тулбара */}
+
+      <div className="space-y-6">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <label
+              className={`text-sm font-medium ${
+                isDarkTheme ? "text-gray-300" : "text-gray-700"
+              }`}
+            >
+              {t("tweaksPage.encyclopediaEnabled.label") ||
+                "Включить внутриигровую энциклопедию"}
+            </label>
+            {hasEncyclopediaEnabledChanged && (
+              <UnsavedAsterisk size={0.55} />
+            )}
+          </div>
+          <Switcher
+            checked={tweaks.encyclopediaEnabled}
+            onChange={(checked) =>
+              updateTweaksSettings({ encyclopediaEnabled: checked })
+            }
+            isDarkTheme={isDarkTheme}
+          />
+        </div>
+
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+          <label
+            className={`text-sm font-medium ${
+              isDarkTheme ? "text-gray-300" : "text-gray-700"
+            }`}
+          >
+            {t("tweaksPage.encyclopediaLanguage.label") ||
+              "Язык внутриигровой энциклопедии"}
+          </label>
+            {hasEncyclopediaLanguageChanged && <UnsavedAsterisk size={0.55} />}
+          </div>
+          <select
+            value={tweaks.encyclopediaLanguage}
+            onChange={(e) =>
+              updateTweaksSettings({
+                encyclopediaLanguage: e.target.value as "en" | "ru",
+              })
+            }
+            disabled={!tweaks.encyclopediaEnabled}
+            className={`
+              w-[130px] max-w-xs px-3 py-2 rounded-md border transition-colors
+              ${
+                isDarkTheme
+                  ? "bg-gray-700 border-gray-600 text-white"
+                  : "bg-white border-gray-300 text-gray-900"
+              }
+              ${
+                !tweaks.encyclopediaEnabled
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
+              }
+              ${
+                isDarkTheme
+                  ? "focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
+                  : "focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
+              }
+            `}
+          >
+            <option value="en">
+              {t("tweaksPage.encyclopediaLanguage.options.en") || "English"}
+            </option>
+            <option value="ru">
+              {t("tweaksPage.encyclopediaLanguage.options.ru") || "Русский"}
+            </option>
+          </select>
+        </div>
+
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <label
+              className={`text-sm font-medium ${
+                isDarkTheme ? "text-gray-300" : "text-gray-700"
+              }`}
+            >
+              {t("tweaksPage.skipIntroVideos.label") ||
+                "Выключить вступительные видеоролики"}
+            </label>
+            {hasSkipIntroChanged && <UnsavedAsterisk size={0.55} />}
+          </div>
+          <Switcher
+            checked={tweaks.skipIntroVideos}
+            onChange={(checked) =>
+              updateTweaksSettings({ skipIntroVideos: checked })
+            }
+            isDarkTheme={isDarkTheme}
+          />
+        </div>
+
+        {/* Stash rename inline UI */}
+        <div>
+          <label className={`block mb-2 text-sm font-medium ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}>
+            {t("tweaksPage.stashRename.label") || "Переименование общих вкладок сундука"}:
+          </label>
+          <div className="flex justify-center">
+            <div className="relative inline-block select-none">
+              <img src="/img/stash_bg.png" alt="Stash tabs background" draggable={false} />
+              <div className="absolute inset-0">
+                {(tweaks.stashRename || []).slice(0, slotsCount).map((value: string, idx: number) => {
+                  const leftPercent = idx * slotWidthPercent;
+                  const baseValue = (baseStashRename || [])[idx] || "";
+                  const isChanged = (value || "") !== baseValue;
+                  return (
+                    <div key={idx} className="absolute top-0 h-full" style={{ left: `${leftPercent}%`, width: `${slotWidthPercent}%` }}>
+                      {isChanged && (
+                        <div className="absolute -top-2 left-1/2 -translate-x-1/2 transform pointer-events-none z-10">
+                          <UnsavedAsterisk size={0.55} />
+                        </div>
+                      )}
+                      <DebouncedInput
+                        type="text"
+                        value={value}
+                        onChange={(v) => {
+                          const next = (tweaks.stashRename || []).slice() as [string, string, string, string, string, string, string];
+                          next[idx] = v;
+                          updateTweaksSettings({ stashRename: next });
+                        }}
+                        maxLength={10}
+                        className={`w-full h-full px-2 pt-[12px] text-center text-[12px] bg-transparent border-0 outline-none ${isDarkTheme ? "text-white placeholder-gray-400" : "text-white placeholder-gray-300"}`}
+                        style={{ WebkitAppearance: "none", MozAppearance: "textfield" }}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Shared stash fix */}
+        <div className="flex items-center justify-between gap-4">
+          <label
+            className={`text-sm font-medium ${
+              isDarkTheme ? "text-gray-300" : "text-gray-700"
+            }`}
+          >
+            {t("tweaksPage.sharedStashFix.label") ||
+              "Оффлайн: фикс вкладок сундука"}
+          </label>
+          <div className="flex gap-2">
+            <Button
+              variant="primary"
+              size="md"
+              isLoading={isLoading}
+              isDarkTheme={isDarkTheme}
+              onClick={applyFix}
+            >
+              {t("tweaksPage.sharedStashFix.applyButton") || "Применить фикс"}
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default TweaksTab;
+

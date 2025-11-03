@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSettings } from "../../app/providers/SettingsContext";
 import MultipleLeveledLocales from "../../shared/components/MultipleLeveledLocales";
+import { useUnsavedChanges } from "../../shared/hooks/useUnsavedChanges";
 
 interface GemsTabProps {
   isDarkTheme: boolean;
@@ -16,6 +17,7 @@ const GemsTab: React.FC<GemsTabProps> = ({ isDarkTheme }) => {
     updateGemLevelSettings,
   } = useSettings();
   const selectedLocales = getSelectedLocales();
+  useUnsavedChanges();
 
   // Локальные состояния для коллапсов
   const [collapseStates, setCollapseStates] = useState({
@@ -175,6 +177,9 @@ const GemsTab: React.FC<GemsTabProps> = ({ isDarkTheme }) => {
         }
         onLocaleChange={(level, locale, value) =>
           handleGemLocaleChange(itemType, level, locale, value)
+        }
+        getBaselineGroup={(root) =>
+          root.gems?.[itemType as keyof typeof root.gems] as any
         }
       />
     );

@@ -22,21 +22,24 @@ const FileOperationsBlock: React.FC<FileOperationsBlockProps> = ({
   return (
     <div className="w-full md:w-auto flex flex-col md:items-end gap-1 md:ml-2 mt-2 md:mt-0">
       <div
-        className={`text-xs font-semibold uppercase tracking-wide ${isDarkTheme ? "text-gray-300" : "text-gray-700"
-          }`}
+        className={`text-xs font-semibold uppercase tracking-wide ${
+          isDarkTheme ? "text-gray-300" : "text-gray-700"
+        }`}
       >
         {t("profiles.filesSectionTitle")}
       </div>
       <div
-        className={`justify-between flex items-stretch gap-3 flex-wrap rounded-md p-2 ${isDarkTheme
-          ? "bg-gray-800 border border-gray-700"
-          : "bg-gray-100 border border-gray-200"
-          }`}
+        className={`justify-between flex items-stretch gap-3 flex-wrap rounded-md p-2 ${
+          isDarkTheme
+            ? "bg-gray-800 border border-gray-700"
+            : "bg-gray-100 border border-gray-200"
+        }`}
       >
         <div className="flex flex-col gap-1">
           <div
-            className={`text-[10px] uppercase tracking-wide ${isDarkTheme ? "text-gray-400" : "text-gray-600"
-              }`}
+            className={`text-[10px] uppercase tracking-wide ${
+              isDarkTheme ? "text-gray-400" : "text-gray-600"
+            }`}
           >
             {t("files.groups.all")}
           </div>
@@ -77,5 +80,3 @@ const FileOperationsBlock: React.FC<FileOperationsBlockProps> = ({
 };
 
 export default FileOperationsBlock;
-
-

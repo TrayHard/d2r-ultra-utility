@@ -1,7 +1,22 @@
 {
   "id": "1755975799629",
   "name": "Minimalistic",
+  "version": "1.0",
   "settings": {
+    "tweaks": {
+      "encyclopediaEnabled": true,
+      "encyclopediaLanguage": "ru",
+      "skipIntroVideos": true,
+      "stashRename": [
+        "Common",
+        "Runes&Gems",
+        "Casters",
+        "Weaponry",
+        "Charms",
+        "Jewelry",
+        "Blanks"
+      ]
+    },
     "runes": {
       "el": {
         "mode": "manual",

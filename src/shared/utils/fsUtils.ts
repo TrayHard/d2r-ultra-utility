@@ -9,9 +9,13 @@ export interface EnsureWritableResult {
   error?: string | null;
 }
 
-export async function ensureWritable(paths: string[]): Promise<EnsureWritableResult[]> {
+export async function ensureWritable(
+  paths: string[],
+): Promise<EnsureWritableResult[]> {
   try {
-    const res = await invoke<EnsureWritableResult[]>("ensure_writable", { paths });
+    const res = await invoke<EnsureWritableResult[]>("ensure_writable", {
+      paths,
+    });
     return res;
   } catch (e) {
     // If backend not available, return synthetic failures
@@ -26,7 +30,10 @@ export async function ensureWritable(paths: string[]): Promise<EnsureWritableRes
   }
 }
 
-export function summarizeEnsureResults(results: EnsureWritableResult[]): { ok: string[]; failed: EnsureWritableResult[] } {
+export function summarizeEnsureResults(results: EnsureWritableResult[]): {
+  ok: string[];
+  failed: EnsureWritableResult[];
+} {
   const ok: string[] = [];
   const failed: EnsureWritableResult[] = [];
   results.forEach((r) => {
@@ -36,4 +43,7 @@ export function summarizeEnsureResults(results: EnsureWritableResult[]): { ok: s
   return { ok, failed };
 }
 
-
+export async function ensureDirs(paths: string[]): Promise<string[]> {
+  const res = await invoke<string[]>("ensure_dir", { paths });
+  return res;
+}

@@ -13,8 +13,11 @@ import { useCommonItemsWorker } from "../../../shared/hooks/useCommonItemsWorker
 import { useGemsWorker } from "../../../shared/hooks/useGemsWorker.ts";
 import { useItemsWorker } from "../../../shared/hooks/useItemsWorker.ts";
 import { useApplyAllWorker } from "../../../shared/hooks/useApplyAllWorker.ts";
+import { useStashRenameWorker } from "../../../shared/hooks/useStashRenameWorker.ts";
+import { useTweaksWorker } from "../../../shared/hooks/useTweaksWorker.ts";
 import basesData from "../../../pages/items/bases.json";
-// no storage keys needed here anymore
+import { useUnsavedChanges } from "../../../shared/hooks/useUnsavedChanges";
+import { STORAGE_KEYS } from "../../../shared/constants";
 
 interface MainSpaceProps {
   isDarkTheme: boolean;
@@ -22,12 +25,14 @@ interface MainSpaceProps {
 
 const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
   const { t } = useTranslation();
-  const logger = useLogger('MainSpace');
+  const logger = useLogger("MainSpace");
   const [activeTab, setActiveTab] = useState<TabType>("common");
   const [confirmAction, setConfirmAction] = useState<
     null | "readAll" | "applyAll" | "readCurrent" | "applyCurrent"
   >(null);
   const [isBulkLoading, setIsBulkLoading] = useState(false);
+  const [isReadingCurrentLoading, setIsReadingCurrentLoading] = useState(false);
+  const [saveToProfile, setSaveToProfile] = useState(true);
 
   // Хуки для работы с настройками
   const {
@@ -38,6 +43,8 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     updateGemLevelSettings,
     updateItemsLevelSettings,
     updateItemSettings,
+    
+    updateTweaksSettings,
     getCommonSettings,
     getGemSettings,
     getItemsSettings,
@@ -165,8 +172,48 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     getAppMode
   );
 
+  // Хук для переименования вкладок сундука
+  const {
+    isLoading: isStashLoading,
+    error: stashError,
+    readFromFiles: readStashFromFiles,
+    applyChanges: applyStashChanges,
+  } = useStashRenameWorker(
+    (payload) => {
+      if (payload?.tabs) {
+        updateTweaksSettings({ stashRename: payload.tabs as any });
+      }
+    },
+    (message, opts) => {
+      if (isBulkLoading && opts?.type === "success") return;
+      sendMessage(message, { type: opts?.type, title: opts?.title });
+    },
+    t,
+    () => ({ tabs: (settings.tweaks?.stashRename || ["@shared","@shared","@shared","@shared","@shared","@shared","@shared"]) as any }),
+    "advanced",
+    getAppMode,
+  );
+
+  // Хук для tweaks
+  const {
+    isLoading: isTweaksLoading,
+    error: tweaksError,
+    readFromFiles: readTweaksFromFiles,
+    applyChanges: applyTweaksChanges,
+  } = useTweaksWorker(
+    updateTweaksSettings,
+    (message, opts) => {
+      if (isBulkLoading && opts?.type === "success") return;
+      sendMessage(message, { type: opts?.type, title: opts?.title });
+    },
+    t,
+    () => settings.tweaks,
+    "advanced",
+    getAppMode,
+  );
+
   // Единый агрегатор записи
-  const { applyAllChanges } = useApplyAllWorker(
+  const { isLoading: isApplyAllLoading, applyAllChanges } = useApplyAllWorker(
     (message, opts) => {
       if (isBulkLoading && opts?.type === "success") return;
       sendMessage(message, { type: opts?.type, title: opts?.title });
@@ -178,50 +225,77 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     getAppMode
   );
 
+  // Дебаунс настроек только для активного профиля, чтобы избежать мигания индикаторов при переключении профилей
+  const { activeProfileId: currentProfileId } = useSettings();
+  const [debounced, setDebounced] = useState({
+    settings,
+    profileId: currentProfileId,
+  });
+  React.useEffect(() => {
+    const pid = currentProfileId;
+    const id = setTimeout(
+      () => setDebounced({ settings, profileId: pid }),
+      500
+    );
+    return () => clearTimeout(id);
+  }, [settings, currentProfileId]);
+
   // Определяем, какой хук использовать в зависимости от активного таба
   const isLoading =
     activeTab === "runes"
       ? isRunesLoading
       : activeTab === "common"
-      ? isCommonItemsLoading
-      : activeTab === "gems"
-      ? isGemsLoading
-      : activeTab === "items"
-      ? isItemsLoading
-      : false;
+        ? isCommonItemsLoading
+        : activeTab === "gems"
+          ? isGemsLoading
+          : activeTab === "items"
+            ? isItemsLoading
+            : activeTab === "tweaks"
+                ? (isTweaksLoading || isStashLoading)
+                : false;
   const error =
     activeTab === "runes"
       ? runesError
       : activeTab === "common"
-      ? commonItemsError
-      : activeTab === "gems"
-      ? gemsError
-      : activeTab === "items"
-      ? itemsError
-      : null;
+        ? commonItemsError
+        : activeTab === "gems"
+          ? gemsError
+          : activeTab === "items"
+            ? itemsError
+            : activeTab === "tweaks"
+                ? (tweaksError || stashError)
+                : null;
   const readFromFiles =
     activeTab === "runes"
       ? readRunesFromFiles
       : activeTab === "common"
-      ? readCommonItemsFromFiles
-      : activeTab === "gems"
-      ? readGemsFromFiles
-      : activeTab === "items"
-      ? readItemsFromFiles
-      : () => {};
+        ? readCommonItemsFromFiles
+        : activeTab === "gems"
+          ? readGemsFromFiles
+          : activeTab === "items"
+            ? readItemsFromFiles
+            : activeTab === "tweaks"
+                ? (async () => { await readTweaksFromFiles(); await readStashFromFiles(); })
+                : () => { };
   const applyChanges =
     activeTab === "runes"
       ? applyRunesChanges
       : activeTab === "common"
-      ? applyCommonItemsChanges
-      : activeTab === "gems"
-      ? applyGemsChanges
-      : activeTab === "items"
-      ? applyItemsChanges
-      : () => {};
+        ? applyCommonItemsChanges
+        : activeTab === "gems"
+          ? applyGemsChanges
+          : activeTab === "items"
+            ? applyItemsChanges
+            : activeTab === "tweaks"
+                ? (async () => { await applyTweaksChanges(); await applyStashChanges(); })
+                : () => { };
 
   const executeReadAll = useCallback(async () => {
-    logger.info('Starting bulk read operation for all file types', undefined, 'executeReadAll');
+    logger.info(
+      "Starting bulk read operation for all file types",
+      undefined,
+      "executeReadAll"
+    );
     setIsBulkLoading(true);
     muteTypes(["success"]);
     const results = await Promise.allSettled([
@@ -229,22 +303,37 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       readItemsFromFiles(),
       readRunesFromFiles(),
       readGemsFromFiles(),
+      readStashFromFiles(),
+      readTweaksFromFiles(),
     ]);
     setIsBulkLoading(false);
     unmute();
     const hasError = results.some((r) => r.status === "rejected");
     if (hasError) {
       const details = results.map((r, idx) => {
-        if (r.status === 'rejected') {
-          return { index: idx, error: r.reason instanceof Error ? r.reason.message : String(r.reason) };
+        if (r.status === "rejected") {
+          return {
+            index: idx,
+            error:
+              r.reason instanceof Error ? r.reason.message : String(r.reason),
+          };
         }
-        return { index: idx, value: 'ok' };
+        return { index: idx, value: "ok" };
       });
-      logger.error('One or more read operations failed', new Error('Bulk read failure'), { details }, 'executeReadAll');
+      logger.error(
+        "One or more read operations failed",
+        new Error("Bulk read failure"),
+        { details },
+        "executeReadAll"
+      );
     }
-    
-    logger.info('Completed bulk read operation', { hasError, resultCount: results.length }, 'executeReadAll');
-    
+
+    logger.info(
+      "Completed bulk read operation",
+      { hasError, resultCount: results.length },
+      "executeReadAll"
+    );
+
     if (!hasError) {
       sendMessage(
         t("messages.success.allLoaded") || "All settings loaded successfully",
@@ -257,41 +346,223 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     readItemsFromFiles,
     readRunesFromFiles,
     readGemsFromFiles,
+    readStashFromFiles,
+    readTweaksFromFiles,
     unmute,
     sendMessage,
     t,
   ]);
 
-  const executeApplyAll = useCallback(async () => {
-    logger.info('Starting aggregated apply operation', undefined, 'executeApplyAll');
-    await applyAllChanges();
-    logger.info('Completed aggregated apply operation', undefined, 'executeApplyAll');
-  }, [applyAllChanges, logger]);
+  const allProfiles = useMemo(() => [...immutableProfiles, ...profiles], [immutableProfiles, profiles]);
+  const activeProfile = useMemo(() => allProfiles.find((p: any) => p.id === activeProfileId), [allProfiles, activeProfileId]);
+  // Разрешаем сохранять в immutable при admin=1
+  const isAdmin = (() => {
+    try {
+      return localStorage.getItem(STORAGE_KEYS.ADMIN_MODE) === "1";
+    } catch {
+      return false;
+    }
+  })();
+  const isActiveProfileImmutable = !!activeProfile?.isImmutable && !isAdmin;
 
-  const handleConfirm = () => {
+  const executeApplyAll = useCallback(async () => {
+    logger.info(
+      "Starting aggregated apply operation",
+      undefined,
+      "executeApplyAll"
+    );
+    await applyAllChanges();
+    try {
+      if (saveToProfile && activeProfileId && !isActiveProfileImmutable) {
+        await saveProfile(activeProfileId, settings);
+      }
+    } catch (e) {
+      // swallow errors on optional profile save to not block applying to game files
+    }
+    logger.info(
+      "Completed aggregated apply operation",
+      undefined,
+      "executeApplyAll"
+    );
+  }, [applyAllChanges, logger, saveToProfile, activeProfileId, isActiveProfileImmutable, saveProfile, settings]);
+
+  const handleConfirm = async () => {
     const action = confirmAction;
     setConfirmAction(null);
-    if (action === "readAll") executeReadAll();
-    else if (action === "applyAll") executeApplyAll();
-    else if (action === "readCurrent") readFromFiles();
-    else if (action === "applyCurrent") applyChanges();
+    if (action === "readAll") {
+      await executeReadAll();
+    } else if (action === "applyAll") {
+      await executeApplyAll();
+    } else if (action === "readCurrent") {
+      try {
+        setIsReadingCurrentLoading(true);
+        await readFromFiles();
+      } finally {
+        setIsReadingCurrentLoading(false);
+      }
+    } else if (action === "applyCurrent") {
+      await applyChanges();
+      try {
+        if (saveToProfile && activeProfileId && !isActiveProfileImmutable) {
+          await saveProfile(activeProfileId, settings);
+        }
+      } catch (e) {
+        // swallow errors on optional profile save
+      }
+    }
   };
 
   const handleCancel = () => setConfirmAction(null);
+
+  // Reset checkbox default state on modal open depending on profile mutability
+  React.useEffect(() => {
+    if (confirmAction === "applyAll" || confirmAction === "applyCurrent") {
+      setSaveToProfile(!isActiveProfileImmutable);
+    }
+    if (confirmAction === null) {
+      setSaveToProfile(true);
+    }
+  }, [confirmAction, isActiveProfileImmutable]);
 
   const tabs: TabItem[] = [
     { id: "common", label: t("tabs.common") },
     { id: "items", label: t("tabs.items") },
     { id: "runes", label: t("tabs.runes") },
     { id: "gems", label: t("tabs.gems") },
+    { id: "tweaks", label: t("tabs.tweaks") },
   ];
+
+  // Индикаторы изменений по табам относительно активного профиля
+  const { baseline } = useUnsavedChanges();
+  const tabIndicators = React.useMemo(() => {
+    if (!baseline) return {} as Record<string, boolean>;
+
+    // Если дебаунсированные настройки соответствуют другому профилю, чем baseline, не показываем индикаторы (во избежание мигания)
+    if (
+      (debounced as any)?.profileId &&
+      activeProfileId &&
+      (debounced as any).profileId !== activeProfileId
+    ) {
+      return {} as Record<string, boolean>;
+    }
+
+    const pickLevels = (g: any) =>
+      Array.isArray(g?.levels)
+        ? g.levels.map((lvl: any) => ({
+          enabled: !!lvl?.enabled,
+          locales: lvl?.locales || {},
+          // Нормализуем highlight к булю, чтобы undefined и false считались одинаково
+          highlight: !!(lvl as any)?.highlight,
+        }))
+        : [];
+
+    const normalizeCommon = (root: any) => {
+      const c = root?.common || {};
+      const keys = Object.keys(c);
+      const out: Record<string, unknown> = {};
+      for (const k of keys) {
+        const grp = c[k];
+        if (!grp) continue;
+        if (Array.isArray(grp.levels)) {
+          out[k] = pickLevels(grp);
+        } else {
+          out[k] = {
+            enabled: !!grp.enabled,
+            locales: grp.locales || {},
+          };
+        }
+      }
+      return out;
+    };
+
+    const normalizeItems = (root: any) => {
+      const items = root?.items || {};
+      const itemsMap = items?.items || {};
+      const normalizedItems: Record<string, unknown> = {};
+      for (const key of Object.keys(itemsMap)) {
+        const it = itemsMap[key] || {};
+        normalizedItems[key] = {
+          enabled: !!it.enabled,
+          showDifficultyClassMarker: !!it.showDifficultyClassMarker,
+          locales: it.locales || {},
+        };
+      }
+      return {
+        difficultyClassMarkers: pickLevels(items.difficultyClassMarkers),
+        qualityPrefixes: pickLevels(items.qualityPrefixes),
+        items: normalizedItems,
+      };
+    };
+
+    const normalizeGems = (root: any) => {
+      const g = root?.gems || {};
+      const out: Record<string, unknown> = {};
+      for (const k of Object.keys(g)) out[k] = pickLevels(g[k]);
+      return out;
+    };
+
+    const hasCommonChanges =
+      JSON.stringify(normalizeCommon(baseline)) !==
+      JSON.stringify(normalizeCommon((debounced as any).settings));
+    const hasItemsChanges =
+      JSON.stringify(normalizeItems(baseline)) !==
+      JSON.stringify(normalizeItems((debounced as any).settings));
+    const hasGemsChanges =
+      JSON.stringify(normalizeGems(baseline)) !==
+      JSON.stringify(normalizeGems((debounced as any).settings));
+    const hasRunesChanges =
+      JSON.stringify(baseline.runes) !==
+      JSON.stringify((debounced as any).settings.runes);
+
+    const hasTweaksChanges = (() => {
+      const baseEnabled = (baseline as any)?.tweaks?.encyclopediaEnabled ?? true;
+      const curEnabled = (debounced as any)?.settings?.tweaks?.encyclopediaEnabled ?? true;
+      const baseLang = (baseline as any)?.tweaks?.encyclopediaLanguage || "en";
+      const curLang = (debounced as any)?.settings?.tweaks?.encyclopediaLanguage || "en";
+      const baseSkip = (baseline as any)?.tweaks?.skipIntroVideos ?? false;
+      const curSkip = (debounced as any)?.settings?.tweaks?.skipIntroVideos ?? false;
+      const baseTabs = (baseline as any)?.tweaks?.stashRename || (baseline as any)?.stashRename?.tabs || [];
+      const curTabs = (debounced as any)?.settings?.tweaks?.stashRename || [];
+      const tabsChanged = JSON.stringify(baseTabs) !== JSON.stringify(curTabs);
+      return baseEnabled !== curEnabled || baseLang !== curLang || baseSkip !== curSkip || tabsChanged;
+    })();
+
+    return {
+      common: hasCommonChanges,
+      items: hasItemsChanges,
+      runes: hasRunesChanges,
+      gems: hasGemsChanges,
+      tweaks: hasTweaksChanges,
+    } as Record<string, boolean>;
+  }, [baseline, debounced, activeProfileId]);
+
+  const hasAnyChanges = Object.values(tabIndicators).some(Boolean);
 
   return (
     <div
-      className={`flex-1 grid ${
-        error ? "grid-rows-[auto_auto_44px_1fr]" : "grid-rows-[auto_44px_1fr]"
-      } ${isDarkTheme ? "bg-gray-900" : "bg-gray-50"}`}
+      className={`flex-1 grid ${error ? "grid-rows-[auto_auto_44px_1fr]" : "grid-rows-[auto_44px_1fr]"
+        } ${isDarkTheme ? "bg-gray-900" : "bg-gray-50"}`}
     >
+      {(isApplyAllLoading || isBulkLoading || isReadingCurrentLoading) && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm"
+          style={{
+            backgroundColor: isDarkTheme
+              ? "rgba(17,24,39,0.6)"
+              : "rgba(243,244,246,0.6)",
+          }}
+        >
+          <div className="flex flex-col items-center gap-4">
+            <div className="w-12 h-12 border-4 border-gray-300 border-t-yellow-500 rounded-full animate-spin"></div>
+            <div
+              className={`text-lg font-medium ${isDarkTheme ? "text-white" : "text-gray-900"
+                }`}
+            >
+              {isApplyAllLoading ? t("basicMainSpace.applying") : t("common.loading")}
+            </div>
+          </div>
+        </div>
+      )}
       {/* AppToolbar - показывается на всех вкладках */}
       <AppToolbar
         isDarkTheme={isDarkTheme}
@@ -310,17 +581,17 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
         onProfileImport={importProfile}
         onReadAll={() => setConfirmAction("readAll")}
         onApplyAll={() => setConfirmAction("applyAll")}
+        hasAnyChanges={hasAnyChanges}
       />
 
       {/* Error Display для всех табов */}
       {error && (
         <div
           className={`
-            mx-4 mt-4 px-4 py-2 rounded-lg border
-            ${
-              isDarkTheme
-                ? "bg-red-900/50 border-red-700 text-red-300"
-                : "bg-red-50 border-red-300 text-red-700"
+            mx-4 my-4 px-4 py-2 rounded-lg border
+            ${isDarkTheme
+              ? "bg-red-900/50 border-red-700 text-red-300"
+              : "bg-red-50 border-red-300 text-red-700"
             }
           `}
         >
@@ -334,6 +605,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
         activeTab={activeTab}
         onTabChange={(tabId) => setActiveTab(tabId as TabType)}
         isDarkTheme={isDarkTheme}
+        indicators={tabIndicators}
       />
 
       {/* Tab Content */}
@@ -362,15 +634,28 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       >
         <div className="space-y-4">
           <p
-            className={`text-sm ${
-              isDarkTheme ? "text-gray-300" : "text-gray-600"
-            }`}
+            className={`text-sm ${isDarkTheme ? "text-gray-300" : "text-gray-600"
+              }`}
           >
             {confirmAction === "readAll" || confirmAction === "readCurrent"
-              ? (t("runePage.textWorker.readConfirmMessage") ||
-                "Вы уверены, что хотите прочитать настройки из файлов? Текущие несохраненные изменения в настройках могут быть перезаписаны.")
+              ? t("runePage.textWorker.readConfirmMessage") ||
+              "Вы уверены, что хотите прочитать настройки из файлов? Текущие несохраненные изменения в настройках могут быть перезаписаны."
               : t("runePage.confirmModal.message")}
           </p>
+          {(confirmAction === "applyAll" || confirmAction === "applyCurrent") && (
+            <label className="flex items-center gap-2 select-none">
+              <input
+                type="checkbox"
+                className="w-4 h-4"
+                checked={saveToProfile && !isActiveProfileImmutable}
+                onChange={(e) => setSaveToProfile(e.target.checked)}
+                disabled={isActiveProfileImmutable}
+              />
+              <span className={`text-sm ${isDarkTheme ? "text-gray-200" : "text-gray-800"}`}>
+                {t("runePage.confirmModal.saveToProfile")}
+              </span>
+            </label>
+          )}
           <div className="flex justify-end gap-2">
             <Button
               variant="secondary"
@@ -387,7 +672,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
               size="sm"
             >
               {confirmAction === "readAll" || confirmAction === "readCurrent"
-                ? (t("runePage.textWorker.readFromFiles") || "Прочитать")
+                ? t("runePage.textWorker.readFromFiles") || "Прочитать"
                 : t("runePage.confirmModal.confirm")}
             </Button>
           </div>

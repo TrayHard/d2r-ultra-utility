@@ -190,11 +190,7 @@ export const commonItemGroups = {
     ECommonItem.pPoison2,
     ECommonItem.pPoison3,
   ],
-  firePotions: [
-    ECommonItem.pFire1,
-    ECommonItem.pFire2,
-    ECommonItem.pFire3,
-  ],
+  firePotions: [ECommonItem.pFire1, ECommonItem.pFire2, ECommonItem.pFire3],
 };
 
 // Маппинг для получения ECommonItem из настроек

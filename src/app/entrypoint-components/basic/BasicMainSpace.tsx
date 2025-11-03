@@ -16,7 +16,7 @@ import { useApplyAllWorker } from "../../../shared/hooks/useApplyAllWorker.ts";
 import basesData from "../../../pages/items/bases.json";
 import type { AppSettings } from "../../providers/SettingsContext.tsx";
 import Icon from "@mdi/react";
-import { mdiDelete } from "@mdi/js";
+import { mdiDelete, mdiCloudRefreshVariant, mdiCloudCheckVariant } from "@mdi/js";
 import Modal from "../../../shared/components/Modal.tsx";
 import Button from "../../../shared/components/Button.tsx";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
@@ -99,9 +99,8 @@ const SortableProfileItem: React.FC<SortableProfileItemProps> = ({
     <li
       ref={setNodeRef}
       style={style}
-      className={`${itemClasses} ${
-        isDragging ? "shadow-lg opacity-90 z-10" : ""
-      }`}
+      className={`${itemClasses} ${isDragging ? "shadow-lg opacity-90 z-10" : ""
+        }`}
     >
       <div
         {...attributes}
@@ -138,9 +137,8 @@ const SortableProfileItem: React.FC<SortableProfileItemProps> = ({
             mouseEnterDelay={0}
           >
             <span
-              className={`truncate ${
-                isDarkTheme ? "text-gray-200" : "text-gray-800"
-              }`}
+              className={`truncate ${isDarkTheme ? "text-gray-200" : "text-gray-800"
+                } baseModeProfileName`}
               onClick={() => onStartEditing(profile.id, profile.name)}
             >
               {profile.name}
@@ -183,6 +181,9 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
     getSelectedLocales,
     settings,
     getAppMode,
+    // immutable updates
+    getImmutableProfileUpdateInfo,
+    updateImmutableProfile,
   } = useSettings();
 
   const { sendMessage } = useGlobalMessage();
@@ -292,6 +293,22 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
     getSelectedLocales,
     "basic",
     getAppMode
+  );
+
+  // Полноэкранный лоадер на время обновления immutable профиля
+  const [updatingProfileId, setUpdatingProfileId] = useState<string | null>(null);
+
+  const handleUpdateImmutableProfile = useCallback(
+    async (profileId: string) => {
+      if (updatingProfileId) return;
+      setUpdatingProfileId(profileId);
+      try {
+        await updateImmutableProfile(profileId);
+      } finally {
+        setUpdatingProfileId(null);
+      }
+    },
+    [updateImmutableProfile, updatingProfileId]
   );
 
   // Рефы с актуальными функциями применения (чтобы избежать устаревших замыканий)
@@ -536,7 +553,7 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
 
   // Подписка на drag & drop события через Tauri (глобально по окну)
   useEffect(() => {
-    let unlisten: (() => void) | null = null;
+    let unlisten: (() => void | Promise<void>) | null = null;
     const setup = async () => {
       try {
         const win = getCurrentWebviewWindow();
@@ -611,8 +628,40 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
     setup();
     return () => {
       if (unlisten) {
-        unlisten();
-        unlisten = null;
+        const dispose = unlisten;
+        try {
+          const internals = (
+            window as unknown as {
+              __TAURI_INTERNALS__?: {
+                event?: { unregisterListener?: unknown };
+              };
+            }
+          ).__TAURI_INTERNALS__;
+          const canUnregister =
+            typeof internals?.event?.unregisterListener === "function";
+          if (!canUnregister) {
+            return;
+          }
+          const maybePromise = dispose();
+          if (
+            maybePromise &&
+            typeof (maybePromise as any).then === "function"
+          ) {
+            (maybePromise as Promise<void>).catch((err) => {
+              console.warn(
+                "Drag&Drop unlisten failed (probably already removed)",
+                err
+              );
+            });
+          }
+        } catch (err) {
+          console.warn(
+            "Drag&Drop unlisten failed (probably already removed)",
+            err
+          );
+        } finally {
+          unlisten = null;
+        }
       }
     };
   }, []); // Пустой массив зависимостей - эффект выполняется только один раз
@@ -662,28 +711,22 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
     input.click();
   }, [importProfile, sendMessage, getUniqueProfileName]);
 
-  const listContainerClasses = `mt-4 border rounded-lg ${
-    isDarkTheme ? "border-gray-700 bg-gray-800" : "border-gray-200 bg-white"
-  } h-96 overflow-y-auto overflow-x-hidden`;
-  const sectionTitleClasses = `px-3 pt-3 text-xs uppercase tracking-wide ${
-    isDarkTheme ? "text-gray-400" : "text-gray-500"
-  }`;
-  const itemClasses = `flex items-center justify-between px-3 py-2 ${
-    isDarkTheme ? "hover:bg-gray-700" : "hover:bg-gray-50"
-  }`;
-  const nameClasses = `truncate flex-1 ${
-    isDarkTheme ? "text-gray-200" : "text-gray-800"
-  }`;
-  const applyBtnClasses = `px-2 py-1 text-xs rounded flex items-center gap-1 ${
-    isDarkTheme
-      ? "bg-green-600 hover:bg-green-500 text-white"
-      : "bg-green-500 hover:bg-green-400 text-white"
-  }`;
-  const deleteBtnClasses = `mr-2 px-2 py-1 text-xs rounded ${
-    isDarkTheme
-      ? "bg-red-700 hover:bg-red-600 text-white"
-      : "bg-red-600 hover:bg-red-500 text-white"
-  }`;
+  const listContainerClasses = `mt-4 border rounded-lg ${isDarkTheme ? "border-gray-700 bg-gray-800" : "border-gray-200 bg-white"
+    } h-96 overflow-y-auto overflow-x-hidden`;
+  const sectionTitleClasses = `px-3 pt-3 text-xs uppercase tracking-wide ${isDarkTheme ? "text-gray-400" : "text-gray-500"
+    }`;
+  const itemClasses = `flex items-center justify-between px-3 py-2 ${isDarkTheme ? "hover:bg-gray-700" : "hover:bg-gray-50"
+    }`;
+  const nameClasses = `truncate flex-1 ${isDarkTheme ? "text-gray-200" : "text-gray-800"
+    }`;
+  const applyBtnClasses = `px-2 py-1 text-xs rounded flex items-center gap-1 ${isDarkTheme
+    ? "bg-green-600 hover:bg-green-500 text-white"
+    : "bg-green-500 hover:bg-green-400 text-white"
+    }`;
+  const deleteBtnClasses = `mr-2 px-2 py-1 text-xs rounded ${isDarkTheme
+    ? "bg-red-700 hover:bg-red-600 text-white"
+    : "bg-red-600 hover:bg-red-500 text-white"
+    }`;
 
   return (
     <div
@@ -704,11 +747,10 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
       }}
     >
       <div
-        className={`h-full ${
-          isDarkTheme
-            ? "bg-gradient-to-tr from-gray-900/50 via-gray-800 to-gray-900"
-            : "bg-gradient-to-br from-gray-50 via-white to-blue-100"
-        }`}
+        className={`h-full ${isDarkTheme
+          ? "bg-gradient-to-tr from-gray-900/50 via-gray-800 to-gray-900"
+          : "bg-gradient-to-br from-gray-50 via-white to-blue-100"
+          }`}
       >
         {isApplying && (
           <div
@@ -722,11 +764,30 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
             <div className="flex flex-col items-center gap-4">
               <div className="w-12 h-12 border-4 border-gray-300 border-t-yellow-500 rounded-full animate-spin"></div>
               <div
-                className={`text-lg font-medium ${
-                  isDarkTheme ? "text-white" : "text-gray-900"
-                }`}
+                className={`text-lg font-medium ${isDarkTheme ? "text-white" : "text-gray-900"
+                  }`}
               >
                 {t("basicMainSpace.applying")}
+              </div>
+            </div>
+          </div>
+        )}
+        {updatingProfileId && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm"
+            style={{
+              backgroundColor: isDarkTheme
+                ? "rgba(17,24,39,0.6)"
+                : "rgba(243,244,246,0.6)",
+            }}
+          >
+            <div className="flex flex-col items-center gap-4">
+              <div className="w-12 h-12 border-4 border-gray-300 border-t-green-500 rounded-full animate-spin"></div>
+              <div
+                className={`text-lg font-medium ${isDarkTheme ? "text-white" : "text-gray-900"
+                  }`}
+              >
+                {t("basicMainSpace.update.updatingOverlay")}
               </div>
             </div>
           </div>
@@ -741,23 +802,20 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
             }}
           >
             <div
-              className={`border-2 border-dashed rounded-xl p-10 text-center max-w-md mx-4 ${
-                isDarkTheme
-                  ? "border-blue-400 bg-blue-900/20"
-                  : "border-blue-500 bg-blue-50"
-              }`}
+              className={`border-2 border-dashed rounded-xl p-10 text-center max-w-md mx-4 ${isDarkTheme
+                ? "border-blue-400 bg-blue-900/20"
+                : "border-blue-500 bg-blue-50"
+                }`}
             >
               <div
-                className={`text-4xl mb-3 ${
-                  isDarkTheme ? "text-blue-400" : "text-blue-600"
-                }`}
+                className={`text-4xl mb-3 ${isDarkTheme ? "text-blue-400" : "text-blue-600"
+                  }`}
               >
                 📁
               </div>
               <div
-                className={`text-xl font-semibold mb-1 ${
-                  isDarkTheme ? "text-blue-300" : "text-blue-700"
-                }`}
+                className={`text-xl font-semibold mb-1 ${isDarkTheme ? "text-blue-300" : "text-blue-700"
+                  }`}
               >
                 {t("basicMainSpace.importProfile")}
               </div>
@@ -771,9 +829,8 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
         )}
         <div className={`max-w-[600px] px-4 py-8`}>
           <h1
-            className={`text-4xl font-bold text-center diablo-font ${
-              isDarkTheme ? "text-white" : "text-gray-900"
-            }`}
+            className={`text-4xl font-bold text-center diablo-font ${isDarkTheme ? "text-white" : "text-gray-900"
+              }`}
           >
             {t("basicMainSpace.title")}
           </h1>
@@ -781,11 +838,10 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
           <div className="mt-4 text-center">
             <button
               onClick={() => setIsHelpModalOpen(true)}
-              className={`px-4 py-2 rounded text-sm font-medium transition-colors ${
-                isDarkTheme
-                  ? "bg-gray-700 hover:bg-gray-600 text-gray-200 border border-gray-600"
-                  : "bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300"
-              }`}
+              className={`px-4 py-2 rounded text-sm font-medium transition-colors ${isDarkTheme
+                ? "bg-gray-700 hover:bg-gray-600 text-gray-200 border border-gray-600"
+                : "bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300"
+                }`}
             >
               {t("basicMainSpace.buttons.howToUse")}
             </button>
@@ -797,11 +853,10 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={t("basicMainSpace.searchPlaceholder")}
-              className={`w-full px-3 py-2 rounded border focus:outline-none ${
-                isDarkTheme
-                  ? "bg-gray-900 border-gray-700 text-gray-200 placeholder-gray-500 focus:border-yellow-600"
-                  : "bg-white border-gray-300 text-gray-800 placeholder-gray-400 focus:border-yellow-500"
-              }`}
+              className={`w-full px-3 py-2 rounded border focus:outline-none ${isDarkTheme
+                ? "bg-gray-900 border-gray-700 text-gray-200 placeholder-gray-500 focus:border-yellow-600"
+                : "bg-white border-gray-300 text-gray-800 placeholder-gray-400 focus:border-yellow-500"
+                }`}
             />
           </div>
 
@@ -809,43 +864,67 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
             {filteredRecommended.length > 0 && (
               <>
                 <div
-                  className={`${sectionTitleClasses} ${
-                    isDarkTheme
-                      ? "border-b border-gray-700 pb-2 bg-gray-600/50"
-                      : "border-b border-gray-200 pb-2 bg-gray-50/50"
-                  }`}
+                  className={`${sectionTitleClasses} ${isDarkTheme
+                    ? "border-b border-gray-700 pb-2 bg-gray-600/50"
+                    : "border-b border-gray-200 pb-2 bg-gray-50/50"
+                    }`}
                 >
                   {t("basicMainSpace.sections.recommended")}
                 </div>
                 <ul className="mt-2">
-                  {filteredRecommended.map((p) => (
-                    <li key={p.id} className={itemClasses}>
-                      <span
-                        className={`${nameClasses} cursor-default`}
-                        title={p.name}
-                      >
-                        {p.name}
-                      </span>
-                      <div className="flex items-center">
-                        <button
-                          className={applyBtnClasses}
-                          onClick={() => handleApplyProfile(p.id)}
+                  {filteredRecommended.map((p) => {
+                    const info = getImmutableProfileUpdateInfo(p.id);
+                    const hasUpdate = info.hasUpdate;
+                    const tooltipTitle = hasUpdate
+                      ? t("basicMainSpace.update.tooltipUpdateProfile", {
+                        from: info.currentVersion || "-",
+                        to: info.remoteVersion || "-",
+                      })
+                      : t("basicMainSpace.update.tooltipUpToDate", {
+                        version: info.currentVersion || "-",
+                      });
+                    return (
+                      <li key={p.id} className={itemClasses}>
+                        <Tooltip title={tooltipTitle} placement="top">
+                          <button
+                            onClick={() => hasUpdate && handleUpdateImmutableProfile(p.id)}
+                            disabled={!hasUpdate}
+                            aria-label={hasUpdate ? t("basicMainSpace.update.updateActionAria") : t("basicMainSpace.update.upToDateAria")}
+                            style={{ background: "transparent", border: 0, padding: 0, margin: "0 6px 0 0" }}
+                          >
+                            <Icon
+                              path={hasUpdate ? mdiCloudRefreshVariant : mdiCloudCheckVariant}
+                              size={1}
+                              className={`${hasUpdate ? "text-green-500" : isDarkTheme ? "text-gray-500" : "text-gray-400"} ${hasUpdate ? "animate-pulse" : ""}`}
+                            />
+                          </button>
+                        </Tooltip>
+                        <span
+                          className={`${nameClasses} cursor-default`}
+                          title={p.name}
                         >
-                          ✓ {t("basicMainSpace.buttons.apply")}
-                        </button>
-                      </div>
-                    </li>
-                  ))}
+                          {p.name}
+                        </span>
+                        <div className="flex items-center">
+                          <button
+                            className={applyBtnClasses}
+                            onClick={() => handleApplyProfile(p.id)}
+                          >
+                            ✓ {t("basicMainSpace.buttons.apply")}
+                          </button>
+                        </div>
+                      </li>
+                    );
+                  })}
                 </ul>
               </>
             )}
 
             <div
-              className={`${sectionTitleClasses} border-t border-b ${
-                isDarkTheme
-                  ? "border-gray-700 pb-2 bg-gray-600/50"
-                  : "border-gray-200 pb-2 bg-gray-50/50"
-              } mt-2`}
+              className={`${sectionTitleClasses} border-t border-b ${isDarkTheme
+                ? "border-gray-700 pb-2 bg-gray-600/50"
+                : "border-gray-200 pb-2 bg-gray-50/50"
+                } mt-2`}
             >
               {t("basicMainSpace.sections.userProfiles")}
             </div>
@@ -887,21 +966,19 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
 
           <div className="mt-4 flex justify-center gap-2">
             <button
-              className={`diablo-font px-4 py-2 rounded font-medium ${
-                isDarkTheme
-                  ? "bg-blue-600 hover:bg-blue-500 text-white"
-                  : "bg-blue-500 hover:bg-blue-400 text-white"
-              }`}
+              className={`diablo-font px-4 py-2 rounded font-medium ${isDarkTheme
+                ? "bg-blue-600 hover:bg-blue-500 text-white"
+                : "bg-blue-500 hover:bg-blue-400 text-white"
+                }`}
               onClick={handleImportProfile}
             >
               {t("basicMainSpace.buttons.addLootFilter")}
             </button>
             <button
-              className={`diablo-font px-4 py-2 rounded font-medium ${
-                isDarkTheme
-                  ? "bg-gray-700 hover:bg-gray-600 text-gray-100"
-                  : "bg-gray-200 hover:bg-gray-300 text-gray-800"
-              }`}
+              className={`diablo-font px-4 py-2 rounded font-medium ${isDarkTheme
+                ? "bg-gray-700 hover:bg-gray-600 text-gray-100"
+                : "bg-gray-200 hover:bg-gray-300 text-gray-800"
+                }`}
               onClick={handleDisableLootfilters}
               disabled={!defaultProfile}
             >
@@ -921,9 +998,8 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
       >
         <div className="space-y-4">
           <p
-            className={`text-sm leading-relaxed ${
-              isDarkTheme ? "text-gray-300" : "text-gray-600"
-            }`}
+            className={`text-sm leading-relaxed ${isDarkTheme ? "text-gray-300" : "text-gray-600"
+              }`}
           >
             <p style={{ marginBottom: "10px" }}>
               {t("basicMainSpace.helpModal.content.line1")}
@@ -958,9 +1034,8 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
       >
         <div className="space-y-4">
           <p
-            className={`text-sm ${
-              isDarkTheme ? "text-gray-300" : "text-gray-600"
-            }`}
+            className={`text-sm ${isDarkTheme ? "text-gray-300" : "text-gray-600"
+              }`}
           >
             {t("basicMainSpace.confirmDelete.message")}
           </p>

@@ -15,7 +15,8 @@ const ColorHint: React.FC<ColorHintProps> = ({ isDarkTheme }) => {
 
   const colorEntries = Object.entries(colorCodes);
 
-  const getColorStyle = (colorCode: string) => colorCodeToHex[colorCode] || "#FFFFFF";
+  const getColorStyle = (colorCode: string) =>
+    colorCodeToHex[colorCode] || "#FFFFFF";
 
   const tooltipContent = (
     <div className="w-full p-2 overflow-x-hidden">
@@ -38,7 +39,7 @@ const ColorHint: React.FC<ColorHintProps> = ({ isDarkTheme }) => {
               navigator.clipboard.writeText(colorCode);
               message.success(
                 t("runePage.controls.colorHint.copied", { code: colorCode }) ||
-                  `Copied ${colorCode} to clipboard`
+                  `Copied ${colorCode} to clipboard`,
               );
             }}
           >

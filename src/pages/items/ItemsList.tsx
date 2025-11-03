@@ -12,6 +12,7 @@ import {
 } from "@mdi/js";
 import { FixedSizeList as List } from "react-window";
 import Button from "../../shared/components/Button";
+import UnsavedAsterisk from "../../shared/components/UnsavedAsterisk";
 import Checkbox from "../../shared/components/Checkbox";
 import { Tooltip } from "antd";
 
@@ -52,6 +53,8 @@ interface ItemsListProps {
   onOpenSettingsModal: () => void;
   className?: string;
   filtersRef: React.RefObject<HTMLDivElement>;
+  itemHasUnsavedMap?: Map<string, boolean>;
+  itemsSettingsUnsaved?: boolean;
 }
 
 interface ItemRowProps {
@@ -69,6 +72,8 @@ interface ItemRowProps {
       shiftKey: boolean
     ) => void;
     onSetSelectedItemForSettings: (itemKey: string) => void;
+    itemHasUnsavedMap?: Map<string, boolean>;
+    itemsSettingsUnsaved?: boolean;
   };
 }
 
@@ -88,6 +93,7 @@ const ItemRow: React.FC<ItemRowProps> = ({ index, style, data }) => {
   const itemImagePath = `/img/bases/${item.imgName}.png`;
   const isSelected = selectedItems.has(item.key);
   const isSelectedForSettings = selectedItemForSettings === item.key;
+  const hasUnsaved = data.itemHasUnsavedMap?.get(item.key);
 
   return (
     <div style={style} className="px-2">
@@ -103,8 +109,8 @@ const ItemRow: React.FC<ItemRowProps> = ({ index, style, data }) => {
                   ? "bg-yellow-900/30 border-yellow-400"
                   : "bg-yellow-50 border-yellow-400"
                 : isDarkTheme
-                ? "bg-gray-800 border-gray-700 hover:bg-gray-750"
-                : "bg-white border-gray-200 hover:bg-gray-50"
+                  ? "bg-gray-800 border-gray-700 hover:bg-gray-750"
+                  : "bg-white border-gray-200 hover:bg-gray-50"
             }
           `}
         >
@@ -131,9 +137,10 @@ const ItemRow: React.FC<ItemRowProps> = ({ index, style, data }) => {
           {/* Имя предмета и класс сложности */}
           <div className="flex-1 min-w-0">
             <div
-              className={`font-medium ${
+              className={`font-medium truncate w-[150px] overflow-x-hidden ${
                 isDarkTheme ? "text-white" : "text-gray-900"
               }`}
+              title={itemName}
             >
               {itemName}
             </div>
@@ -145,6 +152,14 @@ const ItemRow: React.FC<ItemRowProps> = ({ index, style, data }) => {
               {t(`itemsPage.filters.${item.difficultyClass}`)}
             </div>
           </div>
+
+          {hasUnsaved && (
+            <span className="relative inline-block">
+              <span className="absolute" style={{ right: 0, top: -10 }}>
+                <UnsavedAsterisk size={0.65} />
+              </span>
+            </span>
+          )}
         </div>
 
         {/* Чекбокс */}
@@ -183,6 +198,8 @@ const ItemsList: React.FC<ItemsListProps> = ({
   onOpenSettingsModal,
   className,
   filtersRef,
+  itemHasUnsavedMap,
+  itemsSettingsUnsaved,
 }) => {
   const { t } = useTranslation();
   const listRef = React.useRef<HTMLDivElement>(null);
@@ -289,7 +306,7 @@ const ItemsList: React.FC<ItemsListProps> = ({
           />
 
           {/* Кнопка настроек */}
-          <div className="ml-auto">
+          <div className="ml-auto relative">
             <Tooltip title={t("itemsPage.settings.title")} placement="top">
               <Button
                 variant="secondary"
@@ -300,6 +317,11 @@ const ItemsList: React.FC<ItemsListProps> = ({
                 className={`!w-10 !h-full !p-0 ${isDarkTheme ? "!bg-black-700 !border-gray-600" : "!bg-gray-200 !border-gray-300"}`}
               />
             </Tooltip>
+            {itemsSettingsUnsaved && (
+              <span className="absolute" style={{ right: -6, top: -6 }}>
+                <UnsavedAsterisk size={0.6} />
+              </span>
+            )}
           </div>
         </div>
 
@@ -310,7 +332,10 @@ const ItemsList: React.FC<ItemsListProps> = ({
               variant="secondary"
               size="sm"
               title={t("itemsPage.massEdit.selectAll")}
-              onClick={onSelectAll}
+              onClick={() => {
+                onSelectAll();
+                onOpenMassEditModal();
+              }}
               isDarkTheme={isDarkTheme}
               icon={mdiCheckAll}
               iconSize={0.6}
@@ -335,7 +360,10 @@ const ItemsList: React.FC<ItemsListProps> = ({
             </Button>
           </div>
 
-          <Tooltip title={t("itemsPage.massEdit.editSelected") ?? "Edit selected"} placement="top">
+          <Tooltip
+            title={t("itemsPage.massEdit.editSelected") ?? "Edit selected"}
+            placement="top"
+          >
             <Button
               variant={selectedItems.size === 0 ? "secondary" : "primary"}
               onClick={onOpenMassEditModal}
@@ -382,6 +410,7 @@ const ItemsList: React.FC<ItemsListProps> = ({
               t,
               onItemSelection,
               onSetSelectedItemForSettings,
+              itemHasUnsavedMap,
             }}
           >
             {ItemRow}

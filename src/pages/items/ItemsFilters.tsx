@@ -4,6 +4,7 @@ import { EBaseType, ECharacterClass, allBaseTypes } from "./constants";
 import { Button as AntButton, Input, InputNumber, Select, Tooltip } from "antd";
 import { SearchOutlined, ReloadOutlined } from "@ant-design/icons";
 import "./ItemsTab.css";
+import UnsavedAsterisk from "../../shared/components/UnsavedAsterisk";
 
 interface ItemsFiltersProps {
   isDarkTheme: boolean;
@@ -27,6 +28,9 @@ interface ItemsFiltersProps {
   onToggleRelatedKind: (kind: string) => void;
   onToggleBaseType: (baseType: EBaseType) => void;
   filtersRef: React.RefObject<HTMLDivElement>;
+  unsavedOnly: boolean;
+  unsavedCount: number;
+  onToggleUnsavedOnly: () => void;
 }
 
 const ItemsFilters: React.FC<ItemsFiltersProps> = ({
@@ -51,6 +55,9 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
   onToggleRelatedKind,
   onToggleBaseType,
   filtersRef,
+  unsavedOnly,
+  unsavedCount,
+  onToggleUnsavedOnly,
 }) => {
   const { t } = useTranslation();
 
@@ -111,8 +118,8 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
                     ? "bg-yellow-900/30 border-yellow-400 text-yellow-300"
                     : "bg-yellow-50 border-yellow-400 text-yellow-800"
                   : isDarkTheme
-                  ? "bg-gray-700 border-gray-600 text-white hover:bg-gray-600"
-                  : "bg-white border-gray-300 text-gray-900 hover:bg-gray-50"
+                    ? "bg-gray-700 border-gray-600 text-white hover:bg-gray-600"
+                    : "bg-white border-gray-300 text-gray-900 hover:bg-gray-50"
               }
             `}
           >
@@ -136,18 +143,58 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
     <div
       ref={filtersRef}
       className={`py-4 px-3 border-b ${
-        isDarkTheme ? "border-gray-700 dark-theme" : "border-gray-200 dark-theme"
+        isDarkTheme
+          ? "border-gray-700 dark-theme"
+          : "border-gray-200 dark-theme"
       }`}
     >
       {/* Первая строка фильтров */}
       <div className="flex items-center gap-2 mb-4">
         <AntButton
           icon={<ReloadOutlined />}
-          onClick={onResetFilters}
+          onClick={() => {
+            onResetFilters();
+            if (unsavedOnly) onToggleUnsavedOnly();
+          }}
           type="default"
         >
           {t("itemsPage.filters.reset")}
         </AntButton>
+
+        <Tooltip
+          title={
+            unsavedCount > 0
+              ? `${unsavedCount} items unsaved in profile`
+              : "No unsaved changes"
+          }
+          placement="top"
+        >
+          <AntButton
+            onClick={onToggleUnsavedOnly}
+            type={unsavedOnly ? "primary" : "default"}
+            disabled={unsavedCount === 0}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              minWidth: 32,
+              maxWidth: 32,
+              height: 32,
+              padding: 0,
+            }}
+          >
+            <UnsavedAsterisk
+              size={0.65}
+              color={
+                unsavedCount > 0
+                  ? isDarkTheme
+                    ? "#F59E0B"
+                    : "#D97706"
+                  : "#9CA3AF"
+              }
+            />
+          </AntButton>
+        </Tooltip>
 
         <div className="w-70">
           <Input
@@ -182,7 +229,10 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
         )}
 
         <div className="flex gap-2">
-          <Tooltip title={t("itemsPage.filters.reqLevelTooltip")} placement="top">
+          <Tooltip
+            title={t("itemsPage.filters.reqLevelTooltip")}
+            placement="top"
+          >
             <InputNumber
               placeholder={t("itemsPage.filters.reqLevel")}
               value={reqLevelFilter || null}
@@ -193,7 +243,10 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
             />
           </Tooltip>
 
-          <Tooltip title={t("itemsPage.filters.reqStrengthTooltip")} placement="top">
+          <Tooltip
+            title={t("itemsPage.filters.reqStrengthTooltip")}
+            placement="top"
+          >
             <InputNumber
               placeholder={t("itemsPage.filters.reqStrength")}
               value={reqStrengthFilter || null}
@@ -204,7 +257,10 @@ const ItemsFilters: React.FC<ItemsFiltersProps> = ({
             />
           </Tooltip>
 
-          <Tooltip title={t("itemsPage.filters.reqDexterityTooltip")} placement="top">
+          <Tooltip
+            title={t("itemsPage.filters.reqDexterityTooltip")}
+            placement="top"
+          >
             <InputNumber
               placeholder={t("itemsPage.filters.reqDexterity")}
               value={reqDexterityFilter || null}

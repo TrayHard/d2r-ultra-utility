@@ -10,6 +10,9 @@ import { mdiEyeOutline, mdiEyeOffOutline } from "@mdi/js";
 import MultipleLeveledLocales from "../../shared/components/MultipleLeveledLocales";
 import ColorHint from "../../shared/components/ColorHint";
 import SymbolsHint from "../../shared/components/SymbolsHint";
+import UnsavedAsterisk from "../../shared/components/UnsavedAsterisk";
+import DebouncedInput from "../../shared/components/DebouncedInput";
+import { useUnsavedChanges } from "../../shared/hooks/useUnsavedChanges";
 import type {
   CommonItemSettings,
   PotionGroupSettings,
@@ -32,6 +35,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
     updatePotionLevelSettings,
   } = useSettings();
   const selectedLocales = getSelectedLocales();
+  const { baseline } = useUnsavedChanges();
 
   // Состояние для отслеживания фокуса в полях локалей
   const [focusedLocale, setFocusedLocale] = useState<string | null>(null);
@@ -301,14 +305,14 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
       | "keys",
     toggleHandler: (enabled: boolean) => void
   ) => {
-    const showGenderCodeHintForItemType = (
+    const base = baseline ? (baseline as any).common?.[itemType] : null;
+    const showGenderCodeHintForItemType =
       itemType === "amulets" ||
       itemType === "rings" ||
       itemType === "jewels" ||
       itemType === "smallCharms" ||
       itemType === "largeCharms" ||
-      itemType === "grandCharms"
-    );
+      itemType === "grandCharms";
     return (
       <div className="space-y-4">
         {/* Предпросмотр + переключатель состояния */}
@@ -318,7 +322,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
               title={t("runePage.controls.toggleItemVisibilityTooltip")}
               placement="top"
             >
-              <div>
+              <div className="relative">
                 <Switch
                   enabled={itemSettings.enabled}
                   onChange={(enabled) => toggleHandler(enabled)}
@@ -334,6 +338,13 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
                     />
                   }
                 />
+                {base && base.enabled !== itemSettings.enabled && (
+                  <UnsavedAsterisk
+                    size={0.55}
+                    className="absolute"
+                    style={{ right: -6, top: -6 }}
+                  />
+                )}
               </div>
             </Tooltip>
           </div>
@@ -405,7 +416,10 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
                         style={{ textDecoration: "underline dotted" }}
                       >
                         {locale.label}:
-                        <span className="pointer-events-none absolute -top-1 opacity-50 text-[10px]" style={{ right: "4px" }}>
+                        <span
+                          className="pointer-events-none absolute -top-1 opacity-50 text-[10px]"
+                          style={{ right: "4px" }}
+                        >
                           ?
                         </span>
                       </span>
@@ -414,20 +428,16 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
                     <>{locale.label}:</>
                   )}
                 </span>
-                <div className="flex-1 flex items-center space-x-2">
-                  <input
+                <div className="flex-1 flex items-center space-x-2 relative">
+                  <DebouncedInput
                     type="text"
                     value={
                       itemSettings.locales[
                         locale.value as keyof typeof itemSettings.locales
                       ] ?? ""
                     }
-                    onChange={(e) =>
-                      handleLocaleChange(
-                        itemType,
-                        locale.value,
-                        e.target.value
-                      )
+                    onChange={(v) =>
+                      handleLocaleChange(itemType, locale.value, v)
                     }
                     onFocus={() => setFocusedLocale(locale.value)}
                     onBlur={() => setFocusedLocale(null)}
@@ -446,11 +456,24 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
                         !itemSettings.enabled
                           ? "opacity-50 cursor-not-allowed"
                           : isDarkTheme
-                          ? "focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
-                          : "focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
+                            ? "focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
+                            : "focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
                       }
                     `}
                   />
+                  {base &&
+                    base.locales?.[
+                      locale.value as keyof typeof base.locales
+                    ] !==
+                      itemSettings.locales[
+                        locale.value as keyof typeof itemSettings.locales
+                      ] && (
+                      <UnsavedAsterisk
+                        size={0.55}
+                        className="absolute"
+                        style={{ right: 6, top: 6 }}
+                      />
+                    )}
                   <div className="flex items-center gap-1">
                     <SymbolsHint isDarkTheme={isDarkTheme} />
                     <ColorHint isDarkTheme={isDarkTheme} />
@@ -566,6 +589,19 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
       iconClassName={itemSettings.enabled ? "opacity-100" : "opacity-30"}
       isOpen={collapseStates[titleKey]}
       onToggle={(isOpen) => handleCollapseToggle(titleKey, isOpen)}
+      rightAdornment={(() => {
+        const base = baseline ? (baseline as any).common?.[titleKey] : null;
+        if (!base) return null;
+        if (base.enabled !== itemSettings.enabled)
+          return <UnsavedAsterisk size={0.7} />;
+        for (const loc of selectedLocales) {
+          const b = base.locales?.[loc as keyof typeof base.locales];
+          const c =
+            itemSettings.locales?.[loc as keyof typeof itemSettings.locales];
+          if (b !== c) return <UnsavedAsterisk size={0.7} />;
+        }
+        return null;
+      })()}
     >
       {renderLocaleInputs(itemSettings, titleKey, toggleHandler)}
     </Collapse>
@@ -586,8 +622,8 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
       itemType === "rejuvenationPotions"
         ? 1
         : itemType === "poisonPotions" || itemType === "firePotions"
-        ? 0
-        : 4;
+          ? 0
+          : 4;
     const headerIcon = getPotionImagePath(itemType, headerIconIndex);
 
     return (
@@ -610,6 +646,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
         onLocaleChange={(level, locale, value) =>
           handlePotionLocaleChange(itemType, level, locale, value)
         }
+        getBaselineGroup={(root) => root.common[itemType]}
       />
     );
   };
@@ -649,12 +686,18 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
         }
         showTopEnableSwitch={itemType === "uberKeys"}
         showHighlightSwitch={itemType === "uberKeys"}
-        highlightEnabled={itemType === "uberKeys" ? Boolean(activeLevel?.highlight) : undefined}
+        highlightEnabled={
+          itemType === "uberKeys" ? Boolean(activeLevel?.highlight) : undefined
+        }
         onHighlightToggle={
           itemType === "uberKeys"
-            ? (enabled) => updatePotionLevelSettings("uberKeys", activeIndex, { highlight: enabled })
+            ? (enabled) =>
+                updatePotionLevelSettings("uberKeys", activeIndex, {
+                  highlight: enabled,
+                })
             : undefined
         }
+        getBaselineGroup={(root) => root.common[itemType]}
       />
     );
   };

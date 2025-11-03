@@ -3,10 +3,24 @@
   "name": "Blizzless",
   "version": "1.2",
   "settings": {
+    "tweaks": {
+      "encyclopediaEnabled": true,
+      "encyclopediaLanguage": "en",
+      "skipIntroVideos": true,
+      "stashRename": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7"
+      ]
+    },
     "runes": {
       "el": {
         "mode": "manual",
-        "isHighlighted": false,
+        "isHighlighted": true,
         "autoSettings": {
           "numbering": {
             "show": false,
@@ -12071,5 +12085,5 @@
     }
   },
   "createdAt": "2025-08-21T15:27:21.879Z",
-  "modifiedAt": "2025-08-21T15:36:49.600Z"
+  "modifiedAt": "2025-10-04T03:20:00.600Z"
 }

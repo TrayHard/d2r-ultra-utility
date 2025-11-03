@@ -13,6 +13,7 @@ interface CollapseProps {
   icon?: string; // Путь к изображению иконки
   iconClassName?: string; // Доп. классы для иконки
   containerClassName?: string; // Доп. классы для контейнера
+  rightAdornment?: React.ReactNode; // Правый верхний адорнмент в шапке
 }
 
 const Collapse: React.FC<CollapseProps> = ({
@@ -26,6 +27,7 @@ const Collapse: React.FC<CollapseProps> = ({
   icon,
   iconClassName,
   containerClassName,
+  rightAdornment,
 }) => {
   const [internalIsOpen, setInternalIsOpen] = useState(false);
 
@@ -69,7 +71,7 @@ const Collapse: React.FC<CollapseProps> = ({
           ${isDarkTheme ? "focus:ring-yellow-400" : "focus:ring-yellow-500"}
         `}
       >
-        <div className="flex items-center">
+        <div className="flex items-center relative w-full">
           {icon && (
             <img
               src={icon}
@@ -79,6 +81,12 @@ const Collapse: React.FC<CollapseProps> = ({
             />
           )}
           <span className="font-medium">{title}</span>
+          {rightAdornment && (
+            <span className="absolute right-8 top-1 pointer-events-none select-none">
+              {rightAdornment}
+            </span>
+          )}
+          <span className="ml-auto"></span>
         </div>
         <Icon
           path={isOpen ? mdiChevronUp : mdiChevronDown}
@@ -96,7 +104,9 @@ const Collapse: React.FC<CollapseProps> = ({
           ${isOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"}
         `}
       >
-        <div className={`p-4 ${isDarkTheme ? "bg-gray-800" : "bg-white"} ${containerClassName || ""}`}>
+        <div
+          className={`p-4 ${isDarkTheme ? "bg-gray-800" : "bg-white"} ${containerClassName || ""}`}
+        >
           {children}
         </div>
       </div>

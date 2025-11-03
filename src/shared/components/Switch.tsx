@@ -38,8 +38,8 @@ const Switch: React.FC<SwitchProps> = ({
               ? "focus:ring-green-500 focus:ring-offset-gray-800"
               : "focus:ring-green-500 focus:ring-offset-white"
             : isDarkTheme
-            ? "focus:ring-gray-500 focus:ring-offset-gray-800"
-            : "focus:ring-gray-300 focus:ring-offset-white"
+              ? "focus:ring-gray-500 focus:ring-offset-gray-800"
+              : "focus:ring-gray-300 focus:ring-offset-white"
         }
         ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
         ${className}

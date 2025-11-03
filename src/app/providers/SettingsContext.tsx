@@ -5,7 +5,10 @@ import React, {
   createContext,
   useEffect,
 } from "react";
-import { ERune, runeHardcodedLocales } from "../../pages/runes/constants/runes.ts";
+import {
+  ERune,
+  runeHardcodedLocales,
+} from "../../pages/runes/constants/runes.ts";
 import i18n from "../../shared/i18n";
 import { STORAGE_KEYS } from "../../shared/constants";
 import { logger } from "../../shared/utils/logger";
@@ -13,15 +16,27 @@ import { logger } from "../../shared/utils/logger";
 // Новый формат: recommendedProfiles + корневой d2r-profile-Default.json
 // Для обратной совместимости поддерживаем старые пути (baseProfiles)
 const recommendedProfilesModules: Record<string, { default: unknown }> = {
-  ...import.meta.glob("../../shared/assets/profiles/recommendedProfiles/*.json", { eager: true }),
-  ...import.meta.glob("../../shared/assets/profiles/baseProfiles/*.json", { eager: true }),
+  ...import.meta.glob(
+    "../../shared/assets/profiles/recommendedProfiles/*.json",
+    { eager: true }
+  ),
+  ...import.meta.glob("../../shared/assets/profiles/baseProfiles/*.json", {
+    eager: true,
+  }),
 };
 const defaultProfileModule: Record<string, { default: unknown }> = {
-  ...import.meta.glob("../../shared/assets/profiles/d2r-profile-Default.json", { eager: true }),
-  ...import.meta.glob("../../shared/assets/profiles/baseProfiles/d2r-profile-Default.json", { eager: true }),
+  ...import.meta.glob("../../shared/assets/profiles/d2r-profile-Default.json", {
+    eager: true,
+  }),
+  ...import.meta.glob(
+    "../../shared/assets/profiles/baseProfiles/d2r-profile-Default.json",
+    { eager: true }
+  ),
 };
 const userProfilesModules: Record<string, { default: unknown }> =
-  import.meta.glob("../../shared/assets/profiles/userProfiles/*.json", { eager: true });
+  import.meta.glob("../../shared/assets/profiles/userProfiles/*.json", {
+    eager: true,
+  });
 
 // Типы для локализации
 interface Locales {
@@ -48,6 +63,7 @@ interface AppConfig {
   theme: "light" | "dark"; // Тема приложения
   debugMode: boolean; // Режим отладки для логирования
   appMode: "basic" | "advanced"; // Режим приложения
+  asteriskColor?: string; // Цвет индикатора несохранённых изменений
   // В будущем добавим другие глобальные настройки
 }
 
@@ -152,6 +168,20 @@ export interface ItemsSettings {
   items: Record<string, ItemSettings>;
 }
 
+// Переименование вкладок сундука (7 общих вкладок)
+export interface StashRenameSettings {
+  tabs: [string, string, string, string, string, string, string];
+}
+
+// Настройки tweaks (игровые настройки)
+export interface TweaksSettings {
+  encyclopediaEnabled: boolean;
+  encyclopediaLanguage: "en" | "ru";
+  skipIntroVideos: boolean;
+  // Новая структура: переименование вкладок хранится внутри tweaks как массив без промежуточного "tabs"
+  stashRename: [string, string, string, string, string, string, string];
+}
+
 // Настройки профиля (только специфичные для профиля данные)
 interface AppSettings {
   runes: Record<ERune, RuneSettings>;
@@ -159,6 +189,7 @@ interface AppSettings {
   common: CommonSettings;
   gems: GemSettings;
   items: ItemsSettings;
+  tweaks: TweaksSettings;
   // В будущем добавим:
   // skills: Record<string, SkillSettings>;
 }
@@ -172,6 +203,7 @@ interface Profile {
   modifiedAt: string;
   isImmutable?: boolean; // Флаг для неизменяемых (встроенных) профилей
   isDefault?: boolean; // Флаг для Default профиля в корне
+  version?: string; // Версия профиля (для immutable обязательно)
 }
 
 // Интерфейс для контекста
@@ -185,6 +217,8 @@ interface SettingsContextType {
   getTheme: () => "light" | "dark";
   getIsDarkTheme: () => boolean;
   getDebugMode: () => boolean;
+  // Admin mode (bypass immutable restrictions)
+  getIsAdmin: () => boolean;
   isThemeChanging: boolean;
 
   // Setter'ы для настроек приложения
@@ -224,10 +258,32 @@ interface SettingsContextType {
   // Setter'ы для CommonTab
   getCommonSettings: () => CommonSettings;
   getCommonItemSettings: (
-    item: "arrows" | "bolts" | "staminaPotions" | "antidotes" | "thawingPotions" | "amulets" | "rings" | "jewels" | "smallCharms" | "largeCharms" | "grandCharms" | "gold" | "keys"
+    item:
+      | "arrows"
+      | "bolts"
+      | "staminaPotions"
+      | "antidotes"
+      | "thawingPotions"
+      | "amulets"
+      | "rings"
+      | "jewels"
+      | "smallCharms"
+      | "largeCharms"
+      | "grandCharms"
+      | "gold"
+      | "keys"
   ) => CommonItemSettings;
   getPotionGroupSettings: (
-    item: "healthPotions" | "manaPotions" | "rejuvenationPotions" | "identify" | "portal" | "uberKeys" | "essences" | "poisonPotions" | "firePotions"
+    item:
+      | "healthPotions"
+      | "manaPotions"
+      | "rejuvenationPotions"
+      | "identify"
+      | "portal"
+      | "uberKeys"
+      | "essences"
+      | "poisonPotions"
+      | "firePotions"
   ) => PotionGroupSettings;
   updateCommonItemSettings: (
     item:
@@ -247,11 +303,29 @@ interface SettingsContextType {
     newSettings: Partial<CommonItemSettings>
   ) => void;
   updatePotionGroupSettings: (
-    item: "healthPotions" | "manaPotions" | "rejuvenationPotions" | "identify" | "portal" | "uberKeys" | "essences" | "poisonPotions" | "firePotions",
+    item:
+      | "healthPotions"
+      | "manaPotions"
+      | "rejuvenationPotions"
+      | "identify"
+      | "portal"
+      | "uberKeys"
+      | "essences"
+      | "poisonPotions"
+      | "firePotions",
     newSettings: Partial<PotionGroupSettings>
   ) => void;
   updatePotionLevelSettings: (
-    item: "healthPotions" | "manaPotions" | "rejuvenationPotions" | "identify" | "portal" | "uberKeys" | "essences" | "poisonPotions" | "firePotions",
+    item:
+      | "healthPotions"
+      | "manaPotions"
+      | "rejuvenationPotions"
+      | "identify"
+      | "portal"
+      | "uberKeys"
+      | "essences"
+      | "poisonPotions"
+      | "firePotions",
     level: number,
     newSettings: Partial<PotionLevelSettings>
   ) => void;
@@ -337,13 +411,23 @@ interface SettingsContextType {
   deleteProfile: (profileId: string) => void;
   exportProfile: (profileId: string) => void;
   importProfile: (profileData: any) => void;
-  
+
   // Неизменяемые профили
   immutableProfiles: Profile[];
   getImmutableProfiles: () => Profile[];
+  getImmutableProfileUpdateInfo: (
+    profileId: string
+  ) => { hasUpdate: boolean; currentVersion: string; remoteVersion: string };
+  updateImmutableProfile: (
+    profileId: string
+  ) => Promise<{ from: string; to: string; updated: boolean }>;
 
   // Deprecated (для обратной совместимости)
   resetSelectedLocales: () => void;
+
+  // Getter/Setter для tweaks
+  getTweaksSettings: () => TweaksSettings;
+  updateTweaksSettings: (newSettings: Partial<TweaksSettings>) => void;
 }
 
 // Дефолтные настройки приложения
@@ -354,6 +438,7 @@ const getDefaultAppConfig = (): AppConfig => ({
   theme: "dark", // По умолчанию темная тема
   debugMode: false, // По умолчанию отладочный режим выключен
   appMode: "basic", // По умолчанию базовый режим
+  asteriskColor: "#F59E0B",
 });
 
 // Дефолтные общие настройки для рун
@@ -378,28 +463,36 @@ const cleanSettings = (oldCommon: any): CommonSettings => {
   });
 
   // Удаляем activeTab из групп зелий
-  ["healthPotions", "manaPotions", "rejuvenationPotions", "identify", "portal", "uberKeys", "essences", "poisonPotions", "firePotions"].forEach(
-    (potionType) => {
-      if (cleaned[potionType]) {
-        cleaned[potionType] = {
-          ...getDefaultPotionGroupSettings(
-            potionType === "rejuvenationPotions"
-              ? 2
-              : potionType === "identify" || potionType === "portal"
+  [
+    "healthPotions",
+    "manaPotions",
+    "rejuvenationPotions",
+    "identify",
+    "portal",
+    "uberKeys",
+    "essences",
+    "poisonPotions",
+    "firePotions",
+  ].forEach((potionType) => {
+    if (cleaned[potionType]) {
+      cleaned[potionType] = {
+        ...getDefaultPotionGroupSettings(
+          potionType === "rejuvenationPotions"
+            ? 2
+            : potionType === "identify" || potionType === "portal"
               ? 2
               : potionType === "uberKeys"
-              ? 3
-              : potionType === "poisonPotions" || potionType === "firePotions"
-              ? 3
-              : potionType === "essences"
-              ? 5
-              : 5
-          ),
-          ...cleaned[potionType],
-        };
-      }
+                ? 3
+                : potionType === "poisonPotions" || potionType === "firePotions"
+                  ? 3
+                  : potionType === "essences"
+                    ? 5
+                    : 5
+        ),
+        ...cleaned[potionType],
+      };
     }
-  );
+  });
 
   return cleaned;
 };
@@ -517,16 +610,16 @@ const migrateItemsSettings = (oldItems: any): ItemsSettings => {
   const oldQuality = oldItems?.qualityPrefixes;
   const migratedQuality: PotionGroupSettings = oldQuality
     ? {
-        enabled: oldQuality.enabled ?? false,
-        activeTab: oldQuality.activeTab ?? 0,
-        levels: (oldQuality.levels || defaultItems.qualityPrefixes.levels).map(
-          (lvl: PotionLevelSettings, i: number) => ({
-            enabled: lvl?.enabled ?? false,
-            locales:
-              lvl?.locales || defaultItems.qualityPrefixes.levels[i]?.locales,
-          })
-        ),
-      }
+      enabled: oldQuality.enabled ?? false,
+      activeTab: oldQuality.activeTab ?? 0,
+      levels: (oldQuality.levels || defaultItems.qualityPrefixes.levels).map(
+        (lvl: PotionLevelSettings, i: number) => ({
+          enabled: lvl?.enabled ?? false,
+          locales:
+            lvl?.locales || defaultItems.qualityPrefixes.levels[i]?.locales,
+        })
+      ),
+    }
     : defaultItems.qualityPrefixes;
 
   return {
@@ -599,6 +692,45 @@ const getDefaultItemsSettings = (): ItemsSettings => ({
   qualityPrefixes: getDefaultPotionGroupSettings(2), // 2 уровня: Damaged, Superior
   items: {}, // Начинаем с пустого объекта, предметы будут добавляться по мере необходимости
 });
+
+const getDefaultStashTabs = (): [string, string, string, string, string, string, string] => (
+  ["@shared", "@shared", "@shared", "@shared", "@shared", "@shared", "@shared"]
+);
+
+const getDefaultTweaksSettings = (): TweaksSettings => ({
+  encyclopediaEnabled: true,
+  encyclopediaLanguage: "en",
+  skipIntroVideos: false,
+  stashRename: getDefaultStashTabs(),
+});
+
+// Миграция: извлекаем массив вкладок сундука из разных форматов
+const extractStashTabs = (
+  source: unknown,
+  fallback?: [string, string, string, string, string, string, string]
+): [string, string, string, string, string, string, string] => {
+  const def = fallback || getDefaultStashTabs();
+  try {
+    if (Array.isArray(source) && source.length === 7) {
+      return source.map((s) => String(s)) as [string, string, string, string, string, string, string];
+    }
+    if (source && typeof source === "object" && (source as any)?.tabs) {
+      const tabs = (source as any).tabs;
+      if (Array.isArray(tabs) && tabs.length === 7) {
+        return tabs.map((s: unknown) => String(s)) as [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+      }
+    }
+  } catch {}
+  return def;
+};
 
 // Миграция старых настроек рун к новому формату
 const migrateRuneSettings = (oldSettings: any): RuneSettings => {
@@ -725,14 +857,14 @@ const createDefaultSettings = (): AppSettings => {
   // Инициализируем настройки для всех рун
   Object.values(ERune).forEach((rune) => {
     const defaultSettings = getDefaultRuneSettings();
-    
+
     // Для автоматического режима заполняем manualSettings.locales захардкоженными значениями
     // Это нужно для того, чтобы превью и генерация имен работали правильно
     const hardcodedLocales = runeHardcodedLocales[rune as ERune];
     if (hardcodedLocales) {
       defaultSettings.manualSettings.locales = hardcodedLocales;
     }
-    
+
     runeSettings[rune] = defaultSettings;
   });
 
@@ -742,6 +874,7 @@ const createDefaultSettings = (): AppSettings => {
     common: getDefaultCommonSettings(),
     gems: getDefaultGemSettings(),
     items: getDefaultItemsSettings(),
+    tweaks: getDefaultTweaksSettings(),
   };
 };
 
@@ -836,7 +969,10 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         _setAppConfig((prev) => {
           const newConfig = newConfigOrUpdater(prev);
           if (!skipSave && !isLoading) {
-            localStorage.setItem(STORAGE_KEYS.APP_CONFIG, JSON.stringify(newConfig));
+            localStorage.setItem(
+              STORAGE_KEYS.APP_CONFIG,
+              JSON.stringify(newConfig)
+            );
           }
           return newConfig;
         });
@@ -853,40 +989,16 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     [isLoading]
   );
 
-  // Загрузка неизменяемых профилей из GitHub (raw) с фоллбеком на ассеты
+  // Принцип версионирования: используем ТОЛЬКО version из JSON (формат X.Y)
+
+  // Состояние: удалённые версии и профили для сравнения (по имени, lower-case)
+  const [immutableRemoteByName, setImmutableRemoteByName] = useState<Record<string, Profile>>({});
+
+  // Загрузка неизменяемых профилей: локальные ассеты как источник, удалённые — только для версии/обновления
   const loadImmutableProfiles = useCallback(async () => {
     const now = Date.now();
 
-    // Используем raw-ссылки, чтобы получать актуальные версии из репозитория
-    const RAW_BASE = "https://raw.githubusercontent.com/TrayHard/d2r-ultra-utility/master/src/shared/assets/profiles";
-    const urls = {
-      default: `${RAW_BASE}/d2r-profile-Default.json`,
-      blizzless: `${RAW_BASE}/recommendedProfiles/d2r-profile-Blizzless.json`,
-      minimalistic: `${RAW_BASE}/recommendedProfiles/d2r-profile-Minimalistic.json`,
-    } as const;
-
-    type RawProfile = { id?: string; name?: string; settings?: unknown };
-
-    const fetchJson = async (url: string): Promise<RawProfile | null> => {
-      try {
-        const response = await fetch(url, { cache: "no-store" });
-        if (!response.ok) return null;
-        const data = (await response.json()) as RawProfile;
-        return data ?? null;
-      } catch (_) {
-        return null;
-      }
-    };
-
-    const [remoteDefault, remoteBlizzless, remoteMinimalistic] = await Promise.all([
-      fetchJson(urls.default),
-      fetchJson(urls.blizzless),
-      fetchJson(urls.minimalistic),
-    ]);
-
-    // Собираем локальные источники как фоллбек
-    const localRecommendedSources = Object.values(recommendedProfilesModules).map((m) => m.default);
-    const localDefaultSources = Object.values(defaultProfileModule).map((m) => m.default);
+    type RawProfile = { id?: string; name?: string; settings?: unknown; version?: string };
 
     // Помощник для миграции и сборки профиля
     const buildProfile = (
@@ -894,8 +1006,14 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       index: number,
       options: { isDefault?: boolean; fallbackName?: string }
     ): Profile => {
-      const name = (src?.name || options.fallbackName || `Recommended Profile ${index + 1}`).trim();
-      const profileId = src?.id || `${options.isDefault ? "default" : "recommended"}_${now + index}`;
+      const name = (
+        src?.name ||
+        options.fallbackName ||
+        `Recommended Profile ${index + 1}`
+      ).trim();
+      const profileId =
+        src?.id ||
+        `${options.isDefault ? "default" : "recommended"}_${now + index}`;
       const settingsSource = src?.settings as unknown;
 
       const settingsObj =
@@ -904,19 +1022,42 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
           : {};
 
       const runesObj =
-        typeof settingsObj["runes"] === "object" && settingsObj["runes"] !== null
+        typeof settingsObj["runes"] === "object" &&
+          settingsObj["runes"] !== null
           ? (settingsObj["runes"] as Record<string, unknown>)
           : {};
 
       const migratedSettings: AppSettings = {
         runes: Object.fromEntries(
-          Object.entries(runesObj).map(([key, value]) => [key, migrateRuneSettings(value)])
+          Object.entries(runesObj).map(([key, value]) => [
+            key,
+            migrateRuneSettings(value),
+          ])
         ) as Record<ERune, RuneSettings>,
         generalRunes: getDefaultGeneralRuneSettings(),
-        common: settingsObj["common"] ? cleanSettings(settingsObj["common"]) : getDefaultCommonSettings(),
-        gems: settingsObj["gems"] ? (settingsObj["gems"] as GemSettings) : getDefaultGemSettings(),
-        items: settingsObj["items"] ? migrateItemsSettings(settingsObj["items"]) : getDefaultItemsSettings(),
-      };
+        common: settingsObj["common"]
+          ? cleanSettings(settingsObj["common"])
+          : getDefaultCommonSettings(),
+        gems: settingsObj["gems"]
+          ? (settingsObj["gems"] as GemSettings)
+          : getDefaultGemSettings(),
+        items: settingsObj["items"]
+          ? migrateItemsSettings(settingsObj["items"])
+          : getDefaultItemsSettings(),
+        tweaks: (() => {
+          const base = settingsObj["tweaks"]
+            ? ({ ...getDefaultTweaksSettings(), ...(settingsObj["tweaks"] as TweaksSettings) } as TweaksSettings)
+            : getDefaultTweaksSettings();
+          const legacy = settingsObj["stashRename"];
+          const incoming = (settingsObj["tweaks"] as any)?.stashRename;
+          const tabs = extractStashTabs(incoming ?? legacy, base.stashRename);
+          return { ...base, stashRename: tabs } as TweaksSettings;
+        })(),
+      } as unknown as AppSettings;
+
+      // Версия: используем ТОЛЬКО то, что пришло в JSON и соответствует X.Y
+      const rawVersion = (src?.version ?? "").toString().trim();
+      const calculatedVersion = /^\d+\.\d+$/.test(rawVersion) ? rawVersion : "";
 
       return {
         id: profileId,
@@ -926,67 +1067,180 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         modifiedAt: new Date().toISOString(),
         isImmutable: true,
         isDefault: options.isDefault || false,
+        version: calculatedVersion || undefined,
       };
     };
 
     try {
-      // 1) Формируем remote данные
-      const remoteRecommendedRaw: RawProfile[] = [];
-      if (remoteBlizzless) remoteRecommendedRaw.push(remoteBlizzless);
-      if (remoteMinimalistic) remoteRecommendedRaw.push(remoteMinimalistic);
-      const remoteDefaultRaw: RawProfile[] = remoteDefault ? [remoteDefault] : [];
+      // 1) Локальные ассеты — формируем список immutable профилей
+      const localRecommendedSources = Object.values(
+        recommendedProfilesModules
+      ).map((m) => m.default);
+      const localDefaultSources = Object.values(defaultProfileModule).map(
+        (m) => m.default
+      );
 
-      // 2) Фоллбек на локальные ассеты, если чего-то нет
       const localRecommendedRaw: RawProfile[] = localRecommendedSources as RawProfile[];
       const localDefaultRaw: RawProfile[] = localDefaultSources as RawProfile[];
 
-      // Дедуп по имени (нормализуем к нижнему регистру), приоритет remote
-      const byName = new Map<string, RawProfile & { __isDefault?: boolean }>();
+      const byNameLocal = new Map<string, RawProfile & { __isDefault?: boolean }>();
       const normalize = (v?: string) => (v || "").trim().toLowerCase();
 
-      // Рекомендуемые
-      remoteRecommendedRaw.forEach((p) => {
-        byName.set(normalize(p?.name), p);
-      });
+      if (localDefaultRaw[0]) {
+        const p = localDefaultRaw[0];
+        byNameLocal.set(normalize(p?.name || "Default"), { ...p, __isDefault: true });
+      }
       localRecommendedRaw.forEach((p) => {
         const key = normalize(p?.name);
-        if (!byName.has(key)) byName.set(key, p);
+        if (!byNameLocal.has(key)) byNameLocal.set(key, p);
       });
 
-      // Default
-      if (remoteDefaultRaw[0]) {
-        const p = remoteDefaultRaw[0];
-        byName.set(normalize(p?.name || "Default"), { ...p, __isDefault: true });
-      } else if (localDefaultRaw[0]) {
-        const p = localDefaultRaw[0];
-        byName.set(normalize(p?.name || "Default"), { ...p, __isDefault: true });
-      }
-
-      // 3) Строим итоговые профили
-      const result: Profile[] = [];
-
-      // Сначала Default, если присутствует
+      // Применяем локальные ассеты
+      let localResult: Profile[] = [];
       const defaultKey = normalize("Default");
-      if (byName.has(defaultKey)) {
-        const src = byName.get(defaultKey)!;
-        result.push(buildProfile(src, 0, { isDefault: true, fallbackName: "Default" }));
-        byName.delete(defaultKey);
+      if (byNameLocal.has(defaultKey)) {
+        const src = byNameLocal.get(defaultKey)!;
+        localResult.push(
+          buildProfile(src, 0, { isDefault: true, fallbackName: "Default" })
+        );
+        byNameLocal.delete(defaultKey);
       }
-
-      // Остальные рекомендуемые
       let idx = 1;
-      for (const [, src] of byName) {
-        result.push(buildProfile(src, idx, { isDefault: false }));
+      for (const [, src] of byNameLocal) {
+        localResult.push(buildProfile(src, idx, { isDefault: false }));
         idx++;
       }
 
-      setImmutableProfiles(result);
-      logger.info("Загружены неизменяемые профили (remote + fallback)", { count: result.length });
+      // 1.1) Применяем локальные оверрайды (если пользователь обновлял immutable ранее)
+      try {
+        const rawOverrides = localStorage.getItem(STORAGE_KEYS.IMMUTABLE_OVERRIDES);
+        if (rawOverrides) {
+          const overrides = JSON.parse(rawOverrides) as Record<string, { version?: string; settings?: AppSettings }>;
+          const norm = (v?: string) => (v || "").trim().toLowerCase();
+          localResult = localResult.map((p) => {
+            const ov = overrides[norm(p.name)];
+            if (ov && ov.settings && typeof ov.settings === "object") {
+              return {
+                ...p,
+                settings: ov.settings,
+                version: typeof ov.version === "string" && /^\d+\.\d+$/.test(ov.version) ? ov.version : p.version,
+                modifiedAt: new Date().toISOString(),
+              } as Profile;
+            }
+            return p;
+          });
+        }
+      } catch { }
+
+      setImmutableProfiles(localResult);
+      logger.info("Загружены неизменяемые профили (локальные ассеты)", {
+        count: localResult.length,
+      });
+
+      // 2) Параллельно подтягиваем удалённые версии для сравнения
+      const RAW_BASE =
+        "https://raw.githubusercontent.com/TrayHard/d2r-ultra-utility/master/src/shared/assets/profiles";
+      const urls = {
+        default: `${RAW_BASE}/d2r-profile-Default.json`,
+        blizzless: `${RAW_BASE}/recommendedProfiles/d2r-profile-Blizzless.json`,
+        minimalistic: `${RAW_BASE}/recommendedProfiles/d2r-profile-Minimalistic.json`,
+      } as const;
+
+      const fetchJson = async (url: string): Promise<RawProfile | null> => {
+        try {
+          const response = await fetch(url, { cache: "no-store" });
+          if (!response.ok) return null;
+          const data = (await response.json()) as RawProfile;
+          return data ?? null;
+        } catch (_) {
+          return null;
+        }
+      };
+
+      const [remoteDefault, remoteBlizzless, remoteMinimalistic] = await Promise.all([
+        fetchJson(urls.default),
+        fetchJson(urls.blizzless),
+        fetchJson(urls.minimalistic),
+      ]);
+
+      const byNameRemote: Record<string, Profile> = {};
+      const pushRemote = (raw: RawProfile | null, index: number, opts: { isDefault?: boolean; fallbackName?: string }) => {
+        if (!raw) return;
+        const p = buildProfile(raw, index, opts);
+        byNameRemote[normalize(p.name)] = p;
+      };
+      pushRemote(remoteDefault, 0, { isDefault: true, fallbackName: "Default" });
+      pushRemote(remoteBlizzless, 1, {});
+      pushRemote(remoteMinimalistic, 2, {});
+
+      setImmutableRemoteByName(byNameRemote);
+      logger.info("Подтянуты удалённые версии immutable профилей", {
+        count: Object.keys(byNameRemote).length,
+      });
     } catch (error) {
       logger.error("Ошибка загрузки неизменяемых профилей", error as Error);
       setImmutableProfiles([]);
+      setImmutableRemoteByName({});
     }
   }, []);
+
+  // Информация об обновлении immutable профиля
+  const getImmutableProfileUpdateInfo = useCallback(
+    (profileId: string) => {
+      const all = immutableProfiles;
+      const target = all.find((p) => p.id === profileId);
+      if (!target) return { hasUpdate: false, currentVersion: "", remoteVersion: "" };
+      const normalize = (v?: string) => (v || "").trim().toLowerCase();
+      const remote = immutableRemoteByName[normalize(target.name)];
+      const currentVersion = target.version || "";
+      const remoteVersion = remote?.version || "";
+      const hasUpdate = !!remote && !!remoteVersion && remoteVersion !== currentVersion;
+      return { hasUpdate, currentVersion, remoteVersion };
+    },
+    [immutableProfiles, immutableRemoteByName]
+  );
+
+  // Обновить immutable профиль до удалённой версии (по нажатию пользователя)
+  const updateImmutableProfile = useCallback(
+    async (profileId: string) => {
+      const normalize = (v?: string) => (v || "").trim().toLowerCase();
+      const current = immutableProfiles.find((p) => p.id === profileId);
+      if (!current) return { from: "", to: "", updated: false } as const;
+      const remote = immutableRemoteByName[normalize(current.name)];
+      if (!remote) return { from: current.version || "", to: current.version || "", updated: false } as const;
+
+      const from = current.version || "";
+      const to = remote.version || "";
+      if (from === to) return { from, to, updated: false } as const;
+
+      const updatedList = immutableProfiles.map((p) =>
+        p.id === profileId
+          ? {
+            ...p,
+            settings: remote.settings,
+            version: remote.version,
+            modifiedAt: new Date().toISOString(),
+          }
+          : p
+      );
+      setImmutableProfiles(updatedList);
+
+      // Сохраняем оверрайд в localStorage, чтобы изменения переживали перезапуск
+      try {
+        const key = STORAGE_KEYS.IMMUTABLE_OVERRIDES;
+        const raw = localStorage.getItem(key);
+        const overrides = raw ? (JSON.parse(raw) as Record<string, { version?: string; settings?: AppSettings }>) : {};
+        const norm = (v?: string) => (v || "").trim().toLowerCase();
+        overrides[norm(current.name)] = {
+          version: remote.version,
+          settings: remote.settings as AppSettings,
+        };
+        localStorage.setItem(key, JSON.stringify(overrides));
+      } catch { }
+      return { from, to, updated: true } as const;
+    },
+    [immutableProfiles, immutableRemoteByName]
+  );
 
   // Получить неизменяемые профили
   const getImmutableProfiles = useCallback(() => {
@@ -998,7 +1252,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     const savedAppConfig = localStorage.getItem(STORAGE_KEYS.APP_CONFIG);
     const savedSettings = localStorage.getItem(STORAGE_KEYS.SETTINGS);
     const savedProfiles = localStorage.getItem(STORAGE_KEYS.PROFILES);
-    const savedActiveProfileId = localStorage.getItem(STORAGE_KEYS.ACTIVE_PROFILE);
+    const savedActiveProfileId = localStorage.getItem(
+      STORAGE_KEYS.ACTIVE_PROFILE
+    );
     const isFirstRun = !localStorage.getItem(STORAGE_KEYS.FIRST_RUN);
 
     // Миграция: удаляем старый ключ языка если он есть
@@ -1055,6 +1311,13 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
           items: parsedSettings.items
             ? migrateItemsSettings(parsedSettings.items)
             : getDefaultItemsSettings(),
+          tweaks: (() => {
+            const base = parsedSettings.tweaks
+              ? ({ ...getDefaultTweaksSettings(), ...parsedSettings.tweaks } as TweaksSettings)
+              : getDefaultTweaksSettings();
+            const tabs = extractStashTabs((parsedSettings as any)?.tweaks?.stashRename ?? parsedSettings.stashRename, base.stashRename);
+            return { ...base, stashRename: tabs } as TweaksSettings;
+          })(),
         };
         setSettings(migratedSettings);
       } catch (error) {
@@ -1070,7 +1333,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         // Мигрируем настройки рун в загруженных профилях и добавляем common и gems если их нет
         const migratedProfiles = parsedProfiles.map((profile: Profile) => ({
           ...profile,
-          settings: {
+            settings: {
             ...profile.settings,
             runes: Object.fromEntries(
               Object.entries(profile.settings.runes).map(([key, value]) => [
@@ -1087,10 +1350,18 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
             items: profile.settings.items
               ? migrateItemsSettings(profile.settings.items)
               : getDefaultItemsSettings(),
+              tweaks: (() => {
+                const base = profile.settings.tweaks
+                  ? ({ ...getDefaultTweaksSettings(), ...profile.settings.tweaks } as TweaksSettings)
+                  : getDefaultTweaksSettings();
+                const tabs = extractStashTabs((profile.settings as any)?.tweaks?.stashRename ?? (profile.settings as any)?.stashRename, base.stashRename);
+                return { ...base, stashRename: tabs } as TweaksSettings;
+              })(),
           },
         }));
         setProfiles(migratedProfiles);
-        hadProfiles = Array.isArray(migratedProfiles) && migratedProfiles.length > 0;
+        hadProfiles =
+          Array.isArray(migratedProfiles) && migratedProfiles.length > 0;
 
         // Если есть активный профиль, загружаем его настройки
         if (
@@ -1119,7 +1390,10 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
 
         const seeded: Profile[] = sources
           .map((src, index) => {
-            const data = src as unknown as { name?: string; settings?: unknown };
+            const data = src as unknown as {
+              name?: string;
+              settings?: unknown;
+            };
             const name = data?.name || `Profile ${index + 1}`;
             const settingsSource = data?.settings as unknown;
 
@@ -1129,7 +1403,8 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
                 : {};
 
             const runesObj =
-              typeof settingsObj["runes"] === "object" && settingsObj["runes"] !== null
+              typeof settingsObj["runes"] === "object" &&
+                settingsObj["runes"] !== null
                 ? (settingsObj["runes"] as Record<string, unknown>)
                 : {};
 
@@ -1142,14 +1417,21 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
               ) as Record<ERune, RuneSettings>,
               generalRunes: getDefaultGeneralRuneSettings(),
               common: settingsObj["common"]
-                ? cleanSettings(settingsObj["common"]) 
+                ? cleanSettings(settingsObj["common"])
                 : getDefaultCommonSettings(),
               gems: settingsObj["gems"]
                 ? (settingsObj["gems"] as GemSettings)
                 : getDefaultGemSettings(),
               items: settingsObj["items"]
-                ? migrateItemsSettings(settingsObj["items"]) 
+                ? migrateItemsSettings(settingsObj["items"])
                 : getDefaultItemsSettings(),
+              tweaks: (() => {
+                const base = settingsObj["tweaks"]
+                  ? ({ ...getDefaultTweaksSettings(), ...(settingsObj["tweaks"] as TweaksSettings) } as TweaksSettings)
+                  : getDefaultTweaksSettings();
+                const tabs = extractStashTabs((settingsObj["tweaks"] as any)?.stashRename ?? settingsObj["stashRename"], base.stashRename);
+                return { ...base, stashRename: tabs } as TweaksSettings;
+              })(),
             };
 
             return {
@@ -1183,39 +1465,38 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   }, [setAppConfig, loadImmutableProfiles]);
 
   // Функция для переименования дублирующихся профилей
-  const renameDuplicateProfiles = useCallback((userProfiles: Profile[], baseProfiles: Profile[]) => {
-    const baseProfileNames = new Set(baseProfiles.map(p => p.name));
-    let renamedCount = 0;
-    
-    const processedProfiles = userProfiles.map(profile => {
-      if (baseProfileNames.has(profile.name)) {
-        renamedCount++;
-        const newName = `${profile.name} (Custom)`;
-        logger.info("Переименован дублирующийся пользовательский профиль", { 
-          oldName: profile.name, 
-          newName 
-        });
-        return {
-          ...profile,
-          name: newName,
-          modifiedAt: new Date().toISOString(),
-        };
-      }
-      return profile;
-    });
-    
-    if (renamedCount > 0) {
-      logger.info("Переименованы дублирующиеся пользовательские профили", { 
-        renamed: renamedCount 
+  const renameDuplicateProfiles = useCallback(
+    (userProfiles: Profile[], baseProfiles: Profile[]) => {
+      const baseProfileNames = new Set(baseProfiles.map((p) => p.name));
+      let renamedCount = 0;
+
+      const processedProfiles = userProfiles.map((profile) => {
+        if (baseProfileNames.has(profile.name)) {
+          renamedCount++;
+          const newName = `${profile.name} (Custom)`;
+          logger.info("Переименован дублирующийся пользовательский профиль", {
+            oldName: profile.name,
+            newName,
+          });
+          return {
+            ...profile,
+            name: newName,
+            modifiedAt: new Date().toISOString(),
+          };
+        }
+        return profile;
       });
-    }
-    
-    return processedProfiles;
-  }, []);
 
+      if (renamedCount > 0) {
+        logger.info("Переименованы дублирующиеся пользовательские профили", {
+          renamed: renamedCount,
+        });
+      }
 
-
-
+      return processedProfiles;
+    },
+    []
+  );
 
   // Убираем старый useEffect для сохранения, так как теперь сохраняем в setAppConfig
 
@@ -1230,7 +1511,10 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   // Сохранение профилей в localStorage
   const saveProfilesToLocalStorage = useCallback(
     (updatedProfiles: Profile[]) => {
-      localStorage.setItem(STORAGE_KEYS.PROFILES, JSON.stringify(updatedProfiles));
+      localStorage.setItem(
+        STORAGE_KEYS.PROFILES,
+        JSON.stringify(updatedProfiles)
+      );
     },
     []
   );
@@ -1250,25 +1534,37 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   // Эффект для переименования дублирующихся профилей после загрузки неизменяемых
   useEffect(() => {
     if (immutableProfiles.length > 0 && profiles.length > 0) {
-      const processedProfiles = renameDuplicateProfiles(profiles, immutableProfiles);
-      // Проверяем, были ли изменения (сравниваем по именам)
-      const hasChanges = processedProfiles.some((profile, index) => 
-        profile.name !== profiles[index]?.name
+      const processedProfiles = renameDuplicateProfiles(
+        profiles,
+        immutableProfiles
       );
-      
+      // Проверяем, были ли изменения (сравниваем по именам)
+      const hasChanges = processedProfiles.some(
+        (profile, index) => profile.name !== profiles[index]?.name
+      );
+
       if (hasChanges) {
         setProfiles(processedProfiles);
         saveProfilesToLocalStorage(processedProfiles);
       }
     }
-  }, [immutableProfiles, profiles, renameDuplicateProfiles, saveProfilesToLocalStorage]);
+  }, [
+    immutableProfiles,
+    profiles,
+    renameDuplicateProfiles,
+    saveProfilesToLocalStorage,
+  ]);
 
   // Восстановление активного профиля из localStorage для неизменяемых профилей
   useEffect(() => {
     if (!activeProfileId && immutableProfiles.length > 0) {
-      const savedActiveProfileId = localStorage.getItem(STORAGE_KEYS.ACTIVE_PROFILE);
+      const savedActiveProfileId = localStorage.getItem(
+        STORAGE_KEYS.ACTIVE_PROFILE
+      );
       if (savedActiveProfileId) {
-        const immutable = immutableProfiles.find((p) => p.id === savedActiveProfileId);
+        const immutable = immutableProfiles.find(
+          (p) => p.id === savedActiveProfileId
+        );
         if (immutable) {
           setSettings(immutable.settings);
           setActiveProfileId(savedActiveProfileId);
@@ -1281,13 +1577,17 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   useEffect(() => {
     if (isLoading) return;
     if (activeProfileId) return;
-    const savedActiveProfileId = localStorage.getItem(STORAGE_KEYS.ACTIVE_PROFILE);
+    const savedActiveProfileId = localStorage.getItem(
+      STORAGE_KEYS.ACTIVE_PROFILE
+    );
     if (savedActiveProfileId) return;
 
     const all = [...immutableProfiles, ...profiles];
     if (all.length === 0) return;
 
-    const defaultByName = all.find((p) => (p.name || "").trim().toLowerCase() === "default");
+    const defaultByName = all.find(
+      (p) => (p.name || "").trim().toLowerCase() === "default"
+    );
     const toActivate = defaultByName || all[0];
     if (!toActivate) return;
 
@@ -1295,7 +1595,13 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     setActiveProfileId(toActivate.id);
     saveActiveProfileToLocalStorage(toActivate.id);
     localStorage.removeItem(STORAGE_KEYS.SETTINGS);
-  }, [isLoading, activeProfileId, immutableProfiles, profiles, saveActiveProfileToLocalStorage]);
+  }, [
+    isLoading,
+    activeProfileId,
+    immutableProfiles,
+    profiles,
+    saveActiveProfileToLocalStorage,
+  ]);
 
   // Методы для работы с настройками приложения
   const getAppConfig = useCallback(() => appConfig, [appConfig]);
@@ -1305,10 +1611,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     [appConfig.selectedLocales]
   );
 
-  const getAppMode = useCallback(
-    () => appConfig.appMode,
-    [appConfig.appMode]
-  );
+  const getAppMode = useCallback(() => appConfig.appMode, [appConfig.appMode]);
 
   const getAppLanguage = useCallback(
     () => appConfig.appLanguage,
@@ -1325,7 +1628,19 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     () => appConfig.theme === "dark",
     [appConfig.theme]
   );
-  const getDebugMode = useCallback(() => appConfig.debugMode, [appConfig.debugMode]);
+  const getDebugMode = useCallback(
+    () => appConfig.debugMode,
+    [appConfig.debugMode]
+  );
+
+  // Чтение флага isAdmin из localStorage (1 = включено)
+  const getIsAdmin = useCallback(() => {
+    try {
+      return localStorage.getItem(STORAGE_KEYS.ADMIN_MODE) === "1";
+    } catch {
+      return false;
+    }
+  }, []);
 
   const updateAppConfig = useCallback(
     (config: Partial<AppConfig>) => {
@@ -1403,8 +1718,8 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       logger.info(
         `Theme changed from ${prev.theme} to ${newTheme}`,
         { oldTheme: prev.theme, newTheme },
-        'SettingsContext',
-        'toggleTheme'
+        "SettingsContext",
+        "toggleTheme"
       );
       return {
         ...prev,
@@ -1419,10 +1734,10 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       logger.info(
         `App mode changed from ${prev.appMode} to ${newMode}`,
         { oldMode: prev.appMode, newMode },
-        'SettingsContext',
-        'toggleAppMode'
+        "SettingsContext",
+        "toggleAppMode"
       );
-    return {
+      return {
         ...prev,
         appMode: newMode,
       };
@@ -1438,10 +1753,10 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       // Обновляем режим отладки в логгере
       logger.setDebugMode(enabled);
       logger.info(
-        `Debug mode ${enabled ? 'enabled' : 'disabled'}`,
+        `Debug mode ${enabled ? "enabled" : "disabled"}`,
         { debugMode: enabled },
-        'SettingsContext',
-        'updateDebugMode'
+        "SettingsContext",
+        "updateDebugMode"
       );
     },
     [setAppConfig]
@@ -1453,10 +1768,10 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       // Обновляем режим отладки в логгере
       logger.setDebugMode(newDebugMode);
       logger.info(
-        `Debug mode toggled to ${newDebugMode ? 'enabled' : 'disabled'}`,
+        `Debug mode toggled to ${newDebugMode ? "enabled" : "disabled"}`,
         { debugMode: newDebugMode },
-        'SettingsContext',
-        'toggleDebugMode'
+        "SettingsContext",
+        "toggleDebugMode"
       );
       return {
         ...prev,
@@ -1532,13 +1847,13 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   const resetRuneSettings = useCallback((rune: ERune) => {
     setSettings((prev) => {
       const defaultSettings = getDefaultRuneSettings(prev.generalRunes);
-      
+
       // Заполняем захардкоженные локали для автоматического режима
       const hardcodedLocales = runeHardcodedLocales[rune];
       if (hardcodedLocales) {
         defaultSettings.manualSettings.locales = hardcodedLocales;
       }
-      
+
       return {
         ...prev,
         runes: {
@@ -1555,13 +1870,13 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       const updatedRunes = { ...prev.runes };
       runes.forEach((rune) => {
         const defaultSettings = getDefaultRuneSettings(prev.generalRunes);
-        
+
         // Заполняем захардкоженные локали для автоматического режима
         const hardcodedLocales = runeHardcodedLocales[rune];
         if (hardcodedLocales) {
           defaultSettings.manualSettings.locales = hardcodedLocales;
         }
-        
+
         updatedRunes[rune] = defaultSettings;
       });
 
@@ -1633,15 +1948,18 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   const createProfile = useCallback(
     (name: string, settings: AppSettings) => {
       // Проверяем, что имя не совпадает с базовыми профилями
-      const baseProfileNames = immutableProfiles.map(p => p.name);
+      const baseProfileNames = immutableProfiles.map((p) => p.name);
       let finalName = name;
-      
+
       if (baseProfileNames.includes(name)) {
         finalName = `${name} (Custom)`;
-        logger.info("Автоматически переименован профиль для избежания конфликта с базовым профилем", { 
-          originalName: name, 
-          newName: finalName 
-        });
+        logger.info(
+          "Автоматически переименован профиль для избежания конфликта с базовым профилем",
+          {
+            originalName: name,
+            newName: finalName,
+          }
+        );
       }
 
       const newProfile: Profile = {
@@ -1660,15 +1978,20 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       // Удаляем автономные настройки профиля при создании профиля
       localStorage.removeItem(STORAGE_KEYS.SETTINGS);
     },
-    [profiles, immutableProfiles, saveProfilesToLocalStorage, saveActiveProfileToLocalStorage]
+    [
+      profiles,
+      immutableProfiles,
+      saveProfilesToLocalStorage,
+      saveActiveProfileToLocalStorage,
+    ]
   );
 
   // Сохранить профиль
   const saveProfile = useCallback(
     (profileId: string, settings: AppSettings) => {
       // Проверяем, что это не неизменяемый профиль
-      const profileToSave = profiles.find(p => p.id === profileId);
-      if (profileToSave?.isImmutable) {
+      const profileToSave = profiles.find((p) => p.id === profileId);
+      if (profileToSave?.isImmutable && !getIsAdmin()) {
         logger.warn("Попытка сохранить неизменяемый профиль", { profileId });
         return;
       }
@@ -1693,8 +2016,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   const loadProfile = useCallback(
     (profileId: string) => {
       // Ищем профиль в обычных и неизменяемых профилях
-      const profile = profiles.find((p) => p.id === profileId) || 
-                     immutableProfiles.find((p) => p.id === profileId);
+      const profile =
+        profiles.find((p) => p.id === profileId) ||
+        immutableProfiles.find((p) => p.id === profileId);
       if (profile) {
         setSettings(profile.settings);
         setActiveProfileId(profileId);
@@ -1710,9 +2034,11 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   const renameProfile = useCallback(
     (profileId: string, newName: string) => {
       // Проверяем, что это не неизменяемый профиль
-      const profileToRename = profiles.find(p => p.id === profileId);
-      if (profileToRename?.isImmutable) {
-        logger.warn("Попытка переименовать неизменяемый профиль", { profileId });
+      const profileToRename = profiles.find((p) => p.id === profileId);
+      if (profileToRename?.isImmutable && !getIsAdmin()) {
+        logger.warn("Попытка переименовать неизменяемый профиль", {
+          profileId,
+        });
         return;
       }
 
@@ -1732,19 +2058,19 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     (profileIds: string[]) => {
       // Создаём новый массив профилей в указанном порядке
       const reorderedProfiles = profileIds
-        .map(id => profiles.find(p => p.id === id))
+        .map((id) => profiles.find((p) => p.id === id))
         .filter((p): p is Profile => p !== undefined);
-      
+
       // Добавляем профили, которые не были в списке (на случай рассинхронизации)
       const includedIds = new Set(profileIds);
-      const missingProfiles = profiles.filter(p => !includedIds.has(p.id));
-      
+      const missingProfiles = profiles.filter((p) => !includedIds.has(p.id));
+
       const updatedProfiles = [...reorderedProfiles, ...missingProfiles];
       setProfiles(updatedProfiles);
       saveProfilesToLocalStorage(updatedProfiles);
-      
-      logger.info("Изменён порядок пользовательских профилей", { 
-        newOrder: profileIds 
+
+      logger.info("Изменён порядок пользовательских профилей", {
+        newOrder: profileIds,
       });
     },
     [profiles, saveProfilesToLocalStorage]
@@ -1755,8 +2081,8 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     (profileId: string) => {
       // Найти профиль для дублирования (может быть как пользовательский, так и неизменяемый)
       const allProfiles = [...profiles, ...immutableProfiles];
-      const profileToDuplicate = allProfiles.find(p => p.id === profileId);
-      
+      const profileToDuplicate = allProfiles.find((p) => p.id === profileId);
+
       if (!profileToDuplicate) {
         logger.error(`Профиль для дублирования не найден: ${profileId}`);
         return;
@@ -1764,13 +2090,14 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
 
       // Генерируем уникальное имя для дубликата
       const allExistingNames = new Set(
-        [...profiles, ...immutableProfiles]
-          .map((p) => (p.name || "").trim().toLowerCase())
+        [...profiles, ...immutableProfiles].map((p) =>
+          (p.name || "").trim().toLowerCase()
+        )
       );
-      
+
       let duplicateName = `${profileToDuplicate.name} (Copy)`;
       let counter = 1;
-      
+
       while (allExistingNames.has(duplicateName.toLowerCase())) {
         counter++;
         duplicateName = `${profileToDuplicate.name} (Copy ${counter})`;
@@ -1789,13 +2116,15 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       const updatedProfiles = [...profiles, newProfile];
       setProfiles(updatedProfiles);
       saveProfilesToLocalStorage(updatedProfiles);
-      
+
       // Сразу переключаемся на новый профиль
       setActiveProfileId(newProfile.id);
       saveActiveProfileToLocalStorage(newProfile.id);
       setSettings(newProfile.settings);
 
-      logger.debug(`Профиль продублирован и активирован: ${profileToDuplicate.name} -> ${newProfile.name}`);
+      logger.debug(
+        `Профиль продублирован и активирован: ${profileToDuplicate.name} -> ${newProfile.name}`
+      );
     },
     [profiles, immutableProfiles, saveProfilesToLocalStorage, logger]
   );
@@ -1804,8 +2133,8 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   const deleteProfile = useCallback(
     (profileId: string) => {
       // Проверяем, что это не неизменяемый профиль
-      const profileToDelete = profiles.find(p => p.id === profileId);
-      if (profileToDelete?.isImmutable) {
+      const profileToDelete = profiles.find((p) => p.id === profileId);
+      if (profileToDelete?.isImmutable && !getIsAdmin()) {
         logger.warn("Попытка удалить неизменяемый профиль", { profileId });
         return;
       }
@@ -1836,9 +2165,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
               ),
               common: parsedSettings.common
                 ? {
-                    ...getDefaultCommonSettings(),
-                    ...parsedSettings.common,
-                  }
+                  ...getDefaultCommonSettings(),
+                  ...parsedSettings.common,
+                }
                 : getDefaultCommonSettings(),
               gems: parsedSettings.gems
                 ? parsedSettings.gems
@@ -1869,8 +2198,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   const exportProfile = useCallback(
     (profileId: string) => {
       // Ищем профиль в обычных и неизменяемых профилях
-      const profile = profiles.find((p) => p.id === profileId) || 
-                     immutableProfiles.find((p) => p.id === profileId);
+      const profile =
+        profiles.find((p) => p.id === profileId) ||
+        immutableProfiles.find((p) => p.id === profileId);
       if (profile) {
         const cleanProfile = prepareForExport(profile);
         const dataStr = JSON.stringify(cleanProfile, null, 2);
@@ -1899,8 +2229,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
 
         // Генерируем уникальное имя среди всех профилей (пользовательских и неизменяемых)
         const allExistingNames = new Set(
-          [...profiles, ...immutableProfiles]
-            .map((p) => (p.name || "").trim().toLowerCase())
+          [...profiles, ...immutableProfiles].map((p) =>
+            (p.name || "").trim().toLowerCase()
+          )
         );
         const baseName = (profileData.name as string).trim();
         let finalName = baseName || "Безымянный профиль";
@@ -2353,6 +2684,26 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     }));
   }, []);
 
+  // Stash Rename перенесён внутрь tweaks (используйте updateTweaksSettings)
+
+  // Tweaks
+  const getTweaksSettings = useCallback(() => {
+    return settings.tweaks || getDefaultTweaksSettings();
+  }, [settings.tweaks]);
+
+  const updateTweaksSettings = useCallback(
+    (newSettings: Partial<TweaksSettings>) => {
+      setSettings((prev) => ({
+        ...prev,
+        tweaks: {
+          ...(prev.tweaks || getDefaultTweaksSettings()),
+          ...newSettings,
+        },
+      }));
+    },
+    []
+  );
+
   const contextValue: SettingsContextType = {
     // Методы для настроек приложения
     getAppConfig,
@@ -2363,6 +2714,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     getTheme,
     getIsDarkTheme,
     getDebugMode,
+    getIsAdmin,
     isThemeChanging,
     updateAppConfig,
     updateAppMode,
@@ -2437,9 +2789,15 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     // Неизменяемые профили
     immutableProfiles,
     getImmutableProfiles,
+    getImmutableProfileUpdateInfo,
+    updateImmutableProfile,
 
     // Deprecated
     resetSelectedLocales,
+
+    // Getter/Setter для tweaks
+    getTweaksSettings,
+    updateTweaksSettings,
   };
 
   return (
