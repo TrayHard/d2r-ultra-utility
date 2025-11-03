@@ -39,7 +39,7 @@ const TweaksTab: React.FC<TweaksTabProps> = ({ isDarkTheme }) => {
   const slotWidthPercent = 100 / slotsCount;
 
   return (
-    <div className="p-8 max-w-5xl mx-auto space-y-8">
+    <div className="p-8 max-w-3xl mx-auto space-y-8">
       {/* Чтение/применение выполняется глобальными кнопками тулбара */}
 
       <div className="space-y-6">
