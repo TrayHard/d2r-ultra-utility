@@ -627,7 +627,7 @@ export const useApplyAllWorker = (
         const sanitizeJson = (text: string) =>
           text.replace(/(^|\s)\/\/.*$/gm, "").replace(/,\s*([}\]])/g, "$1");
         const bankJson = JSON.parse(sanitizeJson(bankContent));
-        const tabs = settings.stashRename?.tabs || [
+        const tabs = (settings.tweaks?.stashRename || [
           "@shared",
           "@shared",
           "@shared",
@@ -635,7 +635,7 @@ export const useApplyAllWorker = (
           "@shared",
           "@shared",
           "@shared",
-        ];
+        ]) as string[];
         const applyTabs = (arr: any[]) => {
           for (const node of arr) {
             if (node?.type === "TabBarWidget" && node?.fields?.textStrings) {

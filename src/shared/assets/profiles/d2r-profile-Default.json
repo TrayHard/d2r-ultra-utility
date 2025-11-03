@@ -3,8 +3,11 @@
   "name": "Default",
   "version": "1.0",
   "settings": {
-    "stashRename": {
-      "tabs": [
+    "tweaks": {
+      "encyclopediaEnabled": true,
+      "encyclopediaLanguage": "en",
+      "skipIntroVideos": false,
+      "stashRename": [
         "@shared",
         "@shared",
         "@shared",
@@ -13,11 +16,6 @@
         "@shared",
         "@shared"
       ]
-    },
-    "tweaks": {
-      "encyclopediaEnabled": true,
-      "encyclopediaLanguage": "en",
-      "skipIntroVideos": false
     },
     "runes": {
       "el": {

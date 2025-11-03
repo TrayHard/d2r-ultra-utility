@@ -43,7 +43,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     updateGemLevelSettings,
     updateItemsLevelSettings,
     updateItemSettings,
-    updateStashRenameSettings,
+    
     updateTweaksSettings,
     getCommonSettings,
     getGemSettings,
@@ -179,13 +179,17 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     readFromFiles: readStashFromFiles,
     applyChanges: applyStashChanges,
   } = useStashRenameWorker(
-    updateStashRenameSettings,
+    (payload) => {
+      if (payload?.tabs) {
+        updateTweaksSettings({ stashRename: payload.tabs as any });
+      }
+    },
     (message, opts) => {
       if (isBulkLoading && opts?.type === "success") return;
       sendMessage(message, { type: opts?.type, title: opts?.title });
     },
     t,
-    () => ({ tabs: settings.stashRename.tabs }),
+    () => ({ tabs: (settings.tweaks?.stashRename || ["@shared","@shared","@shared","@shared","@shared","@shared","@shared"]) as any }),
     "advanced",
     getAppMode,
   );
@@ -246,10 +250,8 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
           ? isGemsLoading
           : activeTab === "items"
             ? isItemsLoading
-            : activeTab === "stash"
-              ? isStashLoading
-              : activeTab === "tweaks"
-                ? isTweaksLoading
+            : activeTab === "tweaks"
+                ? (isTweaksLoading || isStashLoading)
                 : false;
   const error =
     activeTab === "runes"
@@ -260,10 +262,8 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
           ? gemsError
           : activeTab === "items"
             ? itemsError
-            : activeTab === "stash"
-              ? stashError
-              : activeTab === "tweaks"
-                ? tweaksError
+            : activeTab === "tweaks"
+                ? (tweaksError || stashError)
                 : null;
   const readFromFiles =
     activeTab === "runes"
@@ -274,10 +274,8 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
           ? readGemsFromFiles
           : activeTab === "items"
             ? readItemsFromFiles
-            : activeTab === "stash"
-              ? readStashFromFiles
-              : activeTab === "tweaks"
-                ? readTweaksFromFiles
+            : activeTab === "tweaks"
+                ? (async () => { await readTweaksFromFiles(); await readStashFromFiles(); })
                 : () => { };
   const applyChanges =
     activeTab === "runes"
@@ -288,10 +286,8 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
           ? applyGemsChanges
           : activeTab === "items"
             ? applyItemsChanges
-            : activeTab === "stash"
-              ? applyStashChanges
-              : activeTab === "tweaks"
-                ? applyTweaksChanges
+            : activeTab === "tweaks"
+                ? (async () => { await applyTweaksChanges(); await applyStashChanges(); })
                 : () => { };
 
   const executeReadAll = useCallback(async () => {
@@ -433,7 +429,6 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     { id: "items", label: t("tabs.items") },
     { id: "runes", label: t("tabs.runes") },
     { id: "gems", label: t("tabs.gems") },
-    { id: "stash", label: t("tabs.stash") },
     { id: "tweaks", label: t("tabs.tweaks") },
   ];
 
@@ -519,12 +514,6 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       JSON.stringify(baseline.runes) !==
       JSON.stringify((debounced as any).settings.runes);
 
-    const hasStashChanges = (() => {
-      const base = (baseline as any)?.stashRename?.tabs || [];
-      const cur = (debounced as any)?.settings?.stashRename?.tabs || [];
-      return JSON.stringify(base) !== JSON.stringify(cur);
-    })();
-
     const hasTweaksChanges = (() => {
       const baseEnabled = (baseline as any)?.tweaks?.encyclopediaEnabled ?? true;
       const curEnabled = (debounced as any)?.settings?.tweaks?.encyclopediaEnabled ?? true;
@@ -532,7 +521,10 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       const curLang = (debounced as any)?.settings?.tweaks?.encyclopediaLanguage || "en";
       const baseSkip = (baseline as any)?.tweaks?.skipIntroVideos ?? false;
       const curSkip = (debounced as any)?.settings?.tweaks?.skipIntroVideos ?? false;
-      return baseEnabled !== curEnabled || baseLang !== curLang || baseSkip !== curSkip;
+      const baseTabs = (baseline as any)?.tweaks?.stashRename || (baseline as any)?.stashRename?.tabs || [];
+      const curTabs = (debounced as any)?.settings?.tweaks?.stashRename || [];
+      const tabsChanged = JSON.stringify(baseTabs) !== JSON.stringify(curTabs);
+      return baseEnabled !== curEnabled || baseLang !== curLang || baseSkip !== curSkip || tabsChanged;
     })();
 
     return {
@@ -540,7 +532,6 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       items: hasItemsChanges,
       runes: hasRunesChanges,
       gems: hasGemsChanges,
-      stash: hasStashChanges,
       tweaks: hasTweaksChanges,
     } as Record<string, boolean>;
   }, [baseline, debounced, activeProfileId]);

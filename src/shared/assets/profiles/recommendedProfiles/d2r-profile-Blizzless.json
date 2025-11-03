@@ -3,8 +3,11 @@
   "name": "Blizzless",
   "version": "1.0",
   "settings": {
-    "stashRename": {
-      "tabs": [
+    "tweaks": {
+      "encyclopediaEnabled": true,
+      "encyclopediaLanguage": "en",
+      "skipIntroVideos": true,
+      "stashRename": [
         "1",
         "2",
         "3",
@@ -13,11 +16,6 @@
         "6",
         "7"
       ]
-    },
-    "tweaks": {
-      "encyclopediaEnabled": true,
-      "encyclopediaLanguage": "en",
-      "skipIntroVideos": true
     },
     "runes": {
       "el": {

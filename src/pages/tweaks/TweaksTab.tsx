@@ -3,6 +3,7 @@ import { useSettings } from "../../app/providers/SettingsContext.tsx";
 import { useUnsavedChanges } from "../../shared/hooks/useUnsavedChanges";
 import UnsavedAsterisk from "../../shared/components/UnsavedAsterisk.tsx";
 import Switcher from "../../shared/components/Switcher.tsx";
+import DebouncedInput from "../../shared/components/DebouncedInput.tsx";
 import { useTranslation } from "react-i18next";
 
 interface TweaksTabProps {
@@ -34,8 +35,11 @@ const TweaksTab: React.FC<TweaksTabProps> = ({ isDarkTheme }) => {
   }, [baseline]);
   const hasSkipIntroChanged = baseSkipIntro !== tweaks.skipIntroVideos;
 
+  const slotsCount = 7;
+  const slotWidthPercent = 100 / slotsCount;
+
   return (
-    <div className="p-8 max-w-3xl mx-auto space-y-6">
+    <div className="p-8 max-w-5xl mx-auto space-y-8">
       {/* Чтение/применение выполняется глобальными кнопками тулбара */}
 
       <div className="space-y-6">
@@ -131,6 +135,39 @@ const TweaksTab: React.FC<TweaksTabProps> = ({ isDarkTheme }) => {
             }
             isDarkTheme={isDarkTheme}
           />
+        </div>
+
+        {/* Stash rename inline UI */}
+        <div>
+          <label className={`block mb-2 text-sm font-medium ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}>
+            {t("tweaksPage.stashRename.label") || "Переименование общих вкладок сундука"}:
+          </label>
+          <div className="flex justify-center">
+            <div className="relative inline-block select-none">
+              <img src="/img/stash_bg.png" alt="Stash tabs background" draggable={false} />
+              <div className="absolute inset-0">
+                {(tweaks.stashRename || []).slice(0, slotsCount).map((value: string, idx: number) => {
+                  const leftPercent = idx * slotWidthPercent;
+                  return (
+                    <div key={idx} className="absolute top-0 h-full" style={{ left: `${leftPercent}%`, width: `${slotWidthPercent}%` }}>
+                      <DebouncedInput
+                        type="text"
+                        value={value}
+                        onChange={(v) => {
+                          const next = (tweaks.stashRename || []).slice() as [string, string, string, string, string, string, string];
+                          next[idx] = v;
+                          updateTweaksSettings({ stashRename: next });
+                        }}
+                        maxLength={10}
+                        className={`w-full h-full px-2 pt-[12px] text-center text-[12px] bg-transparent border-0 outline-none ${isDarkTheme ? "text-white placeholder-gray-400" : "text-white placeholder-gray-300"}`}
+                        style={{ WebkitAppearance: "none", MozAppearance: "textfield" }}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

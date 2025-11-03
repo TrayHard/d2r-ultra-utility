@@ -1748,6 +1748,9 @@
     },
     "skipIntroVideos": {
       "label": "Skip intro videos"
+    },
+    "stashRename": {
+      "label": "Shared stash names"
     }
   }
 }

@@ -3,8 +3,11 @@
   "name": "Minimalistic",
   "version": "1.0",
   "settings": {
-    "stashRename": {
-      "tabs": [
+    "tweaks": {
+      "encyclopediaEnabled": true,
+      "encyclopediaLanguage": "ru",
+      "skipIntroVideos": true,
+      "stashRename": [
         "Common",
         "Runes&Gems",
         "Casters",
@@ -13,11 +16,6 @@
         "Jewelry",
         "Blanks"
       ]
-    },
-    "tweaks": {
-      "encyclopediaEnabled": true,
-      "encyclopediaLanguage": "ru",
-      "skipIntroVideos": true
     },
     "runes": {
       "el": {
