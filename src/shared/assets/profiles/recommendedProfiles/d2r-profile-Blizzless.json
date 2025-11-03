@@ -3,6 +3,17 @@
   "name": "Blizzless",
   "version": "1.0",
   "settings": {
+    "stashRename": {
+      "tabs": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7"
+      ]
+    },
     "runes": {
       "el": {
         "mode": "manual",

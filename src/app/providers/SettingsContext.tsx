@@ -168,6 +168,11 @@ export interface ItemsSettings {
   items: Record<string, ItemSettings>;
 }
 
+// Переименование вкладок сундука (7 общих вкладок)
+export interface StashRenameSettings {
+  tabs: [string, string, string, string, string, string, string];
+}
+
 // Настройки профиля (только специфичные для профиля данные)
 interface AppSettings {
   runes: Record<ERune, RuneSettings>;
@@ -175,6 +180,7 @@ interface AppSettings {
   common: CommonSettings;
   gems: GemSettings;
   items: ItemsSettings;
+  stashRename: StashRenameSettings;
   // В будущем добавим:
   // skills: Record<string, SkillSettings>;
 }
@@ -409,6 +415,11 @@ interface SettingsContextType {
 
   // Deprecated (для обратной совместимости)
   resetSelectedLocales: () => void;
+
+  // Getter/Setter для переименования вкладок сундука
+  getStashRenameSettings: () => StashRenameSettings;
+  updateStashRenameSettings: (newSettings: Partial<StashRenameSettings>) => void;
+  updateStashTab: (index: number, value: string) => void;
 }
 
 // Дефолтные настройки приложения
@@ -674,6 +685,10 @@ const getDefaultItemsSettings = (): ItemsSettings => ({
   items: {}, // Начинаем с пустого объекта, предметы будут добавляться по мере необходимости
 });
 
+const getDefaultStashRenameSettings = (): StashRenameSettings => ({
+  tabs: ["@shared", "@shared", "@shared", "@shared", "@shared", "@shared", "@shared"],
+});
+
 // Миграция старых настроек рун к новому формату
 const migrateRuneSettings = (oldSettings: any): RuneSettings => {
   // Если это уже новый формат с mode
@@ -816,6 +831,7 @@ const createDefaultSettings = (): AppSettings => {
     common: getDefaultCommonSettings(),
     gems: getDefaultGemSettings(),
     items: getDefaultItemsSettings(),
+    stashRename: getDefaultStashRenameSettings(),
   };
 };
 
@@ -985,6 +1001,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         items: settingsObj["items"]
           ? migrateItemsSettings(settingsObj["items"])
           : getDefaultItemsSettings(),
+        stashRename: settingsObj["stashRename"]
+          ? (settingsObj["stashRename"] as StashRenameSettings)
+          : getDefaultStashRenameSettings(),
       };
 
       // Версия: используем ТОЛЬКО то, что пришло в JSON и соответствует X.Y
@@ -1243,6 +1262,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
           items: parsedSettings.items
             ? migrateItemsSettings(parsedSettings.items)
             : getDefaultItemsSettings(),
+          stashRename: parsedSettings.stashRename
+            ? parsedSettings.stashRename
+            : getDefaultStashRenameSettings(),
         };
         setSettings(migratedSettings);
       } catch (error) {
@@ -1275,6 +1297,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
             items: profile.settings.items
               ? migrateItemsSettings(profile.settings.items)
               : getDefaultItemsSettings(),
+            stashRename: profile.settings.stashRename
+              ? (profile.settings as any).stashRename
+              : getDefaultStashRenameSettings(),
           },
         }));
         setProfiles(migratedProfiles);
@@ -1343,6 +1368,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
               items: settingsObj["items"]
                 ? migrateItemsSettings(settingsObj["items"])
                 : getDefaultItemsSettings(),
+              stashRename: settingsObj["stashRename"]
+                ? (settingsObj["stashRename"] as StashRenameSettings)
+                : getDefaultStashRenameSettings(),
             };
 
             return {
@@ -2595,6 +2623,34 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     }));
   }, []);
 
+  // Stash Rename
+  const getStashRenameSettings = useCallback(() => {
+    return settings.stashRename || getDefaultStashRenameSettings();
+  }, [settings.stashRename]);
+
+  const updateStashRenameSettings = useCallback(
+    (newSettings: Partial<StashRenameSettings>) => {
+      setSettings((prev) => ({
+        ...prev,
+        stashRename: {
+          ...(prev.stashRename || getDefaultStashRenameSettings()),
+          ...newSettings,
+        },
+      }));
+    },
+    []
+  );
+
+  const updateStashTab = useCallback((index: number, value: string) => {
+    setSettings((prev) => {
+      const current = prev.stashRename || getDefaultStashRenameSettings();
+      const nextTabs = [...current.tabs] as StashRenameSettings["tabs"];
+      if (index < 0 || index >= nextTabs.length) return prev;
+      nextTabs[index] = value;
+      return { ...prev, stashRename: { tabs: nextTabs } };
+    });
+  }, []);
+
   const contextValue: SettingsContextType = {
     // Методы для настроек приложения
     getAppConfig,
@@ -2685,6 +2741,11 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
 
     // Deprecated
     resetSelectedLocales,
+
+    // Getter/Setter для переименования вкладок сундука
+    getStashRenameSettings,
+    updateStashRenameSettings,
+    updateStashTab,
   };
 
   return (
