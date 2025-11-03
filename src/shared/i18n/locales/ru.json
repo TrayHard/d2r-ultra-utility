@@ -13,12 +13,7 @@
     "available": "Доступно обновление - Нажмите для установки",
     "downloading": "Скачивание обновления...",
     "installing": "Установка обновления...",
-    "upToDate": "Актуальная версия",
-    "tooltipUpdateProfile": "Обновить профиль с {{from}} до {{to}} версии",
-    "tooltipUpToDate": "Версия актуальная ({{version}}).",
-    "updatingOverlay": "Обновляем лутфильтр",
-    "updateActionAria": "Обновить профиль",
-    "upToDateAria": "Версия актуальная"
+    "upToDate": "Актуальная версия"
   },
   "feedback": {
     "title": "Обратная связь",
@@ -1734,7 +1729,7 @@
     },
     "update": {
       "tooltipUpdateProfile": "Обновить профиль с {{from}} до {{to}} версии",
-      "tooltipUpToDate": "Версия актуальная ({{version}}).",
+      "tooltipUpToDate": "Версия профиля актуальная ({{version}})",
       "updatingOverlay": "Обновляем лутфильтр",
       "updateActionAria": "Обновить профиль",
       "upToDateAria": "Версия актуальная"
