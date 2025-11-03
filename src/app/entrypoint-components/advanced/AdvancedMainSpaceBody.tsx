@@ -3,10 +3,9 @@ import CommonTab from "../../../pages/common/CommonTab.tsx";
 import ItemsTab from "../../../pages/items/ItemsTab.tsx";
 import RunesTab from "../../../pages/runes/RunesTab.tsx";
 import GemsTab from "../../../pages/gems/GemsTab.tsx";
-import StashRenameTab from "../../../pages/stash/StashRenameTab.tsx";
 import TweaksTab from "../../../pages/tweaks/TweaksTab.tsx";
 
-export type TabType = "common" | "items" | "runes" | "gems" | "stash" | "tweaks";
+export type TabType = "common" | "items" | "runes" | "gems" | "tweaks";
 
 interface AdvancedMainSpaceBodyProps {
   activeTab: TabType;
@@ -43,10 +42,6 @@ const AdvancedMainSpaceBody: React.FC<AdvancedMainSpaceBodyProps> = ({
         return <RunesTab isDarkTheme={isDarkTheme} />;
       case "gems":
         return <GemsTab isDarkTheme={isDarkTheme} />;
-      case "stash":
-        return (
-          <StashRenameTab isDarkTheme={isDarkTheme} />
-        );
       case "tweaks":
         return (
           <TweaksTab isDarkTheme={isDarkTheme} />

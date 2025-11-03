@@ -178,6 +178,8 @@ export interface TweaksSettings {
   encyclopediaEnabled: boolean;
   encyclopediaLanguage: "en" | "ru";
   skipIntroVideos: boolean;
+  // Новая структура: переименование вкладок хранится внутри tweaks как массив без промежуточного "tabs"
+  stashRename: [string, string, string, string, string, string, string];
 }
 
 // Настройки профиля (только специфичные для профиля данные)
@@ -187,7 +189,6 @@ interface AppSettings {
   common: CommonSettings;
   gems: GemSettings;
   items: ItemsSettings;
-  stashRename: StashRenameSettings;
   tweaks: TweaksSettings;
   // В будущем добавим:
   // skills: Record<string, SkillSettings>;
@@ -423,11 +424,6 @@ interface SettingsContextType {
 
   // Deprecated (для обратной совместимости)
   resetSelectedLocales: () => void;
-
-  // Getter/Setter для переименования вкладок сундука
-  getStashRenameSettings: () => StashRenameSettings;
-  updateStashRenameSettings: (newSettings: Partial<StashRenameSettings>) => void;
-  updateStashTab: (index: number, value: string) => void;
 
   // Getter/Setter для tweaks
   getTweaksSettings: () => TweaksSettings;
@@ -697,15 +693,44 @@ const getDefaultItemsSettings = (): ItemsSettings => ({
   items: {}, // Начинаем с пустого объекта, предметы будут добавляться по мере необходимости
 });
 
-const getDefaultStashRenameSettings = (): StashRenameSettings => ({
-  tabs: ["@shared", "@shared", "@shared", "@shared", "@shared", "@shared", "@shared"],
-});
+const getDefaultStashTabs = (): [string, string, string, string, string, string, string] => (
+  ["@shared", "@shared", "@shared", "@shared", "@shared", "@shared", "@shared"]
+);
 
 const getDefaultTweaksSettings = (): TweaksSettings => ({
   encyclopediaEnabled: true,
   encyclopediaLanguage: "en",
   skipIntroVideos: false,
+  stashRename: getDefaultStashTabs(),
 });
+
+// Миграция: извлекаем массив вкладок сундука из разных форматов
+const extractStashTabs = (
+  source: unknown,
+  fallback?: [string, string, string, string, string, string, string]
+): [string, string, string, string, string, string, string] => {
+  const def = fallback || getDefaultStashTabs();
+  try {
+    if (Array.isArray(source) && source.length === 7) {
+      return source.map((s) => String(s)) as [string, string, string, string, string, string, string];
+    }
+    if (source && typeof source === "object" && (source as any)?.tabs) {
+      const tabs = (source as any).tabs;
+      if (Array.isArray(tabs) && tabs.length === 7) {
+        return tabs.map((s: unknown) => String(s)) as [
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string
+        ];
+      }
+    }
+  } catch {}
+  return def;
+};
 
 // Миграция старых настроек рун к новому формату
 const migrateRuneSettings = (oldSettings: any): RuneSettings => {
@@ -849,7 +874,6 @@ const createDefaultSettings = (): AppSettings => {
     common: getDefaultCommonSettings(),
     gems: getDefaultGemSettings(),
     items: getDefaultItemsSettings(),
-    stashRename: getDefaultStashRenameSettings(),
     tweaks: getDefaultTweaksSettings(),
   };
 };
@@ -1020,10 +1044,16 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         items: settingsObj["items"]
           ? migrateItemsSettings(settingsObj["items"])
           : getDefaultItemsSettings(),
-        stashRename: settingsObj["stashRename"]
-          ? (settingsObj["stashRename"] as StashRenameSettings)
-          : getDefaultStashRenameSettings(),
-      };
+        tweaks: (() => {
+          const base = settingsObj["tweaks"]
+            ? ({ ...getDefaultTweaksSettings(), ...(settingsObj["tweaks"] as TweaksSettings) } as TweaksSettings)
+            : getDefaultTweaksSettings();
+          const legacy = settingsObj["stashRename"];
+          const incoming = (settingsObj["tweaks"] as any)?.stashRename;
+          const tabs = extractStashTabs(incoming ?? legacy, base.stashRename);
+          return { ...base, stashRename: tabs } as TweaksSettings;
+        })(),
+      } as unknown as AppSettings;
 
       // Версия: используем ТОЛЬКО то, что пришло в JSON и соответствует X.Y
       const rawVersion = (src?.version ?? "").toString().trim();
@@ -1281,9 +1311,13 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
           items: parsedSettings.items
             ? migrateItemsSettings(parsedSettings.items)
             : getDefaultItemsSettings(),
-          stashRename: parsedSettings.stashRename
-            ? parsedSettings.stashRename
-            : getDefaultStashRenameSettings(),
+          tweaks: (() => {
+            const base = parsedSettings.tweaks
+              ? ({ ...getDefaultTweaksSettings(), ...parsedSettings.tweaks } as TweaksSettings)
+              : getDefaultTweaksSettings();
+            const tabs = extractStashTabs((parsedSettings as any)?.tweaks?.stashRename ?? parsedSettings.stashRename, base.stashRename);
+            return { ...base, stashRename: tabs } as TweaksSettings;
+          })(),
         };
         setSettings(migratedSettings);
       } catch (error) {
@@ -1299,7 +1333,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         // Мигрируем настройки рун в загруженных профилях и добавляем common и gems если их нет
         const migratedProfiles = parsedProfiles.map((profile: Profile) => ({
           ...profile,
-          settings: {
+            settings: {
             ...profile.settings,
             runes: Object.fromEntries(
               Object.entries(profile.settings.runes).map(([key, value]) => [
@@ -1316,9 +1350,13 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
             items: profile.settings.items
               ? migrateItemsSettings(profile.settings.items)
               : getDefaultItemsSettings(),
-            stashRename: profile.settings.stashRename
-              ? (profile.settings as any).stashRename
-              : getDefaultStashRenameSettings(),
+              tweaks: (() => {
+                const base = profile.settings.tweaks
+                  ? ({ ...getDefaultTweaksSettings(), ...profile.settings.tweaks } as TweaksSettings)
+                  : getDefaultTweaksSettings();
+                const tabs = extractStashTabs((profile.settings as any)?.tweaks?.stashRename ?? (profile.settings as any)?.stashRename, base.stashRename);
+                return { ...base, stashRename: tabs } as TweaksSettings;
+              })(),
           },
         }));
         setProfiles(migratedProfiles);
@@ -1387,15 +1425,13 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
               items: settingsObj["items"]
                 ? migrateItemsSettings(settingsObj["items"])
                 : getDefaultItemsSettings(),
-              stashRename: settingsObj["stashRename"]
-                ? (settingsObj["stashRename"] as StashRenameSettings)
-                : getDefaultStashRenameSettings(),
-              tweaks: settingsObj["tweaks"]
-                ? ({
-                    ...getDefaultTweaksSettings(),
-                    ...(settingsObj["tweaks"] as TweaksSettings),
-                  } as TweaksSettings)
-                : getDefaultTweaksSettings(),
+              tweaks: (() => {
+                const base = settingsObj["tweaks"]
+                  ? ({ ...getDefaultTweaksSettings(), ...(settingsObj["tweaks"] as TweaksSettings) } as TweaksSettings)
+                  : getDefaultTweaksSettings();
+                const tabs = extractStashTabs((settingsObj["tweaks"] as any)?.stashRename ?? settingsObj["stashRename"], base.stashRename);
+                return { ...base, stashRename: tabs } as TweaksSettings;
+              })(),
             };
 
             return {
@@ -2648,33 +2684,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     }));
   }, []);
 
-  // Stash Rename
-  const getStashRenameSettings = useCallback(() => {
-    return settings.stashRename || getDefaultStashRenameSettings();
-  }, [settings.stashRename]);
-
-  const updateStashRenameSettings = useCallback(
-    (newSettings: Partial<StashRenameSettings>) => {
-      setSettings((prev) => ({
-        ...prev,
-        stashRename: {
-          ...(prev.stashRename || getDefaultStashRenameSettings()),
-          ...newSettings,
-        },
-      }));
-    },
-    []
-  );
-
-  const updateStashTab = useCallback((index: number, value: string) => {
-    setSettings((prev) => {
-      const current = prev.stashRename || getDefaultStashRenameSettings();
-      const nextTabs = [...current.tabs] as StashRenameSettings["tabs"];
-      if (index < 0 || index >= nextTabs.length) return prev;
-      nextTabs[index] = value;
-      return { ...prev, stashRename: { tabs: nextTabs } };
-    });
-  }, []);
+  // Stash Rename перенесён внутрь tweaks (используйте updateTweaksSettings)
 
   // Tweaks
   const getTweaksSettings = useCallback(() => {
@@ -2784,11 +2794,6 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
 
     // Deprecated
     resetSelectedLocales,
-
-    // Getter/Setter для переименования вкладок сундука
-    getStashRenameSettings,
-    updateStashRenameSettings,
-    updateStashTab,
 
     // Getter/Setter для tweaks
     getTweaksSettings,
