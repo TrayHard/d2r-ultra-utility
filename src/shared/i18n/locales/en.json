@@ -5,6 +5,7 @@
     "runes": "Runes",
     "gems": "Gems",
     "stash": "Stash Rename",
+    "tweaks": "Tweaks",
     "other": "Other"
   },
   "update": {
@@ -1732,6 +1733,18 @@
       "updatingOverlay": "Updating loot filter",
       "updateActionAria": "Update profile",
       "upToDateAria": "Version is up to date"
+    }
+  },
+  "tweaksPage": {
+    "encyclopediaEnabled": {
+      "label": "Enable in-game encyclopedia"
+    },
+    "encyclopediaLanguage": {
+      "label": "In-game encyclopedia language",
+      "options": {
+        "en": "English",
+        "ru": "Russian"
+      }
     }
   }
 }

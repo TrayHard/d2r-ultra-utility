@@ -173,6 +173,12 @@ export interface StashRenameSettings {
   tabs: [string, string, string, string, string, string, string];
 }
 
+// Настройки tweaks (игровые настройки)
+export interface TweaksSettings {
+  encyclopediaEnabled: boolean;
+  encyclopediaLanguage: "en" | "ru";
+}
+
 // Настройки профиля (только специфичные для профиля данные)
 interface AppSettings {
   runes: Record<ERune, RuneSettings>;
@@ -181,6 +187,7 @@ interface AppSettings {
   gems: GemSettings;
   items: ItemsSettings;
   stashRename: StashRenameSettings;
+  tweaks: TweaksSettings;
   // В будущем добавим:
   // skills: Record<string, SkillSettings>;
 }
@@ -420,6 +427,10 @@ interface SettingsContextType {
   getStashRenameSettings: () => StashRenameSettings;
   updateStashRenameSettings: (newSettings: Partial<StashRenameSettings>) => void;
   updateStashTab: (index: number, value: string) => void;
+
+  // Getter/Setter для tweaks
+  getTweaksSettings: () => TweaksSettings;
+  updateTweaksSettings: (newSettings: Partial<TweaksSettings>) => void;
 }
 
 // Дефолтные настройки приложения
@@ -689,6 +700,11 @@ const getDefaultStashRenameSettings = (): StashRenameSettings => ({
   tabs: ["@shared", "@shared", "@shared", "@shared", "@shared", "@shared", "@shared"],
 });
 
+const getDefaultTweaksSettings = (): TweaksSettings => ({
+  encyclopediaEnabled: true,
+  encyclopediaLanguage: "en",
+});
+
 // Миграция старых настроек рун к новому формату
 const migrateRuneSettings = (oldSettings: any): RuneSettings => {
   // Если это уже новый формат с mode
@@ -832,6 +848,7 @@ const createDefaultSettings = (): AppSettings => {
     gems: getDefaultGemSettings(),
     items: getDefaultItemsSettings(),
     stashRename: getDefaultStashRenameSettings(),
+    tweaks: getDefaultTweaksSettings(),
   };
 };
 
@@ -1371,6 +1388,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
               stashRename: settingsObj["stashRename"]
                 ? (settingsObj["stashRename"] as StashRenameSettings)
                 : getDefaultStashRenameSettings(),
+              tweaks: settingsObj["tweaks"]
+                ? (settingsObj["tweaks"] as TweaksSettings)
+                : getDefaultTweaksSettings(),
             };
 
             return {
@@ -2651,6 +2671,24 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     });
   }, []);
 
+  // Tweaks
+  const getTweaksSettings = useCallback(() => {
+    return settings.tweaks || getDefaultTweaksSettings();
+  }, [settings.tweaks]);
+
+  const updateTweaksSettings = useCallback(
+    (newSettings: Partial<TweaksSettings>) => {
+      setSettings((prev) => ({
+        ...prev,
+        tweaks: {
+          ...(prev.tweaks || getDefaultTweaksSettings()),
+          ...newSettings,
+        },
+      }));
+    },
+    []
+  );
+
   const contextValue: SettingsContextType = {
     // Методы для настроек приложения
     getAppConfig,
@@ -2746,6 +2784,10 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     getStashRenameSettings,
     updateStashRenameSettings,
     updateStashTab,
+
+    // Getter/Setter для tweaks
+    getTweaksSettings,
+    updateTweaksSettings,
   };
 
   return (

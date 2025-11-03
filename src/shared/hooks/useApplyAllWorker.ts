@@ -666,6 +666,96 @@ export const useApplyAllWorker = (
         );
       }
 
+      // ===== TWEAKS - HUD PANEL HD =====
+      try {
+        const primaryHudPanelPath = `${homeDir}\\mods\\D2RBlizzless\\D2RBlizzless.mpq\\data\\global\\ui\\layouts\\hudpanelhd.json`;
+        const fallbackHudPanelPath = `${homeDir}\\data\\global\\ui\\layouts\\hudpanelhd.json`;
+        let pathToWrite = primaryHudPanelPath;
+        let hudPanelContent = "";
+        try {
+          hudPanelContent = await readTextFile(primaryHudPanelPath);
+        } catch {
+          hudPanelContent = await readTextFile(fallbackHudPanelPath);
+          pathToWrite = fallbackHudPanelPath;
+        }
+        const sanitizeJson = (text: string) =>
+          text.replace(/(^|\s)\/\/.*$/gm, "").replace(/,\s*([}\]])/g, "$1");
+        const hudPanelJson = JSON.parse(sanitizeJson(hudPanelContent));
+
+        const tweaksSettings = settings.tweaks || {
+          encyclopediaEnabled: true,
+          encyclopediaLanguage: "en",
+        };
+        const targetLanguage = tweaksSettings.encyclopediaLanguage || "en";
+        const targetSuffix = targetLanguage === "ru" ? "ru" : "en";
+
+        // Шаблон объекта энциклопедии
+        const encyclopediaObject = {
+          type: "ButtonWidget",
+          name: "BlizzlessEncyclopediaButRu",
+          fields: {
+            rect: {
+              x: 630,
+              y: 305,
+              scale: 0.2,
+            },
+            filename: "BlizzlessEncyclopedia\\scroll_enc",
+            hoveredFrame: 1,
+            pressedFrame: 2,
+            tooltipString: "@dictEnc",
+            onClickMessage: `PanelManager:OpenPanel:BlizzlessEncyclopediabut${targetSuffix}`,
+          },
+        };
+
+        // Ищем массив children и обрабатываем
+        const findAndProcessChildren = (obj: any): any => {
+          if (Array.isArray(obj)) {
+            // Удаляем существующий объект энциклопедии, если есть
+            const filtered = obj.filter(
+              (item) => item?.name !== "BlizzlessEncyclopediaButRu"
+            );
+
+            if (tweaksSettings.encyclopediaEnabled) {
+              // Ищем RunButtonWidget и вставляем после него
+              const runButtonIndex = filtered.findIndex(
+                (item) => item?.type === "RunButtonWidget"
+              );
+              if (runButtonIndex !== -1) {
+                filtered.splice(runButtonIndex + 1, 0, encyclopediaObject);
+              } else {
+                // Если RunButtonWidget не найден, добавляем в конец
+                filtered.push(encyclopediaObject);
+              }
+            }
+
+            return filtered;
+          } else if (obj && typeof obj === "object") {
+            const result: any = {};
+            for (const key in obj) {
+              if (key === "children" && Array.isArray(obj[key])) {
+                result[key] = findAndProcessChildren(obj[key]);
+              } else {
+                result[key] = findAndProcessChildren(obj[key]);
+              }
+            }
+            return result;
+          }
+          return obj;
+        };
+
+        const updatedHudPanelJson = findAndProcessChildren(hudPanelJson);
+        await writeFileWithRetry(
+          pathToWrite,
+          JSON.stringify(updatedHudPanelJson, null, 2)
+        );
+      } catch (e) {
+        logger.warn(
+          "Failed to update hudpanelhd.json",
+          { error: e instanceof Error ? e.message : String(e) },
+          "applyAllChanges"
+        );
+      }
+
       // ===== RUNES HIGHLIGHT FILES =====
       for (const [runeKey, runeSettings] of Object.entries(settings.runes)) {
         const rune = runeKey as ERune;
