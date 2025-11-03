@@ -42,3 +42,8 @@ export function summarizeEnsureResults(results: EnsureWritableResult[]): {
   });
   return { ok, failed };
 }
+
+export async function ensureDirs(paths: string[]): Promise<string[]> {
+  const res = await invoke<string[]>("ensure_dir", { paths });
+  return res;
+}
