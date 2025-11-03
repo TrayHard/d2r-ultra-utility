@@ -5,6 +5,7 @@
     "runes": "Руны",
     "gems": "Камни",
     "stash": "Переименование сундука",
+    "tweaks": "Настройки",
     "other": "Прочее"
   },
   "update": {
@@ -1737,6 +1738,18 @@
       "updatingOverlay": "Обновляем лутфильтр",
       "updateActionAria": "Обновить профиль",
       "upToDateAria": "Версия актуальная"
+    }
+  },
+  "tweaksPage": {
+    "encyclopediaEnabled": {
+      "label": "Включить внутриигровую энциклопедию"
+    },
+    "encyclopediaLanguage": {
+      "label": "Язык внутриигровой энциклопедии",
+      "options": {
+        "en": "Английский",
+        "ru": "Русский"
+      }
     }
   }
 }

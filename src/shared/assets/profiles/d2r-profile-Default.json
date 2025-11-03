@@ -14,6 +14,10 @@
         "@shared"
       ]
     },
+    "tweaks": {
+      "encyclopediaEnabled": true,
+      "encyclopediaLanguage": "en"
+    },
     "runes": {
       "el": {
         "mode": "manual",
