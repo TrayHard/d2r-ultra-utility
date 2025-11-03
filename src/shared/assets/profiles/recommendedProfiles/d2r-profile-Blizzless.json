@@ -1,7 +1,7 @@
 {
   "id": "1755790041879",
   "name": "Blizzless",
-  "version": "1.0",
+  "version": "1.2",
   "settings": {
     "tweaks": {
       "encyclopediaEnabled": true,
@@ -12085,5 +12085,5 @@
     }
   },
   "createdAt": "2025-08-21T15:27:21.879Z",
-  "modifiedAt": "2025-09-30T15:00:00.600Z"
+  "modifiedAt": "2025-10-04T03:20:00.600Z"
 }
