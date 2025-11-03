@@ -530,7 +530,9 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       const curEnabled = (debounced as any)?.settings?.tweaks?.encyclopediaEnabled ?? true;
       const baseLang = (baseline as any)?.tweaks?.encyclopediaLanguage || "en";
       const curLang = (debounced as any)?.settings?.tweaks?.encyclopediaLanguage || "en";
-      return baseEnabled !== curEnabled || baseLang !== curLang;
+      const baseSkip = (baseline as any)?.tweaks?.skipIntroVideos ?? false;
+      const curSkip = (debounced as any)?.settings?.tweaks?.skipIntroVideos ?? false;
+      return baseEnabled !== curEnabled || baseLang !== curLang || baseSkip !== curSkip;
     })();
 
     return {

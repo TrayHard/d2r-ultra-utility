@@ -16,7 +16,8 @@
     },
     "tweaks": {
       "encyclopediaEnabled": true,
-      "encyclopediaLanguage": "en"
+      "encyclopediaLanguage": "en",
+      "skipIntroVideos": false
     },
     "runes": {
       "el": {

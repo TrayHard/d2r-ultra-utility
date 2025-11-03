@@ -177,6 +177,7 @@ export interface StashRenameSettings {
 export interface TweaksSettings {
   encyclopediaEnabled: boolean;
   encyclopediaLanguage: "en" | "ru";
+  skipIntroVideos: boolean;
 }
 
 // Настройки профиля (только специфичные для профиля данные)
@@ -703,6 +704,7 @@ const getDefaultStashRenameSettings = (): StashRenameSettings => ({
 const getDefaultTweaksSettings = (): TweaksSettings => ({
   encyclopediaEnabled: true,
   encyclopediaLanguage: "en",
+  skipIntroVideos: false,
 });
 
 // Миграция старых настроек рун к новому формату
@@ -1389,7 +1391,10 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
                 ? (settingsObj["stashRename"] as StashRenameSettings)
                 : getDefaultStashRenameSettings(),
               tweaks: settingsObj["tweaks"]
-                ? (settingsObj["tweaks"] as TweaksSettings)
+                ? ({
+                    ...getDefaultTweaksSettings(),
+                    ...(settingsObj["tweaks"] as TweaksSettings),
+                  } as TweaksSettings)
                 : getDefaultTweaksSettings(),
             };
 

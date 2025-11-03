@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import { useLogger } from "../utils/logger";
-import { ensureWritable } from "../utils/fsUtils";
+import { ensureWritable, ensureDirs } from "../utils/fsUtils";
 import {
   GAME_PATHS as COMMON_GAME_PATHS,
   loadSavedSettings,
@@ -748,6 +748,17 @@ export const useApplyAllWorker = (
           pathToWrite,
           JSON.stringify(updatedHudPanelJson, null, 2)
         );
+
+        // Skip intro videos
+        if ((tweaksSettings as any).skipIntroVideos) {
+          const videoDir = `${homeDir}\\mods\\D2RBlizzless\\D2RBlizzless.mpq\\data\\hd\\global\\video`;
+          const videoFiles = ["blizzardlogos.webm", "d2intro.webm", "logoanim.webm"];
+          try { await ensureDirs([videoDir]); } catch {}
+          for (const fname of videoFiles) {
+            const p = `${videoDir}\\${fname}`;
+            await writeFileWithRetry(p, "");
+          }
+        }
       } catch (e) {
         logger.warn(
           "Failed to update hudpanelhd.json",
@@ -841,3 +852,4 @@ export const useApplyAllWorker = (
 
   return { isLoading, error, applyAllChanges };
 };
+

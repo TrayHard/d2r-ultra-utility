@@ -1745,6 +1745,9 @@
         "en": "English",
         "ru": "Russian"
       }
+    },
+    "skipIntroVideos": {
+      "label": "Skip intro videos"
     }
   }
 }

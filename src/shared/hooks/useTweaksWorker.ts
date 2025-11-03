@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
+import { ensureDirs } from "../utils/fsUtils";
 import { ensureWritable } from "../utils/fsUtils";
 import { loadSavedSettings } from "../utils/commonUtils";
 import { TweaksSettings } from "../../app/providers/SettingsContext";
@@ -94,6 +95,20 @@ export const useTweaksWorker = (
       const childrenArray = findChildrenArray(json);
       const encyclopediaInfo = childrenArray ? findEncyclopediaObject(childrenArray) : null;
 
+      // Определяем состояние skipIntroVideos по наличию пустых файлов
+      const videoDir = `${homeDir}\\mods\\D2RBlizzless\\D2RBlizzless.mpq\\data\\hd\\global\\video`;
+      const videoFiles = ["blizzardlogos.webm", "d2intro.webm", "logoanim.webm"];
+      const results: boolean[] = [];
+      for (const fname of videoFiles) {
+        try {
+          const c = await readTextFile(`${videoDir}\\${fname}`);
+          results.push(c.length === 0);
+        } catch {
+          results.push(false);
+        }
+      }
+      const skipIntroDetected = results.every(Boolean);
+
       if (updateTweaksSettings) {
         if (encyclopediaInfo) {
           // Объект найден - энциклопедия включена
@@ -107,6 +122,7 @@ export const useTweaksWorker = (
             encyclopediaEnabled: false,
           });
         }
+        updateTweaksSettings({ skipIntroVideos: skipIntroDetected });
         sendMessage?.(
           t?.("messages.success.filesLoaded") || "Настройки загружены",
           { type: "success" }
@@ -229,6 +245,31 @@ export const useTweaksWorker = (
               await ensureWritable([pathToWrite]);
             } catch {}
             await writeTextFile(pathToWrite, contentOut);
+          }
+        }
+      }
+
+      // Применяем skipIntroVideos: создаем пустые файлы если включено
+      if ((currentSettings as any).skipIntroVideos) {
+        const videoDir = `${homeDir}\\mods\\D2RBlizzless\\D2RBlizzless.mpq\\data\\hd\\global\\video`;
+        const videoFiles = ["blizzardlogos.webm", "d2intro.webm", "logoanim.webm"];
+
+        // Убедимся, что video — это директория
+        try { await ensureDirs([videoDir]); } catch {}
+        for (const fname of videoFiles) {
+          const p = `${videoDir}\\${fname}`;
+          for (let attempt = 0; attempt < maxAttempts; attempt++) {
+            try {
+              await writeTextFile(p, "");
+              break;
+            } catch (err) {
+              if (attempt === maxAttempts - 1) {
+                try {
+                  await ensureWritable([p]);
+                } catch {}
+                await writeTextFile(p, "");
+              }
+            }
           }
         }
       }

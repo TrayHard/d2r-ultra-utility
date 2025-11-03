@@ -273,7 +273,8 @@ pub fn run() {
             search_file,
             set_selected_file,
             open_file_dialog,
-            ensure_writable
+            ensure_writable,
+            ensure_dir
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -381,4 +382,28 @@ async fn ensure_writable(paths: Vec<String>) -> Result<Vec<EnsureResult>, String
     }
 
     Ok(results)
+}
+
+#[tauri::command]
+async fn ensure_dir(paths: Vec<String>) -> Result<Vec<String>, String> {
+    use std::fs;
+    use std::path::Path;
+
+    let mut created: Vec<String> = Vec::new();
+    for p in paths {
+        let path = Path::new(&p);
+        if path.exists() {
+            // если это файл, удалим его
+            if let Ok(md) = fs::metadata(&path) {
+                if md.is_file() {
+                    let _ = fs::remove_file(&path);
+                }
+            }
+        }
+        if let Err(e) = fs::create_dir_all(&path) {
+            return Err(format!("create_dir_all failed for {}: {}", p, e));
+        }
+        created.push(p);
+    }
+    Ok(created)
 }
