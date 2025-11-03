@@ -13,6 +13,7 @@ import { useCommonItemsWorker } from "../../../shared/hooks/useCommonItemsWorker
 import { useGemsWorker } from "../../../shared/hooks/useGemsWorker.ts";
 import { useItemsWorker } from "../../../shared/hooks/useItemsWorker.ts";
 import { useApplyAllWorker } from "../../../shared/hooks/useApplyAllWorker.ts";
+import { useStashRenameWorker } from "../../../shared/hooks/useStashRenameWorker.ts";
 import basesData from "../../../pages/items/bases.json";
 import { useUnsavedChanges } from "../../../shared/hooks/useUnsavedChanges";
 import { STORAGE_KEYS } from "../../../shared/constants";
@@ -41,6 +42,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     updateGemLevelSettings,
     updateItemsLevelSettings,
     updateItemSettings,
+    updateStashRenameSettings,
     getCommonSettings,
     getGemSettings,
     getItemsSettings,
@@ -168,6 +170,24 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     getAppMode
   );
 
+  // Хук для переименования вкладок сундука
+  const {
+    isLoading: isStashLoading,
+    error: stashError,
+    readFromFiles: readStashFromFiles,
+    applyChanges: applyStashChanges,
+  } = useStashRenameWorker(
+    updateStashRenameSettings,
+    (message, opts) => {
+      if (isBulkLoading && opts?.type === "success") return;
+      sendMessage(message, { type: opts?.type, title: opts?.title });
+    },
+    t,
+    () => ({ tabs: settings.stashRename.tabs }),
+    "advanced",
+    getAppMode,
+  );
+
   // Единый агрегатор записи
   const { isLoading: isApplyAllLoading, applyAllChanges } = useApplyAllWorker(
     (message, opts) => {
@@ -206,7 +226,9 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
           ? isGemsLoading
           : activeTab === "items"
             ? isItemsLoading
-            : false;
+            : activeTab === "stash"
+              ? isStashLoading
+              : false;
   const error =
     activeTab === "runes"
       ? runesError
@@ -216,7 +238,9 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
           ? gemsError
           : activeTab === "items"
             ? itemsError
-            : null;
+            : activeTab === "stash"
+              ? stashError
+              : null;
   const readFromFiles =
     activeTab === "runes"
       ? readRunesFromFiles
@@ -226,7 +250,9 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
           ? readGemsFromFiles
           : activeTab === "items"
             ? readItemsFromFiles
-            : () => { };
+            : activeTab === "stash"
+              ? readStashFromFiles
+              : () => { };
   const applyChanges =
     activeTab === "runes"
       ? applyRunesChanges
@@ -236,7 +262,9 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
           ? applyGemsChanges
           : activeTab === "items"
             ? applyItemsChanges
-            : () => { };
+            : activeTab === "stash"
+              ? applyStashChanges
+              : () => { };
 
   const executeReadAll = useCallback(async () => {
     logger.info(
@@ -373,6 +401,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     { id: "items", label: t("tabs.items") },
     { id: "runes", label: t("tabs.runes") },
     { id: "gems", label: t("tabs.gems") },
+    { id: "stash", label: t("tabs.stash") },
   ];
 
   // Индикаторы изменений по табам относительно активного профиля
@@ -457,11 +486,18 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       JSON.stringify(baseline.runes) !==
       JSON.stringify((debounced as any).settings.runes);
 
+    const hasStashChanges = (() => {
+      const base = (baseline as any)?.stashRename?.tabs || [];
+      const cur = (debounced as any)?.settings?.stashRename?.tabs || [];
+      return JSON.stringify(base) !== JSON.stringify(cur);
+    })();
+
     return {
       common: hasCommonChanges,
       items: hasItemsChanges,
       runes: hasRunesChanges,
       gems: hasGemsChanges,
+      stash: hasStashChanges,
     } as Record<string, boolean>;
   }, [baseline, debounced, activeProfileId]);
 

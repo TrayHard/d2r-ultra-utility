@@ -3,6 +3,17 @@
   "name": "Minimalistic",
   "version": "1.0",
   "settings": {
+    "stashRename": {
+      "tabs": [
+        "Common",
+        "Runes&Gems",
+        "Casters",
+        "Weaponry",
+        "Charms",
+        "Jewelry",
+        "Blanks"
+      ]
+    },
     "runes": {
       "el": {
         "mode": "manual",

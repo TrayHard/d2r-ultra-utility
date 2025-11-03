@@ -39,7 +39,7 @@ import type {
 
 type SendMessage = (
   message: string,
-  options?: { type?: "success" | "error" | "warning" | "info"; title?: string },
+  options?: { type?: "success" | "error" | "warning" | "info"; title?: string }
 ) => void;
 
 export const useApplyAllWorker = (
@@ -48,7 +48,7 @@ export const useApplyAllWorker = (
   getAllSettings?: () => AppSettings,
   getSelectedLocales?: () => string[],
   allowedMode?: "basic" | "advanced" | null,
-  getCurrentMode?: () => "basic" | "advanced",
+  getCurrentMode?: () => "basic" | "advanced"
 ) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -94,7 +94,7 @@ export const useApplyAllWorker = (
               maxAttempts,
               error: err instanceof Error ? err.message : String(err),
             },
-            "writeFileWithRetry",
+            "writeFileWithRetry"
           );
           if (isLast) {
             try {
@@ -103,13 +103,13 @@ export const useApplyAllWorker = (
               logger.warn(
                 "Attempted to ensure writable",
                 { path, result: r },
-                "writeFileWithRetry",
+                "writeFileWithRetry"
               );
             } catch (e) {
               logger.warn(
                 "ensureWritable invocation failed",
                 { path, error: e instanceof Error ? e.message : String(e) },
-                "writeFileWithRetry",
+                "writeFileWithRetry"
               );
             }
             try {
@@ -131,7 +131,7 @@ export const useApplyAllWorker = (
         }
       }
     },
-    [logger],
+    [logger]
   );
 
   const applyAllChanges = useCallback(async () => {
@@ -142,7 +142,7 @@ export const useApplyAllWorker = (
         logger.warn(
           "Skipping apply all - wrong mode",
           { current, allowedMode },
-          "applyAllChanges",
+          "applyAllChanges"
         );
         return;
       }
@@ -151,7 +151,7 @@ export const useApplyAllWorker = (
     if (!getAllSettingsRef.current || !getSelectedLocalesRef.current) {
       logger.error(
         "Missing dependencies for applyAllChanges",
-        new Error("Missing getters"),
+        new Error("Missing getters")
       );
       return;
     }
@@ -183,7 +183,7 @@ export const useApplyAllWorker = (
       logger.info(
         "Reading source files (aggregate)",
         { itemNamesPath, nameAffixesPath, modifiersPath, runesPath },
-        "applyAllChanges",
+        "applyAllChanges"
       );
 
       // Читаем исходные файлы
@@ -214,7 +214,7 @@ export const useApplyAllWorker = (
       let itemNamesData: CommonLocaleItem[] = JSON.parse(itemNamesContent);
       let nameAffixesData: CommonLocaleItem[] = JSON.parse(nameAffixesContent);
       let modifiersData: CommonLocaleItem[] = JSON.parse(
-        modifiersContent || "[]",
+        modifiersContent || "[]"
       );
       let runesData: Array<
         { id: number; Key: string } & Record<string, string>
@@ -235,7 +235,7 @@ export const useApplyAllWorker = (
       // ===== COMMON =====
       const applyCommonGroup = (
         groupSettings: PotionGroupSettings,
-        mapper: ECommonItem[],
+        mapper: ECommonItem[]
       ) => {
         mapper.forEach((potionItem, level) => {
           const potionId = commonItemToIdMapper[potionItem];
@@ -349,7 +349,7 @@ export const useApplyAllWorker = (
             });
             targetArray.push(newItem);
           }
-        },
+        }
       );
 
       // Группы зелий и пр. в common
@@ -361,7 +361,7 @@ export const useApplyAllWorker = (
           ] as PotionGroupSettings;
           if (!group) return;
           applyCommonGroup(group, mapped as ECommonItem[]);
-        },
+        }
       );
 
       // ===== GEMS =====
@@ -420,7 +420,7 @@ export const useApplyAllWorker = (
               targetArray.push(newItem);
             }
           });
-        },
+        }
       );
 
       // ===== ITEMS =====
@@ -504,7 +504,7 @@ export const useApplyAllWorker = (
 
             (updatedItemNames[idx] as any)[k] = baseName;
           });
-        },
+        }
       );
 
       // Quality Prefixes (item-nameaffixes)
@@ -593,24 +593,78 @@ export const useApplyAllWorker = (
       logger.info(
         "Writing aggregated files",
         { itemNamesPath, nameAffixesPath, modifiersPath, runesPath },
-        "applyAllChanges",
+        "applyAllChanges"
       );
       await writeFileWithRetry(
         itemNamesPath,
-        JSON.stringify(updatedItemNames, null, 2),
+        JSON.stringify(updatedItemNames, null, 2)
       );
       await writeFileWithRetry(
         nameAffixesPath,
-        JSON.stringify(updatedNameAffixes, null, 2),
+        JSON.stringify(updatedNameAffixes, null, 2)
       );
       await writeFileWithRetry(
         modifiersPath,
-        JSON.stringify(updatedModifiers, null, 2),
+        JSON.stringify(updatedModifiers, null, 2)
       );
       await writeFileWithRetry(
         runesPath,
-        JSON.stringify(updatedRunes, null, 2),
+        JSON.stringify(updatedRunes, null, 2)
       );
+
+      // ===== BANK LAYOUT (stash rename) =====
+      try {
+        const primaryBankPath = `${homeDir}\\mods\\D2RBlizzless\\D2RBlizzless.mpq\\data\\global\\ui\\layouts\\bankexpansionlayouthd.json`;
+        const fallbackBankPath = `${homeDir}\\${COMMON_GAME_PATHS.LOCALES}\\..\\..\\..\\ui\\layouts\\bankexpansionlayouthd.json`;
+        let pathToWrite = primaryBankPath;
+        let bankContent = "";
+        try {
+          bankContent = await readTextFile(primaryBankPath);
+        } catch {
+          bankContent = await readTextFile(fallbackBankPath);
+          pathToWrite = fallbackBankPath;
+        }
+        const sanitizeJson = (text: string) =>
+          text.replace(/(^|\s)\/\/.*$/gm, "").replace(/,\s*([}\]])/g, "$1");
+        const bankJson = JSON.parse(sanitizeJson(bankContent));
+        const tabs = settings.stashRename?.tabs || [
+          "@shared",
+          "@shared",
+          "@shared",
+          "@shared",
+          "@shared",
+          "@shared",
+          "@shared",
+        ];
+        const applyTabs = (arr: any[]) => {
+          for (const node of arr) {
+            if (node?.type === "TabBarWidget" && node?.fields?.textStrings) {
+              const ts = node.fields.textStrings as any[];
+              if (
+                Array.isArray(ts) &&
+                ts.length === 8 &&
+                ts[0] === "@personal"
+              ) {
+                node.fields.textStrings = ["@personal", ...tabs];
+              } else if (Array.isArray(ts) && ts.length === 7) {
+                node.fields.textStrings = [...tabs];
+              }
+            }
+            if (Array.isArray(node?.children)) applyTabs(node.children);
+          }
+        };
+        if (Array.isArray(bankJson?.children)) applyTabs(bankJson.children);
+        await writeFileWithRetry(
+          pathToWrite,
+          JSON.stringify(bankJson, null, 4)
+        );
+      } catch (e) {
+        logger.warn(
+          "Failed to update bankexpansionlayouthd.json",
+          { error: e instanceof Error ? e.message : String(e) },
+          "applyAllChanges"
+        );
+      }
 
       // ===== RUNES HIGHLIGHT FILES =====
       for (const [runeKey, runeSettings] of Object.entries(settings.runes)) {
@@ -623,7 +677,7 @@ export const useApplyAllWorker = (
           logger.warn(
             "Failed to write rune highlight file",
             { rune, error: e instanceof Error ? e.message : String(e) },
-            "applyAllChanges",
+            "applyAllChanges"
           );
         }
       }
@@ -647,7 +701,7 @@ export const useApplyAllWorker = (
               const targetPath = `${keysHighlightDir}\\${fileName}`;
               await writeFileWithRetry(
                 targetPath,
-                JSON.stringify(keyData, null, 2),
+                JSON.stringify(keyData, null, 2)
               );
             } catch (e) {
               logger.warn(
@@ -657,7 +711,7 @@ export const useApplyAllWorker = (
                   keyName,
                   error: e instanceof Error ? e.message : String(e),
                 },
-                "applyAllChanges",
+                "applyAllChanges"
               );
             }
           }
@@ -666,7 +720,7 @@ export const useApplyAllWorker = (
         logger.warn(
           "Unexpected error while applying uber key highlight templates",
           { error: e instanceof Error ? e.message : String(e) },
-          "applyAllChanges",
+          "applyAllChanges"
         );
       }
 
@@ -681,7 +735,7 @@ export const useApplyAllWorker = (
         "Failed to apply all changes (aggregate)",
         e as Error,
         { error: msg },
-        "applyAllChanges",
+        "applyAllChanges"
       );
       sendMessageRef.current?.(msg, {
         type: "error",

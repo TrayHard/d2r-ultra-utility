@@ -3,6 +3,17 @@
   "name": "Default",
   "version": "1.0",
   "settings": {
+    "stashRename": {
+      "tabs": [
+        "@shared",
+        "@shared",
+        "@shared",
+        "@shared",
+        "@shared",
+        "@shared",
+        "@shared"
+      ]
+    },
     "runes": {
       "el": {
         "mode": "manual",
