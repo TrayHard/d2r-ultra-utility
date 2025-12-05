@@ -1,7 +1,7 @@
 {
   "id": "1755790041879",
   "name": "Blizzless",
-  "version": "1.3",
+  "version": "1.4",
   "settings": {
     "tweaks": {
       "encyclopediaEnabled": true,
@@ -36,7 +36,7 @@
         "manualSettings": {
           "locales": {
             "enUS": "El Rune",
-            "ruRU": "Руна Эл",
+            "ruRU": "Руна Эль",
             "zhTW": "符文：艾爾",
             "deDE": "[fs]El-Rune",
             "esES": "Runa El",
@@ -432,7 +432,7 @@
         "manualSettings": {
           "locales": {
             "enUS": "Shael Rune",
-            "ruRU": "Руна Шаэл",
+            "ruRU": "Руна Шаэль",
             "zhTW": "符文：夏",
             "deDE": "[fs]Shael-Rune",
             "esES": "Runa Shael",
@@ -728,7 +728,7 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "~  Um  Rune  ~ÿc;",
+            "enUS": "~  Um Rune  ~ÿc;",
             "ruRU": "~  Руна Ум  ~ÿc;",
             "zhTW": "符文：烏姆",
             "deDE": "[fs]Um-Rune",
@@ -894,7 +894,7 @@
         "manualSettings": {
           "locales": {
             "enUS": "~  Ohm Rune  ~ÿc;",
-            "ruRU": "~  Руна Охм  ~ÿc;",
+            "ruRU": "~  Руна Ом  ~ÿc;",
             "zhTW": "符文：歐姆",
             "deDE": "[fs]Ohm-Rune",
             "esES": "Runa Ohm",
@@ -926,7 +926,7 @@
         },
         "manualSettings": {
           "locales": {
-            "enUS": "~  Lo  Rune  ~ÿc;",
+            "enUS": "~  Lo Rune  ~ÿc;",
             "ruRU": "~  Руна Ло  ~ÿc;",
             "zhTW": "符文：羅",
             "deDE": "[fs]Lo-Rune",
