@@ -168,18 +168,11 @@ export interface ItemsSettings {
   items: Record<string, ItemSettings>;
 }
 
-// Переименование вкладок сундука (7 общих вкладок)
-export interface StashRenameSettings {
-  tabs: [string, string, string, string, string, string, string];
-}
-
 // Настройки tweaks (игровые настройки)
 export interface TweaksSettings {
   encyclopediaEnabled: boolean;
   encyclopediaLanguage: "en" | "ru";
   skipIntroVideos: boolean;
-  // Новая структура: переименование вкладок хранится внутри tweaks как массив без промежуточного "tabs"
-  stashRename: [string, string, string, string, string, string, string];
 }
 
 // Настройки профиля (только специфичные для профиля данные)
@@ -693,44 +686,11 @@ const getDefaultItemsSettings = (): ItemsSettings => ({
   items: {}, // Начинаем с пустого объекта, предметы будут добавляться по мере необходимости
 });
 
-const getDefaultStashTabs = (): [string, string, string, string, string, string, string] => (
-  ["@shared", "@shared", "@shared", "@shared", "@shared", "@shared", "@shared"]
-);
-
 const getDefaultTweaksSettings = (): TweaksSettings => ({
   encyclopediaEnabled: true,
   encyclopediaLanguage: "en",
   skipIntroVideos: false,
-  stashRename: getDefaultStashTabs(),
 });
-
-// Миграция: извлекаем массив вкладок сундука из разных форматов
-const extractStashTabs = (
-  source: unknown,
-  fallback?: [string, string, string, string, string, string, string]
-): [string, string, string, string, string, string, string] => {
-  const def = fallback || getDefaultStashTabs();
-  try {
-    if (Array.isArray(source) && source.length === 7) {
-      return source.map((s) => String(s)) as [string, string, string, string, string, string, string];
-    }
-    if (source && typeof source === "object" && (source as any)?.tabs) {
-      const tabs = (source as any).tabs;
-      if (Array.isArray(tabs) && tabs.length === 7) {
-        return tabs.map((s: unknown) => String(s)) as [
-          string,
-          string,
-          string,
-          string,
-          string,
-          string,
-          string
-        ];
-      }
-    }
-  } catch {}
-  return def;
-};
 
 // Миграция старых настроек рун к новому формату
 const migrateRuneSettings = (oldSettings: any): RuneSettings => {
@@ -1044,15 +1004,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         items: settingsObj["items"]
           ? migrateItemsSettings(settingsObj["items"])
           : getDefaultItemsSettings(),
-        tweaks: (() => {
-          const base = settingsObj["tweaks"]
-            ? ({ ...getDefaultTweaksSettings(), ...(settingsObj["tweaks"] as TweaksSettings) } as TweaksSettings)
-            : getDefaultTweaksSettings();
-          const legacy = settingsObj["stashRename"];
-          const incoming = (settingsObj["tweaks"] as any)?.stashRename;
-          const tabs = extractStashTabs(incoming ?? legacy, base.stashRename);
-          return { ...base, stashRename: tabs } as TweaksSettings;
-        })(),
+        tweaks: settingsObj["tweaks"]
+          ? ({ ...getDefaultTweaksSettings(), ...(settingsObj["tweaks"] as TweaksSettings) } as TweaksSettings)
+          : getDefaultTweaksSettings(),
       } as unknown as AppSettings;
 
       // Версия: используем ТОЛЬКО то, что пришло в JSON и соответствует X.Y
@@ -1311,13 +1265,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
           items: parsedSettings.items
             ? migrateItemsSettings(parsedSettings.items)
             : getDefaultItemsSettings(),
-          tweaks: (() => {
-            const base = parsedSettings.tweaks
-              ? ({ ...getDefaultTweaksSettings(), ...parsedSettings.tweaks } as TweaksSettings)
-              : getDefaultTweaksSettings();
-            const tabs = extractStashTabs((parsedSettings as any)?.tweaks?.stashRename ?? parsedSettings.stashRename, base.stashRename);
-            return { ...base, stashRename: tabs } as TweaksSettings;
-          })(),
+          tweaks: parsedSettings.tweaks
+            ? ({ ...getDefaultTweaksSettings(), ...parsedSettings.tweaks } as TweaksSettings)
+            : getDefaultTweaksSettings(),
         };
         setSettings(migratedSettings);
       } catch (error) {
@@ -1350,13 +1300,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
             items: profile.settings.items
               ? migrateItemsSettings(profile.settings.items)
               : getDefaultItemsSettings(),
-              tweaks: (() => {
-                const base = profile.settings.tweaks
-                  ? ({ ...getDefaultTweaksSettings(), ...profile.settings.tweaks } as TweaksSettings)
-                  : getDefaultTweaksSettings();
-                const tabs = extractStashTabs((profile.settings as any)?.tweaks?.stashRename ?? (profile.settings as any)?.stashRename, base.stashRename);
-                return { ...base, stashRename: tabs } as TweaksSettings;
-              })(),
+              tweaks: profile.settings.tweaks
+              ? ({ ...getDefaultTweaksSettings(), ...profile.settings.tweaks } as TweaksSettings)
+              : getDefaultTweaksSettings(),
           },
         }));
         setProfiles(migratedProfiles);
@@ -1425,13 +1371,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
               items: settingsObj["items"]
                 ? migrateItemsSettings(settingsObj["items"])
                 : getDefaultItemsSettings(),
-              tweaks: (() => {
-                const base = settingsObj["tweaks"]
-                  ? ({ ...getDefaultTweaksSettings(), ...(settingsObj["tweaks"] as TweaksSettings) } as TweaksSettings)
-                  : getDefaultTweaksSettings();
-                const tabs = extractStashTabs((settingsObj["tweaks"] as any)?.stashRename ?? settingsObj["stashRename"], base.stashRename);
-                return { ...base, stashRename: tabs } as TweaksSettings;
-              })(),
+              tweaks: settingsObj["tweaks"]
+                ? ({ ...getDefaultTweaksSettings(), ...(settingsObj["tweaks"] as TweaksSettings) } as TweaksSettings)
+                : getDefaultTweaksSettings(),
             };
 
             return {
