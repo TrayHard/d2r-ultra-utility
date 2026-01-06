@@ -612,59 +612,6 @@ export const useApplyAllWorker = (
         JSON.stringify(updatedRunes, null, 2)
       );
 
-      // ===== BANK LAYOUT (stash rename) =====
-      try {
-        const primaryBankPath = `${homeDir}\\mods\\D2RBlizzless\\D2RBlizzless.mpq\\data\\global\\ui\\layouts\\bankexpansionlayouthd.json`;
-        const fallbackBankPath = `${homeDir}\\${COMMON_GAME_PATHS.LOCALES}\\..\\..\\..\\ui\\layouts\\bankexpansionlayouthd.json`;
-        let pathToWrite = primaryBankPath;
-        let bankContent = "";
-        try {
-          bankContent = await readTextFile(primaryBankPath);
-        } catch {
-          bankContent = await readTextFile(fallbackBankPath);
-          pathToWrite = fallbackBankPath;
-        }
-        const sanitizeJson = (text: string) =>
-          text.replace(/(^|\s)\/\/.*$/gm, "").replace(/,\s*([}\]])/g, "$1");
-        const bankJson = JSON.parse(sanitizeJson(bankContent));
-        const tabs = (settings.tweaks?.stashRename || [
-          "@shared",
-          "@shared",
-          "@shared",
-          "@shared",
-          "@shared",
-          "@shared",
-          "@shared",
-        ]) as string[];
-        const applyTabs = (arr: any[]) => {
-          for (const node of arr) {
-            if (node?.type === "TabBarWidget" && node?.fields?.textStrings) {
-              const ts = node.fields.textStrings as any[];
-              if (
-                Array.isArray(ts) &&
-                ts.length === 8 &&
-                ts[0] === "@personal"
-              ) {
-                node.fields.textStrings = ["@personal", ...tabs];
-              } else if (Array.isArray(ts) && ts.length === 7) {
-                node.fields.textStrings = [...tabs];
-              }
-            }
-            if (Array.isArray(node?.children)) applyTabs(node.children);
-          }
-        };
-        if (Array.isArray(bankJson?.children)) applyTabs(bankJson.children);
-        await writeFileWithRetry(
-          pathToWrite,
-          JSON.stringify(bankJson, null, 4)
-        );
-      } catch (e) {
-        logger.warn(
-          "Failed to update bankexpansionlayouthd.json",
-          { error: e instanceof Error ? e.message : String(e) },
-          "applyAllChanges"
-        );
-      }
 
       // ===== TWEAKS - HUD PANEL HD =====
       try {

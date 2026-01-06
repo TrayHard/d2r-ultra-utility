@@ -13,7 +13,6 @@ import { useCommonItemsWorker } from "../../../shared/hooks/useCommonItemsWorker
 import { useGemsWorker } from "../../../shared/hooks/useGemsWorker.ts";
 import { useItemsWorker } from "../../../shared/hooks/useItemsWorker.ts";
 import { useApplyAllWorker } from "../../../shared/hooks/useApplyAllWorker.ts";
-import { useStashRenameWorker } from "../../../shared/hooks/useStashRenameWorker.ts";
 import { useTweaksWorker } from "../../../shared/hooks/useTweaksWorker.ts";
 import basesData from "../../../pages/items/bases.json";
 import { useUnsavedChanges } from "../../../shared/hooks/useUnsavedChanges";
@@ -172,28 +171,6 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     getAppMode
   );
 
-  // Хук для переименования вкладок сундука
-  const {
-    isLoading: isStashLoading,
-    error: stashError,
-    readFromFiles: readStashFromFiles,
-    applyChanges: applyStashChanges,
-  } = useStashRenameWorker(
-    (payload) => {
-      if (payload?.tabs) {
-        updateTweaksSettings({ stashRename: payload.tabs as any });
-      }
-    },
-    (message, opts) => {
-      if (isBulkLoading && opts?.type === "success") return;
-      sendMessage(message, { type: opts?.type, title: opts?.title });
-    },
-    t,
-    () => ({ tabs: (settings.tweaks?.stashRename || ["@shared","@shared","@shared","@shared","@shared","@shared","@shared"]) as any }),
-    "advanced",
-    getAppMode,
-  );
-
   // Хук для tweaks
   const {
     isLoading: isTweaksLoading,
@@ -251,8 +228,8 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
           : activeTab === "items"
             ? isItemsLoading
             : activeTab === "tweaks"
-                ? (isTweaksLoading || isStashLoading)
-                : false;
+        ? isTweaksLoading
+        : false;
   const error =
     activeTab === "runes"
       ? runesError
@@ -263,7 +240,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
           : activeTab === "items"
             ? itemsError
             : activeTab === "tweaks"
-                ? (tweaksError || stashError)
+                ? tweaksError
                 : null;
   const readFromFiles =
     activeTab === "runes"
@@ -275,7 +252,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
           : activeTab === "items"
             ? readItemsFromFiles
             : activeTab === "tweaks"
-                ? (async () => { await readTweaksFromFiles(); await readStashFromFiles(); })
+                ? readTweaksFromFiles
                 : () => { };
   const applyChanges =
     activeTab === "runes"
@@ -287,7 +264,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
           : activeTab === "items"
             ? applyItemsChanges
             : activeTab === "tweaks"
-                ? (async () => { await applyTweaksChanges(); await applyStashChanges(); })
+                ? applyTweaksChanges
                 : () => { };
 
   const executeReadAll = useCallback(async () => {
@@ -303,7 +280,6 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       readItemsFromFiles(),
       readRunesFromFiles(),
       readGemsFromFiles(),
-      readStashFromFiles(),
       readTweaksFromFiles(),
     ]);
     setIsBulkLoading(false);
@@ -346,7 +322,6 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     readItemsFromFiles,
     readRunesFromFiles,
     readGemsFromFiles,
-    readStashFromFiles,
     readTweaksFromFiles,
     unmute,
     sendMessage,
@@ -521,10 +496,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       const curLang = (debounced as any)?.settings?.tweaks?.encyclopediaLanguage || "en";
       const baseSkip = (baseline as any)?.tweaks?.skipIntroVideos ?? false;
       const curSkip = (debounced as any)?.settings?.tweaks?.skipIntroVideos ?? false;
-      const baseTabs = (baseline as any)?.tweaks?.stashRename || (baseline as any)?.stashRename?.tabs || [];
-      const curTabs = (debounced as any)?.settings?.tweaks?.stashRename || [];
-      const tabsChanged = JSON.stringify(baseTabs) !== JSON.stringify(curTabs);
-      return baseEnabled !== curEnabled || baseLang !== curLang || baseSkip !== curSkip || tabsChanged;
+      return baseEnabled !== curEnabled || baseLang !== curLang || baseSkip !== curSkip;
     })();
 
     return {
