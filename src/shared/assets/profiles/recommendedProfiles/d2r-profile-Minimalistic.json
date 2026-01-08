@@ -638,7 +638,7 @@
       },
       "lem": {
         "mode": "manual",
-        "isHighlighted": false,
+        "isHighlighted": true,
         "autoSettings": {
           "numbering": {
             "show": false,
@@ -671,7 +671,7 @@
       },
       "pul": {
         "mode": "manual",
-        "isHighlighted": false,
+        "isHighlighted": true,
         "autoSettings": {
           "numbering": {
             "show": false,
@@ -704,7 +704,7 @@
       },
       "um": {
         "mode": "manual",
-        "isHighlighted": false,
+        "isHighlighted": true,
         "autoSettings": {
           "numbering": {
             "show": false,
@@ -737,7 +737,7 @@
       },
       "mal": {
         "mode": "manual",
-        "isHighlighted": false,
+        "isHighlighted": true,
         "autoSettings": {
           "numbering": {
             "show": false,
