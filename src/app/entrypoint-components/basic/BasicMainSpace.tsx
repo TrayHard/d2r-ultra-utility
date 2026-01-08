@@ -835,7 +835,7 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
             {t("basicMainSpace.title")}
           </h1>
 
-          <div className="mt-4 text-center">
+          <div className="mt-4 text-center flex items-center justify-center gap-2">
             <button
               onClick={() => setIsHelpModalOpen(true)}
               className={`px-4 py-2 rounded text-sm font-medium transition-colors ${isDarkTheme
@@ -845,6 +845,8 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
             >
               {t("basicMainSpace.buttons.howToUse")}
             </button>
+
+            {/* Mode toggle placed to the right of How to Use */}
           </div>
 
           <div className="mt-4">

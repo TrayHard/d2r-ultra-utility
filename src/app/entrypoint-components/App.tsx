@@ -10,6 +10,8 @@ import { STORAGE_KEYS } from "../../shared/constants.ts";
 
 import PathSelector from "../../widgets/Toolbar/PathSelector.tsx";
 import WorkSpace from "./WorkSpace.tsx";
+import MainMenuWindow, { AppSection } from "./MainMenuWindow.tsx";
+import TweaksWorkspace from "./TweaksWorkspace.tsx";
 import "./App.css";
 
 interface SearchProgress {
@@ -70,7 +72,11 @@ type AppState =
   | "saved-path"
   | "searching"
   | "path-selection"
-  | "manual-input";
+  | "manual-input"
+  | "main-menu"
+  | "lootfilters"
+  | "tweaks"
+  | "runcounter";
 
 function App() {
   const logger = useLogger("App");
@@ -131,7 +137,7 @@ function App() {
         // Полную проверку существования файла делать не будем, чтобы не усложнять
         setSavedPath(savedFilePath);
         setHomeDirectory(savedHomeDir);
-        setAppState("saved-path");
+        setAppState("main-menu");
         return;
       }
 
@@ -257,7 +263,15 @@ function App() {
     // Извлекаем папку из полного пути к файлу
     const homeDir = path.substring(0, path.lastIndexOf("\\"));
     setHomeDirectory(homeDir);
-    setAppState("saved-path");
+    setAppState("main-menu");
+  };
+
+  const handleSectionSelect = (section: AppSection) => {
+    setAppState(section);
+  };
+
+  const handleBackToMainMenu = () => {
+    setAppState("main-menu");
   };
 
   const handleChangePath = async () => {
@@ -322,13 +336,62 @@ function App() {
     });
   };
 
-  // Если путь сохранён, сразу показываем WorkSpace (включая debug-режим)
-  if (appState === "saved-path" && savedPath && homeDirectory) {
+  // Если путь сохранён, показываем главное меню
+  if (appState === "main-menu" && savedPath && homeDirectory) {
     return (
       <div className="h-screen flex flex-col bg-gradient-to-br from-gray-900 to-black">
         <CustomTitleBar />
         <div className="flex-1">
-          <WorkSpace onChangeClick={handleChangePath} />
+          <MainMenuWindow
+            onSectionSelect={handleSectionSelect}
+            onSettingsClick={() => {}}
+            onChangePathClick={handleChangePath}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // Loot Filters
+  if (appState === "lootfilters" && savedPath && homeDirectory) {
+    return (
+      <div className="h-screen flex flex-col bg-gradient-to-br from-gray-900 to-black">
+        <CustomTitleBar />
+        <div className="flex-1">
+          <WorkSpace onChangeClick={handleChangePath} onBackClick={handleBackToMainMenu} />
+        </div>
+      </div>
+    );
+  }
+
+  // Tweaks
+  if (appState === "tweaks" && savedPath && homeDirectory) {
+    return (
+      <div className="h-screen flex flex-col bg-gradient-to-br from-gray-900 to-black">
+        <CustomTitleBar />
+        <div className="flex-1">
+          <TweaksWorkspace onBackClick={handleBackToMainMenu} onChangeClick={handleChangePath} />
+        </div>
+      </div>
+    );
+  }
+
+  // Run Counter (placeholder)
+  if (appState === "runcounter" && savedPath && homeDirectory) {
+    return (
+      <div className="h-screen flex flex-col bg-gradient-to-br from-gray-900 to-black">
+        <CustomTitleBar />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-yellow-400 mb-4">Run Counter</h1>
+            <p className="text-gray-400 text-xl">Coming Soon...</p>
+            <button
+              onClick={handleBackToMainMenu}
+              className="mt-8 px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors"
+            >
+              ← Назад в меню
+            </button>
+          </div>
         </div>
       </div>
     );

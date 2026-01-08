@@ -3,11 +3,7 @@ import { useSettings } from "../../app/providers/SettingsContext.tsx";
 import { useUnsavedChanges } from "../../shared/hooks/useUnsavedChanges";
 import UnsavedAsterisk from "../../shared/components/UnsavedAsterisk.tsx";
 import Switcher from "../../shared/components/Switcher.tsx";
-import DebouncedInput from "../../shared/components/DebouncedInput.tsx";
 import { useTranslation } from "react-i18next";
-import { useSharedStashFix } from "../../shared/hooks/useSharedStashFix";
-import { useGlobalMessage } from "../../shared/components/Message/MessageProvider.tsx";
-import Button from "../../shared/components/Button.tsx";
 
 interface TweaksTabProps {
   isDarkTheme: boolean;
@@ -18,8 +14,6 @@ const TweaksTab: React.FC<TweaksTabProps> = ({ isDarkTheme }) => {
   const { getTweaksSettings, updateTweaksSettings } = useSettings();
   const tweaks = getTweaksSettings();
   const { baseline } = useUnsavedChanges();
-  const { sendMessage } = useGlobalMessage();
-  const { isLoading, applyFix } = useSharedStashFix(sendMessage, t);
 
   const baseEncyclopediaEnabled: boolean = useMemo(() => {
     return (baseline as any)?.tweaks?.encyclopediaEnabled ?? true;
@@ -39,13 +33,6 @@ const TweaksTab: React.FC<TweaksTabProps> = ({ isDarkTheme }) => {
     return (baseline as any)?.tweaks?.skipIntroVideos ?? false;
   }, [baseline]);
   const hasSkipIntroChanged = baseSkipIntro !== tweaks.skipIntroVideos;
-
-  const slotsCount = 7;
-  const slotWidthPercent = 100 / slotsCount;
-
-  const baseStashRename: string[] = useMemo(() => {
-    return ((baseline as any)?.tweaks?.stashRename || []).slice(0, slotsCount);
-  }, [baseline]);
 
   return (
     <div className="p-8 max-w-3xl mx-auto space-y-8">
@@ -142,69 +129,6 @@ const TweaksTab: React.FC<TweaksTabProps> = ({ isDarkTheme }) => {
             }
             isDarkTheme={isDarkTheme}
           />
-        </div>
-
-        {/* Stash rename inline UI */}
-        <div>
-          <label className={`block mb-2 text-sm font-medium ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}>
-            {t("tweaksPage.stashRename.label") || "Переименование общих вкладок сундука"}:
-          </label>
-          <div className="flex justify-center">
-            <div className="relative inline-block select-none">
-              <img src="/img/stash_bg.png" alt="Stash tabs background" draggable={false} />
-              <div className="absolute inset-0">
-                {(tweaks.stashRename || []).slice(0, slotsCount).map((value: string, idx: number) => {
-                  const leftPercent = idx * slotWidthPercent;
-                  const baseValue = (baseStashRename || [])[idx] || "";
-                  const isChanged = (value || "") !== baseValue;
-                  return (
-                    <div key={idx} className="absolute top-0 h-full" style={{ left: `${leftPercent}%`, width: `${slotWidthPercent}%` }}>
-                      {isChanged && (
-                        <div className="absolute -top-2 left-1/2 -translate-x-1/2 transform pointer-events-none z-10">
-                          <UnsavedAsterisk size={0.55} />
-                        </div>
-                      )}
-                      <DebouncedInput
-                        type="text"
-                        value={value}
-                        onChange={(v) => {
-                          const next = (tweaks.stashRename || []).slice() as [string, string, string, string, string, string, string];
-                          next[idx] = v;
-                          updateTweaksSettings({ stashRename: next });
-                        }}
-                        maxLength={10}
-                        className={`w-full h-full px-2 pt-[12px] text-center text-[12px] bg-transparent border-0 outline-none ${isDarkTheme ? "text-white placeholder-gray-400" : "text-white placeholder-gray-300"}`}
-                        style={{ WebkitAppearance: "none", MozAppearance: "textfield" }}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Shared stash fix */}
-        <div className="flex items-center justify-between gap-4">
-          <label
-            className={`text-sm font-medium ${
-              isDarkTheme ? "text-gray-300" : "text-gray-700"
-            }`}
-          >
-            {t("tweaksPage.sharedStashFix.label") ||
-              "Оффлайн: фикс вкладок сундука"}
-          </label>
-          <div className="flex gap-2">
-            <Button
-              variant="primary"
-              size="md"
-              isLoading={isLoading}
-              isDarkTheme={isDarkTheme}
-              onClick={applyFix}
-            >
-              {t("tweaksPage.sharedStashFix.applyButton") || "Применить фикс"}
-            </Button>
-          </div>
         </div>
       </div>
     </div>

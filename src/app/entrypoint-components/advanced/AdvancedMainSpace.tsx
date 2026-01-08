@@ -13,8 +13,7 @@ import { useCommonItemsWorker } from "../../../shared/hooks/useCommonItemsWorker
 import { useGemsWorker } from "../../../shared/hooks/useGemsWorker.ts";
 import { useItemsWorker } from "../../../shared/hooks/useItemsWorker.ts";
 import { useApplyAllWorker } from "../../../shared/hooks/useApplyAllWorker.ts";
-import { useStashRenameWorker } from "../../../shared/hooks/useStashRenameWorker.ts";
-import { useTweaksWorker } from "../../../shared/hooks/useTweaksWorker.ts";
+// useTweaksWorker moved to separate Tweaks section
 import basesData from "../../../pages/items/bases.json";
 import { useUnsavedChanges } from "../../../shared/hooks/useUnsavedChanges";
 import { STORAGE_KEYS } from "../../../shared/constants";
@@ -44,7 +43,6 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     updateItemsLevelSettings,
     updateItemSettings,
     
-    updateTweaksSettings,
     getCommonSettings,
     getGemSettings,
     getItemsSettings,
@@ -172,45 +170,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     getAppMode
   );
 
-  // Хук для переименования вкладок сундука
-  const {
-    isLoading: isStashLoading,
-    error: stashError,
-    readFromFiles: readStashFromFiles,
-    applyChanges: applyStashChanges,
-  } = useStashRenameWorker(
-    (payload) => {
-      if (payload?.tabs) {
-        updateTweaksSettings({ stashRename: payload.tabs as any });
-      }
-    },
-    (message, opts) => {
-      if (isBulkLoading && opts?.type === "success") return;
-      sendMessage(message, { type: opts?.type, title: opts?.title });
-    },
-    t,
-    () => ({ tabs: (settings.tweaks?.stashRename || ["@shared","@shared","@shared","@shared","@shared","@shared","@shared"]) as any }),
-    "advanced",
-    getAppMode,
-  );
-
-  // Хук для tweaks
-  const {
-    isLoading: isTweaksLoading,
-    error: tweaksError,
-    readFromFiles: readTweaksFromFiles,
-    applyChanges: applyTweaksChanges,
-  } = useTweaksWorker(
-    updateTweaksSettings,
-    (message, opts) => {
-      if (isBulkLoading && opts?.type === "success") return;
-      sendMessage(message, { type: opts?.type, title: opts?.title });
-    },
-    t,
-    () => settings.tweaks,
-    "advanced",
-    getAppMode,
-  );
+  // Tweaks moved to separate section
 
   // Единый агрегатор записи
   const { isLoading: isApplyAllLoading, applyAllChanges } = useApplyAllWorker(
@@ -250,9 +210,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
           ? isGemsLoading
           : activeTab === "items"
             ? isItemsLoading
-            : activeTab === "tweaks"
-                ? (isTweaksLoading || isStashLoading)
-                : false;
+            : false;
   const error =
     activeTab === "runes"
       ? runesError
@@ -262,9 +220,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
           ? gemsError
           : activeTab === "items"
             ? itemsError
-            : activeTab === "tweaks"
-                ? (tweaksError || stashError)
-                : null;
+            : null;
   const readFromFiles =
     activeTab === "runes"
       ? readRunesFromFiles
@@ -274,9 +230,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
           ? readGemsFromFiles
           : activeTab === "items"
             ? readItemsFromFiles
-            : activeTab === "tweaks"
-                ? (async () => { await readTweaksFromFiles(); await readStashFromFiles(); })
-                : () => { };
+            : () => { };
   const applyChanges =
     activeTab === "runes"
       ? applyRunesChanges
@@ -286,9 +240,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
           ? applyGemsChanges
           : activeTab === "items"
             ? applyItemsChanges
-            : activeTab === "tweaks"
-                ? (async () => { await applyTweaksChanges(); await applyStashChanges(); })
-                : () => { };
+            : () => { };
 
   const executeReadAll = useCallback(async () => {
     logger.info(
@@ -303,8 +255,6 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       readItemsFromFiles(),
       readRunesFromFiles(),
       readGemsFromFiles(),
-      readStashFromFiles(),
-      readTweaksFromFiles(),
     ]);
     setIsBulkLoading(false);
     unmute();
@@ -346,8 +296,6 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     readItemsFromFiles,
     readRunesFromFiles,
     readGemsFromFiles,
-    readStashFromFiles,
-    readTweaksFromFiles,
     unmute,
     sendMessage,
     t,
@@ -429,7 +377,6 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     { id: "items", label: t("tabs.items") },
     { id: "runes", label: t("tabs.runes") },
     { id: "gems", label: t("tabs.gems") },
-    { id: "tweaks", label: t("tabs.tweaks") },
   ];
 
   // Индикаторы изменений по табам относительно активного профиля
@@ -514,25 +461,11 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       JSON.stringify(baseline.runes) !==
       JSON.stringify((debounced as any).settings.runes);
 
-    const hasTweaksChanges = (() => {
-      const baseEnabled = (baseline as any)?.tweaks?.encyclopediaEnabled ?? true;
-      const curEnabled = (debounced as any)?.settings?.tweaks?.encyclopediaEnabled ?? true;
-      const baseLang = (baseline as any)?.tweaks?.encyclopediaLanguage || "en";
-      const curLang = (debounced as any)?.settings?.tweaks?.encyclopediaLanguage || "en";
-      const baseSkip = (baseline as any)?.tweaks?.skipIntroVideos ?? false;
-      const curSkip = (debounced as any)?.settings?.tweaks?.skipIntroVideos ?? false;
-      const baseTabs = (baseline as any)?.tweaks?.stashRename || (baseline as any)?.stashRename?.tabs || [];
-      const curTabs = (debounced as any)?.settings?.tweaks?.stashRename || [];
-      const tabsChanged = JSON.stringify(baseTabs) !== JSON.stringify(curTabs);
-      return baseEnabled !== curEnabled || baseLang !== curLang || baseSkip !== curSkip || tabsChanged;
-    })();
-
     return {
       common: hasCommonChanges,
       items: hasItemsChanges,
       runes: hasRunesChanges,
       gems: hasGemsChanges,
-      tweaks: hasTweaksChanges,
     } as Record<string, boolean>;
   }, [baseline, debounced, activeProfileId]);
 

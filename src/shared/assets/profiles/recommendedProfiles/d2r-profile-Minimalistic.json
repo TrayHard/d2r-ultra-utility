@@ -6,16 +6,7 @@
     "tweaks": {
       "encyclopediaEnabled": true,
       "encyclopediaLanguage": "ru",
-      "skipIntroVideos": true,
-      "stashRename": [
-        "Common",
-        "Runes&Gems",
-        "Casters",
-        "Weaponry",
-        "Charms",
-        "Jewelry",
-        "Blanks"
-      ]
+      "skipIntroVideos": true
     },
     "runes": {
       "el": {
@@ -647,7 +638,7 @@
       },
       "lem": {
         "mode": "manual",
-        "isHighlighted": false,
+        "isHighlighted": true,
         "autoSettings": {
           "numbering": {
             "show": false,
@@ -680,7 +671,7 @@
       },
       "pul": {
         "mode": "manual",
-        "isHighlighted": false,
+        "isHighlighted": true,
         "autoSettings": {
           "numbering": {
             "show": false,
@@ -713,7 +704,7 @@
       },
       "um": {
         "mode": "manual",
-        "isHighlighted": false,
+        "isHighlighted": true,
         "autoSettings": {
           "numbering": {
             "show": false,
@@ -746,7 +737,7 @@
       },
       "mal": {
         "mode": "manual",
-        "isHighlighted": false,
+        "isHighlighted": true,
         "autoSettings": {
           "numbering": {
             "show": false,

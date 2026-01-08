@@ -1,4 +1,5 @@
 {
+  "tweaks": "Tweaks",
   "tabs": {
     "common": "Common",
     "items": "Items",
@@ -1735,6 +1736,14 @@
       "upToDateAria": "Version is up to date"
     }
   },
+  "mainMenu": {
+    "descriptions": {
+      "lootFilters": "Manage loot filters: runes, gems, items",
+      "tweaks": "Game tweaks: encyclopedia, videos",
+      "runCounter": "Track your game runs"
+    }
+  },
+  "runCounter": "Run Counter",
   "tweaksPage": {
     "encyclopediaEnabled": {
       "label": "Enable in-game encyclopedia"
@@ -1748,17 +1757,6 @@
     },
     "skipIntroVideos": {
       "label": "Skip intro videos"
-    },
-    "stashRename": {
-      "label": "Shared stash names"
-    },
-    "sharedStashFix": {
-      "label": "Offline: fix shared stashes",
-      "applyButton": "Apply fix",
-      "revertButton": "Revert",
-      "applied": "Fix applied successfully",
-      "restored": "File restored from backup",
-      "notNeeded": "Shared stash seems already fixed"
     }
   }
 }
