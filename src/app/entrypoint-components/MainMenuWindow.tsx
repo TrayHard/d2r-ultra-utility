@@ -98,7 +98,11 @@ const MainMenuWindowInner: React.FC<MainMenuWindowProps> = ({
   };
 
   return (
-    <div className={`h-screen flex flex-col pt-9 ${isDarkTheme ? "bg-gray-900" : "bg-white"}`}>
+    <div
+      className={`h-screen flex flex-col pt-9 ${
+        isDarkTheme ? "bg-gray-900" : "bg-gray-200"
+      }`}
+    >
       {showSettings ? (
         <AppSettingsPage
           isDarkTheme={isDarkTheme}
