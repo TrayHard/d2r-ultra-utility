@@ -104,12 +104,12 @@ const AppSettingsPage: React.FC<AppSettingsPageProps> = ({
     >
       {/* Заголовок с кнопкой назад */}
       <div
-        className={`shadow-lg border-b px-3 py-1 elevation-4 ${isDarkTheme
+        className={`shadow-lg border-b px-3 py-1 elevation-4 h-9 ${isDarkTheme
           ? "bg-gray-800 border-gray-700"
           : "bg-white border-gray-200"
           }`}
       >
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between h-full">
           <div className="flex items-center space-x-4">
             {/* Settings Button */}
             <Tooltip title={t("buttons.back")} placement="bottom">

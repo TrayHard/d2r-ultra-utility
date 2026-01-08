@@ -167,6 +167,7 @@ export const STORAGE_KEYS = {
   PATH_SETTINGS: "d2r-path-settings",
   APP_CONFIG: "d2r-app-config",
   SETTINGS: "d2r-settings",
+  TWEAKS: "d2r-tweaks",
   PROFILES: "d2r-profiles",
   ACTIVE_PROFILE: "d2r-active-profile",
   LEGACY_LANGUAGE: "language",

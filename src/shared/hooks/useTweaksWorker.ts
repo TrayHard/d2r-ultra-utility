@@ -1,5 +1,12 @@
 import { useCallback, useState } from "react";
-import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
+import {
+  exists,
+  readTextFile,
+  remove,
+  stat,
+  writeFile,
+  writeTextFile,
+} from "@tauri-apps/plugin-fs";
 import { ensureDirs } from "../utils/fsUtils";
 import { ensureWritable } from "../utils/fsUtils";
 import { loadSavedSettings } from "../utils/commonUtils";
@@ -23,6 +30,13 @@ export const useTweaksWorker = (
     const primary = `${homeDir}\\mods\\D2RBlizzless\\D2RBlizzless.mpq\\data\\global\\ui\\layouts\\hudpanelhd.json`;
     const fallback = `${homeDir}\\data\\global\\ui\\layouts\\hudpanelhd.json`;
     return { primary, fallback };
+  };
+
+  const resolveVideoDirs = (homeDir: string) => {
+    const root = homeDir.replace(/[\/\\]+$/, "");
+    return {
+      modHd: `${root}\\mods\\D2RBlizzless\\D2RBlizzless.mpq\\data\\hd\\global\\video`,
+    };
   };
 
   const readFromFiles = useCallback(async () => {
@@ -96,18 +110,25 @@ export const useTweaksWorker = (
       const encyclopediaInfo = childrenArray ? findEncyclopediaObject(childrenArray) : null;
 
       // Определяем состояние skipIntroVideos по наличию пустых файлов
-      const videoDir = `${homeDir}\\mods\\D2RBlizzless\\D2RBlizzless.mpq\\data\\hd\\global\\video`;
+      const { modHd } = resolveVideoDirs(homeDir);
       const videoFiles = ["blizzardlogos.webm", "d2intro.webm", "logoanim.webm"];
-      const results: boolean[] = [];
-      for (const fname of videoFiles) {
+
+      const isEmptyVideoSet = async (dir: string) => {
         try {
-          const c = await readTextFile(`${videoDir}\\${fname}`);
-          results.push(c.length === 0);
+          for (const fname of videoFiles) {
+            const p = `${dir}\\${fname}`;
+            const ok = await exists(p);
+            if (!ok) return false;
+            const info = await stat(p);
+            if (info.size !== 0) return false;
+          }
+          return true;
         } catch {
-          results.push(false);
+          return false;
         }
-      }
-      const skipIntroDetected = results.every(Boolean);
+      };
+
+      const skipIntroDetected = await isEmptyVideoSet(modHd);
 
       if (updateTweaksSettings) {
         if (encyclopediaInfo) {
@@ -250,26 +271,63 @@ export const useTweaksWorker = (
       }
 
       // Применяем skipIntroVideos: создаем пустые файлы если включено
-      if ((currentSettings as any).skipIntroVideos) {
-        const videoDir = `${homeDir}\\mods\\D2RBlizzless\\D2RBlizzless.mpq\\data\\hd\\global\\video`;
+      {
+        const { modHd } = resolveVideoDirs(homeDir);
         const videoFiles = ["blizzardlogos.webm", "d2intro.webm", "logoanim.webm"];
 
-        // Убедимся, что video — это директория
-        try { await ensureDirs([videoDir]); } catch {}
-        for (const fname of videoFiles) {
-          const p = `${videoDir}\\${fname}`;
+        const writeEmptyWithRetry = async (filePath: string) => {
           for (let attempt = 0; attempt < maxAttempts; attempt++) {
             try {
-              await writeTextFile(p, "");
-              break;
-            } catch (err) {
+              await writeFile(filePath, new Uint8Array());
+              return;
+            } catch {
               if (attempt === maxAttempts - 1) {
                 try {
-                  await ensureWritable([p]);
+                  await ensureWritable([filePath]);
                 } catch {}
-                await writeTextFile(p, "");
+                await writeFile(filePath, new Uint8Array());
               }
             }
+          }
+        };
+
+        const removeEmptyWithRetry = async (filePath: string) => {
+          try {
+            const ok = await exists(filePath);
+            if (!ok) return;
+            const info = await stat(filePath);
+            if (info.size !== 0) return;
+          } catch {
+            return;
+          }
+
+          for (let attempt = 0; attempt < maxAttempts; attempt++) {
+            try {
+              await remove(filePath);
+              return;
+            } catch {
+              if (attempt === maxAttempts - 1) {
+                try {
+                  await ensureWritable([filePath]);
+                } catch {}
+                await remove(filePath);
+              }
+            }
+          }
+        };
+
+        if ((currentSettings as any).skipIntroVideos) {
+          // Пишем ТОЛЬКО в hd\global\video внутри Blizzless мод-пака.
+          try {
+            await ensureDirs([modHd]);
+          } catch {}
+          for (const fname of videoFiles) {
+            await writeEmptyWithRetry(`${modHd}\\${fname}`);
+          }
+        } else {
+          // Отключение: удаляем только пустые файлы, которые сами создавали.
+          for (const fname of videoFiles) {
+            await removeEmptyWithRetry(`${modHd}\\${fname}`);
           }
         }
       }

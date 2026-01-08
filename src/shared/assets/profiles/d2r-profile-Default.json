@@ -6,16 +6,7 @@
     "tweaks": {
       "encyclopediaEnabled": true,
       "encyclopediaLanguage": "en",
-      "skipIntroVideos": false,
-      "stashRename": [
-        "@shared",
-        "@shared",
-        "@shared",
-        "@shared",
-        "@shared",
-        "@shared",
-        "@shared"
-      ]
+      "skipIntroVideos": false
     },
     "runes": {
       "el": {

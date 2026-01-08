@@ -11,8 +11,7 @@ interface ToolbarProps {
   onSettingsClick: () => void;
   isDarkTheme: boolean;
   onThemeChange: () => void;
-  appMode: "basic" | "advanced";
-  onModeToggle: () => void;
+  onBackClick?: () => void;
 }
 
 const MainSpaceToolbar: React.FC<ToolbarProps> = ({
@@ -20,19 +19,35 @@ const MainSpaceToolbar: React.FC<ToolbarProps> = ({
   onSettingsClick,
   isDarkTheme,
   onThemeChange,
-  appMode,
-  onModeToggle,
+  onBackClick,
 }) => {
   const { t } = useTranslation();
 
   return (
     <div
-      className={`shadow-lg border-b px-3 py-1 elevation-4 ${
+      className={`shadow-lg border-b px-3 py-1 elevation-4 h-9 ${
         isDarkTheme ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
       }`}
     >
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center h-full">
         <div className="flex items-center space-x-4">
+          {/* Back Button */}
+          {onBackClick && (
+            <Tooltip title="Назад в главное меню" placement="bottom">
+              <button
+                onClick={onBackClick}
+                className={`p-1 rounded-full transition-all duration-200 text-sm hover:scale-110 ${
+                  isDarkTheme
+                    ? "bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white"
+                    : "bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+            </Tooltip>
+          )}
           {/* Settings Button */}
           <Tooltip title={t("buttons.settings")} placement="bottom">
             <button
@@ -46,36 +61,7 @@ const MainSpaceToolbar: React.FC<ToolbarProps> = ({
               <Icon path={mdiCogOutline} size={0.7} />
             </button>
           </Tooltip>
-          {/* Update Button */}
           <UpdateButton isDarkTheme={isDarkTheme} />
-          {/* Mode Toggle Button */}
-          <Tooltip
-            title={
-              appMode === "advanced"
-                ? (t(
-                    "mode.switchToBasic",
-                    "Переключить в базовый режим"
-                  ) as string)
-                : (t(
-                    "mode.switchToAdvanced",
-                    "Переключить в режим редактирования"
-                  ) as string)
-            }
-            placement="bottom"
-          >
-            <button
-              onClick={onModeToggle}
-              className={`px-2 py-1 rounded text-xs transition-all duration-200 ${
-                isDarkTheme
-                  ? "bg-gray-700 hover:bg-gray-600 text-gray-200"
-                  : "bg-gray-100 hover:bg-gray-200 text-gray-800"
-              }`}
-            >
-              {appMode === "advanced"
-                ? (t("mode.basicButton", "Базовый режим") as string)
-                : (t("mode.advancedButton", "Режим редактирования") as string)}
-            </button>
-          </Tooltip>
         </div>
 
         <div className="flex items-center space-x-4">
@@ -93,7 +79,6 @@ const MainSpaceToolbar: React.FC<ToolbarProps> = ({
               }`}
             >
               <Icon path={mdiThemeLightDark} size={0.7} />
-              {/* {isDarkTheme ? "🌞" : "🌙"} */}
             </button>
           </Tooltip>
 
