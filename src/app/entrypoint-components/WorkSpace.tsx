@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useSettings, SettingsProvider } from "../providers/SettingsContext";
 import MainSpaceToolbar from "../../widgets/Toolbar/MainSpaceToolbar";
 import AdvancedMainSpace from "./advanced/AdvancedMainSpace";
@@ -9,12 +10,15 @@ import { ConfigProvider, theme } from "antd";
 import "../../shared/assets/antd-theme.css";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { LogicalSize } from "@tauri-apps/api/dpi";
+import Switcher from "../../shared/components/Switcher";
 
 interface WorkSpaceProps {
   onChangeClick: () => void;
+  onBackClick?: () => void;
 }
 
-const WorkSpaceContent: React.FC<WorkSpaceProps> = ({ onChangeClick }) => {
+const WorkSpaceContent: React.FC<WorkSpaceProps> = ({ onChangeClick, onBackClick }) => {
+  const { t } = useTranslation();
   const {
     getIsDarkTheme,
     toggleTheme,
@@ -26,6 +30,7 @@ const WorkSpaceContent: React.FC<WorkSpaceProps> = ({ onChangeClick }) => {
 
   const isDarkTheme = getIsDarkTheme();
   const appMode = getAppMode();
+  const isAdvancedMode = appMode === "advanced";
 
   // Синхронизируем глобальный класс для Tailwind и любых глобальных стилей
   React.useEffect(() => {
@@ -46,11 +51,11 @@ const WorkSpaceContent: React.FC<WorkSpaceProps> = ({ onChangeClick }) => {
         if (appMode === "basic") {
           // Базовый режим: 600x700, фиксированный размер
           await window.setResizable(false);
-          await window.setSize(new LogicalSize(600, 751));
+          await window.setSize(new LogicalSize(600, 790));
         } else {
           // Продвинутый режим: 1200x900, можно ресайзить
           await window.setResizable(true);
-          await window.setSize(new LogicalSize(1200, 900));
+          await window.setSize(new LogicalSize(1200, 790));
         }
       } catch (error) {
         console.error("Failed to update window size for mode change:", error);
@@ -77,6 +82,29 @@ const WorkSpaceContent: React.FC<WorkSpaceProps> = ({ onChangeClick }) => {
 
   const handleChangePathClick = () => {
     onChangeClick();
+  };
+
+  const handleBackClick = () => {
+    if (!onBackClick) return;
+
+    // Если уходим назад из режима редактирования (advanced),
+    // то возвращаем размер окна к базовому режиму лутфильтров.
+    if (appMode === "advanced") {
+      (async () => {
+        try {
+          const window = getCurrentWindow();
+          await window.setResizable(false);
+          await window.setSize(new LogicalSize(600, 790));
+        } catch (error) {
+          console.error("Failed to restore window size on back:", error);
+        } finally {
+          onBackClick();
+        }
+      })();
+      return;
+    }
+
+    onBackClick();
   };
 
   return (
@@ -132,9 +160,59 @@ const WorkSpaceContent: React.FC<WorkSpaceProps> = ({ onChangeClick }) => {
                 onSettingsClick={handleSettingsClick}
                 isDarkTheme={isDarkTheme}
                 onThemeChange={toggleTheme}
-                appMode={appMode}
-                onModeToggle={toggleAppMode}
+                onBackClick={onBackClick ? handleBackClick : undefined}
               />
+
+              {/* Mode toggle row (centered, одинаковый в обоих режимах) */}
+              <div
+                className={`flex items-center justify-center px-3 py-2 border-b ${
+                  isDarkTheme
+                    ? "bg-gray-800 border-gray-700"
+                    : "bg-white border-gray-200"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <span
+                    className={`text-sm font-medium ${
+                      !isAdvancedMode
+                        ? isDarkTheme
+                          ? "text-white"
+                          : "text-gray-900"
+                        : isDarkTheme
+                          ? "text-gray-400"
+                          : "text-gray-500"
+                    }`}
+                  >
+                    {t("mode.basicButton") as string}
+                  </span>
+
+                  <Switcher
+                    checked={isAdvancedMode}
+                    onChange={(checked) => {
+                      if (checked !== isAdvancedMode) {
+                        toggleAppMode();
+                      }
+                    }}
+                    isDarkTheme={isDarkTheme}
+                    size="md"
+                  />
+
+                  <span
+                    className={`text-sm font-medium ${
+                      isAdvancedMode
+                        ? isDarkTheme
+                          ? "text-white"
+                          : "text-gray-900"
+                        : isDarkTheme
+                          ? "text-gray-400"
+                          : "text-gray-500"
+                    }`}
+                  >
+                    {t("mode.advancedButton") as string}
+                  </span>
+                </div>
+              </div>
+
               {appMode === "advanced" ? (
                 <AdvancedMainSpace isDarkTheme={isDarkTheme} />
               ) : (
@@ -148,10 +226,10 @@ const WorkSpaceContent: React.FC<WorkSpaceProps> = ({ onChangeClick }) => {
   );
 };
 
-const WorkSpace: React.FC<WorkSpaceProps> = ({ onChangeClick }) => {
+const WorkSpace: React.FC<WorkSpaceProps> = ({ onChangeClick, onBackClick }) => {
   return (
     <SettingsProvider>
-      <WorkSpaceContent onChangeClick={onChangeClick} />
+      <WorkSpaceContent onChangeClick={onChangeClick} onBackClick={onBackClick} />
     </SettingsProvider>
   );
 };

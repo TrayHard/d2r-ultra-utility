@@ -841,6 +841,14 @@ const createDefaultSettings = (): AppSettings => {
 // Создаем контекст
 const SettingsContext = createContext<SettingsContextType | null>(null);
 
+const stripTweaksFromSettings = (source: AppSettings): AppSettings => {
+  const { tweaks: _tweaks, ...rest } = source as any;
+  return {
+    ...(rest as AppSettings),
+    tweaks: getDefaultTweaksSettings(),
+  };
+};
+
 // Функция для подготовки данных к экспорту - удаляет UI состояния
 const prepareForExport = (profile: Profile): Profile => {
   const exportProfile = JSON.parse(JSON.stringify(profile)); // Deep clone
@@ -875,6 +883,11 @@ const prepareForExport = (profile: Profile): Profile => {
       delete exportProfile.settings.items[itemType].activeTab;
     }
   });
+
+  // Tweaks экспортируются отдельно от Loot Filters профилей
+  if (exportProfile.settings) {
+    delete (exportProfile.settings as any).tweaks;
+  }
 
   return exportProfile;
 };
@@ -1004,9 +1017,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         items: settingsObj["items"]
           ? migrateItemsSettings(settingsObj["items"])
           : getDefaultItemsSettings(),
-        tweaks: settingsObj["tweaks"]
-          ? ({ ...getDefaultTweaksSettings(), ...(settingsObj["tweaks"] as TweaksSettings) } as TweaksSettings)
-          : getDefaultTweaksSettings(),
+        tweaks: getDefaultTweaksSettings(),
       } as unknown as AppSettings;
 
       // Версия: используем ТОЛЬКО то, что пришло в JSON и соответствует X.Y
@@ -1205,6 +1216,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   useEffect(() => {
     const savedAppConfig = localStorage.getItem(STORAGE_KEYS.APP_CONFIG);
     const savedSettings = localStorage.getItem(STORAGE_KEYS.SETTINGS);
+    const savedTweaks = localStorage.getItem(STORAGE_KEYS.TWEAKS);
     const savedProfiles = localStorage.getItem(STORAGE_KEYS.PROFILES);
     const savedActiveProfileId = localStorage.getItem(
       STORAGE_KEYS.ACTIVE_PROFILE
@@ -1243,6 +1255,26 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       i18n.changeLanguage(mapAppLanguageToI18n(defaultConfig.appLanguage));
     }
 
+    const tweaksFromStorage: TweaksSettings = (() => {
+      if (!savedTweaks) return getDefaultTweaksSettings();
+      try {
+        const parsed = JSON.parse(savedTweaks);
+        if (typeof parsed !== "object" || parsed === null) {
+          return getDefaultTweaksSettings();
+        }
+        return { ...getDefaultTweaksSettings(), ...(parsed as TweaksSettings) };
+      } catch {
+        return getDefaultTweaksSettings();
+      }
+    })();
+
+    // Всегда подмешиваем tweaks из отдельного хранилища,
+    // чтобы они не зависели от наличия/отсутствия профиля.
+    setSettings((prev) => ({
+      ...prev,
+      tweaks: tweaksFromStorage,
+    }));
+
     // Загружаем настройки профиля (если нет активного профиля)
     if (savedSettings) {
       try {
@@ -1265,9 +1297,8 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
           items: parsedSettings.items
             ? migrateItemsSettings(parsedSettings.items)
             : getDefaultItemsSettings(),
-          tweaks: parsedSettings.tweaks
-            ? ({ ...getDefaultTweaksSettings(), ...parsedSettings.tweaks } as TweaksSettings)
-            : getDefaultTweaksSettings(),
+          // Tweaks живут отдельно от Loot Filters настроек/профилей
+          tweaks: tweaksFromStorage,
         };
         setSettings(migratedSettings);
       } catch (error) {
@@ -1300,9 +1331,8 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
             items: profile.settings.items
               ? migrateItemsSettings(profile.settings.items)
               : getDefaultItemsSettings(),
-              tweaks: profile.settings.tweaks
-              ? ({ ...getDefaultTweaksSettings(), ...profile.settings.tweaks } as TweaksSettings)
-              : getDefaultTweaksSettings(),
+              // Tweaks не храним в профилях вообще
+              tweaks: getDefaultTweaksSettings(),
           },
         }));
         setProfiles(migratedProfiles);
@@ -1319,7 +1349,10 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
             (p: Profile) => p.id === savedActiveProfileId
           );
           if (activeProfile) {
-            setSettings(activeProfile.settings);
+            setSettings({
+              ...activeProfile.settings,
+              tweaks: tweaksFromStorage,
+            });
           }
         }
       } catch (error) {
@@ -1371,9 +1404,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
               items: settingsObj["items"]
                 ? migrateItemsSettings(settingsObj["items"])
                 : getDefaultItemsSettings(),
-              tweaks: settingsObj["tweaks"]
-                ? ({ ...getDefaultTweaksSettings(), ...(settingsObj["tweaks"] as TweaksSettings) } as TweaksSettings)
-                : getDefaultTweaksSettings(),
+              tweaks: getDefaultTweaksSettings(),
             };
 
             return {
@@ -1446,9 +1477,23 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   useEffect(() => {
     // Сохраняем настройки только если нет активного профиля и не загружаемся
     if (!activeProfileId && !isLoading) {
-      localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
+      localStorage.setItem(
+        STORAGE_KEYS.SETTINGS,
+        JSON.stringify(stripTweaksFromSettings(settings))
+      );
     }
   }, [settings, activeProfileId, isLoading]);
+
+  // Tweaks сохраняем независимо от активного профиля
+  useEffect(() => {
+    if (isLoading) return;
+    try {
+      localStorage.setItem(
+        STORAGE_KEYS.TWEAKS,
+        JSON.stringify(settings.tweaks || getDefaultTweaksSettings())
+      );
+    } catch {}
+  }, [settings.tweaks, isLoading]);
 
   // Сохранение профилей в localStorage
   const saveProfilesToLocalStorage = useCallback(
@@ -1508,7 +1553,10 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
           (p) => p.id === savedActiveProfileId
         );
         if (immutable) {
-          setSettings(immutable.settings);
+          setSettings((prev) => ({
+            ...immutable.settings,
+            tweaks: prev.tweaks || getDefaultTweaksSettings(),
+          }));
           setActiveProfileId(savedActiveProfileId);
         }
       }
@@ -1533,7 +1581,10 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     const toActivate = defaultByName || all[0];
     if (!toActivate) return;
 
-    setSettings(toActivate.settings);
+    setSettings((prev) => ({
+      ...toActivate.settings,
+      tweaks: prev.tweaks || getDefaultTweaksSettings(),
+    }));
     setActiveProfileId(toActivate.id);
     saveActiveProfileToLocalStorage(toActivate.id);
     localStorage.removeItem(STORAGE_KEYS.SETTINGS);
@@ -1907,7 +1958,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       const newProfile: Profile = {
         id: Date.now().toString(),
         name: finalName,
-        settings,
+        settings: stripTweaksFromSettings(settings),
         createdAt: new Date().toISOString(),
         modifiedAt: new Date().toISOString(),
       };
@@ -1940,7 +1991,11 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
 
       const updatedProfiles = profiles.map((profile) =>
         profile.id === profileId
-          ? { ...profile, settings, modifiedAt: new Date().toISOString() }
+          ? {
+              ...profile,
+              settings: stripTweaksFromSettings(settings),
+              modifiedAt: new Date().toISOString(),
+            }
           : profile
       );
       setProfiles(updatedProfiles);
@@ -1948,7 +2003,10 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
 
       // Если это активный профиль, обновляем текущие настройки
       if (profileId === activeProfileId) {
-        setSettings(settings);
+        setSettings((prev) => ({
+          ...settings,
+          tweaks: prev.tweaks || getDefaultTweaksSettings(),
+        }));
       }
     },
     [profiles, activeProfileId, saveProfilesToLocalStorage]
@@ -1962,7 +2020,10 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         profiles.find((p) => p.id === profileId) ||
         immutableProfiles.find((p) => p.id === profileId);
       if (profile) {
-        setSettings(profile.settings);
+        setSettings((prev) => ({
+          ...profile.settings,
+          tweaks: prev.tweaks || getDefaultTweaksSettings(),
+        }));
         setActiveProfileId(profileId);
         saveActiveProfileToLocalStorage(profileId);
         // Удаляем автономные настройки профиля при загрузке профиля
@@ -2049,7 +2110,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       const newProfile: Profile = {
         id: `profile-${Date.now()}`,
         name: duplicateName,
-        settings: profileToDuplicate.settings,
+        settings: stripTweaksFromSettings(profileToDuplicate.settings),
         createdAt: new Date().toISOString(),
         modifiedAt: new Date().toISOString(),
         isImmutable: false, // Дубликат всегда пользовательский
@@ -2062,7 +2123,10 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       // Сразу переключаемся на новый профиль
       setActiveProfileId(newProfile.id);
       saveActiveProfileToLocalStorage(newProfile.id);
-      setSettings(newProfile.settings);
+      setSettings((prev) => ({
+        ...newProfile.settings,
+        tweaks: prev.tweaks || getDefaultTweaksSettings(),
+      }));
 
       logger.debug(
         `Профиль продублирован и активирован: ${profileToDuplicate.name} -> ${newProfile.name}`
@@ -2118,7 +2182,10 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
                 ? migrateItemsSettings(parsedSettings.items)
                 : getDefaultItemsSettings(),
             };
-            setSettings(migratedSettings);
+            setSettings((prev) => ({
+              ...(migratedSettings as AppSettings),
+              tweaks: prev.tweaks || getDefaultTweaksSettings(),
+            }));
           } catch (error) {
             console.error("Error restoring settings from localStorage:", error);
             setSettings(createDefaultSettings());
@@ -2212,7 +2279,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         const newProfile: Profile = {
           id: Date.now().toString(),
           name: finalName,
-          settings: migratedSettings,
+          settings: stripTweaksFromSettings(migratedSettings as AppSettings),
           createdAt: new Date().toISOString(),
           modifiedAt: new Date().toISOString(),
         };
