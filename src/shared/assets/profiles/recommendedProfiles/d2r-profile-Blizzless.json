@@ -1,13 +1,8 @@
 {
   "id": "1755790041879",
   "name": "Blizzless",
-  "version": "1.4",
+  "version": "1.5",
   "settings": {
-    "tweaks": {
-      "encyclopediaEnabled": true,
-      "encyclopediaLanguage": "en",
-      "skipIntroVideos": true
-    },
     "runes": {
       "el": {
         "mode": "manual",
