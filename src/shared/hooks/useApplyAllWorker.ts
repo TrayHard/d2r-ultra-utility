@@ -29,6 +29,7 @@ import {
   commonItemFileMapper,
   ECommonItem,
 } from "../../pages/common/constants/commonItems";
+import { getDirectoryPath } from "../utils/platformUtils";
 import type {
   AppSettings,
   ItemsSettings,
@@ -170,15 +171,15 @@ export const useApplyAllWorker = (
       }
       let homeDir = saved.homeDirectory.replace(/[\/\\]+$/, "");
       if (homeDir.endsWith(".exe")) {
-        homeDir = homeDir.substring(0, homeDir.lastIndexOf("\\"));
+        homeDir = getDirectoryPath(homeDir);
       }
 
-      const itemNamesPath = `${homeDir}\\${COMMON_GAME_PATHS.LOCALES}\\${COMMON_GAME_PATHS.ITEMS_FILE}`;
-      const nameAffixesPath = `${homeDir}\\${COMMON_GAME_PATHS.LOCALES}\\${COMMON_GAME_PATHS.NAMEAFFIXES_FILE}`;
-      const modifiersPath = `${homeDir}\\${COMMON_GAME_PATHS.LOCALES}\\item-modifiers.json`;
-      const runesPath = `${homeDir}\\${RUNES_GAME_PATHS.LOCALES}\\${RUNES_GAME_PATHS.RUNES_FILE}`;
-      const runeHighlightDir = `${homeDir}\\${RUNES_GAME_PATHS.RUNE_HIGHLIGHT}`;
-      const keysHighlightDir = `${homeDir}\\mods\\D2RBlizzless\\D2RBlizzless.mpq\\data\\hd\\items\\misc\\key`;
+      const itemNamesPath = `${homeDir}/${COMMON_GAME_PATHS.LOCALES}/${COMMON_GAME_PATHS.ITEMS_FILE}`;
+      const nameAffixesPath = `${homeDir}/${COMMON_GAME_PATHS.LOCALES}/${COMMON_GAME_PATHS.NAMEAFFIXES_FILE}`;
+      const modifiersPath = `${homeDir}/${COMMON_GAME_PATHS.LOCALES}/item-modifiers.json`;
+      const runesPath = `${homeDir}/${RUNES_GAME_PATHS.LOCALES}/${RUNES_GAME_PATHS.RUNES_FILE}`;
+      const runeHighlightDir = `${homeDir}/${RUNES_GAME_PATHS.RUNE_HIGHLIGHT}`;
+      const keysHighlightDir = `${homeDir}/mods/D2RBlizzless/D2RBlizzless.mpq/data/hd/items/misc/key`;
 
       logger.info(
         "Reading source files (aggregate)",

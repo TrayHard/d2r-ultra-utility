@@ -90,8 +90,8 @@ export const useGemsWorker = (
 
       // Строим полные пути к файлам
       const homeDir = settings.homeDirectory.replace(/[\/\\]+$/, "");
-      const itemNamesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.ITEMS_FILE}`;
-      const nameAffixesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.NAMEAFFIXES_FILE}`;
+      const itemNamesPath = `${homeDir}/${GAME_PATHS.LOCALES}/${GAME_PATHS.ITEMS_FILE}`;
+      const nameAffixesPath = `${homeDir}/${GAME_PATHS.LOCALES}/${GAME_PATHS.NAMEAFFIXES_FILE}`;
 
       logger.info(
         "Reading gems from paths",
@@ -260,8 +260,8 @@ export const useGemsWorker = (
 
   const applyChanges = useCallback(
     async (homeDir: string, gemSettings: GemSettings) => {
-      const itemNamesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.ITEMS_FILE}`;
-      const nameAffixesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.NAMEAFFIXES_FILE}`;
+      const itemNamesPath = `${homeDir}/${GAME_PATHS.LOCALES}/${GAME_PATHS.ITEMS_FILE}`;
+      const nameAffixesPath = `${homeDir}/${GAME_PATHS.LOCALES}/${GAME_PATHS.NAMEAFFIXES_FILE}`;
 
       logger.info(
         "Applying gems changes to paths",

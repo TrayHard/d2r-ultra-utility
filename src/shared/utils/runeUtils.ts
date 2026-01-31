@@ -5,6 +5,7 @@ import {
 } from "../../pages/runes/constants/runes.ts";
 import { RuneSettings } from "../../app/providers/SettingsContext.tsx";
 import { colorCodes, MOD_ROOT } from "../constants.ts";
+import { normalizePath } from "./platformUtils";
 
 // Шаблоны для подсветки рун
 const HIGHLIGHT_RUNE_TEMPLATE = `{
@@ -962,9 +963,9 @@ export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
  * Пути к файлам
  */
 export const GAME_PATHS = {
-  LOCALES: `${MOD_ROOT}\\local\\lng\\strings`,
+  LOCALES: normalizePath(`${MOD_ROOT}/local/lng/strings`),
   RUNES_FILE: "item-runes.json",
-  RUNE_HIGHLIGHT: `${MOD_ROOT}\\hd\\items\\misc\\rune`,
+  RUNE_HIGHLIGHT: normalizePath(`${MOD_ROOT}/hd/items/misc/rune`),
 } as const;
 
 /**

@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import { useLogger } from "../utils/logger";
+import { getDirectoryPath } from "../utils/platformUtils";
 import { ensureWritable } from "../utils/fsUtils";
 import {
   GAME_PATHS,
@@ -100,11 +101,11 @@ export const useItemsWorker = (
       // Убираем .exe из пути если он есть и нормализуем путь
       let homeDir = savedSettings.homeDirectory.replace(/[\/\\]+$/, "");
       if (homeDir.endsWith(".exe")) {
-        homeDir = homeDir.substring(0, homeDir.lastIndexOf("\\"));
+        homeDir = getDirectoryPath(homeDir);
       }
 
-      const itemNamesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.ITEMS_FILE}`;
-      const nameAffixesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.NAMEAFFIXES_FILE}`;
+      const itemNamesPath = `${homeDir}/${GAME_PATHS.LOCALES}/${GAME_PATHS.ITEMS_FILE}`;
+      const nameAffixesPath = `${homeDir}/${GAME_PATHS.LOCALES}/${GAME_PATHS.NAMEAFFIXES_FILE}`;
 
       console.log("Reading items data from:", {
         itemNamesPath,
@@ -415,11 +416,11 @@ export const useItemsWorker = (
       // Убираем .exe из пути если он есть и нормализуем путь
       let homeDir = savedSettings.homeDirectory.replace(/[\/\\]+$/, "");
       if (homeDir.endsWith(".exe")) {
-        homeDir = homeDir.substring(0, homeDir.lastIndexOf("\\"));
+        homeDir = getDirectoryPath(homeDir);
       }
 
-      const itemNamesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.ITEMS_FILE}`;
-      const nameAffixesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.NAMEAFFIXES_FILE}`;
+      const itemNamesPath = `${homeDir}/${GAME_PATHS.LOCALES}/${GAME_PATHS.ITEMS_FILE}`;
+      const nameAffixesPath = `${homeDir}/${GAME_PATHS.LOCALES}/${GAME_PATHS.NAMEAFFIXES_FILE}`;
 
       logger.info(
         "Reading items files",

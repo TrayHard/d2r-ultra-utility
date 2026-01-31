@@ -27,15 +27,15 @@ export const useTweaksWorker = (
   const [error, setError] = useState<string | null>(null);
 
   const resolveHudPanelPath = (homeDir: string) => {
-    const primary = `${homeDir}\\mods\\D2RBlizzless\\D2RBlizzless.mpq\\data\\global\\ui\\layouts\\hudpanelhd.json`;
-    const fallback = `${homeDir}\\data\\global\\ui\\layouts\\hudpanelhd.json`;
+    const primary = `${homeDir}/mods/D2RBlizzless/D2RBlizzless.mpq/data/global/ui/layouts/hudpanelhd.json`;
+    const fallback = `${homeDir}/data/global/ui/layouts/hudpanelhd.json`;
     return { primary, fallback };
   };
 
   const resolveVideoDirs = (homeDir: string) => {
     const root = homeDir.replace(/[\/\\]+$/, "");
     return {
-      modHd: `${root}\\mods\\D2RBlizzless\\D2RBlizzless.mpq\\data\\hd\\global\\video`,
+      modHd: `${root}/mods/D2RBlizzless/D2RBlizzless.mpq/data/hd/global/video`,
     };
   };
 
