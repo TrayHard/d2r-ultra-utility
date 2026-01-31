@@ -88,7 +88,7 @@ export const useTextWorker = (
       // Строим полный путь к файлу используя простое соединение строк
       // Убираем лишние слеши и нормализуем путь
       const homeDir = settings.homeDirectory.replace(/[\/\\]+$/, ""); // убираем завершающие слеши
-      const fullPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.RUNES_FILE}`;
+      const fullPath = `${homeDir}/${GAME_PATHS.LOCALES}/${GAME_PATHS.RUNES_FILE}`;
 
       logger.info("Reading runes file", { path: fullPath }, "readLocales");
 
@@ -228,7 +228,7 @@ export const useTextWorker = (
       }
 
       const homeDir = settings.homeDirectory.replace(/[\/\\]+$/, "");
-      const runeHighlightPath = `${homeDir}\\${GAME_PATHS.RUNE_HIGHLIGHT}`;
+      const runeHighlightPath = `${homeDir}/${GAME_PATHS.RUNE_HIGHLIGHT}`;
 
       console.log("Reading highlight settings from:", runeHighlightPath);
 
@@ -418,7 +418,7 @@ export const useTextWorker = (
   // Функция для применения изменений к файлу локализации
   const applyLocalizationChanges = useCallback(
     async (homeDir: string, runeSettings: Record<ERune, RuneSettings>) => {
-      const localizationPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.RUNES_FILE}`;
+      const localizationPath = `${homeDir}/${GAME_PATHS.LOCALES}/${GAME_PATHS.RUNES_FILE}`;
 
       console.log("Applying localization changes to:", localizationPath);
 
@@ -567,7 +567,7 @@ export const useTextWorker = (
   // Функция для применения изменений к файлам подсветки рун
   const applyHighlightChanges = useCallback(
     async (homeDir: string, runeSettings: Record<ERune, RuneSettings>) => {
-      const runeHighlightPath = `${homeDir}\\${GAME_PATHS.RUNE_HIGHLIGHT}`;
+      const runeHighlightPath = `${homeDir}/${GAME_PATHS.RUNE_HIGHLIGHT}`;
 
       console.log("Applying highlight changes to:", runeHighlightPath);
 

@@ -6,6 +6,7 @@ import { useLogger } from "../../shared/utils/logger";
 import ProgressBar from "../../shared/components/ProgressBar.tsx";
 import CustomTitleBar from "../../widgets/CustomTitleBar.tsx";
 import StartupLanguageSwitch from "../../widgets/Toolbar/StartupLanguageSwitch.tsx";
+import { getDirectoryPath } from "../../shared/utils/platformUtils";
 import { STORAGE_KEYS } from "../../shared/constants.ts";
 
 import PathSelector from "../../widgets/Toolbar/PathSelector.tsx";
@@ -50,8 +51,8 @@ const loadSavedHomeDirectory = (): string | null => {
 };
 
 const savePath = (filePath: string) => {
-  // Извлекаем папку из полного пути к файлу
-  const homeDirectory = filePath.substring(0, filePath.lastIndexOf("\\"));
+  // Извлекаем папку из полного пути к файлу (кросс-платформенно)
+  const homeDirectory = getDirectoryPath(filePath);
 
   localStorage.setItem(
     SETTINGS_KEY,
@@ -260,8 +261,8 @@ function App() {
   const handlePathSelect = (path: string) => {
     savePath(path);
     setSavedPath(path);
-    // Извлекаем папку из полного пути к файлу
-    const homeDir = path.substring(0, path.lastIndexOf("\\"));
+    // Извлекаем папку из полного пути к файлу (кросс-платформенно)
+    const homeDir = getDirectoryPath(path);
     setHomeDirectory(homeDir);
     setAppState("main-menu");
   };

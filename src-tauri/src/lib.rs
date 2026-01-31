@@ -117,12 +117,52 @@ struct OpenFileDialogRequest {
 fn get_predefined_search_paths() -> Vec<String> {
     let mut paths = Vec::new();
 
-    // Общие места где может лежать Diablo 2
-    paths.push("C:\\Program Files (x86)\\Diablo II Resurrected".to_string());
-    paths.push("C:\\Program Files\\Diablo II Resurrected".to_string());
-    paths.push("C:\\Games\\Diablo II Resurrected".to_string());
-    paths.push("D:\\Games\\Diablo II Resurrected".to_string());
-    paths.push("E:\\Games\\Diablo II Resurrected".to_string());
+    // Windows paths
+    #[cfg(target_os = "windows")]
+    {
+        paths.push("C:\\Program Files (x86)\\Diablo II Resurrected".to_string());
+        paths.push("C:\\Program Files\\Diablo II Resurrected".to_string());
+        paths.push("C:\\Games\\Diablo II Resurrected".to_string());
+        paths.push("D:\\Games\\Diablo II Resurrected".to_string());
+        paths.push("E:\\Games\\Diablo II Resurrected".to_string());
+    }
+
+    // Linux paths
+    #[cfg(not(target_os = "windows"))]
+    {
+        if let Ok(home) = env::var("HOME") {
+            // Direct path in home
+            paths.push(format!("{}/Diablo II Resurrected", home));
+
+            // Steam paths
+            paths.push(format!("{}/.steam/steam/steamapps/common/Diablo II Resurrected", home));
+            paths.push(format!("{}/.local/share/Steam/steamapps/common/Diablo II Resurrected", home));
+            paths.push(format!("{}/Games/Diablo II Resurrected", home));
+            paths.push(format!("{}/.games/Diablo II Resurrected", home));
+
+            // Lutris paths
+            paths.push(format!("{}/Games/lutris/Diablo II Resurrected", home));
+            paths.push(format!("{}/.local/share/lutris/games/diablo-ii-resurrected", home));
+
+            // Heroic Games Launcher paths
+            paths.push(format!("{}/.config/heroic/Diablo II Resurrected", home));
+            paths.push(format!("{}/.local/share/heroic/Diablo II Resurrected", home));
+
+            // Bottles (Wine) paths
+            paths.push(format!("{}/.local/share/bottles/bottles/Diablo II Resurrected/drive_c/Program Files (x86)/Diablo II Resurrected", home));
+            paths.push(format!("{}/.local/share/bottles/bottles/Diablo II Resurrected/drive_c/Program Files/Diablo II Resurrected", home));
+
+            // Common Wine prefix paths
+            paths.push(format!("{}/.wine/drive_c/Program Files (x86)/Diablo II Resurrected", home));
+            paths.push(format!("{}/.wine/drive_c/Program Files/Diablo II Resurrected", home));
+            paths.push(format!("{}/.wine/drive_c/Games/Diablo II Resurrected", home));
+        }
+
+        // System paths for Linux
+        paths.push("/opt/Diablo II Resurrected".to_string());
+        paths.push("/usr/local/games/Diablo II Resurrected".to_string());
+        paths.push("/usr/games/Diablo II Resurrected".to_string());
+    }
 
     paths
 }
@@ -178,19 +218,42 @@ async fn search_in_directory(
         }
     }
 
-    // Игнорируем системные пути Windows
+    // Игнорируем системные пути
     if let Some(path_str) = dir.to_str() {
         let path_lower = path_str.to_lowercase();
-        if path_lower.contains("windows")
-            || path_lower.contains("program files")
-            || path_lower.contains("programdata")
-            || path_lower.contains("system32")
-            || path_lower.contains("$recycle.bin")
-            || path_lower.contains("recovery")
-            || path_lower.contains("appdata\\local\\temp")
-            || path_lower.contains("node_modules")
+        #[cfg(target_os = "windows")]
         {
-            return;
+            if path_lower.contains("windows")
+                || path_lower.contains("program files")
+                || path_lower.contains("programdata")
+                || path_lower.contains("system32")
+                || path_lower.contains("$recycle.bin")
+                || path_lower.contains("recovery")
+                || path_lower.contains("appdata\\local\\temp")
+                || path_lower.contains("node_modules")
+            {
+                return;
+            }
+        }
+        #[cfg(not(target_os = "windows"))]
+        {
+            if path_lower.contains("/proc")
+                || path_lower.contains("/sys")
+                || path_lower.contains("/dev")
+                || path_lower.contains("/run")
+                || path_lower.contains("/tmp")
+                || path_lower.contains("/var/tmp")
+                || path_lower.contains("/var/cache")
+                || path_lower.contains("/var/log")
+                || path_lower.contains("/usr/share")
+                || path_lower.contains("/lib")
+                || path_lower.contains("/lib64")
+                || path_lower.contains("/bin")
+                || path_lower.contains("/sbin")
+                || path_lower.contains("node_modules")
+            {
+                return;
+            }
         }
     }
 
@@ -352,6 +415,20 @@ async fn ensure_writable(paths: Vec<String>) -> Result<Vec<EnsureResult>, String
             if let Some(u) = user {
                 let icacls_cmd = format!("icacls \"{}\" /grant {}:F /C /Q", target_for_attr.display(), u);
                 if let Ok(o) = Command::new("cmd").args(["/C", &icacls_cmd]).output() {
+                    if o.status.success() {
+                        granted_acl = true;
+                    }
+                }
+            }
+        }
+
+        #[cfg(not(target_os = "windows"))]
+        {
+            // For Linux, try to change permissions
+            if let Some(parent_dir) = &parent {
+                // Try to make directory writable
+                let chmod_cmd = format!("chmod -R u+w \"{}\"", parent_dir.display());
+                if let Ok(o) = Command::new("sh").args(["-c", &chmod_cmd]).output() {
                     if o.status.success() {
                         granted_acl = true;
                     }

@@ -61,7 +61,9 @@ export const localeOptions = [
 
 export const localeCodes = localeOptions.map((option) => option.value);
 
-export const MOD_ROOT = "mods\\D2RBlizzless\\D2RBlizzless.mpq\\data";
+export const MOD_ROOT = "mods/D2RBlizzless/D2RBlizzless.mpq/data";
+
+import { normalizePath } from "./utils/platformUtils";
 
 // Набор специальных символов шрифта Diablo для быстрого копирования
 export const diabloSymbols: string[] = [
@@ -161,6 +163,13 @@ export const diabloSymbols: string[] = [
   "ⅾ",
   "ⅿ",
 ];
+
+// Cross-platform paths to game files
+export const GAME_PATHS = {
+  LOCALES: normalizePath(`${MOD_ROOT}/local/lng/strings`),
+  ITEMS_FILE: "item-names.json",
+  NAMEAFFIXES_FILE: "item-nameaffixes.json",
+} as const;
 
 // Ключи для localStorage
 export const STORAGE_KEYS = {
