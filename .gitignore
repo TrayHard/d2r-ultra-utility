@@ -29,3 +29,4 @@ dist-ssr
 src-tauri/target/
 scripts/*
 scripts/
+nogit/
