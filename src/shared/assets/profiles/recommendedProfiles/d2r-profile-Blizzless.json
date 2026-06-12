@@ -12066,6 +12066,291 @@
             "ptBR": "[ms]Machado Voador",
             "zhCN": "飞斧"
           }
+        },
+        "old_book": {
+          "enabled": true,
+          "showDifficultyClassMarker": false,
+          "locales": {
+            "enUS": "Old Book",
+            "ruRU": "[fs]старая книга",
+            "zhTW": "舊書",
+            "deDE": "[ns]Altes Buch",
+            "esES": "[ms]Libro viejo",
+            "frFR": "Livre ancien",
+            "itIT": "Vecchio Libro",
+            "koKR": "오래된 책",
+            "plPL": "Stara księga",
+            "esMX": "Libro viejo",
+            "jaJP": "古い本",
+            "ptBR": "Livro Antigo",
+            "zhCN": "古书"
+          }
+        },
+        "tome": {
+          "enabled": true,
+          "showDifficultyClassMarker": false,
+          "locales": {
+            "enUS": "Tome",
+            "ruRU": "[ms]фолиант",
+            "zhTW": "秘典",
+            "deDE": "[ms]Foliant",
+            "esES": "[ms]Volumen",
+            "frFR": "Tome",
+            "itIT": "Tomo",
+            "koKR": "고서",
+            "plPL": "Tom",
+            "esMX": "Tomo",
+            "jaJP": "書物",
+            "ptBR": "Tomo",
+            "zhCN": "典籍"
+          }
+        },
+        "codex": {
+          "enabled": true,
+          "showDifficultyClassMarker": false,
+          "locales": {
+            "enUS": "Codex",
+            "ruRU": "[ms]кодекс",
+            "zhTW": "寶典",
+            "deDE": "[ms]Kodex",
+            "esES": "[ms]Códice",
+            "frFR": "Codex",
+            "itIT": "Codex",
+            "koKR": "고문서",
+            "plPL": "Kodeks",
+            "esMX": "Códice",
+            "jaJP": "古写本",
+            "ptBR": "Códice",
+            "zhCN": "法典"
+          }
+        },
+        "compendium": {
+          "enabled": true,
+          "showDifficultyClassMarker": false,
+          "locales": {
+            "enUS": "Compendium",
+            "ruRU": "[ms]компендиум",
+            "zhTW": "綱要",
+            "deDE": "[ns]Kompendium",
+            "esES": "[ms]Compendio",
+            "frFR": "Compendium",
+            "itIT": "Compendio",
+            "koKR": "전서",
+            "plPL": "Kompendium",
+            "esMX": "Compendio",
+            "jaJP": "抄録",
+            "ptBR": "Compêndio",
+            "zhCN": "纲要"
+          }
+        },
+        "grimoire": {
+          "enabled": true,
+          "showDifficultyClassMarker": false,
+          "locales": {
+            "enUS": "Grimoire",
+            "ruRU": "[ms]гримуар",
+            "zhTW": "魔典",
+            "deDE": "[ns]Grimoire",
+            "esES": "[ms]Grimorio",
+            "frFR": "Grimoire",
+            "itIT": "Grimorio",
+            "koKR": "마법서",
+            "plPL": "Grymuar",
+            "esMX": "Grimorio",
+            "jaJP": "グリモア",
+            "ptBR": "Grimório",
+            "zhCN": "魔典"
+          }
+        },
+        "burnt_text": {
+          "enabled": true,
+          "showDifficultyClassMarker": false,
+          "locales": {
+            "enUS": "Burnt Text",
+            "ruRU": "[ms]обгорелый текст",
+            "zhTW": "焦灼書冊",
+            "deDE": "[ms]Verbrannter Text",
+            "esES": "[ms]Texto quemado",
+            "frFR": "Texte brûlé",
+            "itIT": "Testo Bruciato",
+            "koKR": "불탄 문헌",
+            "plPL": "Spalony tekst",
+            "esMX": "Texto quemado",
+            "jaJP": "焼けた書",
+            "ptBR": "Texto Queimado",
+            "zhCN": "焦黑文本"
+          }
+        },
+        "dark_tome": {
+          "enabled": true,
+          "showDifficultyClassMarker": false,
+          "locales": {
+            "enUS": "Dark Tome",
+            "ruRU": "[ms]темный фолиант",
+            "zhTW": "黑暗秘典",
+            "deDE": "[ms]Dunkler Foliant",
+            "esES": "[ms]Volumen oscuro",
+            "frFR": "Tome noir",
+            "itIT": "Tomo Oscuro",
+            "koKR": "어두운 고서",
+            "plPL": "Mroczny tom",
+            "esMX": "Tomo oscuro",
+            "jaJP": "闇の書物",
+            "ptBR": "Tomo Antigo",
+            "zhCN": "黑暗典籍"
+          }
+        },
+        "dark_codex": {
+          "enabled": true,
+          "showDifficultyClassMarker": false,
+          "locales": {
+            "enUS": "Dark Codex",
+            "ruRU": "[ms]темный кодекс",
+            "zhTW": "黑暗寶典",
+            "deDE": "[ms]Dunkler Kodex",
+            "esES": "[ms]Códice oscuro",
+            "frFR": "Codex noir",
+            "itIT": "Codex Oscuro",
+            "koKR": "어두운 고문서",
+            "plPL": "Mroczny kodeks",
+            "esMX": "Códice oscuro",
+            "jaJP": "闇の古写本",
+            "ptBR": "Códice Sombrio",
+            "zhCN": "黑暗法典"
+          }
+        },
+        "possessed_compendium": {
+          "enabled": true,
+          "showDifficultyClassMarker": false,
+          "locales": {
+            "enUS": "Possessed Compendium",
+            "ruRU": "[ms]одержимый компендиум",
+            "zhTW": "著魔綱要",
+            "deDE": "[ns]Besessenes Kompendium",
+            "esES": "[ms]Compendio poseído",
+            "frFR": "Compendium possédé",
+            "itIT": "Compendio Posseduto",
+            "koKR": "빙의된 전서",
+            "plPL": "Opętane kompendium",
+            "esMX": "Compendio poseído",
+            "jaJP": "依代の抄録",
+            "ptBR": "Compêndio Possuído",
+            "zhCN": "魔附纲要"
+          }
+        },
+        "possessed_grimoire": {
+          "enabled": true,
+          "showDifficultyClassMarker": false,
+          "locales": {
+            "enUS": "Possessed Grimoire",
+            "ruRU": "[ms]одержимый гримуар",
+            "zhTW": "著魔魔典",
+            "deDE": "[ns]Besessenes Grimoire",
+            "esES": "[ms]Grimorio poseído",
+            "frFR": "Grimoire possédé",
+            "itIT": "Grimorio Posseduto",
+            "koKR": "빙의된 마법서",
+            "plPL": "Opętany grymuar",
+            "esMX": "Grimorio poseído",
+            "jaJP": "依代のグリモア",
+            "ptBR": "Grimório Possuído",
+            "zhCN": "魔附魔典"
+          }
+        },
+        "forgotten_volume": {
+          "enabled": true,
+          "showDifficultyClassMarker": false,
+          "locales": {
+            "enUS": "Forgotten Volume",
+            "ruRU": "[ms]забытый том",
+            "zhTW": "被遺忘的書冊",
+            "deDE": "[ms]Vergessener Band",
+            "esES": "[ms]Volumen olvidado",
+            "frFR": "Ouvrage oublié",
+            "itIT": "Volume Dimenticato",
+            "koKR": "잊힌 책자",
+            "plPL": "Zapomniany tom",
+            "esMX": "Volumen olvidado",
+            "jaJP": "忘れ去られし巻",
+            "ptBR": "Volume Esquecido",
+            "zhCN": "遗世卷册"
+          }
+        },
+        "occult_tome": {
+          "enabled": true,
+          "showDifficultyClassMarker": false,
+          "locales": {
+            "enUS": "Occult Tome",
+            "ruRU": "[ms]оккультный фолиант",
+            "zhTW": "神秘秘典",
+            "deDE": "[ms]Okkulter Foliant",
+            "esES": "[ms]Tomo esotérico",
+            "frFR": "Tome occulte",
+            "itIT": "Tomo Occulto",
+            "koKR": "비술 고서",
+            "plPL": "Księga okultystyczna",
+            "esMX": "Tomo oculto",
+            "jaJP": "神秘の書物",
+            "ptBR": "Tomo Oculto",
+            "zhCN": "神秘典籍"
+          }
+        },
+        "occult_codex": {
+          "enabled": true,
+          "showDifficultyClassMarker": false,
+          "locales": {
+            "enUS": "Occult Codex",
+            "ruRU": "[ms]оккультный кодекс",
+            "zhTW": "神秘寶典",
+            "deDE": "[ms]Okkulter Kodex",
+            "esES": "[ms]Códice esotérico",
+            "frFR": "Codex occulte",
+            "itIT": "Codex Occulto",
+            "koKR": "비술 고문서",
+            "plPL": "Kodeks okultystyczny",
+            "esMX": "Códice oculto",
+            "jaJP": "神秘の古写本",
+            "ptBR": "Códice Oculto",
+            "zhCN": "神秘法典"
+          }
+        },
+        "blasphemous_compendium": {
+          "enabled": true,
+          "showDifficultyClassMarker": false,
+          "locales": {
+            "enUS": "Blasphemous Compendium",
+            "ruRU": "[ms]кощунственный компендиум",
+            "zhTW": "褻瀆綱要",
+            "deDE": "[ns]Blasphemisches Kompendium",
+            "esES": "[ms]Compendio blasfemo",
+            "frFR": "Compendium blasphématoire",
+            "itIT": "Compendio Blasfemo",
+            "koKR": "신성모독 전서",
+            "plPL": "Bluźniercze kompendium",
+            "esMX": "Compendio blasfemo",
+            "jaJP": "邪教の抄録",
+            "ptBR": "Compêndio Blasfemo",
+            "zhCN": "亵渎纲要"
+          }
+        },
+        "blasphemous_grimoire": {
+          "enabled": true,
+          "showDifficultyClassMarker": false,
+          "locales": {
+            "enUS": "Blasphemous Grimoire",
+            "ruRU": "[ms]кощунственный гримуар",
+            "zhTW": "褻瀆魔典",
+            "deDE": "[ns]Blasphemisches Grimoire",
+            "esES": "[ms]Grimorio blasfemo",
+            "frFR": "Grimoire blasphématoire",
+            "itIT": "Grimorio Blasfemo",
+            "koKR": "신성모독 마법서",
+            "plPL": "Bluźnierczy grymuar",
+            "esMX": "Grimorio blasfemo",
+            "jaJP": "邪教のグリモア",
+            "ptBR": "Grimório Blasfemo",
+            "zhCN": "亵渎魔典"
+          }
         }
       }
     }

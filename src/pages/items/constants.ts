@@ -31,6 +31,7 @@ export enum EBaseType {
   Shields = "Shields",
   Helms = "Helms",
   PaladinShields = "PaladinShields",
+  Grimoires = "Grimoires",
 }
 
 export const allBaseTypes: EBaseType[] = [
@@ -57,6 +58,7 @@ export const allBaseTypes: EBaseType[] = [
   EBaseType.Shields,
   EBaseType.PaladinShields,
   EBaseType.ShrunkenHeads,
+  EBaseType.Grimoires,
 ];
 
 export enum ECharacterClass {
@@ -67,4 +69,5 @@ export enum ECharacterClass {
   Barbarian = "barbarian",
   Druid = "druid",
   Assassin = "assassin",
+  Warlock = "warlock",
 }
