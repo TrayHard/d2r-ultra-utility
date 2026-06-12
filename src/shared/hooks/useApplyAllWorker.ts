@@ -19,6 +19,7 @@ import {
 } from "../utils/runeUtils";
 import { idToRuneMapper, ERune } from "../../pages/runes/constants/runes";
 import { MOD_ROOT } from "../constants";
+import { applyItemShowLevels } from "../utils/excelUtils";
 import {
   gemToIdMapper,
   settingsKeyToGemMapper,
@@ -613,6 +614,30 @@ export const useApplyAllWorker = (
         JSON.stringify(updatedRunes, null, 2)
       );
 
+      // ===== ITEMS SHOWLEVEL (ilvl в excel-файлах мода) =====
+      // Скрытый предмет не должен светить уровень даже с пустым именем
+      const idToNamestr = new Map(
+        itemNamesData.map((d) => [d.id, d.Key] as const)
+      );
+      const showLevelStates = new Map<string, boolean>();
+      Object.entries(itemsSettings.items || {}).forEach(
+        ([key, itemSettings]) => {
+          const id = keyToId.get(key);
+          if (!id) return;
+          const namestr = idToNamestr.get(id);
+          if (!namestr) return;
+          showLevelStates.set(namestr, !!(itemSettings as ItemSettings).enabled);
+        }
+      );
+      try {
+        await applyItemShowLevels(homeDir, showLevelStates);
+      } catch (e) {
+        logger.warn(
+          "Failed to update ShowLevel in excel files",
+          { error: e instanceof Error ? e.message : String(e) },
+          "applyAllChanges"
+        );
+      }
 
       // ===== RUNES HIGHLIGHT FILES =====
       for (const [runeKey, runeSettings] of Object.entries(settings.runes)) {

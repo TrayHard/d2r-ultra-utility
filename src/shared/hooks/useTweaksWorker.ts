@@ -3,6 +3,7 @@ import { exists, remove, stat, writeFile } from "@tauri-apps/plugin-fs";
 import { ensureDirs } from "../utils/fsUtils";
 import { ensureWritable } from "../utils/fsUtils";
 import { loadSavedSettings } from "../utils/commonUtils";
+import { applyAllShowLevels } from "../utils/excelUtils";
 import { MOD_ROOT } from "../constants";
 import { TweaksSettings } from "../../app/providers/SettingsContext";
 
@@ -71,12 +72,9 @@ export const useTweaksWorker = (
 
       const skipIntroDetected = await isEmptyVideoSet(modHd);
 
+      // Тихая загрузка: попап показываем только при применении изменений
       if (updateTweaksSettings) {
         updateTweaksSettings({ skipIntroVideos: skipIntroDetected });
-        sendMessage?.(
-          t?.("messages.success.filesLoaded") || "Настройки загружены",
-          { type: "success" }
-        );
       }
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
@@ -173,5 +171,35 @@ export const useTweaksWorker = (
     }
   }, [allowedMode, getCurrentMode, getCurrentSettings, t, sendMessage]);
 
-  return { isLoading, error, readFromFiles, applyChanges } as const;
+  // Разовое действие: проставить ShowLevel (ilvl) всем предметам — 0 (Hide)
+  // или стоковые значения мода (Show) в armor/weapons/misc.txt
+  const setAllItemLevels = useCallback(
+    async (show: boolean) => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const homeDir = resolveHomeDir();
+        await applyAllShowLevels(homeDir, show);
+        sendMessage?.(
+          t?.("messages.success.changesAppliedText") || "Изменения применены",
+          { type: "success" }
+        );
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : String(e);
+        setError(msg);
+        sendMessage?.(msg, { type: "error" });
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [sendMessage, t]
+  );
+
+  return {
+    isLoading,
+    error,
+    readFromFiles,
+    applyChanges,
+    setAllItemLevels,
+  } as const;
 };

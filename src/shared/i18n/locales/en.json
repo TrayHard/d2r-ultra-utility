@@ -1782,6 +1782,11 @@
   "tweaksPage": {
     "skipIntroVideos": {
       "label": "Skip intro videos"
+    },
+    "allItemLevels": {
+      "label": "All item lvl indicators",
+      "show": "Show",
+      "hide": "Hide"
     }
   }
 }

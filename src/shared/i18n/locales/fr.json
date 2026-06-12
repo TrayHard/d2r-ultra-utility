@@ -4,7 +4,9 @@
     "items": "Objets",
     "runes": "Runes",
     "gems": "Gemmes",
-    "other": "Autres"
+    "other": "Autres",
+    "stash": "Stash Rename",
+    "tweaks": "Tweaks"
   },
   "update": {
     "checking": "Vérification des mises à jour...",
@@ -498,7 +500,11 @@
       "createError": "Error creating profile"
     },
     "baseProfiles": "Base Profiles",
-    "userProfiles": "User Profiles"
+    "userProfiles": "User Profiles",
+    "tooltips": {
+      "saveDisabledImmutable": "Selected profile cannot be edited",
+      "saveDisabledNoChanges": "Make changes to save them to the profile"
+    }
   },
   "itemsPage": {
     "settings": {
@@ -1719,6 +1725,13 @@
         "line3": "Vous pouvez aussi désactiver les filtres de butin à tout moment (bouton en bas)."
       },
       "close": "Fermer"
+    },
+    "update": {
+      "tooltipUpdateProfile": "Update profile from {{from}} to {{to}}",
+      "tooltipUpToDate": "Profile is up to date ({{version}})",
+      "updatingOverlay": "Updating loot filter",
+      "updateActionAria": "Update profile",
+      "upToDateAria": "Version is up to date"
     }
   },
   "startup": {
@@ -1759,12 +1772,21 @@
   },
   "mainMenu": {
     "descriptions": {
-      "tweaks": "Réglages du jeu : vidéos d'intro"
+      "tweaks": "Réglages du jeu : vidéos d'intro",
+      "lootFilters": "Manage loot filters: runes, gems, items",
+      "runCounter": "Track your game runs"
     }
   },
   "tweaksPage": {
     "skipIntroVideos": {
       "label": "Passer les vidéos d'intro"
+    },
+    "allItemLevels": {
+      "label": "Tous les indicateurs de niveau d'objet",
+      "show": "Afficher",
+      "hide": "Masquer"
     }
-  }
+  },
+  "tweaks": "Tweaks",
+  "runCounter": "Run Counter"
 }

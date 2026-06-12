@@ -5,7 +5,9 @@
     "items": "Gegenstände",
     "runes": "Runen",
     "gems": "Edelsteine",
-    "other": "Sonstiges"
+    "other": "Sonstiges",
+    "stash": "Stash Rename",
+    "tweaks": "Tweaks"
   },
   "update": {
     "checking": "Nach Updates wird gesucht...",
@@ -463,7 +465,11 @@
       "createError": "Error creating profile"
     },
     "baseProfiles": "Base Profiles",
-    "userProfiles": "User Profiles"
+    "userProfiles": "User Profiles",
+    "tooltips": {
+      "saveDisabledImmutable": "Selected profile cannot be edited",
+      "saveDisabledNoChanges": "Make changes to save them to the profile"
+    }
   },
   "files": {
     "readAll": "Aus Dateien lesen (alle)",
@@ -1744,6 +1750,13 @@
         "line3": "Sie können Loot-Filter auch jederzeit deaktivieren (Taste unten)."
       },
       "close": "Schließen"
+    },
+    "update": {
+      "tooltipUpdateProfile": "Update profile from {{from}} to {{to}}",
+      "tooltipUpToDate": "Profile is up to date ({{version}})",
+      "updatingOverlay": "Updating loot filter",
+      "updateActionAria": "Update profile",
+      "upToDateAria": "Version is up to date"
     }
   },
   "logs": {
@@ -1760,12 +1773,20 @@
   },
   "mainMenu": {
     "descriptions": {
-      "tweaks": "Spiel-Tweaks: Introvideos"
+      "tweaks": "Spiel-Tweaks: Introvideos",
+      "lootFilters": "Manage loot filters: runes, gems, items",
+      "runCounter": "Track your game runs"
     }
   },
   "tweaksPage": {
     "skipIntroVideos": {
       "label": "Introvideos überspringen"
+    },
+    "allItemLevels": {
+      "label": "Alle Item-Level-Anzeigen",
+      "show": "Anzeigen",
+      "hide": "Ausblenden"
     }
-  }
+  },
+  "runCounter": "Run Counter"
 }

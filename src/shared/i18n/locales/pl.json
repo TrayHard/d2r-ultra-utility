@@ -4,7 +4,9 @@
     "items": "Przedmioty",
     "runes": "Runy",
     "gems": "Kamyki",
-    "other": "Inne"
+    "other": "Inne",
+    "stash": "Stash Rename",
+    "tweaks": "Tweaks"
   },
   "update": {
     "checking": "Sprawdzanie aktualizacji...",
@@ -498,7 +500,11 @@
       "profileDuplicated": "Profile \"{{name}}\" duplicated"
     },
     "baseProfiles": "Base Profiles",
-    "userProfiles": "User Profiles"
+    "userProfiles": "User Profiles",
+    "tooltips": {
+      "saveDisabledImmutable": "Selected profile cannot be edited",
+      "saveDisabledNoChanges": "Make changes to save them to the profile"
+    }
   },
   "itemsPage": {
     "settings": {
@@ -1720,6 +1726,13 @@
         "line3": "Możesz także wyłączyć filtry łupów w dowolnym momencie (przycisk na dole)."
       },
       "close": "Zamknij"
+    },
+    "update": {
+      "tooltipUpdateProfile": "Update profile from {{from}} to {{to}}",
+      "tooltipUpToDate": "Profile is up to date ({{version}})",
+      "updatingOverlay": "Updating loot filter",
+      "updateActionAria": "Update profile",
+      "upToDateAria": "Version is up to date"
     }
   },
   "startup": {
@@ -1760,12 +1773,21 @@
   },
   "mainMenu": {
     "descriptions": {
-      "tweaks": "Ustawienia gry: filmy wprowadzające"
+      "tweaks": "Ustawienia gry: filmy wprowadzające",
+      "lootFilters": "Manage loot filters: runes, gems, items",
+      "runCounter": "Track your game runs"
     }
   },
   "tweaksPage": {
     "skipIntroVideos": {
       "label": "Pomiń filmy wprowadzające"
+    },
+    "allItemLevels": {
+      "label": "Wszystkie wskaźniki poziomu przedmiotu",
+      "show": "Pokaż",
+      "hide": "Ukryj"
     }
-  }
+  },
+  "tweaks": "Tweaks",
+  "runCounter": "Run Counter"
 }

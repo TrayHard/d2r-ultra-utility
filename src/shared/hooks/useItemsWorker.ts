@@ -8,6 +8,7 @@ import {
   LocaleItem,
   loadSavedSettings,
 } from "../utils/commonUtils";
+import { applyItemShowLevels } from "../utils/excelUtils";
 import type {
   ItemSettings,
   ItemsSettings,
@@ -656,6 +657,32 @@ export const useItemsWorker = (
       );
 
       logger.info("Successfully wrote items files", undefined, "applyChanges");
+
+      // Синхронизируем показ ilvl (ShowLevel в excel-файлах мода):
+      // скрытый предмет не должен светить уровень даже с пустым именем
+      const idToNamestr = new Map(
+        itemNamesData.map((d) => [d.id, d.Key] as const),
+      );
+      const showLevelStates = new Map<string, boolean>();
+      for (const item of items) {
+        const namestr = idToNamestr.get(item.id);
+        if (!namestr) continue;
+        showLevelStates.set(namestr, !!itemsSettings.items[item.key]?.enabled);
+      }
+      try {
+        await applyItemShowLevels(homeDir, showLevelStates);
+        logger.info(
+          "Successfully updated ShowLevel in excel files",
+          { items: showLevelStates.size },
+          "applyChanges",
+        );
+      } catch (e) {
+        logger.warn(
+          "Failed to update ShowLevel in excel files",
+          { error: e instanceof Error ? e.message : String(e) },
+          "applyChanges",
+        );
+      }
 
       sendMessage(
         t("messages.success.itemsApplied") ||
