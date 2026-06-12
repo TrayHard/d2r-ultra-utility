@@ -155,7 +155,12 @@
     "weight": "light",
     "beltCapacity": 16,
     "linkedTo": ["battle_belt", "heavy_belt"],
-    "uniques": [],
+    "uniques": [
+      {
+        "key": "gheed_s_wager",
+        "imgName": "gheedswager_graphic"
+      }
+    ],
     "id": 20382,
     "setItems": [
       {
@@ -188,6 +193,10 @@
       {
         "key": "arctic_binding",
         "imgName": "arcticbinding_graphic"
+      },
+      {
+        "key": "bane_s_authority",
+        "imgName": "banesauthority_graphic"
       }
     ]
   },
@@ -847,7 +856,12 @@
       }
     ],
     "id": 1939,
-    "setItems": []
+    "setItems": [
+      {
+        "key": "bane_s_wraithskin",
+        "imgName": "baneswraithskin_graphic"
+      }
+    ]
   },
   {
     "key": "demonhide_armor",
@@ -1182,7 +1196,12 @@
       }
     ],
     "id": 1941,
-    "setItems": []
+    "setItems": [
+      {
+        "key": "angelic_mantle",
+        "imgName": "angelicmantle_graphic"
+      }
+    ]
   },
   {
     "key": "linked_mail",
@@ -1341,7 +1360,12 @@
       }
     ],
     "id": 2086,
-    "setItems": []
+    "setItems": [
+      {
+        "key": "horazon_s_dominion",
+        "imgName": "horazonsdominion_graphic"
+      }
+    ]
   },
   {
     "key": "balrog_skin",
@@ -1806,9 +1830,19 @@
     "weight": "light",
     "beltCapacity": 0,
     "linkedTo": ["battle_boots", "light_plated_boots"],
-    "uniques": [],
+    "uniques": [
+      {
+        "key": "wraithstep",
+        "imgName": "wraithstep_graphic"
+      }
+    ],
     "id": 20377,
-    "setItems": []
+    "setItems": [
+      {
+        "key": "horazon_s_legacy",
+        "imgName": "horazonslegacy_graphic"
+      }
+    ]
   },
   {
     "key": "chain_gloves",
@@ -2085,7 +2119,12 @@
       }
     ],
     "id": 2073,
-    "setItems": []
+    "setItems": [
+      {
+        "key": "horazon_s_hold",
+        "imgName": "horazonshold_graphic"
+      }
+    ]
   },
   {
     "key": "bramble_mitts",
@@ -2806,6 +2845,10 @@
       {
         "key": "steel_shade",
         "imgName": "steelshade_graphic"
+      },
+      {
+        "key": "darkfear",
+        "imgName": "darkfear_graphic"
       }
     ],
     "id": 20343,
@@ -2855,6 +2898,10 @@
       {
         "key": "blackhorn_s_face",
         "imgName": "mask_graphic"
+      },
+      {
+        "key": "hellwarden_s_will",
+        "imgName": "hellwardenswill_graphic"
       }
     ],
     "id": 2095,
@@ -2885,7 +2932,12 @@
       }
     ],
     "id": 20347,
-    "setItems": []
+    "setItems": [
+      {
+        "key": "horazon_s_countenance",
+        "imgName": "horazonscountenance_graphic"
+      }
+    ]
   },
   {
     "key": "skull_cap",
@@ -5933,7 +5985,12 @@
     "weight": "light",
     "beltCapacity": 0,
     "linkedTo": ["dirk", "rondel"],
-    "uniques": [],
+    "uniques": [
+      {
+        "key": "bloodpact_shard",
+        "imgName": "bloodpactshard_graphic"
+      }
+    ],
     "id": 20241,
     "setItems": []
   },
@@ -5957,7 +6014,12 @@
       }
     ],
     "id": 2017,
-    "setItems": []
+    "setItems": [
+      {
+        "key": "bane_s_oathmaker",
+        "imgName": "banesoathmaker_graphic"
+      }
+    ]
   },
   {
     "key": "cinquedeas",
@@ -8994,7 +9056,12 @@
     "weight": "light",
     "beltCapacity": 0,
     "linkedTo": ["espandon", "two_handed_sword"],
-    "uniques": [],
+    "uniques": [
+      {
+        "key": "dreadfang",
+        "imgName": "dreadfang_graphic"
+      }
+    ],
     "id": 20234,
     "setItems": []
   },
@@ -10741,6 +10808,286 @@
       }
     ],
     "id": 20245,
+    "setItems": []
+  },
+  {
+    "key": "old_book",
+    "imgName": "oldbook_graphic",
+    "baseTypes": ["Shields", "Grimoires"],
+    "limitedToClass": "warlock",
+    "maxSockets": 2,
+    "difficultyClass": "normal",
+    "reqLvl": 3,
+    "reqStrength": 12,
+    "reqDexterity": 0,
+    "weight": "light",
+    "beltCapacity": 0,
+    "linkedTo": ["burnt_text", "forgotten_volume"],
+    "uniques": [],
+    "id": 27587,
+    "setItems": []
+  },
+  {
+    "key": "tome",
+    "imgName": "tome_graphic",
+    "baseTypes": ["Shields", "Grimoires"],
+    "limitedToClass": "warlock",
+    "maxSockets": 2,
+    "difficultyClass": "normal",
+    "reqLvl": 6,
+    "reqStrength": 14,
+    "reqDexterity": 0,
+    "weight": "light",
+    "beltCapacity": 0,
+    "linkedTo": ["dark_tome", "occult_tome"],
+    "uniques": [],
+    "id": 27588,
+    "setItems": []
+  },
+  {
+    "key": "codex",
+    "imgName": "codex_graphic",
+    "baseTypes": ["Shields", "Grimoires"],
+    "limitedToClass": "warlock",
+    "maxSockets": 2,
+    "difficultyClass": "normal",
+    "reqLvl": 12,
+    "reqStrength": 18,
+    "reqDexterity": 0,
+    "weight": "light",
+    "beltCapacity": 0,
+    "linkedTo": ["dark_codex", "occult_codex"],
+    "uniques": [],
+    "id": 27589,
+    "setItems": []
+  },
+  {
+    "key": "compendium",
+    "imgName": "compendium_graphic",
+    "baseTypes": ["Shields", "Grimoires"],
+    "limitedToClass": "warlock",
+    "maxSockets": 2,
+    "difficultyClass": "normal",
+    "reqLvl": 15,
+    "reqStrength": 20,
+    "reqDexterity": 0,
+    "weight": "light",
+    "beltCapacity": 0,
+    "linkedTo": ["possessed_compendium", "blasphemous_compendium"],
+    "uniques": [],
+    "id": 27590,
+    "setItems": []
+  },
+  {
+    "key": "grimoire",
+    "imgName": "grimoire_graphic",
+    "baseTypes": ["Shields", "Grimoires"],
+    "limitedToClass": "warlock",
+    "maxSockets": 2,
+    "difficultyClass": "normal",
+    "reqLvl": 18,
+    "reqStrength": 25,
+    "reqDexterity": 0,
+    "weight": "light",
+    "beltCapacity": 0,
+    "linkedTo": ["possessed_grimoire", "blasphemous_grimoire"],
+    "uniques": [],
+    "id": 27591,
+    "setItems": []
+  },
+  {
+    "key": "burnt_text",
+    "imgName": "oldbook_graphic",
+    "baseTypes": ["Shields", "Grimoires"],
+    "limitedToClass": "warlock",
+    "maxSockets": 2,
+    "difficultyClass": "exceptional",
+    "reqLvl": 24,
+    "reqStrength": 38,
+    "reqDexterity": 0,
+    "weight": "light",
+    "beltCapacity": 0,
+    "linkedTo": ["old_book", "forgotten_volume"],
+    "uniques": [
+      {
+        "key": "measured_wrath",
+        "imgName": "measuredwrath_graphic"
+      }
+    ],
+    "id": 27592,
+    "setItems": []
+  },
+  {
+    "key": "dark_tome",
+    "imgName": "tome_graphic",
+    "baseTypes": ["Shields", "Grimoires"],
+    "limitedToClass": "warlock",
+    "maxSockets": 2,
+    "difficultyClass": "exceptional",
+    "reqLvl": 29,
+    "reqStrength": 41,
+    "reqDexterity": 0,
+    "weight": "light",
+    "beltCapacity": 0,
+    "linkedTo": ["tome", "occult_tome"],
+    "uniques": [],
+    "id": 27593,
+    "setItems": []
+  },
+  {
+    "key": "dark_codex",
+    "imgName": "codex_graphic",
+    "baseTypes": ["Shields", "Grimoires"],
+    "limitedToClass": "warlock",
+    "maxSockets": 2,
+    "difficultyClass": "exceptional",
+    "reqLvl": 33,
+    "reqStrength": 47,
+    "reqDexterity": 0,
+    "weight": "light",
+    "beltCapacity": 0,
+    "linkedTo": ["codex", "occult_codex"],
+    "uniques": [],
+    "id": 27594,
+    "setItems": []
+  },
+  {
+    "key": "possessed_compendium",
+    "imgName": "compendium_graphic",
+    "baseTypes": ["Shields", "Grimoires"],
+    "limitedToClass": "warlock",
+    "maxSockets": 2,
+    "difficultyClass": "exceptional",
+    "reqLvl": 36,
+    "reqStrength": 50,
+    "reqDexterity": 0,
+    "weight": "light",
+    "beltCapacity": 0,
+    "linkedTo": ["compendium", "blasphemous_compendium"],
+    "uniques": [],
+    "id": 27595,
+    "setItems": []
+  },
+  {
+    "key": "possessed_grimoire",
+    "imgName": "grimoire_graphic",
+    "baseTypes": ["Shields", "Grimoires"],
+    "limitedToClass": "warlock",
+    "maxSockets": 2,
+    "difficultyClass": "exceptional",
+    "reqLvl": 40,
+    "reqStrength": 58,
+    "reqDexterity": 0,
+    "weight": "light",
+    "beltCapacity": 0,
+    "linkedTo": ["grimoire", "blasphemous_grimoire"],
+    "uniques": [],
+    "id": 27596,
+    "setItems": []
+  },
+  {
+    "key": "forgotten_volume",
+    "imgName": "oldbook_graphic",
+    "baseTypes": ["Shields", "Grimoires"],
+    "limitedToClass": "warlock",
+    "maxSockets": 2,
+    "difficultyClass": "elite",
+    "reqLvl": 44,
+    "reqStrength": 77,
+    "reqDexterity": 0,
+    "weight": "light",
+    "beltCapacity": 0,
+    "linkedTo": ["old_book", "burnt_text"],
+    "uniques": [],
+    "id": 27597,
+    "setItems": []
+  },
+  {
+    "key": "occult_tome",
+    "imgName": "tome_graphic",
+    "baseTypes": ["Shields", "Grimoires"],
+    "limitedToClass": "warlock",
+    "maxSockets": 2,
+    "difficultyClass": "elite",
+    "reqLvl": 49,
+    "reqStrength": 82,
+    "reqDexterity": 0,
+    "weight": "light",
+    "beltCapacity": 0,
+    "linkedTo": ["tome", "dark_tome"],
+    "uniques": [
+      {
+        "key": "ars_dul_mephistos",
+        "imgName": "arsdulmephistos_graphic"
+      }
+    ],
+    "id": 27598,
+    "setItems": []
+  },
+  {
+    "key": "occult_codex",
+    "imgName": "codex_graphic",
+    "baseTypes": ["Shields", "Grimoires"],
+    "limitedToClass": "warlock",
+    "maxSockets": 2,
+    "difficultyClass": "elite",
+    "reqLvl": 50,
+    "reqStrength": 91,
+    "reqDexterity": 0,
+    "weight": "light",
+    "beltCapacity": 0,
+    "linkedTo": ["codex", "dark_codex"],
+    "uniques": [],
+    "id": 27599,
+    "setItems": [
+      {
+        "key": "horazon_s_secrets",
+        "imgName": "horazonssecrets_graphic"
+      }
+    ]
+  },
+  {
+    "key": "blasphemous_compendium",
+    "imgName": "compendium_graphic",
+    "baseTypes": ["Shields", "Grimoires"],
+    "limitedToClass": "warlock",
+    "maxSockets": 2,
+    "difficultyClass": "elite",
+    "reqLvl": 60,
+    "reqStrength": 95,
+    "reqDexterity": 0,
+    "weight": "light",
+    "beltCapacity": 0,
+    "linkedTo": ["compendium", "possessed_compendium"],
+    "uniques": [
+      {
+        "key": "ars_tor_baalos",
+        "imgName": "arstorbaalos_graphic"
+      }
+    ],
+    "id": 27600,
+    "setItems": []
+  },
+  {
+    "key": "blasphemous_grimoire",
+    "imgName": "grimoire_graphic",
+    "baseTypes": ["Shields", "Grimoires"],
+    "limitedToClass": "warlock",
+    "maxSockets": 2,
+    "difficultyClass": "elite",
+    "reqLvl": 65,
+    "reqStrength": 106,
+    "reqDexterity": 0,
+    "weight": "light",
+    "beltCapacity": 0,
+    "linkedTo": ["grimoire", "possessed_grimoire"],
+    "uniques": [
+      {
+        "key": "ars_al_diabolos",
+        "imgName": "arsaldiabolos_graphic"
+      }
+    ],
+    "id": 27601,
     "setItems": []
   }
 ]
