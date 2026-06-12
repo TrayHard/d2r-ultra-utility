@@ -1774,22 +1774,12 @@
   "mainMenu": {
     "descriptions": {
       "lootFilters": "Manage loot filters: runes, gems, items",
-      "tweaks": "Game tweaks: encyclopedia, videos",
+      "tweaks": "Game tweaks: intro videos",
       "runCounter": "Track your game runs"
     }
   },
   "runCounter": "Run Counter",
   "tweaksPage": {
-    "encyclopediaEnabled": {
-      "label": "Enable in-game encyclopedia"
-    },
-    "encyclopediaLanguage": {
-      "label": "In-game encyclopedia language",
-      "options": {
-        "en": "English",
-        "ru": "Russian"
-      }
-    },
     "skipIntroVideos": {
       "label": "Skip intro videos"
     }

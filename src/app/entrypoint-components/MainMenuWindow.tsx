@@ -72,7 +72,7 @@ const MainMenuWindowInner: React.FC<MainMenuWindowProps> = ({
       title: t("tweaks", "Tweaks"),
       description: t(
         "mainMenu.descriptions.tweaks",
-        "Настройки игры: энциклопедия, видео"
+        "Настройки игры: вступительные видео"
       ),
       icon: "⚙️",
     },

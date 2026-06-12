@@ -1,17 +1,12 @@
 import { useCallback, useState } from "react";
-import {
-  exists,
-  readTextFile,
-  remove,
-  stat,
-  writeFile,
-  writeTextFile,
-} from "@tauri-apps/plugin-fs";
+import { exists, remove, stat, writeFile } from "@tauri-apps/plugin-fs";
 import { ensureDirs } from "../utils/fsUtils";
 import { ensureWritable } from "../utils/fsUtils";
 import { loadSavedSettings } from "../utils/commonUtils";
 import { MOD_ROOT } from "../constants";
 import { TweaksSettings } from "../../app/providers/SettingsContext";
+
+const VIDEO_FILES = ["blizzardlogos.webm", "d2intro.webm", "logoanim.webm"];
 
 export const useTweaksWorker = (
   updateTweaksSettings?: (newSettings: Partial<TweaksSettings>) => void,
@@ -27,18 +22,23 @@ export const useTweaksWorker = (
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const resolveHudPanelPath = (homeDir: string) => {
-    const primary = `${homeDir}\\${MOD_ROOT}\\global\\ui\\layouts\\hudpanelhd.json`;
-    const fallback = `${homeDir}\\data\\global\\ui\\layouts\\hudpanelhd.json`;
-    return { primary, fallback };
+  const resolveHomeDir = () => {
+    const saved = loadSavedSettings();
+    if (!saved?.homeDirectory) {
+      const msg =
+        t?.("messages.error.pathNotFound") ??
+        "Путь к игре не найден в настройках";
+      throw new Error(msg);
+    }
+    let homeDir = saved.homeDirectory.replace(/[\/\\]+$/, "");
+    if (homeDir.endsWith(".exe")) {
+      homeDir = homeDir.substring(0, homeDir.lastIndexOf("\\"));
+    }
+    return homeDir;
   };
 
-  const resolveVideoDirs = (homeDir: string) => {
-    const root = homeDir.replace(/[\/\\]+$/, "");
-    return {
-      modHd: `${root}\\${MOD_ROOT}\\hd\\global\\video`,
-    };
-  };
+  const resolveVideoDir = (homeDir: string) =>
+    `${homeDir}\\${MOD_ROOT}\\hd\\global\\video`;
 
   const readFromFiles = useCallback(async () => {
     if (allowedMode && getCurrentMode) {
@@ -49,74 +49,14 @@ export const useTweaksWorker = (
     setIsLoading(true);
     setError(null);
     try {
-      const saved = loadSavedSettings();
-      if (!saved?.homeDirectory) {
-        const msg =
-          t?.("messages.error.pathNotFound") ??
-          "Путь к игре не найден в настройках";
-        throw new Error(msg);
-      }
-      let homeDir = saved.homeDirectory.replace(/[\/\\]+$/, "");
-      if (homeDir.endsWith(".exe")) {
-        homeDir = homeDir.substring(0, homeDir.lastIndexOf("\\"));
-      }
-      const { primary, fallback } = resolveHudPanelPath(homeDir);
-
-      let content = "";
-      try {
-        content = await readTextFile(primary);
-      } catch {
-        content = await readTextFile(fallback);
-      }
-      const sanitizeJson = (text: string) =>
-        text.replace(/(^|\s)\/\/.*$/gm, "").replace(/,\s*([}\]])/g, "$1");
-      const json = JSON.parse(sanitizeJson(content));
-
-      // Ищем объект энциклопедии в массиве children
-      const findEncyclopediaObject = (children: any[]): { index: number; language: "en" | "ru" } | null => {
-        for (let i = 0; i < children.length; i++) {
-          const child = children[i];
-          if (child?.name === "BlizzlessEncyclopediaButRu") {
-            const onClickMessage = child?.fields?.onClickMessage;
-            if (typeof onClickMessage === "string") {
-              const match = onClickMessage.match(/PanelManager:OpenPanel:BlizzlessEncyclopediabut(en|ru)/);
-              if (match) {
-                return { index: i, language: match[1] as "en" | "ru" };
-              }
-            }
-            // Если объект найден, но язык не определен, возвращаем индекс с дефолтным языком
-            return { index: i, language: "en" };
-          }
-        }
-        return null;
-      };
-
-      // Ищем объект с полем children
-      const findChildrenArray = (obj: any): any[] | null => {
-        if (Array.isArray(obj)) {
-          return obj;
-        } else if (obj && typeof obj === "object") {
-          if (obj.children && Array.isArray(obj.children)) {
-            return obj.children;
-          }
-          for (const key in obj) {
-            const result = findChildrenArray(obj[key]);
-            if (result) return result;
-          }
-        }
-        return null;
-      };
-
-      const childrenArray = findChildrenArray(json);
-      const encyclopediaInfo = childrenArray ? findEncyclopediaObject(childrenArray) : null;
+      const homeDir = resolveHomeDir();
 
       // Определяем состояние skipIntroVideos по наличию пустых файлов
-      const { modHd } = resolveVideoDirs(homeDir);
-      const videoFiles = ["blizzardlogos.webm", "d2intro.webm", "logoanim.webm"];
+      const modHd = resolveVideoDir(homeDir);
 
       const isEmptyVideoSet = async (dir: string) => {
         try {
-          for (const fname of videoFiles) {
+          for (const fname of VIDEO_FILES) {
             const p = `${dir}\\${fname}`;
             const ok = await exists(p);
             if (!ok) return false;
@@ -132,18 +72,6 @@ export const useTweaksWorker = (
       const skipIntroDetected = await isEmptyVideoSet(modHd);
 
       if (updateTweaksSettings) {
-        if (encyclopediaInfo) {
-          // Объект найден - энциклопедия включена
-          updateTweaksSettings({
-            encyclopediaEnabled: true,
-            encyclopediaLanguage: encyclopediaInfo.language,
-          });
-        } else {
-          // Объект не найден - энциклопедия выключена, язык оставляем без изменений
-          updateTweaksSettings({
-            encyclopediaEnabled: false,
-          });
-        }
         updateTweaksSettings({ skipIntroVideos: skipIntroDetected });
         sendMessage?.(
           t?.("messages.success.filesLoaded") || "Настройки загружены",
@@ -167,169 +95,68 @@ export const useTweaksWorker = (
     setIsLoading(true);
     setError(null);
     try {
-      const saved = loadSavedSettings();
-      if (!saved?.homeDirectory) {
-        const msg =
-          t?.("messages.error.pathNotFound") ??
-          "Путь к игре не найден в настройках";
-        throw new Error(msg);
-      }
-      let homeDir = saved.homeDirectory.replace(/[\/\\]+$/, "");
-      if (homeDir.endsWith(".exe")) {
-        homeDir = homeDir.substring(0, homeDir.lastIndexOf("\\"));
-      }
-      const { primary, fallback } = resolveHudPanelPath(homeDir);
-
-      let pathToWrite = primary;
-      let content = "";
-      try {
-        content = await readTextFile(primary);
-      } catch {
-        content = await readTextFile(fallback);
-        pathToWrite = fallback;
-      }
-      const sanitizeJson = (text: string) =>
-        text.replace(/(^|\s)\/\/.*$/gm, "").replace(/,\s*([}\]])/g, "$1");
-      const json = JSON.parse(sanitizeJson(content));
+      const homeDir = resolveHomeDir();
 
       const currentSettings = getCurrentSettings?.() || {
-        encyclopediaEnabled: true,
-        encyclopediaLanguage: "en",
-      };
-      const targetLanguage = currentSettings.encyclopediaLanguage || "en";
-      const targetSuffix = targetLanguage === "ru" ? "ru" : "en";
-
-      // Шаблон объекта энциклопедии
-      const encyclopediaObject = {
-        type: "ButtonWidget",
-        name: "BlizzlessEncyclopediaButRu",
-        fields: {
-          rect: {
-            x: 630,
-            y: 305,
-            scale: 0.2,
-          },
-          filename: "BlizzlessEncyclopedia\\scroll_enc",
-          hoveredFrame: 1,
-          pressedFrame: 2,
-          tooltipString: "@dictEnc",
-          onClickMessage: `PanelManager:OpenPanel:BlizzlessEncyclopediabut${targetSuffix}`,
-        },
+        skipIntroVideos: false,
       };
 
-      // Ищем массив children
-      const findAndProcessChildren = (obj: any): any => {
-        if (Array.isArray(obj)) {
-          // Удаляем существующий объект энциклопедии, если есть
-          const filtered = obj.filter(
-            (item) => item?.name !== "BlizzlessEncyclopediaButRu"
-          );
-
-          if (currentSettings.encyclopediaEnabled) {
-            // Ищем RunButtonWidget и вставляем после него
-            const runButtonIndex = filtered.findIndex(
-              (item) => item?.type === "RunButtonWidget"
-            );
-            if (runButtonIndex !== -1) {
-              filtered.splice(runButtonIndex + 1, 0, encyclopediaObject);
-            } else {
-              // Если RunButtonWidget не найден, добавляем в конец
-              filtered.push(encyclopediaObject);
-            }
-          }
-
-          return filtered;
-        } else if (obj && typeof obj === "object") {
-          const result: any = {};
-          for (const key in obj) {
-            if (key === "children" && Array.isArray(obj[key])) {
-              result[key] = findAndProcessChildren(obj[key]);
-            } else {
-              result[key] = findAndProcessChildren(obj[key]);
-            }
-          }
-          return result;
-        }
-        return obj;
-      };
-
-      const updatedJson = findAndProcessChildren(json);
-      const contentOut = JSON.stringify(updatedJson, null, 2);
-
+      const modHd = resolveVideoDir(homeDir);
       const maxAttempts = 2;
-      for (let attempt = 0; attempt < maxAttempts; attempt++) {
-        try {
-          await writeTextFile(pathToWrite, contentOut);
-          break;
-        } catch (err) {
-          if (attempt === maxAttempts - 1) {
-            try {
-              await ensureWritable([pathToWrite]);
-            } catch {}
-            await writeTextFile(pathToWrite, contentOut);
+
+      const writeEmptyWithRetry = async (filePath: string) => {
+        for (let attempt = 0; attempt < maxAttempts; attempt++) {
+          try {
+            await writeFile(filePath, new Uint8Array());
+            return;
+          } catch {
+            if (attempt === maxAttempts - 1) {
+              try {
+                await ensureWritable([filePath]);
+              } catch {}
+              await writeFile(filePath, new Uint8Array());
+            }
           }
         }
-      }
+      };
 
-      // Применяем skipIntroVideos: создаем пустые файлы если включено
-      {
-        const { modHd } = resolveVideoDirs(homeDir);
-        const videoFiles = ["blizzardlogos.webm", "d2intro.webm", "logoanim.webm"];
+      const removeEmptyWithRetry = async (filePath: string) => {
+        try {
+          const ok = await exists(filePath);
+          if (!ok) return;
+          const info = await stat(filePath);
+          if (info.size !== 0) return;
+        } catch {
+          return;
+        }
 
-        const writeEmptyWithRetry = async (filePath: string) => {
-          for (let attempt = 0; attempt < maxAttempts; attempt++) {
-            try {
-              await writeFile(filePath, new Uint8Array());
-              return;
-            } catch {
-              if (attempt === maxAttempts - 1) {
-                try {
-                  await ensureWritable([filePath]);
-                } catch {}
-                await writeFile(filePath, new Uint8Array());
-              }
-            }
-          }
-        };
-
-        const removeEmptyWithRetry = async (filePath: string) => {
+        for (let attempt = 0; attempt < maxAttempts; attempt++) {
           try {
-            const ok = await exists(filePath);
-            if (!ok) return;
-            const info = await stat(filePath);
-            if (info.size !== 0) return;
-          } catch {
+            await remove(filePath);
             return;
-          }
-
-          for (let attempt = 0; attempt < maxAttempts; attempt++) {
-            try {
+          } catch {
+            if (attempt === maxAttempts - 1) {
+              try {
+                await ensureWritable([filePath]);
+              } catch {}
               await remove(filePath);
-              return;
-            } catch {
-              if (attempt === maxAttempts - 1) {
-                try {
-                  await ensureWritable([filePath]);
-                } catch {}
-                await remove(filePath);
-              }
             }
           }
-        };
+        }
+      };
 
-        if ((currentSettings as any).skipIntroVideos) {
-          // Пишем ТОЛЬКО в hd\global\video внутри Blizzless мод-пака.
-          try {
-            await ensureDirs([modHd]);
-          } catch {}
-          for (const fname of videoFiles) {
-            await writeEmptyWithRetry(`${modHd}\\${fname}`);
-          }
-        } else {
-          // Отключение: удаляем только пустые файлы, которые сами создавали.
-          for (const fname of videoFiles) {
-            await removeEmptyWithRetry(`${modHd}\\${fname}`);
-          }
+      if (currentSettings.skipIntroVideos) {
+        // Пишем ТОЛЬКО в hd\global\video внутри Blizzless мод-пака.
+        try {
+          await ensureDirs([modHd]);
+        } catch {}
+        for (const fname of VIDEO_FILES) {
+          await writeEmptyWithRetry(`${modHd}\\${fname}`);
+        }
+      } else {
+        // Отключение: удаляем только пустые файлы, которые сами создавали.
+        for (const fname of VIDEO_FILES) {
+          await removeEmptyWithRetry(`${modHd}\\${fname}`);
         }
       }
 
@@ -348,4 +175,3 @@ export const useTweaksWorker = (
 
   return { isLoading, error, readFromFiles, applyChanges } as const;
 };
-

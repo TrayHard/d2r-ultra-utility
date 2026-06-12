@@ -170,8 +170,6 @@ export interface ItemsSettings {
 
 // Настройки tweaks (игровые настройки)
 export interface TweaksSettings {
-  encyclopediaEnabled: boolean;
-  encyclopediaLanguage: "en" | "ru";
   skipIntroVideos: boolean;
 }
 
@@ -687,8 +685,6 @@ const getDefaultItemsSettings = (): ItemsSettings => ({
 });
 
 const getDefaultTweaksSettings = (): TweaksSettings => ({
-  encyclopediaEnabled: true,
-  encyclopediaLanguage: "en",
   skipIntroVideos: false,
 });
 

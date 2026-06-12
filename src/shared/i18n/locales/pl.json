@@ -1757,5 +1757,15 @@
     "clearLogs": "Clear Logs",
     "confirmClear": "Are you sure you want to clear all logs? This action cannot be undone.",
     "exportDescription": "Export logs to share with developers for troubleshooting."
+  },
+  "mainMenu": {
+    "descriptions": {
+      "tweaks": "Ustawienia gry: filmy wprowadzające"
+    }
+  },
+  "tweaksPage": {
+    "skipIntroVideos": {
+      "label": "Pomiń filmy wprowadzające"
+    }
   }
 }
