@@ -52,9 +52,29 @@ If the build failed (no MSI / no `latest.json`), **stop** — do not publish a p
 
 ## Step 3 — Create the GitHub release + upload the two assets
 
-The tag is already pushed by Step 2; now attach the assets. Prefer `gh`; fall back to manual.
+The tag is already pushed by Step 2; now attach the assets. **`gh` is installed and authenticated** on this machine (account `TrayHard`, `repo` scope — verify with `gh auth status`), so this step is scripted — no manual upload needed.
 
-**If `gh` is installed and authenticated** (`gh auth status`):
+First write the release notes. The established format is a **bilingual (RU/EN) install block** (see any prior release, e.g. `gh release view v2.0.0 --json body -q .body`). Confirm with the user whether to add a short "What's new" / "Что нового" changelog on top (derive it from `git log v<prev>..HEAD`). Write the body to a temp file so multi-line markdown survives:
+
+```powershell
+$Notes = @"
+# RU
+## Установка
+Просто скачайте [**Diablo.II.Ultra.Utility_$($Version)_x64_en-US.msi**](https://github.com/TrayHard/d2r-ultra-utility/releases/download/v$Version/Diablo.II.Ultra.Utility_$($Version)_x64_en-US.msi), запустите и следуйте инструкциям установщика.
+
+_Вам не нужен latest.json, он лежит здесь просто для автообновлений._
+
+# EN
+# Install
+Just download [**Diablo.II.Ultra.Utility_$($Version)_x64_en-US.msi**](https://github.com/TrayHard/d2r-ultra-utility/releases/download/v$Version/Diablo.II.Ultra.Utility_$($Version)_x64_en-US.msi), launch it and follow the instructions.
+
+_You don't need latest.json, it is just for an autoupdate._
+"@
+$NotesFile = "$env:TEMP\release-notes-$Version.md"
+Set-Content -Path $NotesFile -Value $Notes -Encoding utf8
+```
+
+Then create the release with both assets:
 
 ```powershell
 gh release create "v$Version" `
@@ -62,16 +82,12 @@ gh release create "v$Version" `
   "$Bundle/latest.json" `
   --repo TrayHard/d2r-ultra-utility `
   --title "v$Version" `
-  --notes "v$Version"
+  --notes-file $NotesFile
 ```
 
-(If a release for the tag already exists, use `gh release upload "v$Version" "<msi>" "$Bundle/latest.json" --clobber` instead.)
+(If a release for the tag already exists, use `gh release upload "v$Version" "<msi>" "$Bundle/latest.json" --clobber` to attach assets, and `gh release edit "v$Version" --notes-file $NotesFile` to set the body.)
 
-**If `gh` is NOT available** (currently the case — no `gh` CLI and no GitHub MCP connector is wired up): do it manually on the releases page `nogit/build/build-signed.bat` already opened, or open https://github.com/TrayHard/d2r-ultra-utility/releases/new?tag=v<version> — set the title to `v<version>`, then drag in **both**:
-- the MSI from `$Bundle/msi/…_<version>_x64_en-US.msi`
-- `$Bundle/latest.json`
-
-…and click **Publish release**. To make this scriptable next time, suggest the user install GitHub CLI: `winget install --id GitHub.cli` then `gh auth login`.
+**Fallback if `gh` ever fails** (auth lost, network): do it manually on the releases page `nogit/build/build-signed.bat` already opened, or open https://github.com/TrayHard/d2r-ultra-utility/releases/new?tag=v<version> — set the title to `v<version>`, paste the notes above, then drag in **both** the MSI from `$Bundle/msi/…_<version>_x64_en-US.msi` and `$Bundle/latest.json`, and click **Publish release**.
 
 ## Step 4 — Verify auto-update will work
 
