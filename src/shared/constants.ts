@@ -61,7 +61,7 @@ export const localeOptions = [
 
 export const localeCodes = localeOptions.map((option) => option.value);
 
-export const MOD_ROOT = "mods\\D2RBlizzless\\D2RBlizzless.mpq\\data";
+export const MOD_ROOT = "mods\\Blizzless\\Blizzless.mpq\\data";
 
 // Набор специальных символов шрифта Diablo для быстрого копирования
 export const diabloSymbols: string[] = [

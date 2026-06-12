@@ -18,6 +18,7 @@ import {
   SUPPORTED_LOCALES as RUNES_SUPPORTED_LOCALES,
 } from "../utils/runeUtils";
 import { idToRuneMapper, ERune } from "../../pages/runes/constants/runes";
+import { MOD_ROOT } from "../constants";
 import {
   gemToIdMapper,
   settingsKeyToGemMapper,
@@ -178,7 +179,7 @@ export const useApplyAllWorker = (
       const modifiersPath = `${homeDir}\\${COMMON_GAME_PATHS.LOCALES}\\item-modifiers.json`;
       const runesPath = `${homeDir}\\${RUNES_GAME_PATHS.LOCALES}\\${RUNES_GAME_PATHS.RUNES_FILE}`;
       const runeHighlightDir = `${homeDir}\\${RUNES_GAME_PATHS.RUNE_HIGHLIGHT}`;
-      const keysHighlightDir = `${homeDir}\\mods\\D2RBlizzless\\D2RBlizzless.mpq\\data\\hd\\items\\misc\\key`;
+      const keysHighlightDir = `${homeDir}\\${MOD_ROOT}\\hd\\items\\misc\\key`;
 
       logger.info(
         "Reading source files (aggregate)",
