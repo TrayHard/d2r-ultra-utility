@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import Switcher from "../../shared/components/Switcher.tsx";
+import Button from "../../shared/components/Button.tsx";
 import { useTranslation } from "react-i18next";
 import { useTweaksWorker } from "../../shared/hooks/useTweaksWorker.ts";
 import { TweaksSettings } from "../../app/providers/SettingsContext.tsx";
@@ -22,7 +23,7 @@ const TweaksPage: React.FC<TweaksPageProps> = ({ isDarkTheme }) => {
   const [currentTweaks, setCurrentTweaks] = useState<TweaksSettings>(initialTweaks);
 
   // Хук для работы с файлами игры
-  const { readFromFiles, applyChanges, isLoading } = useTweaksWorker(
+  const { readFromFiles, applyChanges, setAllItemLevels, isLoading } = useTweaksWorker(
     (newSettings: Partial<TweaksSettings>) => {
       const merged: TweaksSettings = {
         ...currentTweaksRef.current,
@@ -31,10 +32,8 @@ const TweaksPage: React.FC<TweaksPageProps> = ({ isDarkTheme }) => {
       currentTweaksRef.current = merged;
       setCurrentTweaks(merged);
     },
-    // Успешные сообщения не показываем при автоматической загрузке, но ошибки — обязательно
-    (message, opts) => {
-      if (opts?.type === "error") sendMessage(message, opts);
-    },
+    // Показываем все сообщения: успех при применении и любые ошибки
+    (message, opts) => sendMessage(message, opts),
     t,
     () => currentTweaksRef.current
   );
@@ -76,6 +75,39 @@ const TweaksPage: React.FC<TweaksPageProps> = ({ isDarkTheme }) => {
             isDarkTheme={isDarkTheme}
             disabled={isLoading}
           />
+        </div>
+
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <label
+              className={`text-sm font-medium ${
+                isDarkTheme ? "text-gray-300" : "text-gray-700"
+              }`}
+            >
+              {t("tweaksPage.allItemLevels.label") ||
+                "All item lvl indicators"}
+            </label>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              variant="secondary"
+              isDarkTheme={isDarkTheme}
+              disabled={isLoading}
+              onClick={() => setAllItemLevels(true)}
+            >
+              {t("tweaksPage.allItemLevels.show") || "Show"}
+            </Button>
+            <Button
+              size="sm"
+              variant="secondary"
+              isDarkTheme={isDarkTheme}
+              disabled={isLoading}
+              onClick={() => setAllItemLevels(false)}
+            >
+              {t("tweaksPage.allItemLevels.hide") || "Hide"}
+            </Button>
+          </div>
         </div>
       </div>
     </div>

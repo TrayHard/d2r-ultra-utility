@@ -4,7 +4,9 @@
     "items": "Предмети",
     "runes": "Руни",
     "gems": "Камені",
-    "other": "Інше"
+    "other": "Інше",
+    "stash": "Stash Rename",
+    "tweaks": "Tweaks"
   },
   "update": {
     "checking": "Перевірка оновлень...",
@@ -438,7 +440,11 @@
       "createError": "Error creating profile"
     },
     "baseProfiles": "Base Profiles",
-    "userProfiles": "User Profiles"
+    "userProfiles": "User Profiles",
+    "tooltips": {
+      "saveDisabledImmutable": "Selected profile cannot be edited",
+      "saveDisabledNoChanges": "Make changes to save them to the profile"
+    }
   },
   "files": {
     "readAll": "Читати з файлів (все)",
@@ -1719,6 +1725,13 @@
         "line3": "Також ви можете вимкнути лут-фільтри в будь-який момент (кнопка знизу)."
       },
       "close": "Закрити"
+    },
+    "update": {
+      "tooltipUpdateProfile": "Update profile from {{from}} to {{to}}",
+      "tooltipUpToDate": "Profile is up to date ({{version}})",
+      "updatingOverlay": "Updating loot filter",
+      "updateActionAria": "Update profile",
+      "upToDateAria": "Version is up to date"
     }
   },
   "startup": {
@@ -1759,12 +1772,21 @@
   },
   "mainMenu": {
     "descriptions": {
-      "tweaks": "Налаштування гри: вступні відео"
+      "tweaks": "Налаштування гри: вступні відео",
+      "lootFilters": "Manage loot filters: runes, gems, items",
+      "runCounter": "Track your game runs"
     }
   },
   "tweaksPage": {
     "skipIntroVideos": {
       "label": "Вимкнути вступні відеоролики"
+    },
+    "allItemLevels": {
+      "label": "Усі індикатори рівня предметів",
+      "show": "Показати",
+      "hide": "Приховати"
     }
-  }
+  },
+  "tweaks": "Tweaks",
+  "runCounter": "Run Counter"
 }
