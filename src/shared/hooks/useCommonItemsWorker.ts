@@ -24,7 +24,7 @@ import {
   generateFinalPotionName,
   generateKeyHighlightData,
 } from "../utils/commonUtils";
-import { STORAGE_KEYS } from "../constants";
+import { STORAGE_KEYS, MOD_ROOT } from "../constants";
 type SupportedLocaleKey = Exclude<keyof LocaleItem, "id" | "Key">;
 
 type UpdateCommonItemSettingsFunction = (
@@ -425,7 +425,7 @@ export const useCommonItemsWorker = (
       const namesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.ITEMS_FILE}`;
       const affixesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.NAMEAFFIXES_FILE}`;
       const modifiersPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\item-modifiers.json`;
-      const keysHighlightDir = `${homeDir}\\mods\\D2RBlizzless\\D2RBlizzless.mpq\\data\\hd\\items\\misc\\key`;
+      const keysHighlightDir = `${homeDir}\\${MOD_ROOT}\\hd\\items\\misc\\key`;
 
       logger.info(
         "Applying common items changes",
