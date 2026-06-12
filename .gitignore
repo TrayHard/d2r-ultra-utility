@@ -27,6 +27,4 @@ dist-ssr
 .tauri_key_password
 .cursor/*
 src-tauri/target/
-scripts/*
-scripts/
 nogit/

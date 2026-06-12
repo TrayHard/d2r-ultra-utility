@@ -15,6 +15,8 @@ Always respond to the user in the language they use to address you (e.g. reply i
 
 A release *contains* commits, but a plain commit never escalates into a release. Default to a plain commit; require an explicit request before doing anything release-related.
 
+Commit messages must contain **no AI attribution of any kind** — no `Co-Authored-By: Claude ...`, no "Generated with Claude Code" trailers, nothing similar. Plain message only.
+
 ## What this is
 
 A Tauri (Rust) + React/Vite (TypeScript) desktop app that edits Diablo II: Resurrected loot filters and game tweaks for the [Blizzless mod](https://www.nexusmods.com/diablo2resurrected/mods/808). It works by locating the user's `D2R.exe`, then reading and rewriting the mod's localization JSON files (item names, runes, gems, potions, etc.) on disk to control how items appear in-game.
@@ -40,11 +42,11 @@ node scripts/auto-translate-locales.cjs # auto-translate missing strings
 
 ### Releases (Windows-only, partly manual)
 
-Releasing is **Windows-only** and there is **no CI**. If you see `build-linux.sh`, `build-macos.sh`, `build-portable.bat`, `build-signed-*.sh`, `tauri.conf.unsigned.json`, or a `.github/workflows/` dir in the working tree, that is an **unfinished cross-platform experiment** parked in a git stash — ignore it. The only real build path is `build-signed.bat`. **For the full step-by-step release, use the `/release` skill** (`.claude/skills/release/`).
+Releasing is **Windows-only** and there is **no CI**. If you see `build-linux.sh`, `build-macos.sh`, `build-portable.bat`, `build-signed-*.sh`, `tauri.conf.unsigned.json`, or a `.github/workflows/` dir in the working tree, that is an **unfinished cross-platform experiment** parked in a git stash — ignore it. **All release/build tooling lives in `nogit/build/` (gitignored, local-only — release tooling is deliberately not published).** The only real build path is `nogit/build/build-signed.bat`. **For the full step-by-step release, use the `/release` skill** (`.claude/skills/release/`).
 
-`build-signed.bat [major|minor|patch]` (default `patch`) does the whole local half:
-1. `scripts/bump-version.js` bumps the version in `package.json`, `package-lock.json`, and `src-tauri/tauri.conf.json` — **`tauri.conf.json` is the version source of truth**.
-2. loads the signing key from `.tauri_key` (+ optional `.tauri_key_password`, both gitignored) into `TAURI_SIGNING_PRIVATE_KEY`, then runs `npm run tbuild` (tauri build → `postbuild-rename.js` → `generate-latest-json.js`).
+`nogit\build\build-signed.bat [major|minor|patch]` (default `patch`, run from the repo root) does the whole local half:
+1. `nogit/build/bump-version.js` bumps the version in `package.json`, `package-lock.json`, and `src-tauri/tauri.conf.json` — **`tauri.conf.json` is the version source of truth**.
+2. loads the signing key from `.tauri_key` (+ optional `.tauri_key_password`, both gitignored) into `TAURI_SIGNING_PRIVATE_KEY`, then runs `npm run tbuild` (tauri build → `nogit/build/postbuild-rename.js` → `nogit/build/generate-latest-json.js`).
 3. commits those three version files as `v<version>`, tags `v<version>`, pushes branch + tag, and opens the GitHub releases page.
 
 Then a **manual step** (no script does this): create the GitHub release for the new `v<version>` tag and upload **exactly two assets** from `src-tauri/target/release/bundle/` (this whole dir is gitignored):
