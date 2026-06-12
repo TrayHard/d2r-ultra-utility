@@ -36,7 +36,9 @@ node -v                                    # tauri build needs Node + Rust toolc
 .\nogit\build\build-signed.bat patch    # or: minor | major
 ```
 
-This bumps `package.json` + `package-lock.json` + `src-tauri/tauri.conf.json`, builds the signed MSI, generates `latest.json`, commits as `v<version>`, tags `v<version>`, pushes branch + tag, and opens the releases page in a browser.
+This bumps `package.json` + `package-lock.json` + `src-tauri/tauri.conf.json`, builds the **MSI only**, signs it **non-interactively**, generates `latest.json`, commits as `v<version>`, tags `v<version>`, pushes branch + tag, and opens the releases page in a browser. It is safe to run from a non-interactive / background shell.
+
+> **Why the bat does it in two steps (build, then sign) — do NOT "simplify" back to `npm run tbuild`.** `tauri build` with `createUpdaterArtifacts: true` prompts for the signing-key password and **hangs forever** in any non-interactive run (the key has an empty password; a human normally just presses Enter). It also builds NSIS, whose toolchain-recreate step is flaky (`os error 32` file lock). So the bat instead: builds `--bundles msi` with `--config nogit/build/build-msi-only.conf.json` (which sets `createUpdaterArtifacts: false`, so the build never signs and never prompts), then signs the finished MSI with `tauri signer sign --private-key-path .tauri_key --password=<pwd>` (the `signer sign` subcommand has a `--password` flag `tauri build` lacks; the `--password=` equals form passes an empty value safely — a bare `""` arg gets dropped by some shells), then runs `generate-latest-json.js`. See [[signed-build-password-prompt]].
 
 After it finishes, capture the new version (it's the new `version` in `tauri.conf.json`) and confirm the artifacts exist:
 
@@ -44,11 +46,26 @@ After it finishes, capture the new version (it's the new `version` in `tauri.con
 $Version = (Get-Content src-tauri/tauri.conf.json | ConvertFrom-Json).version
 $Bundle  = "src-tauri/target/release/bundle"
 $Msi     = Get-ChildItem "$Bundle/msi/*.msi" | Where-Object Name -like "*${Version}*" | Select-Object -First 1
-"version = $Version"; "msi     = $($Msi.FullName)"; "latest  = $Bundle/latest.json"
-Get-Content "$Bundle/latest.json"   # sanity-check: version matches $Version, url ends in the MSI name
+"version = $Version"; "msi     = $($Msi.FullName)"; "sig     = $(Test-Path "$($Msi.FullName).sig")"; "latest  = $Bundle/latest.json"
+Get-Content "$Bundle/latest.json"   # sanity-check: version matches $Version, url ends in the MSI name, signature non-empty
 ```
 
-If the build failed (no MSI / no `latest.json`), **stop** — do not publish a partial release. Common causes: missing `.tauri_key`, Rust toolchain not installed, file locks.
+If the build failed (no MSI / no `.msi.sig` / no `latest.json`), **stop** — do not publish a partial release. Common causes: missing `.tauri_key`, Rust toolchain not installed, file locks.
+
+### If you can't run the bat (e.g. version already bumped) — the manual equivalent
+
+Run these from the repo root. This is exactly what the bat does, minus the version bump (use when `tauri.conf.json` is already at the target version):
+
+```powershell
+$Version = (Get-Content src-tauri/tauri.conf.json | ConvertFrom-Json).version
+npx tauri build --bundles msi --config nogit/build/build-msi-only.conf.json   # builds MSI, no signing, no prompt
+$Msi = (Get-ChildItem "src-tauri/target/release/bundle/msi/*_${Version}_x64_en-US.msi" | Select-Object -First 1).FullName
+npx tauri signer sign --private-key-path .tauri_key '--password=' "$Msi"       # signs -> $Msi.sig
+node nogit/build/postbuild-rename.js
+node nogit/build/generate-latest-json.js                                       # writes latest.json from MSI + .sig
+```
+
+Then commit the three version files as `v$Version`, tag `v$Version`, and push branch + tag before Step 3.
 
 ## Step 3 — Create the GitHub release + upload the two assets
 
