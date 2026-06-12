@@ -5,14 +5,14 @@ description: Cut and publish a new release of Diablo II Ultra Utility. Use when 
 
 # Release a new version
 
-This project ships as a **Windows signed MSI** with Tauri auto-update. A release = local signed build (`build-signed.bat`) + a GitHub release carrying **two assets**: the MSI and `latest.json`. There is **no CI** and no cross-platform build — ignore any `build-linux.sh` / `build-macos.sh` / `build-portable.bat` / `.github/workflows/` in the tree (unfinished experiment in a stash).
+This project ships as a **Windows signed MSI** with Tauri auto-update. A release = local signed build (`nogit/build/build-signed.bat`) + a GitHub release carrying **two assets**: the MSI and `latest.json`. There is **no CI** and no cross-platform build — ignore any `build-linux.sh` / `build-macos.sh` / `build-portable.bat` / `.github/workflows/` in the tree (unfinished experiment in a stash).
 
 Repo: `TrayHard/d2r-ultra-utility` · releases: https://github.com/TrayHard/d2r-ultra-utility/releases
 
 ## Guardrails
 
 - This must run **on Windows** (signing + tauri build are Windows-only here).
-- Pushing the tag and publishing the release are **outward-facing and hard to undo**. Confirm the exact version and bump type with the user **before** running `build-signed.bat` (it pushes automatically).
+- Pushing the tag and publishing the release are **outward-facing and hard to undo**. Confirm the exact version and bump type with the user **before** running `nogit/build/build-signed.bat` (it pushes automatically).
 - Never commit or print the contents of `.tauri_key` / `.tauri_key_password`.
 
 ## Step 1 — Pre-flight checks
@@ -27,13 +27,13 @@ git fetch origin; git status -sb          # confirm not behind origin/master
 node -v                                    # tauri build needs Node + Rust toolchain present
 ```
 
-- If the working tree has unrelated changes, commit/stash them first. `build-signed.bat` only `git add`s the three version files, but a dirty tree is confusing and risks a bad build.
+- If the working tree has unrelated changes, commit/stash them first. `nogit/build/build-signed.bat` only `git add`s the three version files, but a dirty tree is confusing and risks a bad build.
 - Decide the **bump type** with the user: `patch` (default, bugfixes), `minor` (features), `major` (breaking). The current version is in `src-tauri/tauri.conf.json` (`version`).
 
 ## Step 2 — Build, tag, push (one command)
 
 ```powershell
-.\build-signed.bat patch    # or: minor | major
+.\nogit\build\build-signed.bat patch    # or: minor | major
 ```
 
 This bumps `package.json` + `package-lock.json` + `src-tauri/tauri.conf.json`, builds the signed MSI, generates `latest.json`, commits as `v<version>`, tags `v<version>`, pushes branch + tag, and opens the releases page in a browser.
@@ -67,7 +67,7 @@ gh release create "v$Version" `
 
 (If a release for the tag already exists, use `gh release upload "v$Version" "<msi>" "$Bundle/latest.json" --clobber` instead.)
 
-**If `gh` is NOT available** (currently the case — no `gh` CLI and no GitHub MCP connector is wired up): do it manually on the releases page `build-signed.bat` already opened, or open https://github.com/TrayHard/d2r-ultra-utility/releases/new?tag=v<version> — set the title to `v<version>`, then drag in **both**:
+**If `gh` is NOT available** (currently the case — no `gh` CLI and no GitHub MCP connector is wired up): do it manually on the releases page `nogit/build/build-signed.bat` already opened, or open https://github.com/TrayHard/d2r-ultra-utility/releases/new?tag=v<version> — set the title to `v<version>`, then drag in **both**:
 - the MSI from `$Bundle/msi/…_<version>_x64_en-US.msi`
 - `$Bundle/latest.json`
 
