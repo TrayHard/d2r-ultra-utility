@@ -6,7 +6,8 @@
     "gems": "Gemmes",
     "other": "Autres",
     "stash": "Stash Rename",
-    "tweaks": "Tweaks"
+    "tweaks": "Tweaks",
+    "modifiers": "Modificateurs"
   },
   "update": {
     "checking": "Vérification des mises à jour...",
@@ -1801,5 +1802,19 @@
     }
   },
   "tweaks": "Tweaks",
-  "runCounter": "Run Counter"
+  "runCounter": "Run Counter",
+  "modifiersPage": {
+    "tabs": {
+      "modifiers": "Modificateurs",
+      "skills": "Compétences"
+    },
+    "groups": {
+      "properties": "Propriétés",
+      "baseStats": "Stats de base"
+    },
+    "selectAll": "Tout sélectionner",
+    "selectedCount": "{{count}} sélectionnés",
+    "applyColor": "Appliquer la couleur",
+    "disable": "Désactiver"
+  }
 }

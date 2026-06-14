@@ -6,7 +6,8 @@
     "gems": "Камені",
     "other": "Інше",
     "stash": "Stash Rename",
-    "tweaks": "Tweaks"
+    "tweaks": "Tweaks",
+    "modifiers": "Модифікатори"
   },
   "update": {
     "checking": "Перевірка оновлень...",
@@ -1801,5 +1802,19 @@
     }
   },
   "tweaks": "Tweaks",
-  "runCounter": "Run Counter"
+  "runCounter": "Run Counter",
+  "modifiersPage": {
+    "tabs": {
+      "modifiers": "Модифікатори",
+      "skills": "Навички"
+    },
+    "groups": {
+      "properties": "Властивості",
+      "baseStats": "Базові стати"
+    },
+    "selectAll": "Вибрати все",
+    "selectedCount": "Вибрано: {{count}}",
+    "applyColor": "Застосувати колір",
+    "disable": "Вимкнути"
+  }
 }
