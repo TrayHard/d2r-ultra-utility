@@ -328,9 +328,16 @@
         "turquoise": "Бірюзовий",
         "lightblue": "Світло-блакитний",
         "pink": "Рожевий",
-        "purple": "Фіолетовий"
+        "purple": "Фіолетовий",
+        "paleyellow": "Блідо-жовтий",
+        "lightpurple": "Світло-фіолетовий",
+        "lavender": "Лавандовий"
       },
-      "autoMode": "Automatic Mode"
+      "autoMode": "Automatic Mode",
+      "nameTab": {
+        "rune": "Назва руни",
+        "container": "Назва контейнера"
+      }
     },
     "runes": {
       "el": "El",
@@ -383,12 +390,18 @@
       "numberingSettings": "Налаштування нумерації",
       "noChange": "Без змін",
       "cancel": "Скасувати",
-      "applyToRunes": "Застосувати до {{count}} рун",
+      "applyToRunes": "Застосувати до {{count}} сутностей",
       "runeMode": "Режим",
       "runeModeTooltips": {
         "auto": "Автоматичний режим",
         "noChange": "Не змінювати режим",
         "manual": "Ручний режим"
+      },
+      "applyTargetLabel": "Застосувати до",
+      "applyTarget": {
+        "rune": "Назва руни",
+        "container": "Назва контейнера",
+        "both": "Обидва"
       }
     },
     "textWorker": {

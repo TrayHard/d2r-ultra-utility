@@ -10,11 +10,19 @@ import { ERune } from "../../pages/runes/constants/runes.ts";
 import Icon from "@mdi/react";
 import { mdiPencilBoxMultiple } from "@mdi/js";
 
+export interface MassEditApplyTarget {
+  rune: boolean;
+  container: boolean;
+}
+
 interface MassEditModalProps {
   isOpen: boolean;
   onClose: () => void;
   selectedRunes: Set<ERune>;
-  onApply: (settings: Partial<RuneSettings>) => void;
+  onApply: (
+    settings: Partial<RuneSettings>,
+    applyTo: MassEditApplyTarget
+  ) => void;
   isDarkTheme: boolean;
 }
 
@@ -26,6 +34,9 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
   isDarkTheme,
 }) => {
   const { t } = useTranslation();
+
+  // Куда применять настройки: к самой руне, к контейнеру (стаку) или к обоим
+  const [target, setTarget] = useState<"rune" | "container" | "both">("rune");
 
   // Состояния модалки
   const [isHighlighted, setIsHighlighted] = useState<TriState>(null);
@@ -42,6 +53,7 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
   // Сбрасываем локальные состояния при каждом открытии
   useEffect(() => {
     if (isOpen) {
+      setTarget("rune");
       setIsHighlighted(null);
       setModeState(null);
       setBoxSize("");
@@ -85,9 +97,15 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
 
   // Применение изменений к выбранным рунам
   const handleApply = () => {
+    const applyTo = {
+      rune: target === "rune" || target === "both",
+      container: target === "container" || target === "both",
+    };
+
     const filteredSettings: Partial<RuneSettings> = {};
 
-    if (isHighlighted !== null) {
+    // Подсветка есть только у самой руны — применяем лишь когда целимся в руну
+    if (applyTo.rune && isHighlighted !== null) {
       filteredSettings.isHighlighted = isHighlighted as boolean;
     }
 
@@ -145,7 +163,7 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
         autoChanges as RuneSettings["autoSettings"];
     }
 
-    onApply(filteredSettings);
+    onApply(filteredSettings, applyTo);
     onClose();
   };
 
@@ -186,6 +204,42 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
           </p>
         </div>
 
+        {/* Куда применять: руна / контейнер / оба */}
+        <div className="flex items-center gap-3">
+          <span
+            className={`text-sm font-medium ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}
+          >
+            {t("runePage.massEdit.applyTargetLabel")}
+          </span>
+          <div
+            className={`inline-flex rounded-lg overflow-hidden border ${
+              isDarkTheme ? "border-gray-700" : "border-gray-300"
+            }`}
+          >
+            {(["rune", "container", "both"] as const).map((opt) => {
+              const isActive = target === opt;
+              return (
+                <button
+                  key={opt}
+                  type="button"
+                  onClick={() => setTarget(opt)}
+                  className={`px-4 py-1.5 text-sm font-medium transition-colors ${
+                    isActive
+                      ? isDarkTheme
+                        ? "bg-yellow-600 text-black"
+                        : "bg-yellow-500 text-white"
+                      : isDarkTheme
+                        ? "bg-gray-800 text-gray-300 hover:bg-gray-750"
+                        : "bg-white text-gray-700 hover:bg-gray-50"
+                  }`}
+                >
+                  {t(`runePage.massEdit.applyTarget.${opt}`)}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         {/* Контроллы */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Левый столбец */}
@@ -196,24 +250,26 @@ const MassEditModal: React.FC<MassEditModalProps> = ({
               {t("runePage.massEdit.basicSettings")}
             </h3>
 
-            {/* Подсветка руны */}
-            <div
-              className={`p-3 rounded-lg ${isDarkTheme ? "bg-gray-800" : "bg-gray-50"}`}
-            >
-              <div className="flex items-center justify-between">
-                <span
-                  className={`text-sm font-medium ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}
-                >
-                  {t("runePage.controls.highlightRune")}
-                </span>
-                <TriStateSwitch
-                  value={isHighlighted}
-                  onChange={setIsHighlighted}
-                  isDarkTheme={isDarkTheme}
-                  size="md"
-                />
+            {/* Подсветка руны (только когда целимся в саму руну) */}
+            {target !== "container" && (
+              <div
+                className={`p-3 rounded-lg ${isDarkTheme ? "bg-gray-800" : "bg-gray-50"}`}
+              >
+                <div className="flex items-center justify-between">
+                  <span
+                    className={`text-sm font-medium ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}
+                  >
+                    {t("runePage.controls.highlightRune")}
+                  </span>
+                  <TriStateSwitch
+                    value={isHighlighted}
+                    onChange={setIsHighlighted}
+                    isDarkTheme={isDarkTheme}
+                    size="md"
+                  />
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Режим руны (auto/manual) */}
             <div>

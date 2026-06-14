@@ -304,9 +304,16 @@
         "turquoise": "Turquoise",
         "lightblue": "Bleu clair",
         "pink": "Rose",
-        "purple": "Violet"
+        "purple": "Violet",
+        "paleyellow": "Jaune pâle",
+        "lightpurple": "Violet clair",
+        "lavender": "Lavande"
       },
-      "autoMode": "Automatic Mode"
+      "autoMode": "Automatic Mode",
+      "nameTab": {
+        "rune": "Nom de la rune",
+        "container": "Nom du conteneur"
+      }
     },
     "runes": {
       "el": "El",
@@ -359,12 +366,18 @@
       "numberingSettings": "Paramètres de numérotation",
       "noChange": "Sans changement",
       "cancel": "Annuler",
-      "applyToRunes": "Appliquer à {{count}} runes",
+      "applyToRunes": "Appliquer à {{count}} entités",
       "runeMode": "Mode",
       "runeModeTooltips": {
         "auto": "Mode automatique",
         "noChange": "Ne pas changer le mode",
         "manual": "Mode manuel"
+      },
+      "applyTargetLabel": "Appliquer à",
+      "applyTarget": {
+        "rune": "Nom de la rune",
+        "container": "Nom du conteneur",
+        "both": "Les deux"
       }
     },
     "textWorker": {

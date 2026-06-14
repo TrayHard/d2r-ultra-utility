@@ -142,6 +142,46 @@ export const idToRuneMapper: Record<number, ERune> = {
   20472: ERune.El,
 };
 
+// Маппинг id записей контейнеров рун (Container/стак) в npcs.json -> руна.
+// Контейнер — это «стак» руны (ключи cont_* в npcs.json, id 30003–30035).
+// Стоковые имена контейнеров совпадают с полными именами рун, поэтому для
+// авто-режима переиспользуется runeHardcodedLocales.
+export const idToRuneContainerMapper: Record<number, ERune> = {
+  30003: ERune.Io,
+  30004: ERune.Shael,
+  30005: ERune.Jah,
+  30006: ERune.Zod,
+  30007: ERune.Cham,
+  30008: ERune.Ber,
+  30009: ERune.Sur,
+  30010: ERune.Lo,
+  30011: ERune.Ohm,
+  30012: ERune.Vex,
+  30013: ERune.Gul,
+  30014: ERune.Ist,
+  30015: ERune.Mal,
+  30016: ERune.Um,
+  30017: ERune.Pul,
+  30018: ERune.Lem,
+  30019: ERune.Fal,
+  30020: ERune.Ko,
+  30021: ERune.Lum,
+  30022: ERune.Hel,
+  30023: ERune.Dol,
+  30024: ERune.Sol,
+  30025: ERune.Amn,
+  30026: ERune.Thul,
+  30027: ERune.Ort,
+  30028: ERune.Ral,
+  30029: ERune.Tal,
+  30030: ERune.Ith,
+  30031: ERune.Eth,
+  30032: ERune.Nef,
+  30033: ERune.Tir,
+  30034: ERune.Eld,
+  30035: ERune.El,
+};
+
 export const runeNumbers = {
   [ERune.El]: 1,
   [ERune.Eld]: 2,

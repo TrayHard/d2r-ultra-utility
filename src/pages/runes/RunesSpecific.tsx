@@ -22,6 +22,7 @@ import highlightedBg from "../../shared/assets/runes/highlighted.png";
 import unhighlightedBg from "../../shared/assets/runes/unhighlighted.png";
 import { useUnsavedChanges } from "../../shared/hooks/useUnsavedChanges";
 import UnsavedAsterisk from "../../shared/components/UnsavedAsterisk";
+import { colorNameToHex } from "../../shared/constants.ts";
 
 interface RunesSpecificProps {
   isDarkTheme: boolean;
@@ -152,56 +153,60 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
     updateRuneSettings(rune, settings);
   };
 
-  const handleMassEditApply = (newSettings: Partial<RuneSettings>) => {
+  const handleMassEditApply = (
+    newSettings: Partial<RuneSettings>,
+    applyTo: { rune: boolean; container: boolean } = {
+      rune: true,
+      container: false,
+    }
+  ) => {
+    const incomingAuto = newSettings.autoSettings;
+    const mergeAuto = (auto: RuneSettings["autoSettings"]) => ({
+      ...auto,
+      ...(incomingAuto ?? {}),
+      numbering: {
+        ...auto.numbering,
+        ...(incomingAuto?.numbering ?? {}),
+      },
+    });
+
     selectedRunes.forEach((rune) => {
       const currentSettings = getRuneSettings(rune);
+      let mergedSettings: RuneSettings = { ...currentSettings };
 
-      const incomingAuto = newSettings.autoSettings;
-      const mergedAuto = {
-        ...currentSettings.autoSettings,
-        ...(incomingAuto ?? {}),
-        numbering: {
-          ...currentSettings.autoSettings.numbering,
-          ...(incomingAuto?.numbering ?? {}),
-        },
-      };
+      // Применяем к самой руне
+      if (applyTo.rune) {
+        mergedSettings = {
+          ...mergedSettings,
+          ...(newSettings.mode !== undefined ? { mode: newSettings.mode } : {}),
+          ...(newSettings.isHighlighted !== undefined
+            ? { isHighlighted: newSettings.isHighlighted }
+            : {}),
+          autoSettings: mergeAuto(currentSettings.autoSettings),
+        };
+      }
 
-      const mergedSettings: RuneSettings = {
-        ...currentSettings,
-        ...(newSettings.mode !== undefined ? { mode: newSettings.mode } : {}),
-        ...(newSettings.isHighlighted !== undefined
-          ? { isHighlighted: newSettings.isHighlighted }
-          : {}),
-        autoSettings: mergedAuto,
-      };
+      // Применяем к контейнеру (стаку) — без подсветки
+      if (applyTo.container) {
+        mergedSettings = {
+          ...mergedSettings,
+          container: {
+            ...currentSettings.container,
+            ...(newSettings.mode !== undefined
+              ? { mode: newSettings.mode }
+              : {}),
+            autoSettings: mergeAuto(currentSettings.container.autoSettings),
+          },
+        };
+      }
 
       updateRuneSettings(rune, mergedSettings);
     });
   };
 
-  // Функция для получения стилей цвета D2R
-  const getD2RColorStyle = (colorCode: string) => {
-    const colorMap: Record<string, string> = {
-      white: "#FFFFFF",
-      gray: "#737373",
-      black: "#000000",
-      beige: "#F0DA95",
-      lightred: "#FF5757",
-      red: "#FF0000",
-      dimred: "#D44848",
-      orange: "#FFAF00",
-      lightgold: "#D1C484",
-      yellow: "#FFFF6E",
-      green: "#00FF00",
-      dimgreen: "#00CD00",
-      indigo: "#7878FF",
-      lightindigo: "#B1B1FF",
-      turquoise: "#0AACE0",
-      lightblue: "#8BCAFF",
-      pink: "#FF89FF",
-      purple: "#B500FF",
-    };
-    return colorMap[colorCode] ?? "#FFFFFF";
+  // Функция для получения стилей цвета D2R (единый источник — colorNameToHex)
+  const getD2RColorStyle = (colorName: string) => {
+    return colorNameToHex[colorName] ?? "#FFFFFF";
   };
 
   // Функция для получения размера шрифта
@@ -480,6 +485,45 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
                   if (
                     (bAuto.numbering?.numberColor ?? "") !==
                     (cAuto.numbering?.numberColor ?? "")
+                  )
+                    return true;
+                  // container (стак) diff
+                  const bc = base.container || {};
+                  const cc = cur.container || {};
+                  if ((bc.mode ?? "auto") !== (cc.mode ?? "auto")) return true;
+                  const bcl = bc.manualSettings?.locales || {};
+                  const ccl = cc.manualSettings?.locales || {};
+                  for (const l of new Set([
+                    ...Object.keys(bcl),
+                    ...Object.keys(ccl),
+                  ])) {
+                    if ((bcl as any)[l] !== (ccl as any)[l]) return true;
+                  }
+                  const bca = bc.autoSettings || {};
+                  const cca = cc.autoSettings || {};
+                  if (bca.color !== cca.color) return true;
+                  if (bca.boxSize !== cca.boxSize) return true;
+                  if (bca.boxLimiters !== cca.boxLimiters) return true;
+                  if (bca.boxLimitersColor !== cca.boxLimitersColor)
+                    return true;
+                  if (
+                    (bca.numbering?.show ?? false) !==
+                    (cca.numbering?.show ?? false)
+                  )
+                    return true;
+                  if (
+                    (bca.numbering?.dividerType ?? "") !==
+                    (cca.numbering?.dividerType ?? "")
+                  )
+                    return true;
+                  if (
+                    (bca.numbering?.dividerColor ?? "") !==
+                    (cca.numbering?.dividerColor ?? "")
+                  )
+                    return true;
+                  if (
+                    (bca.numbering?.numberColor ?? "") !==
+                    (cca.numbering?.numberColor ?? "")
                   )
                     return true;
                   return false;

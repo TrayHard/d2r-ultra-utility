@@ -67,10 +67,9 @@ interface AppConfig {
   // В будущем добавим другие глобальные настройки
 }
 
-// Настройки для рун
-export interface RuneSettings {
-  mode: "auto" | "manual"; // Новое поле для режима
-  isHighlighted: boolean;
+// Общие поля настроек имени (используются и руной, и её контейнером)
+export interface RuneNameSettings {
+  mode: "auto" | "manual"; // Режим: авто-генерация или ручной ввод
   // Настройки для автоматического режима
   autoSettings: {
     numbering: {
@@ -88,6 +87,16 @@ export interface RuneSettings {
   manualSettings: {
     locales: Locales;
   };
+}
+
+// Настройки контейнера (стака) руны — отдельный набор имени, без подсветки
+export type RuneContainerSettings = RuneNameSettings;
+
+// Настройки для рун
+export interface RuneSettings extends RuneNameSettings {
+  isHighlighted: boolean;
+  // Настройки имени контейнера (стака) руны — независимые от самой руны
+  container: RuneContainerSettings;
 }
 
 // Общие настройки для всех рун
@@ -688,16 +697,93 @@ const getDefaultTweaksSettings = (): TweaksSettings => ({
   skipIntroVideos: false,
 });
 
+// Пустые локали (все 13 игровых локалей = "")
+const getEmptyLocales = (): Locales => createFilledLocales("");
+
+// Дефолтные настройки контейнера (стака) руны
+export const getDefaultRuneContainerSettings = (
+  generalSettings?: GeneralRuneSettings
+): RuneContainerSettings => {
+  const defaultGeneral = generalSettings ?? getDefaultGeneralRuneSettings();
+  return {
+    mode: "auto",
+    autoSettings: {
+      numbering: {
+        show: false,
+        dividerType: defaultGeneral.dividerType,
+        dividerColor: defaultGeneral.dividerColor,
+        numberColor: defaultGeneral.numberColor,
+      },
+      boxSize: 0,
+      boxLimiters: defaultGeneral.boxLimiters,
+      boxLimitersColor: defaultGeneral.boxLimitersColor,
+      color: "white",
+    },
+    manualSettings: {
+      locales: getEmptyLocales(),
+    },
+  };
+};
+
+// Нормализует контейнер из произвольного объекта (старые сейвы без container)
+const normalizeRuneContainerSettings = (
+  raw: any
+): RuneContainerSettings => {
+  if (!raw || !raw.mode || !raw.autoSettings || !raw.manualSettings) {
+    return getDefaultRuneContainerSettings();
+  }
+  return raw as RuneContainerSettings;
+};
+
+// Переименование цветов палитры: коды расширенных цветов в игре пересобраны,
+// часть имён убрана/переименована (см. colorCodes в constants.ts).
+const COLOR_NAME_REMAP: Record<string, string> = {
+  lightred: "red",
+  lightindigo: "lightpurple",
+};
+const remapColorName = (c: any): any =>
+  typeof c === "string" && COLOR_NAME_REMAP[c] ? COLOR_NAME_REMAP[c] : c;
+
+// Возвращает копию среза имени (руна/контейнер) с переименованными цветами
+const normalizeNameColors = <T extends RuneNameSettings>(s: T): T => {
+  if (!s || !s.autoSettings) return s;
+  const a = s.autoSettings;
+  return {
+    ...s,
+    autoSettings: {
+      ...a,
+      color: remapColorName(a.color),
+      boxLimitersColor: remapColorName(a.boxLimitersColor),
+      numbering: a.numbering
+        ? {
+            ...a.numbering,
+            dividerColor: remapColorName(a.numbering.dividerColor),
+            numberColor: remapColorName(a.numbering.numberColor),
+          }
+        : a.numbering,
+    },
+  };
+};
+
 // Миграция старых настроек рун к новому формату
 const migrateRuneSettings = (oldSettings: any): RuneSettings => {
+  // Гарантируем наличие поля container (добавлено в более поздней версии) и
+  // переименовываем устаревшие имена цветов и в руне, и в контейнере
+  const withContainer = (s: RuneSettings): RuneSettings => ({
+    ...normalizeNameColors(s),
+    container: normalizeNameColors(
+      normalizeRuneContainerSettings((s as any).container)
+    ),
+  });
+
   // Если это уже новый формат с mode
   if (oldSettings.mode) {
-    return oldSettings as RuneSettings;
+    return withContainer(oldSettings as RuneSettings);
   }
 
   // Если это старый формат с numbering (предыдущая версия), мигрируем к новому
   if (oldSettings.numbering) {
-    return {
+    return withContainer({
       mode: oldSettings.isManual ? "manual" : "auto",
       isHighlighted: oldSettings.isHighlighted ?? false,
       autoSettings: {
@@ -708,27 +794,13 @@ const migrateRuneSettings = (oldSettings: any): RuneSettings => {
         color: oldSettings.color ?? "white",
       },
       manualSettings: {
-        locales: oldSettings.locales ?? {
-          enUS: "",
-          ruRU: "",
-          zhTW: "",
-          deDE: "",
-          esES: "",
-          frFR: "",
-          itIT: "",
-          koKR: "",
-          plPL: "",
-          esMX: "",
-          jaJP: "",
-          ptBR: "",
-          zhCN: "",
-        },
+        locales: oldSettings.locales ?? getEmptyLocales(),
       },
-    };
+    } as RuneSettings);
   }
 
   // Если это совсем старый формат (до numbering), мигрируем
-  return {
+  return withContainer({
     mode: oldSettings.isManual ? "manual" : "auto",
     isHighlighted: oldSettings.isHighlighted ?? false,
     autoSettings: {
@@ -744,23 +816,9 @@ const migrateRuneSettings = (oldSettings: any): RuneSettings => {
       color: oldSettings.color ?? "white",
     },
     manualSettings: {
-      locales: oldSettings.locales ?? {
-        enUS: "",
-        ruRU: "",
-        zhTW: "",
-        deDE: "",
-        esES: "",
-        frFR: "",
-        itIT: "",
-        koKR: "",
-        plPL: "",
-        esMX: "",
-        jaJP: "",
-        ptBR: "",
-        zhCN: "",
-      },
+      locales: oldSettings.locales ?? getEmptyLocales(),
     },
-  };
+  } as RuneSettings);
 };
 
 // Дефолтные настройки для руны (принимает общие настройки)
@@ -800,6 +858,7 @@ const getDefaultRuneSettings = (
         zhCN: "",
       },
     },
+    container: getDefaultRuneContainerSettings(defaultGeneral),
   };
 };
 

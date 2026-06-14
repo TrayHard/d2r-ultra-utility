@@ -304,9 +304,16 @@
         "turquoise": "Turquesa",
         "lightblue": "Azul claro",
         "pink": "Rosa",
-        "purple": "Púrpura"
+        "purple": "Púrpura",
+        "paleyellow": "Amarillo pálido",
+        "lightpurple": "Púrpura claro",
+        "lavender": "Lavanda"
       },
-      "autoMode": "Automatic Mode"
+      "autoMode": "Automatic Mode",
+      "nameTab": {
+        "rune": "Nombre de runa",
+        "container": "Nombre de contenedor"
+      }
     },
     "runes": {
       "el": "El",
@@ -359,12 +366,18 @@
       "numberingSettings": "Ajustes de numeración",
       "noChange": "Sin cambios",
       "cancel": "Cancelar",
-      "applyToRunes": "Aplicar a {{count}} runas",
+      "applyToRunes": "Aplicar a {{count}} entidades",
       "runeMode": "Modo",
       "runeModeTooltips": {
         "auto": "Modo automático",
         "noChange": "No cambiar modo",
         "manual": "Modo manual"
+      },
+      "applyTargetLabel": "Aplicar a",
+      "applyTarget": {
+        "rune": "Nombre de runa",
+        "container": "Nombre de contenedor",
+        "both": "Ambos"
       }
     },
     "textWorker": {

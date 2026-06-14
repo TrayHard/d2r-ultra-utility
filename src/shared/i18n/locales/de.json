@@ -353,9 +353,16 @@
         "turquoise": "Türkis",
         "lightblue": "Hellblau",
         "pink": "Pink",
-        "purple": "Lila"
+        "purple": "Lila",
+        "paleyellow": "Blassgelb",
+        "lightpurple": "Helllila",
+        "lavender": "Lavendel"
       },
-      "autoMode": "Automatic Mode"
+      "autoMode": "Automatic Mode",
+      "nameTab": {
+        "rune": "Runenname",
+        "container": "Behältername"
+      }
     },
     "runes": {
       "el": "El",
@@ -408,12 +415,18 @@
       "numberingSettings": "Nummerierungs-Einstellungen",
       "noChange": "Ohne Änderung",
       "cancel": "Abbrechen",
-      "applyToRunes": "Auf {{count}} Runen anwenden",
+      "applyToRunes": "Auf {{count}} Einträge anwenden",
       "runeMode": "Modus",
       "runeModeTooltips": {
         "auto": "Automatischer Modus",
         "noChange": "Modus nicht ändern",
         "manual": "Manueller Modus"
+      },
+      "applyTargetLabel": "Anwenden auf",
+      "applyTarget": {
+        "rune": "Runenname",
+        "container": "Behältername",
+        "both": "Beide"
       }
     },
     "textWorker": {
