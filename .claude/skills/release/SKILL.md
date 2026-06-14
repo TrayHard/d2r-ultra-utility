@@ -12,8 +12,32 @@ Repo: `TrayHard/d2r-ultra-utility` · releases: https://github.com/TrayHard/d2r-
 ## Guardrails
 
 - This must run **on Windows** (signing + tauri build are Windows-only here).
+- **Publish ONLY from `master`.** A release must never be cut from a feature branch. If you are not on `master`, do Step 0 (open a PR, merge it into `master`, switch to `master`) **before** anything else.
 - Pushing the tag and publishing the release are **outward-facing and hard to undo**. Confirm the exact version and bump type with the user **before** running `nogit/build/build-signed.bat` (it pushes automatically).
 - Never commit or print the contents of `.tauri_key` / `.tauri_key_password`.
+
+## Step 0 — Get onto `master` (PR + merge if on a feature branch)
+
+```powershell
+git rev-parse --abbrev-ref HEAD    # if this is already "master", skip Step 0
+```
+
+If you are on a feature branch, **do not** publish from it and **do not** push `master` directly (the safety classifier blocks direct default-branch pushes, and it bypasses review). Instead, merge through a PR:
+
+1. Make sure the branch is committed and pushed (`git push origin <branch>`).
+2. Generate a PR **title** and **description** from the diff — summarize what changed, grouped by area. Derive from `git log master..<branch> --oneline` and `git diff master...<branch> --stat`. Write the body to a temp file so multi-line markdown survives.
+3. Create and immediately merge the PR with `gh` (installed + authed):
+
+```powershell
+$Branch = git rev-parse --abbrev-ref HEAD
+gh pr create --repo TrayHard/d2r-ultra-utility --base master --head $Branch --title "<generated title>" --body-file $env:TEMP\pr-body.md
+gh pr merge $Branch --repo TrayHard/d2r-ultra-utility --merge --delete-branch=false
+git fetch origin
+git checkout master
+git pull --ff-only origin master
+```
+
+Use `--merge` (keeps each commit + the version-tag commit reachable from `master`). Only after `master` contains the work do you continue to Step 1. If `gh pr merge` is blocked by branch protection requiring a review, tell the user and let them approve/merge.
 
 ## Step 1 — Pre-flight checks
 
