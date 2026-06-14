@@ -182,6 +182,20 @@ export interface TweaksSettings {
   skipIntroVideos: boolean;
 }
 
+// Раскраска одной записи (модификатора или скилла): цвет из палитры + опц. символы
+export interface ColorizeEntrySettings {
+  enabled: boolean; // перекрашивать ли эту запись
+  color: string; // имя цвета из colorCodes (например "red")
+  prefixSymbol: string; // символ-префикс ("" = нет)
+  suffixSymbol: string; // символ-суффикс ("" = нет)
+}
+
+// Раскраска модификаторов и названий скиллов (ключи — из catalog.json)
+export interface ModifiersSettings {
+  modifiers: Record<string, ColorizeEntrySettings>;
+  skills: Record<string, ColorizeEntrySettings>;
+}
+
 // Настройки профиля (только специфичные для профиля данные)
 interface AppSettings {
   runes: Record<ERune, RuneSettings>;
@@ -190,8 +204,7 @@ interface AppSettings {
   gems: GemSettings;
   items: ItemsSettings;
   tweaks: TweaksSettings;
-  // В будущем добавим:
-  // skills: Record<string, SkillSettings>;
+  modifiers: ModifiersSettings;
 }
 
 // Интерфейс для профиля
@@ -428,6 +441,23 @@ interface SettingsContextType {
   // Getter/Setter для tweaks
   getTweaksSettings: () => TweaksSettings;
   updateTweaksSettings: (newSettings: Partial<TweaksSettings>) => void;
+
+  // Getter/Setter для раскраски модификаторов и скиллов
+  getModifiersSettings: () => ModifiersSettings;
+  getColorizeEntry: (
+    kind: "modifiers" | "skills",
+    key: string
+  ) => ColorizeEntrySettings;
+  updateColorizeEntry: (
+    kind: "modifiers" | "skills",
+    key: string,
+    newSettings: Partial<ColorizeEntrySettings>
+  ) => void;
+  updateMultipleColorizeEntries: (
+    kind: "modifiers" | "skills",
+    keys: string[],
+    newSettings: Partial<ColorizeEntrySettings>
+  ) => void;
 }
 
 // Дефолтные настройки приложения
@@ -697,6 +727,29 @@ const getDefaultTweaksSettings = (): TweaksSettings => ({
   skipIntroVideos: false,
 });
 
+// Дефолт раскраски одной записи (выключено = без перекраски)
+export const getDefaultColorizeEntrySettings = (): ColorizeEntrySettings => ({
+  enabled: false,
+  color: "white",
+  prefixSymbol: "",
+  suffixSymbol: "",
+});
+
+const getDefaultModifiersSettings = (): ModifiersSettings => ({
+  modifiers: {},
+  skills: {},
+});
+
+// Миграция/нормализация настроек раскраски (добавлено в более поздней версии)
+const migrateModifiersSettings = (raw: any): ModifiersSettings => {
+  if (!raw || typeof raw !== "object") return getDefaultModifiersSettings();
+  return {
+    modifiers:
+      raw.modifiers && typeof raw.modifiers === "object" ? raw.modifiers : {},
+    skills: raw.skills && typeof raw.skills === "object" ? raw.skills : {},
+  };
+};
+
 // Пустые локали (все 13 игровых локалей = "")
 const getEmptyLocales = (): Locales => createFilledLocales("");
 
@@ -890,6 +943,7 @@ const createDefaultSettings = (): AppSettings => {
     gems: getDefaultGemSettings(),
     items: getDefaultItemsSettings(),
     tweaks: getDefaultTweaksSettings(),
+    modifiers: getDefaultModifiersSettings(),
   };
 };
 
@@ -1073,6 +1127,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
           ? migrateItemsSettings(settingsObj["items"])
           : getDefaultItemsSettings(),
         tweaks: getDefaultTweaksSettings(),
+        modifiers: migrateModifiersSettings(settingsObj["modifiers"]),
       } as unknown as AppSettings;
 
       // Версия: используем ТОЛЬКО то, что пришло в JSON и соответствует X.Y
@@ -1388,6 +1443,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
               : getDefaultItemsSettings(),
               // Tweaks не храним в профилях вообще
               tweaks: getDefaultTweaksSettings(),
+            modifiers: migrateModifiersSettings(
+              (profile.settings as any).modifiers
+            ),
           },
         }));
         setProfiles(migratedProfiles);
@@ -1460,6 +1518,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
                 ? migrateItemsSettings(settingsObj["items"])
                 : getDefaultItemsSettings(),
               tweaks: getDefaultTweaksSettings(),
+              modifiers: migrateModifiersSettings(settingsObj["modifiers"]),
             };
 
             return {
@@ -2768,6 +2827,69 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     []
   );
 
+  // Раскраска модификаторов и скиллов
+  const getModifiersSettings = useCallback((): ModifiersSettings => {
+    return settings.modifiers || getDefaultModifiersSettings();
+  }, [settings.modifiers]);
+
+  const getColorizeEntry = useCallback(
+    (kind: "modifiers" | "skills", key: string): ColorizeEntrySettings => {
+      return (
+        settings.modifiers?.[kind]?.[key] ?? getDefaultColorizeEntrySettings()
+      );
+    },
+    [settings.modifiers]
+  );
+
+  const updateColorizeEntry = useCallback(
+    (
+      kind: "modifiers" | "skills",
+      key: string,
+      newSettings: Partial<ColorizeEntrySettings>
+    ) => {
+      setSettings((prev) => {
+        const cur = prev.modifiers || getDefaultModifiersSettings();
+        return {
+          ...prev,
+          modifiers: {
+            ...cur,
+            [kind]: {
+              ...cur[kind],
+              [key]: {
+                ...getDefaultColorizeEntrySettings(),
+                ...cur[kind]?.[key],
+                ...newSettings,
+              },
+            },
+          },
+        };
+      });
+    },
+    []
+  );
+
+  const updateMultipleColorizeEntries = useCallback(
+    (
+      kind: "modifiers" | "skills",
+      keys: string[],
+      newSettings: Partial<ColorizeEntrySettings>
+    ) => {
+      setSettings((prev) => {
+        const cur = prev.modifiers || getDefaultModifiersSettings();
+        const group = { ...cur[kind] };
+        for (const key of keys) {
+          group[key] = {
+            ...getDefaultColorizeEntrySettings(),
+            ...group[key],
+            ...newSettings,
+          };
+        }
+        return { ...prev, modifiers: { ...cur, [kind]: group } };
+      });
+    },
+    []
+  );
+
   const contextValue: SettingsContextType = {
     // Методы для настроек приложения
     getAppConfig,
@@ -2862,6 +2984,12 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     // Getter/Setter для tweaks
     getTweaksSettings,
     updateTweaksSettings,
+
+    // Раскраска модификаторов и скиллов
+    getModifiersSettings,
+    getColorizeEntry,
+    updateColorizeEntry,
+    updateMultipleColorizeEntries,
   };
 
   return (
