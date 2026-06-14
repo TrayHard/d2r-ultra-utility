@@ -15,6 +15,8 @@ Always respond to the user in the language they use to address you (e.g. reply i
 
 A release *contains* commits, but a plain commit never escalates into a release. Default to a plain commit; require an explicit request before doing anything release-related.
 
+**Publish ONLY from `master`.** A release must never be cut from a feature branch. If asked to publish while on a feature branch, first open a PR into `master` (generate the title and description from the diff), merge it immediately via `gh pr merge`, switch to `master`, and only then run the release flow. Never push `master` directly — go through the PR. See the `/release` skill (Step 0).
+
 Commit messages must contain **no AI attribution of any kind** — no `Co-Authored-By: Claude ...`, no "Generated with Claude Code" trailers, nothing similar. Plain message only.
 
 ## What this is
