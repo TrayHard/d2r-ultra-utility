@@ -28,7 +28,19 @@ export interface ModifiersCatalog {
   skills: SkillCatalogEntry[];
 }
 
-export const catalog = catalogJson as ModifiersCatalog;
+// Defensive de-dup by key (the generator can emit a duplicate when two skill
+// rows resolve to the same name string key) — avoids React key collisions and
+// redundant double-apply.
+const dedupeByKey = <T extends { key: string }>(arr: T[]): T[] => {
+  const seen = new Set<string>();
+  return arr.filter((e) => (seen.has(e.key) ? false : (seen.add(e.key), true)));
+};
+
+const rawCatalog = catalogJson as ModifiersCatalog;
+export const catalog: ModifiersCatalog = {
+  modifiers: dedupeByKey(rawCatalog.modifiers),
+  skills: dedupeByKey(rawCatalog.skills),
+};
 
 // The game files that hold colorable strings.
 export const SKILLS_FILE = "skills.json";
@@ -39,7 +51,10 @@ const codeToColorName = new Map(
   Object.entries(colorCodes).map(([name, code]) => [code, name])
 );
 
-const isStripChar = (ch: string) => SYMBOL_SET.has(ch) || ch === " ";
+// Only our own prefix/suffix symbols are strippable. Spaces are NEVER stripped —
+// some game strings legitimately have leading/trailing spaces (fr/jaJP) that must
+// be preserved through the color round-trip.
+const isStripChar = (ch: string) => SYMBOL_SET.has(ch);
 
 // Remove leading ÿc color codes and any leading/trailing Diablo symbols/spaces.
 export const stripColoring = (raw: string): string => {

@@ -164,10 +164,18 @@ function buildModifiers(modDir) {
 
   const modifiers = [];
   const unresolved = [];
+  const nativelyColored = [];
   for (const key of keys) {
     const hit = byKey.get(key);
     if (!hit) {
       unresolved.push(key);
+      continue;
+    }
+    // Skip strings that already ship with a leading color code (natively colored,
+    // e.g. BrokenItem "ÿc1Failure"). Re-coloring those would clobber the game's
+    // own color, so they are not user-colorable.
+    if (/^ÿc./.test(hit.enUS || "")) {
+      nativelyColored.push(key);
       continue;
     }
     modifiers.push({
@@ -179,7 +187,7 @@ function buildModifiers(modDir) {
     });
   }
   modifiers.sort((a, b) => a.enUS.localeCompare(b.enUS));
-  return { modifiers, unresolved };
+  return { modifiers, unresolved, nativelyColored };
 }
 
 // The 8 playable classes in this Blizzless build (incl. Warlock = "war").
@@ -214,6 +222,7 @@ function buildSkills(modDir) {
 
   const skills = [];
   const missed = [];
+  const seenKey = new Set();
   sk.rows.forEach((r) => {
     const cc = (r[cClass] || "").trim();
     if (!PLAYER_CLASSES.has(cc)) return;
@@ -229,6 +238,9 @@ function buildSkills(modDir) {
       missed.push(`${cc}:Id${id}:${internal}`);
       return;
     }
+    // Two distinct skills.txt rows can resolve to the same name key — emit once.
+    if (seenKey.has(entry.Key)) return;
+    seenKey.add(entry.Key);
     skills.push({
       key: entry.Key,
       id: entry.id,
@@ -245,7 +257,7 @@ function buildSkills(modDir) {
 function main() {
   const modDir = discoverMod();
   console.log("mod:", modDir);
-  const { modifiers, unresolved } = buildModifiers(modDir);
+  const { modifiers, unresolved, nativelyColored } = buildModifiers(modDir);
   const skills = buildSkills(modDir);
 
   const byClass = {};
@@ -260,6 +272,8 @@ function main() {
   });
   if (unresolved.length)
     console.log(`  unresolved descstr keys (skipped): ${unresolved.length}`, unresolved.slice(0, 10));
+  if (nativelyColored && nativelyColored.length)
+    console.log(`  natively-colored (skipped): ${nativelyColored.length}`, nativelyColored);
   console.log(`skills: ${skills.length}`, byClass);
 
   const catalog = { modifiers, skills };

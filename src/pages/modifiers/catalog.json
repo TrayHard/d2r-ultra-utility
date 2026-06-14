@@ -1231,20 +1231,6 @@
       "file": "item-modifiers.json",
       "enUS": "Unidentified",
       "category": "itemStats"
-    },
-    {
-      "key": "BrokenItem",
-      "id": 30097,
-      "file": "npcs.json",
-      "enUS": "ÿc1Failure",
-      "category": "property"
-    },
-    {
-      "key": "Quantityadd1",
-      "id": 30002,
-      "file": "npcs.json",
-      "enUS": "ÿc4Items inside: %d",
-      "category": "property"
     }
   ],
   "skills": [
@@ -2428,13 +2414,6 @@
       "key": "Skillname240",
       "id": 22110,
       "enUS": "Fire Claws",
-      "charClass": "dru",
-      "className": "Druid"
-    },
-    {
-      "key": "Skillname241",
-      "id": 22114,
-      "enUS": "Twister",
       "charClass": "dru",
       "className": "Druid"
     },
