@@ -304,7 +304,10 @@
         "turquoise": "Turquoise",
         "lightblue": "Bleu clair",
         "pink": "Rose",
-        "purple": "Violet"
+        "purple": "Violet",
+        "paleyellow": "Jaune pâle",
+        "lightpurple": "Violet clair",
+        "lavender": "Lavande"
       },
       "autoMode": "Automatic Mode",
       "nameTab": {

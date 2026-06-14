@@ -22,6 +22,7 @@ import highlightedBg from "../../shared/assets/runes/highlighted.png";
 import unhighlightedBg from "../../shared/assets/runes/unhighlighted.png";
 import { useUnsavedChanges } from "../../shared/hooks/useUnsavedChanges";
 import UnsavedAsterisk from "../../shared/components/UnsavedAsterisk";
+import { colorNameToHex } from "../../shared/constants.ts";
 
 interface RunesSpecificProps {
   isDarkTheme: boolean;
@@ -203,29 +204,9 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
     });
   };
 
-  // Функция для получения стилей цвета D2R
-  const getD2RColorStyle = (colorCode: string) => {
-    const colorMap: Record<string, string> = {
-      white: "#FFFFFF",
-      gray: "#737373",
-      black: "#000000",
-      beige: "#F0DA95",
-      lightred: "#FF5757",
-      red: "#FF0000",
-      dimred: "#D44848",
-      orange: "#FFAF00",
-      lightgold: "#D1C484",
-      yellow: "#FFFF6E",
-      green: "#00FF00",
-      dimgreen: "#00CD00",
-      indigo: "#7878FF",
-      lightindigo: "#B1B1FF",
-      turquoise: "#0AACE0",
-      lightblue: "#8BCAFF",
-      pink: "#FF89FF",
-      purple: "#B500FF",
-    };
-    return colorMap[colorCode] ?? "#FFFFFF";
+  // Функция для получения стилей цвета D2R (единый источник — colorNameToHex)
+  const getD2RColorStyle = (colorName: string) => {
+    return colorNameToHex[colorName] ?? "#FFFFFF";
   };
 
   // Функция для получения размера шрифта

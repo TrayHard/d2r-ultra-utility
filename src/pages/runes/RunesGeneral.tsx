@@ -4,6 +4,7 @@ import Dropdown from "../../shared/components/Dropdown.tsx";
 import unhighlightedBg from "../../shared/assets/runes/unhighlighted.png";
 import { useSettings } from "../../app/providers/SettingsContext.tsx";
 import Button from "../../shared/components/Button.tsx";
+import { colorNameToHex } from "../../shared/constants.ts";
 
 interface RunesGeneralProps {
   isDarkTheme: boolean;
@@ -48,46 +49,26 @@ const RunesGeneral: React.FC<RunesGeneralProps> = ({ isDarkTheme }) => {
     { value: "white", label: t("runePage.controls.colors.white") },
     { value: "gray", label: t("runePage.controls.colors.gray") },
     { value: "black", label: t("runePage.controls.colors.black") },
-    { value: "beige", label: t("runePage.controls.colors.beige") },
-    { value: "lightred", label: t("runePage.controls.colors.lightred") },
     { value: "red", label: t("runePage.controls.colors.red") },
     { value: "dimred", label: t("runePage.controls.colors.dimred") },
     { value: "orange", label: t("runePage.controls.colors.orange") },
     { value: "lightgold", label: t("runePage.controls.colors.lightgold") },
+    { value: "beige", label: t("runePage.controls.colors.beige") },
     { value: "yellow", label: t("runePage.controls.colors.yellow") },
     { value: "green", label: t("runePage.controls.colors.green") },
     { value: "dimgreen", label: t("runePage.controls.colors.dimgreen") },
     { value: "indigo", label: t("runePage.controls.colors.indigo") },
-    { value: "lightindigo", label: t("runePage.controls.colors.lightindigo") },
-    { value: "turquoise", label: t("runePage.controls.colors.turquoise") },
     { value: "lightblue", label: t("runePage.controls.colors.lightblue") },
-    { value: "pink", label: t("runePage.controls.colors.pink") },
+    { value: "lavender", label: t("runePage.controls.colors.lavender") },
+    { value: "turquoise", label: t("runePage.controls.colors.turquoise") },
     { value: "purple", label: t("runePage.controls.colors.purple") },
+    { value: "lightpurple", label: t("runePage.controls.colors.lightpurple") },
+    { value: "pink", label: t("runePage.controls.colors.pink") },
   ];
 
-  // Функция для получения стилей цвета D2R
-  const getD2RColorStyle = (colorCode: string) => {
-    const colorMap: Record<string, string> = {
-      white: "#FFFFFF",
-      gray: "#737373",
-      black: "#000000",
-      beige: "#F0DA95",
-      lightred: "#FF5757",
-      red: "#FF0000",
-      dimred: "#D44848",
-      orange: "#FFAF00",
-      lightgold: "#D1C484",
-      yellow: "#FFFF6E",
-      green: "#00FF00",
-      dimgreen: "#00CD00",
-      indigo: "#7878FF",
-      lightindigo: "#B1B1FF",
-      turquoise: "#0AACE0",
-      lightblue: "#8BCAFF",
-      pink: "#FF89FF",
-      purple: "#B500FF",
-    };
-    return colorMap[colorCode] ?? "#FFFFFF";
+  // Функция для получения стилей цвета D2R (единый источник — colorNameToHex)
+  const getD2RColorStyle = (colorName: string) => {
+    return colorNameToHex[colorName] ?? "#FFFFFF";
   };
 
   // Функция для получения текста разделителя

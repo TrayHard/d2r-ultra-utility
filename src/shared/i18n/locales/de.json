@@ -353,7 +353,10 @@
         "turquoise": "Türkis",
         "lightblue": "Hellblau",
         "pink": "Pink",
-        "purple": "Lila"
+        "purple": "Lila",
+        "paleyellow": "Blassgelb",
+        "lightpurple": "Helllila",
+        "lavender": "Lavendel"
       },
       "autoMode": "Automatic Mode",
       "nameTab": {

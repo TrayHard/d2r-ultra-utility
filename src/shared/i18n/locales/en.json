@@ -370,7 +370,10 @@
         "turquoise": "Turquoise",
         "lightblue": "Light Blue",
         "pink": "Pink",
-        "purple": "Purple"
+        "purple": "Purple",
+        "paleyellow": "Pale Yellow",
+        "lightpurple": "Light Purple",
+        "lavender": "Lavender"
       }
     },
     "runes": {

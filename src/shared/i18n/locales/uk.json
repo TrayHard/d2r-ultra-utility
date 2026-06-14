@@ -328,7 +328,10 @@
         "turquoise": "Бірюзовий",
         "lightblue": "Світло-блакитний",
         "pink": "Рожевий",
-        "purple": "Фіолетовий"
+        "purple": "Фіолетовий",
+        "paleyellow": "Блідо-жовтий",
+        "lightpurple": "Світло-фіолетовий",
+        "lavender": "Лавандовий"
       },
       "autoMode": "Automatic Mode",
       "nameTab": {

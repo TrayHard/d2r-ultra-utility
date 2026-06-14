@@ -735,12 +735,45 @@ const normalizeRuneContainerSettings = (
   return raw as RuneContainerSettings;
 };
 
+// Переименование цветов палитры: коды расширенных цветов в игре пересобраны,
+// часть имён убрана/переименована (см. colorCodes в constants.ts).
+const COLOR_NAME_REMAP: Record<string, string> = {
+  lightred: "red",
+  lightindigo: "lightpurple",
+};
+const remapColorName = (c: any): any =>
+  typeof c === "string" && COLOR_NAME_REMAP[c] ? COLOR_NAME_REMAP[c] : c;
+
+// Возвращает копию среза имени (руна/контейнер) с переименованными цветами
+const normalizeNameColors = <T extends RuneNameSettings>(s: T): T => {
+  if (!s || !s.autoSettings) return s;
+  const a = s.autoSettings;
+  return {
+    ...s,
+    autoSettings: {
+      ...a,
+      color: remapColorName(a.color),
+      boxLimitersColor: remapColorName(a.boxLimitersColor),
+      numbering: a.numbering
+        ? {
+            ...a.numbering,
+            dividerColor: remapColorName(a.numbering.dividerColor),
+            numberColor: remapColorName(a.numbering.numberColor),
+          }
+        : a.numbering,
+    },
+  };
+};
+
 // Миграция старых настроек рун к новому формату
 const migrateRuneSettings = (oldSettings: any): RuneSettings => {
-  // Гарантируем наличие поля container (добавлено в более поздней версии)
+  // Гарантируем наличие поля container (добавлено в более поздней версии) и
+  // переименовываем устаревшие имена цветов и в руне, и в контейнере
   const withContainer = (s: RuneSettings): RuneSettings => ({
-    ...s,
-    container: normalizeRuneContainerSettings((s as any).container),
+    ...normalizeNameColors(s),
+    container: normalizeNameColors(
+      normalizeRuneContainerSettings((s as any).container)
+    ),
   });
 
   // Если это уже новый формат с mode
