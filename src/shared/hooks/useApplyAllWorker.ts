@@ -17,7 +17,11 @@ import {
   generateRuneHighlightData,
   SUPPORTED_LOCALES as RUNES_SUPPORTED_LOCALES,
 } from "../utils/runeUtils";
-import { idToRuneMapper, ERune } from "../../pages/runes/constants/runes";
+import {
+  idToRuneMapper,
+  idToRuneContainerMapper,
+  ERune,
+} from "../../pages/runes/constants/runes";
 import { MOD_ROOT } from "../constants";
 import { applyItemShowLevels } from "../utils/excelUtils";
 import {
@@ -179,6 +183,7 @@ export const useApplyAllWorker = (
       const nameAffixesPath = `${homeDir}\\${COMMON_GAME_PATHS.LOCALES}\\${COMMON_GAME_PATHS.NAMEAFFIXES_FILE}`;
       const modifiersPath = `${homeDir}\\${COMMON_GAME_PATHS.LOCALES}\\item-modifiers.json`;
       const runesPath = `${homeDir}\\${RUNES_GAME_PATHS.LOCALES}\\${RUNES_GAME_PATHS.RUNES_FILE}`;
+      const containersPath = `${homeDir}\\${RUNES_GAME_PATHS.LOCALES}\\${RUNES_GAME_PATHS.CONTAINERS_FILE}`;
       const runeHighlightDir = `${homeDir}\\${RUNES_GAME_PATHS.RUNE_HIGHLIGHT}`;
       const keysHighlightDir = `${homeDir}\\${MOD_ROOT}\\hd\\items\\misc\\key`;
 
@@ -194,6 +199,7 @@ export const useApplyAllWorker = (
         nameAffixesContent,
         modifiersContent,
         runesContent,
+        containersContent,
       ] = await Promise.all([
         readTextFile(itemNamesPath),
         readTextFile(nameAffixesPath),
@@ -211,6 +217,13 @@ export const useApplyAllWorker = (
             return "[]";
           }
         })(),
+        (async () => {
+          try {
+            return await readTextFile(containersPath);
+          } catch {
+            return "[]";
+          }
+        })(),
       ]);
 
       let itemNamesData: CommonLocaleItem[] = JSON.parse(itemNamesContent);
@@ -221,12 +234,16 @@ export const useApplyAllWorker = (
       let runesData: Array<
         { id: number; Key: string } & Record<string, string>
       > = JSON.parse(runesContent || "[]");
+      let containersData: Array<
+        { id: number; Key: string } & Record<string, string>
+      > = JSON.parse(containersContent || "[]");
 
       // Готовим копии для обновления
       const updatedItemNames = [...itemNamesData];
       const updatedNameAffixes = [...nameAffixesData];
       const updatedModifiers = [...modifiersData];
       const updatedRunes = [...runesData];
+      const updatedContainers = [...containersData];
 
       const selectedLocales = getSelectedLocalesRef.current?.() || [];
       const settings = getAllSettingsRef.current?.();
@@ -591,6 +608,35 @@ export const useApplyAllWorker = (
         }
       });
 
+      // ===== RUNE CONTAINERS (стаки рун, npcs.json) =====
+      const runeToContainerId: Partial<Record<ERune, number>> = {};
+      Object.entries(idToRuneContainerMapper).forEach(([id, rune]) => {
+        runeToContainerId[rune as ERune] = parseInt(id);
+      });
+      Object.entries(settings.runes).forEach(([runeKey, runeSettings]) => {
+        const rune = runeKey as ERune;
+        const containerId = runeToContainerId[rune];
+        if (!containerId) return;
+        const container = runeSettings.container;
+        if (!container) return;
+        const idx = updatedContainers.findIndex((r) => r.id === containerId);
+        if (idx === -1) return;
+        RUNES_SUPPORTED_LOCALES.forEach((loc) => {
+          if (!selectedLocales.includes(loc)) return;
+          let finalName: string;
+          if (container.mode === "manual") {
+            const manualText =
+              container.manualSettings.locales[
+                loc as keyof typeof container.manualSettings.locales
+              ] || container.manualSettings.locales.enUS;
+            finalName = manualText.split(/\r?\n/).reverse().join("\n");
+          } else {
+            finalName = generateFinalRuneName(rune, container, loc);
+          }
+          (updatedContainers[idx] as any)[loc] = finalName;
+        });
+      });
+
       // ===== WRITE FILES ONCE =====
       logger.info(
         "Writing aggregated files",
@@ -612,6 +658,10 @@ export const useApplyAllWorker = (
       await writeFileWithRetry(
         runesPath,
         JSON.stringify(updatedRunes, null, 2)
+      );
+      await writeFileWithRetry(
+        containersPath,
+        JSON.stringify(updatedContainers, null, 2)
       );
 
       // ===== ITEMS SHOWLEVEL (ilvl в excel-файлах мода) =====

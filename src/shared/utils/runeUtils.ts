@@ -3,7 +3,10 @@ import {
   runeNumbers,
   runeHardcodedLocales,
 } from "../../pages/runes/constants/runes.ts";
-import { RuneSettings } from "../../app/providers/SettingsContext.tsx";
+import {
+  RuneSettings,
+  RuneNameSettings,
+} from "../../app/providers/SettingsContext.tsx";
 import { colorCodes, MOD_ROOT } from "../constants.ts";
 
 // Шаблоны для подсветки рун
@@ -656,7 +659,7 @@ export const parseBoxLimitersColor = (text: string): string => {
  */
 export const generateFinalRuneName = (
   rune: ERune,
-  settings: RuneSettings,
+  settings: RuneNameSettings,
   locale: keyof typeof settings.manualSettings.locales,
 ): string => {
   // В ручном режиме возвращаем локаль как есть
@@ -964,6 +967,8 @@ export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 export const GAME_PATHS = {
   LOCALES: `${MOD_ROOT}\\local\\lng\\strings`,
   RUNES_FILE: "item-runes.json",
+  // Имена контейнеров (стаков) рун хранятся в npcs.json (ключи cont_*, id 30003–30035)
+  CONTAINERS_FILE: "npcs.json",
   RUNE_HIGHLIGHT: `${MOD_ROOT}\\hd\\items\\misc\\rune`,
 } as const;
 

@@ -12,6 +12,7 @@ import ColorHint from "../../shared/components/ColorHint.tsx";
 import SymbolsHint from "../../shared/components/SymbolsHint";
 import {
   RuneSettings,
+  RuneContainerSettings,
   useSettings,
 } from "../../app/providers/SettingsContext.tsx";
 import {
@@ -54,17 +55,31 @@ const RuneCard: React.FC<RuneCardProps> = ({
   // Получаем общие настройки как дефолтные значения
   const generalSettings = getGeneralRuneSettings();
 
-  // Основные состояния
-  const mode = React.useMemo(() => settings?.mode ?? "auto", [settings?.mode]);
+  // Активная вкладка имени: сама руна или её контейнер (стак)
+  const [nameTab, setNameTab] = React.useState<"rune" | "container">("rune");
+
+  // Активный срез настроек (руна или контейнер) — на нём работает вся карточка
+  const active = React.useMemo(
+    () => (nameTab === "rune" ? settings : settings?.container),
+    [nameTab, settings]
+  );
+
+  // Основные состояния (берём из активного среза)
+  const mode = React.useMemo(() => active?.mode ?? "auto", [active?.mode]);
+  // Подсветка — свойство самой руны, не зависит от вкладки
   const isHighlighted = React.useMemo(
     () => settings?.isHighlighted ?? false,
     [settings?.isHighlighted]
   );
 
+  // Фон превью с подсветкой показываем только на вкладке самой руны —
+  // у контейнера (стака) подсветки нет
+  const previewHighlighted = nameTab === "rune" && isHighlighted;
+
   // Автоматические настройки
   const autoSettings = React.useMemo(
     () =>
-      settings?.autoSettings ?? {
+      active?.autoSettings ?? {
         numbering: {
           show: false,
           dividerType: generalSettings.dividerType,
@@ -76,13 +91,13 @@ const RuneCard: React.FC<RuneCardProps> = ({
         boxLimitersColor: generalSettings.boxLimitersColor,
         color: "white",
       },
-    [settings?.autoSettings, generalSettings]
+    [active?.autoSettings, generalSettings]
   );
 
   // Ручные настройки
   const manualSettings = React.useMemo(
     () =>
-      settings?.manualSettings ?? {
+      active?.manualSettings ?? {
         locales: {
           enUS: "",
           ruRU: "",
@@ -99,8 +114,15 @@ const RuneCard: React.FC<RuneCardProps> = ({
           zhCN: "",
         },
       },
-    [settings?.manualSettings]
+    [active?.manualSettings]
   );
+
+  // Базовый срез (baseline) для текущей вкладки — для звёздочек несохранённого
+  const getBaseActive = React.useCallback(() => {
+    const b = baseline ? (baseline.runes as any)?.[rune] : null;
+    if (!b) return null;
+    return nameTab === "rune" ? b : b?.container;
+  }, [baseline, rune, nameTab]);
 
   // Получаем захардкоженные локали для автоматического режима
   const hardcodedLocales = React.useMemo(
@@ -145,24 +167,24 @@ const RuneCard: React.FC<RuneCardProps> = ({
     });
   };
 
-  // Handle settings change
-  const handleSettingChange = (newSettings: Partial<RuneSettings>) => {
-    if (!onSettingsChange) return;
+  // Handle settings change — пишем в активный срез (руну или контейнер)
+  const handleSettingChange = (newSettings: Partial<RuneContainerSettings>) => {
+    if (!onSettingsChange || !settings) return;
 
-    const updatedSettings: RuneSettings = {
-      mode,
-      isHighlighted,
-      autoSettings,
-      manualSettings,
-      ...newSettings,
-    };
-
-    onSettingsChange(updatedSettings);
+    if (nameTab === "rune") {
+      onSettingsChange({ ...settings, ...newSettings });
+    } else {
+      onSettingsChange({
+        ...settings,
+        container: { ...settings.container, ...newSettings },
+      });
+    }
   };
 
-  // Handle individual control changes
+  // Подсветка — всегда свойство самой руны, независимо от активной вкладки
   const handleHighlightChange = (checked: boolean) => {
-    handleSettingChange({ isHighlighted: checked });
+    if (!onSettingsChange || !settings) return;
+    onSettingsChange({ ...settings, isHighlighted: checked });
   };
 
   const handleModeChange = (newMode: "auto" | "manual") => {
@@ -377,6 +399,89 @@ const RuneCard: React.FC<RuneCardProps> = ({
               `}
             onClick={(e) => e.stopPropagation()}
           >
+            {/* Переключатель: имя руны / имя контейнера (стака) */}
+            <div className="mb-5 flex justify-center">
+              <div
+                className={`inline-flex rounded-lg overflow-hidden border ${
+                  isDarkTheme ? "border-gray-700" : "border-gray-300"
+                }`}
+              >
+                {(["rune", "container"] as const).map((tab) => {
+                  const isActive = nameTab === tab;
+                  const base = baseline ? (baseline.runes as any)?.[rune] : null;
+                  const hasTabUnsaved = (() => {
+                    if (!base || !settings) return false;
+                    const b = tab === "rune" ? base : base?.container;
+                    const c =
+                      tab === "rune" ? settings : settings.container;
+                    if (!b || !c) return false;
+                    if ((b.mode ?? "auto") !== (c.mode ?? "auto")) return true;
+                    const bl = b.manualSettings?.locales || {};
+                    const cl = c.manualSettings?.locales || {};
+                    for (const l of new Set([
+                      ...Object.keys(bl),
+                      ...Object.keys(cl),
+                    ])) {
+                      if ((bl as any)[l] !== (cl as any)[l]) return true;
+                    }
+                    const ba = b.autoSettings || {};
+                    const ca = c.autoSettings || {};
+                    if (ba.color !== ca.color) return true;
+                    if (ba.boxSize !== ca.boxSize) return true;
+                    if (ba.boxLimiters !== ca.boxLimiters) return true;
+                    if (ba.boxLimitersColor !== ca.boxLimitersColor) return true;
+                    if (
+                      (ba.numbering?.show ?? false) !==
+                      (ca.numbering?.show ?? false)
+                    )
+                      return true;
+                    if (
+                      (ba.numbering?.dividerType ?? "") !==
+                      (ca.numbering?.dividerType ?? "")
+                    )
+                      return true;
+                    if (
+                      (ba.numbering?.dividerColor ?? "") !==
+                      (ca.numbering?.dividerColor ?? "")
+                    )
+                      return true;
+                    if (
+                      (ba.numbering?.numberColor ?? "") !==
+                      (ca.numbering?.numberColor ?? "")
+                    )
+                      return true;
+                    return false;
+                  })();
+                  return (
+                    <button
+                      key={tab}
+                      type="button"
+                      onClick={() => setNameTab(tab)}
+                      className={`relative px-5 py-2 text-sm font-medium transition-colors ${
+                        isActive
+                          ? isDarkTheme
+                            ? "bg-yellow-600 text-black"
+                            : "bg-yellow-500 text-white"
+                          : isDarkTheme
+                            ? "bg-gray-800 text-gray-300 hover:bg-gray-750"
+                            : "bg-white text-gray-700 hover:bg-gray-50"
+                      }`}
+                    >
+                      {t(`runePage.controls.nameTab.${tab}`)}
+                      {hasTabUnsaved && (
+                        <span
+                          className="absolute"
+                          style={{ right: 2, top: 2 }}
+                        >
+                          <UnsavedAsterisk size={0.4} />
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
             {/* Общий превью-блок сверху */}
             {highlightedBg &&
               unhighlightedBg &&
@@ -399,11 +504,11 @@ const RuneCard: React.FC<RuneCardProps> = ({
                       <div className="absolute inset-0 rounded-lg overflow-hidden">
                         {/* Фоновое изображение руны */}
                         <img
-                          src={isHighlighted ? highlightedBg : unhighlightedBg}
-                          alt={`Rune ${isHighlighted ? "highlighted" : "unhighlighted"} background`}
+                          src={previewHighlighted ? highlightedBg : unhighlightedBg}
+                          alt={`Rune ${previewHighlighted ? "highlighted" : "unhighlighted"} background`}
                           className="absolute inset-0 w-full h-[300px] pointer-events-none"
                           style={{
-                            objectPosition: isHighlighted
+                            objectPosition: previewHighlighted
                               ? "57% 20%"
                               : "45% 20%",
                           }}
@@ -611,29 +716,34 @@ const RuneCard: React.FC<RuneCardProps> = ({
                 </div>
               )}
 
-            {/* Общая подсветка руны */}
-            <div className={`mb-4 flex justify-center`}>
-              <div className="relative inline-flex">
-                <Checkbox
-                  checked={isHighlighted}
-                  onChange={handleHighlightChange}
-                  isDarkTheme={isDarkTheme}
-                  size="lg"
-                  label={t("runePage.controls.highlightRune")}
-                />
-                {(() => {
-                  if (!baseline) return null;
-                  const base = (baseline.runes as any)?.[rune];
-                  if (!base) return null;
-                  return (base.isHighlighted ?? false) !==
-                    (isHighlighted ?? false) ? (
-                    <span className="absolute" style={{ right: -10, top: -10 }}>
-                      <UnsavedAsterisk size={0.45} />
-                    </span>
-                  ) : null;
-                })()}
+            {/* Общая подсветка руны (только на вкладке самой руны) */}
+            {nameTab === "rune" && (
+              <div className={`mb-4 flex justify-center`}>
+                <div className="relative inline-flex">
+                  <Checkbox
+                    checked={isHighlighted}
+                    onChange={handleHighlightChange}
+                    isDarkTheme={isDarkTheme}
+                    size="lg"
+                    label={t("runePage.controls.highlightRune")}
+                  />
+                  {(() => {
+                    if (!baseline) return null;
+                    const base = (baseline.runes as any)?.[rune];
+                    if (!base) return null;
+                    return (base.isHighlighted ?? false) !==
+                      (isHighlighted ?? false) ? (
+                      <span
+                        className="absolute"
+                        style={{ right: -10, top: -10 }}
+                      >
+                        <UnsavedAsterisk size={0.45} />
+                      </span>
+                    ) : null;
+                  })()}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Переключатель режимов под превью (grid центрирование) */}
             <div className="mb-6 grid grid-cols-[1fr_auto_1fr] items-center gap-x-6">
@@ -655,7 +765,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
                 />
                 {(() => {
                   if (!baseline) return null;
-                  const base = (baseline.runes as any)?.[rune];
+                  const base = getBaseActive();
                   if (!base) return null;
                   return (base.mode ?? "auto") !== (mode ?? "auto") ? (
                     <span className="absolute" style={{ right: -10, top: -10 }}>
@@ -710,7 +820,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
                           />
                           {(() => {
                             if (!baseline) return null;
-                            const base = (baseline.runes as any)?.[rune];
+                            const base = getBaseActive();
                             if (!base) return null;
                             return (base.autoSettings?.color ?? "white") !==
                               (autoSettings.color ?? "white") ? (
@@ -740,7 +850,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
                           />
                           {(() => {
                             if (!baseline) return null;
-                            const base = (baseline.runes as any)?.[rune];
+                            const base = getBaseActive();
                             if (!base) return null;
                             return (base.autoSettings?.boxSize ?? 0) !==
                               (autoSettings.boxSize ?? 0) ? (
@@ -773,7 +883,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
                           />
                           {(() => {
                             if (!baseline) return null;
-                            const base = (baseline.runes as any)?.[rune];
+                            const base = getBaseActive();
                             if (!base) return null;
                             return (base.autoSettings?.boxLimiters ?? "") !==
                               (autoSettings.boxLimiters ?? "") ? (
@@ -803,7 +913,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
                           />
                           {(() => {
                             if (!baseline) return null;
-                            const base = (baseline.runes as any)?.[rune];
+                            const base = getBaseActive();
                             if (!base) return null;
                             return (base.autoSettings?.boxLimitersColor ??
                               "") !== (autoSettings.boxLimitersColor ?? "") ? (
@@ -837,7 +947,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
                         />
                         {(() => {
                           if (!baseline) return null;
-                          const base = (baseline.runes as any)?.[rune];
+                          const base = getBaseActive();
                           if (!base) return null;
                           return (base.autoSettings?.numbering?.show ??
                             false) !==
@@ -869,7 +979,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
                           />
                           {(() => {
                             if (!baseline) return null;
-                            const base = (baseline.runes as any)?.[rune];
+                            const base = getBaseActive();
                             if (!base) return null;
                             return (base.autoSettings?.numbering?.numberColor ??
                               "") !==
@@ -903,7 +1013,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
                           />
                           {(() => {
                             if (!baseline) return null;
-                            const base = (baseline.runes as any)?.[rune];
+                            const base = getBaseActive();
                             if (!base) return null;
                             return (base.autoSettings?.numbering?.dividerType ??
                               "") !==
@@ -934,7 +1044,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
                           />
                           {(() => {
                             if (!baseline) return null;
-                            const base = (baseline.runes as any)?.[rune];
+                            const base = getBaseActive();
                             if (!base) return null;
                             return (base.autoSettings?.numbering
                               ?.dividerColor ?? "") !==
@@ -1017,7 +1127,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
                             />
                             {(() => {
                               if (!baseline) return null;
-                              const base = (baseline.runes as any)?.[rune];
+                              const base = getBaseActive();
                               if (!base) return null;
                               const baseVal = (base.manualSettings?.locales ||
                                 {})[langCode];

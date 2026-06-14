@@ -367,6 +367,10 @@
         "lightblue": "Светло-голубой",
         "pink": "Розовый",
         "purple": "Фиолетовый"
+      },
+      "nameTab": {
+        "rune": "Имя руны",
+        "container": "Имя контейнера"
       }
     },
     "runes": {
@@ -420,12 +424,18 @@
       "numberingSettings": "Настройки нумерации",
       "noChange": "Не изменять",
       "cancel": "Отменить",
-      "applyToRunes": "Применить к {{count}} рунам",
+      "applyToRunes": "Применить к {{count}} сущностям",
       "runeMode": "Режим",
       "runeModeTooltips": {
         "auto": "Автоматический режим",
         "noChange": "Не изменять режим",
         "manual": "Ручной режим"
+      },
+      "applyTargetLabel": "Применить к",
+      "applyTarget": {
+        "rune": "Имя руны",
+        "container": "Имя контейнера",
+        "both": "Оба"
       }
     },
     "textWorker": {
