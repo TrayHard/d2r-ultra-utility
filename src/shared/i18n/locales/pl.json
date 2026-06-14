@@ -306,7 +306,11 @@
         "pink": "Różowy",
         "purple": "Fioletowy"
       },
-      "autoMode": "Automatic Mode"
+      "autoMode": "Automatic Mode",
+      "nameTab": {
+        "rune": "Nazwa runy",
+        "container": "Nazwa pojemnika"
+      }
     },
     "runes": {
       "el": "El",
@@ -359,12 +363,18 @@
       "numberingSettings": "Ustawienia numeracji",
       "noChange": "Bez zmian",
       "cancel": "Anuluj",
-      "applyToRunes": "Zastosuj do {{count}} run",
+      "applyToRunes": "Zastosuj do {{count}} elementów",
       "runeMode": "Tryb",
       "runeModeTooltips": {
         "auto": "Tryb automatyczny",
         "noChange": "Nie zmieniaj trybu",
         "manual": "Tryb ręczny"
+      },
+      "applyTargetLabel": "Zastosuj do",
+      "applyTarget": {
+        "rune": "Nazwa runy",
+        "container": "Nazwa pojemnika",
+        "both": "Oba"
       }
     },
     "textWorker": {
