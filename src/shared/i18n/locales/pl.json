@@ -6,7 +6,8 @@
     "gems": "Kamyki",
     "other": "Inne",
     "stash": "Stash Rename",
-    "tweaks": "Tweaks"
+    "tweaks": "Tweaks",
+    "modifiers": "Modyfikatory"
   },
   "update": {
     "checking": "Sprawdzanie aktualizacji...",
@@ -1802,5 +1803,19 @@
     }
   },
   "tweaks": "Tweaks",
-  "runCounter": "Run Counter"
+  "runCounter": "Run Counter",
+  "modifiersPage": {
+    "tabs": {
+      "modifiers": "Modyfikatory",
+      "skills": "Umiejętności"
+    },
+    "groups": {
+      "properties": "Właściwości",
+      "baseStats": "Statystyki bazowe"
+    },
+    "selectAll": "Zaznacz wszystko",
+    "selectedCount": "Zaznaczono: {{count}}",
+    "applyColor": "Zastosuj kolor",
+    "disable": "Wyłącz"
+  }
 }
