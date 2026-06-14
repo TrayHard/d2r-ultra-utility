@@ -4,11 +4,15 @@ import { ensureWritable } from "../utils/fsUtils";
 import { useLogger } from "../utils/logger";
 import {
   idToRuneMapper,
+  idToRuneContainerMapper,
   ERune,
   runes,
 } from "../../pages/runes/constants/runes.ts";
 import { itemRunesSchema } from "../types/common.ts";
-import { RuneSettings } from "../../app/providers/SettingsContext.tsx";
+import {
+  RuneSettings,
+  getDefaultRuneContainerSettings,
+} from "../../app/providers/SettingsContext.tsx";
 import { STORAGE_KEYS } from "../constants.ts";
 import {
   generateFinalRuneName,
@@ -146,6 +150,62 @@ export const useTextWorker = (
           processedRunes++;
         }
       });
+
+      // Читаем имена контейнеров (стаков) рун из npcs.json и грузим их в ручной
+      // режим контейнера (как и сами руны — содержимое файла всегда идёт в manual)
+      try {
+        const containersPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.CONTAINERS_FILE}`;
+        logger.info(
+          "Reading rune containers file",
+          { path: containersPath },
+          "readLocales",
+        );
+        const containersContent = await readTextFile(containersPath);
+        const containersData: LocaleItem[] = JSON.parse(containersContent);
+        const prevRuneSettings = getAllRuneSettings?.();
+
+        containersData.forEach((item) => {
+          const rune = idToRuneContainerMapper[item.id];
+          if (!rune || !updateRuneSettings) return;
+          const prevContainer =
+            prevRuneSettings?.[rune]?.container ??
+            getDefaultRuneContainerSettings();
+          updateRuneSettings(rune, {
+            container: {
+              ...prevContainer,
+              mode: "manual",
+              manualSettings: {
+                locales: {
+                  enUS: item.enUS || "",
+                  ruRU: item.ruRU || "",
+                  zhTW: item.zhTW || "",
+                  deDE: item.deDE || "",
+                  esES: item.esES || "",
+                  frFR: item.frFR || "",
+                  itIT: item.itIT || "",
+                  koKR: item.koKR || "",
+                  plPL: item.plPL || "",
+                  esMX: item.esMX || "",
+                  jaJP: item.jaJP || "",
+                  ptBR: item.ptBR || "",
+                  zhCN: item.zhCN || "",
+                },
+              },
+            },
+          });
+        });
+      } catch (containersErr) {
+        logger.warn(
+          "Failed to read rune containers (npcs.json)",
+          {
+            error:
+              containersErr instanceof Error
+                ? containersErr.message
+                : String(containersErr),
+          },
+          "readLocales",
+        );
+      }
 
       console.log("Locale data with runes:", localeData);
 
@@ -369,6 +429,10 @@ export const useTextWorker = (
       logger.info("Applying localization changes", { homeDir }, "applyChanges");
       await applyLocalizationChanges(homeDir, runeSettings);
 
+      // 1b. Применяем имена контейнеров (стаков) рун в npcs.json
+      logger.info("Applying container changes", { homeDir }, "applyChanges");
+      await applyContainerChanges(homeDir, runeSettings);
+
       // 2. Применяем настройки к файлам подсветки рун
       logger.info("Applying highlight changes", { homeDir }, "applyChanges");
       await applyHighlightChanges(homeDir, runeSettings);
@@ -562,6 +626,113 @@ export const useTextWorker = (
       console.log("Localization changes applied successfully");
     },
     [],
+  );
+
+  // Функция для применения имён контейнеров (стаков) рун в npcs.json
+  const applyContainerChanges = useCallback(
+    async (homeDir: string, runeSettings: Record<ERune, RuneSettings>) => {
+      const containersPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.CONTAINERS_FILE}`;
+
+      console.log("Applying container changes to:", containersPath);
+
+      const fileContent = await readTextFile(containersPath);
+      const currentData: LocaleItem[] = JSON.parse(fileContent);
+      const updatedData = [...currentData];
+
+      // Обратный маппинг: руна -> id контейнера
+      const runeToContainerId: Partial<Record<ERune, number>> = {};
+      Object.entries(idToRuneContainerMapper).forEach(([id, rune]) => {
+        runeToContainerId[rune] = parseInt(id);
+      });
+
+      const selectedLocales = JSON.parse(
+        localStorage.getItem(STORAGE_KEYS.APP_CONFIG) || "{}",
+      )?.selectedLocales || ["enUS", "ruRU"];
+
+      Object.entries(runeSettings).forEach(([rune, settings]) => {
+        const runeEnum = rune as ERune;
+        const containerId = runeToContainerId[runeEnum];
+        if (!containerId) return;
+
+        const container = settings.container;
+        if (!container) return;
+
+        const itemIndex = updatedData.findIndex(
+          (item) => item.id === containerId,
+        );
+        if (itemIndex === -1) return;
+
+        const updatedLocales: Partial<LocaleItem> = {};
+        SUPPORTED_LOCALES.forEach((locale) => {
+          if (!selectedLocales.includes(locale)) return;
+          let finalName: string;
+          if (container.mode === "manual") {
+            const manualText =
+              container.manualSettings.locales[locale] ||
+              container.manualSettings.locales.enUS;
+            // В игре строки отображаются снизу вверх — реверсим порядок строк
+            finalName = manualText.split(/\r?\n/).reverse().join("\n");
+          } else {
+            finalName = generateFinalRuneName(runeEnum, container, locale);
+          }
+          updatedLocales[locale] = finalName;
+        });
+
+        updatedData[itemIndex] = {
+          ...updatedData[itemIndex],
+          ...updatedLocales,
+        };
+      });
+
+      const updatedContent = JSON.stringify(updatedData, null, 2);
+      const writeFileWithRetry = async (path: string, content: string) => {
+        const maxAttempts = 10;
+        for (let attempt = 0; attempt < maxAttempts; attempt++) {
+          try {
+            await writeTextFile(path, content);
+            return;
+          } catch (err) {
+            const isLast = attempt === maxAttempts - 1;
+            console.warn(
+              "Container write attempt failed, retrying",
+              path,
+              attempt + 1,
+              err,
+            );
+            if (isLast) {
+              try {
+                const results = await ensureWritable([path]);
+                console.warn("Attempted to ensure writable", {
+                  path,
+                  result: results[0],
+                });
+              } catch (e) {
+                console.warn("ensureWritable invocation failed", path, e);
+              }
+              try {
+                await writeTextFile(path, content);
+                return;
+              } catch (finalErr) {
+                const suggestion =
+                  t?.("messages.error.writePermissionSuggestion") ||
+                  "Could not write the file. Try running the app as Administrator or move the game to a folder where you have write permissions.";
+                const msg =
+                  (finalErr instanceof Error
+                    ? finalErr.message
+                    : String(finalErr)) + `\n${suggestion}`;
+                throw new Error(msg);
+              }
+            }
+            const backoffMs = Math.min(1000, 100 * Math.pow(2, attempt));
+            await new Promise((r) => setTimeout(r, backoffMs));
+          }
+        }
+      };
+      await writeFileWithRetry(containersPath, updatedContent);
+
+      console.log("Container changes applied successfully");
+    },
+    [t],
   );
 
   // Функция для применения изменений к файлам подсветки рун
