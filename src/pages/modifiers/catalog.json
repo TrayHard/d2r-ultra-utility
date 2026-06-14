@@ -1,0 +1,2932 @@
+{
+  "modifiers": [
+    {
+      "key": "ModStr5o",
+      "id": 3589,
+      "file": "item-modifiers.json",
+      "enUS": "-%d%% Target Defense",
+      "category": "property"
+    },
+    {
+      "key": "Moditemenrescoldsk",
+      "id": 10986,
+      "file": "item-modifiers.json",
+      "enUS": "-%d%% to Enemy Cold Resistance",
+      "category": "property"
+    },
+    {
+      "key": "Moditemenresfiresk",
+      "id": 10987,
+      "file": "item-modifiers.json",
+      "enUS": "-%d%% to Enemy Fire Resistance",
+      "category": "property"
+    },
+    {
+      "key": "Moditemenresltngsk",
+      "id": 10988,
+      "file": "item-modifiers.json",
+      "enUS": "-%d%% to Enemy Lightning Resistance",
+      "category": "property"
+    },
+    {
+      "key": "ModStrMagPierce",
+      "id": 27679,
+      "file": "item-modifiers.json",
+      "enUS": "-%d%% to Enemy Magic Resistance",
+      "category": "property"
+    },
+    {
+      "key": "ModStrDamPierce",
+      "id": 27866,
+      "file": "item-modifiers.json",
+      "enUS": "-%d%% to Enemy Physical Damage Resistance",
+      "category": "property"
+    },
+    {
+      "key": "Moditemenrespoissk",
+      "id": 10989,
+      "file": "item-modifiers.json",
+      "enUS": "-%d%% to Enemy Poison Resistance",
+      "category": "property"
+    },
+    {
+      "key": "increaseswithplaylevelX",
+      "id": 11091,
+      "file": "item-modifiers.json",
+      "enUS": "(Based on Character Level)",
+      "category": "property"
+    },
+    {
+      "key": "ModStre9p",
+      "id": 10045,
+      "file": "item-modifiers.json",
+      "enUS": "%+d Absorbs Cold Damage",
+      "category": "property"
+    },
+    {
+      "key": "ModStre9o",
+      "id": 10044,
+      "file": "item-modifiers.json",
+      "enUS": "%+d Absorbs Fire Damage",
+      "category": "property"
+    },
+    {
+      "key": "ModStre9q",
+      "id": 10046,
+      "file": "item-modifiers.json",
+      "enUS": "%+d Absorbs Lightning Damage",
+      "category": "property"
+    },
+    {
+      "key": "ModStr5n",
+      "id": 3588,
+      "file": "item-modifiers.json",
+      "enUS": "%+d Cold Absorb",
+      "category": "property"
+    },
+    {
+      "key": "ModStr1i",
+      "id": 3481,
+      "file": "item-modifiers.json",
+      "enUS": "%+d Defense",
+      "category": "property"
+    },
+    {
+      "key": "ModStr6b",
+      "id": 3602,
+      "file": "item-modifiers.json",
+      "enUS": "%+d Defense vs. Melee",
+      "category": "property"
+    },
+    {
+      "key": "ModStr6a",
+      "id": 3601,
+      "file": "item-modifiers.json",
+      "enUS": "%+d Defense vs. Missile",
+      "category": "property"
+    },
+    {
+      "key": "PlusEchoesskills",
+      "id": 30283,
+      "file": "npcs.json",
+      "enUS": "%+d Echoes",
+      "category": "property"
+    },
+    {
+      "key": "ModStr5h",
+      "id": 3582,
+      "file": "item-modifiers.json",
+      "enUS": "%+d Fire Absorb",
+      "category": "property"
+    },
+    {
+      "key": "ModStr5e",
+      "id": 3579,
+      "file": "item-modifiers.json",
+      "enUS": "%+d Kick Damage",
+      "category": "property"
+    },
+    {
+      "key": "ModStr6c",
+      "id": 3603,
+      "file": "item-modifiers.json",
+      "enUS": "%+d Life after each Demon Kill",
+      "category": "property"
+    },
+    {
+      "key": "ModitemHPaK",
+      "id": 10979,
+      "file": "item-modifiers.json",
+      "enUS": "%+d Life after each Kill",
+      "category": "property"
+    },
+    {
+      "key": "ModStr5j",
+      "id": 3584,
+      "file": "item-modifiers.json",
+      "enUS": "%+d Lightning Absorb",
+      "category": "property"
+    },
+    {
+      "key": "ModStr5l",
+      "id": 3586,
+      "file": "item-modifiers.json",
+      "enUS": "%+d Magic Absorb",
+      "category": "property"
+    },
+    {
+      "key": "ModStr5d",
+      "id": 10001,
+      "file": "item-modifiers.json",
+      "enUS": "%+d Maximum Stamina",
+      "category": "property"
+    },
+    {
+      "key": "PlusMirroredskills",
+      "id": 30284,
+      "file": "npcs.json",
+      "enUS": "%+d Mirrored Weapons Created",
+      "category": "property"
+    },
+    {
+      "key": "ItemModifierNonClassSkill",
+      "id": 23005,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to %s",
+      "category": "property"
+    },
+    {
+      "key": "ItemModifierClassSkill",
+      "id": 23004,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to %s %s",
+      "category": "property"
+    },
+    {
+      "key": "Moditem2allattrib",
+      "id": 10977,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to all Attributes",
+      "category": "property"
+    },
+    {
+      "key": "ModStr3k",
+      "id": 3535,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to All Skills",
+      "category": "property"
+    },
+    {
+      "key": "ModStr3a",
+      "id": 3525,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Amazon Skill Levels",
+      "category": "property"
+    },
+    {
+      "key": "ModStr1h",
+      "id": 3480,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Attack Rating",
+      "category": "property"
+    },
+    {
+      "key": "ModStr4j",
+      "id": 3558,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Attack Rating against Demons",
+      "category": "property"
+    },
+    {
+      "key": "ModStr4k",
+      "id": 3559,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Attack Rating against Undead",
+      "category": "property"
+    },
+    {
+      "key": "ModStrColdskills",
+      "id": 30126,
+      "file": "npcs.json",
+      "enUS": "%+d to Cold Skills",
+      "category": "property"
+    },
+    {
+      "key": "ModStr1b",
+      "id": 3474,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Dexterity",
+      "category": "property"
+    },
+    {
+      "key": "ModStr1d",
+      "id": 3476,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Energy",
+      "category": "property"
+    },
+    {
+      "key": "ModStrFireskills",
+      "id": 30125,
+      "file": "npcs.json",
+      "enUS": "%+d to Fire Skills",
+      "category": "property"
+    },
+    {
+      "key": "StrSklTabItem1",
+      "id": 10054,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Javelin and Spear Skills",
+      "category": "property"
+    },
+    {
+      "key": "ModStr1u",
+      "id": 3493,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Life",
+      "category": "property"
+    },
+    {
+      "key": "ModStr3f",
+      "id": 3530,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Light Radius",
+      "category": "property"
+    },
+    {
+      "key": "ModStrLightningskills",
+      "id": 30127,
+      "file": "npcs.json",
+      "enUS": "%+d to Lightning Skills",
+      "category": "property"
+    },
+    {
+      "key": "ModStrMagicskills",
+      "id": 30129,
+      "file": "npcs.json",
+      "enUS": "%+d to Magic Skills",
+      "category": "property"
+    },
+    {
+      "key": "ModStr1e",
+      "id": 3477,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Mana",
+      "category": "property"
+    },
+    {
+      "key": "ModStr5f",
+      "id": 3580,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Mana after each Kill",
+      "category": "property"
+    },
+    {
+      "key": "ModStrPoisonskills",
+      "id": 30128,
+      "file": "npcs.json",
+      "enUS": "%+d to Poison Skills",
+      "category": "property"
+    },
+    {
+      "key": "ModStr1a",
+      "id": 3473,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Strength",
+      "category": "property"
+    },
+    {
+      "key": "ModStr1c",
+      "id": 3475,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Vitality",
+      "category": "property"
+    },
+    {
+      "key": "ModStr6k",
+      "id": 27371,
+      "file": "item-modifiers.json",
+      "enUS": "%+d%% chance for finishing moves to not consume charges",
+      "category": "property"
+    },
+    {
+      "key": "ModStr5c",
+      "id": 3577,
+      "file": "item-modifiers.json",
+      "enUS": "%+d%% Chance of Crushing Blow",
+      "category": "property"
+    },
+    {
+      "key": "ModStr3m",
+      "id": 3537,
+      "file": "item-modifiers.json",
+      "enUS": "%+d%% Chance of Open Wounds",
+      "category": "property"
+    },
+    {
+      "key": "ModStr6j",
+      "id": 27212,
+      "file": "item-modifiers.json",
+      "enUS": "%+d%% Chance to not consume Quantity",
+      "category": "property"
+    },
+    {
+      "key": "ModStr3w",
+      "id": 3545,
+      "file": "item-modifiers.json",
+      "enUS": "%+d%% Damage Taken Goes To Mana",
+      "category": "property"
+    },
+    {
+      "key": "ModStr4e",
+      "id": 3553,
+      "file": "item-modifiers.json",
+      "enUS": "%+d%% Damage to Demons",
+      "category": "property"
+    },
+    {
+      "key": "ModStr4f",
+      "id": 3554,
+      "file": "item-modifiers.json",
+      "enUS": "%+d%% Damage to Undead",
+      "category": "property"
+    },
+    {
+      "key": "ModStr5q",
+      "id": 3591,
+      "file": "item-modifiers.json",
+      "enUS": "%+d%% Deadly Strike",
+      "category": "property"
+    },
+    {
+      "key": "Modstr2v",
+      "id": 3520,
+      "file": "item-modifiers.json",
+      "enUS": "%+d%% Enhanced Defense",
+      "category": "property"
+    },
+    {
+      "key": "ModStr2j",
+      "id": 3508,
+      "file": "item-modifiers.json",
+      "enUS": "%+d%% Enhanced Maximum Damage",
+      "category": "property"
+    },
+    {
+      "key": "ModStr2k",
+      "id": 3509,
+      "file": "item-modifiers.json",
+      "enUS": "%+d%% Enhanced Minimum Damage",
+      "category": "property"
+    },
+    {
+      "key": "ModStr4y",
+      "id": 3573,
+      "file": "item-modifiers.json",
+      "enUS": "%+d%% Faster Block Rate",
+      "category": "property"
+    },
+    {
+      "key": "ModStr4v",
+      "id": 3570,
+      "file": "item-modifiers.json",
+      "enUS": "%+d%% Faster Cast Rate",
+      "category": "property"
+    },
+    {
+      "key": "ModStr4p",
+      "id": 3564,
+      "file": "item-modifiers.json",
+      "enUS": "%+d%% Faster Hit Recovery",
+      "category": "property"
+    },
+    {
+      "key": "Moditempoisdurskill",
+      "id": 30067,
+      "file": "npcs.json",
+      "enUS": "%+d%% Faster Poisoning by Skills",
+      "category": "property"
+    },
+    {
+      "key": "ModStr4s",
+      "id": 3567,
+      "file": "item-modifiers.json",
+      "enUS": "%+d%% Faster Run/Walk",
+      "category": "property"
+    },
+    {
+      "key": "ModStr4m",
+      "id": 3561,
+      "file": "item-modifiers.json",
+      "enUS": "%+d%% Increased Attack Speed",
+      "category": "property"
+    },
+    {
+      "key": "ModStr6g",
+      "id": 3607,
+      "file": "item-modifiers.json",
+      "enUS": "%+d%% Piercing Attack",
+      "category": "property"
+    },
+    {
+      "key": "ModitemdamColdsk",
+      "id": 10991,
+      "file": "item-modifiers.json",
+      "enUS": "%+d%% to Cold Skill Damage",
+      "category": "property"
+    },
+    {
+      "key": "Moditem2ExpG",
+      "id": 10978,
+      "file": "item-modifiers.json",
+      "enUS": "%+d%% to Experience Gained",
+      "category": "property"
+    },
+    {
+      "key": "ModitemdamFiresk",
+      "id": 10990,
+      "file": "item-modifiers.json",
+      "enUS": "%+d%% to Fire Skill Damage",
+      "category": "property"
+    },
+    {
+      "key": "ModitemdamLtngsk",
+      "id": 10992,
+      "file": "item-modifiers.json",
+      "enUS": "%+d%% to Lightning Skill Damage",
+      "category": "property"
+    },
+    {
+      "key": "ModStrMagMastery",
+      "id": 27678,
+      "file": "item-modifiers.json",
+      "enUS": "%+d%% to Magic Skill Damage",
+      "category": "property"
+    },
+    {
+      "key": "ModStr5v",
+      "id": 3596,
+      "file": "item-modifiers.json",
+      "enUS": "%+d%% to Maximum Cold Resist",
+      "category": "property"
+    },
+    {
+      "key": "ModStr5u",
+      "id": 3595,
+      "file": "item-modifiers.json",
+      "enUS": "%+d%% to Maximum Fire Resist",
+      "category": "property"
+    },
+    {
+      "key": "ModStr5w",
+      "id": 3597,
+      "file": "item-modifiers.json",
+      "enUS": "%+d%% to Maximum Lightning Resist",
+      "category": "property"
+    },
+    {
+      "key": "ModStr5x",
+      "id": 3598,
+      "file": "item-modifiers.json",
+      "enUS": "%+d%% to Maximum Magic Resist",
+      "category": "property"
+    },
+    {
+      "key": "ModStr5y",
+      "id": 3599,
+      "file": "item-modifiers.json",
+      "enUS": "%+d%% to Maximum Poison Resist",
+      "category": "property"
+    },
+    {
+      "key": "ModitemDamPer",
+      "id": 30069,
+      "file": "npcs.json",
+      "enUS": "%+d%% to Physical Attack Damage",
+      "category": "property"
+    },
+    {
+      "key": "ModitemdamPoissk",
+      "id": 10993,
+      "file": "item-modifiers.json",
+      "enUS": "%+d%% to Poison Skill Damage",
+      "category": "property"
+    },
+    {
+      "key": "Moditemreanimas",
+      "id": 10985,
+      "file": "item-modifiers.json",
+      "enUS": "%0%% Reanimate as: %1",
+      "category": "property"
+    },
+    {
+      "key": "ModStr4d",
+      "id": 3552,
+      "file": "item-modifiers.json",
+      "enUS": "%d to Monster Defense Per Hit",
+      "category": "property"
+    },
+    {
+      "key": "ModStr1x",
+      "id": 11033,
+      "file": "item-modifiers.json",
+      "enUS": "%d%% Better Chance of Getting Magic Items",
+      "category": "property"
+    },
+    {
+      "key": "ModStr4c",
+      "id": 11035,
+      "file": "item-modifiers.json",
+      "enUS": "%d%% Bonus to Attack Rating",
+      "category": "property"
+    },
+    {
+      "key": "ItemExpansiveChancX",
+      "id": 21885,
+      "file": "item-modifiers.json",
+      "enUS": "%d%% Chance to cast level %d %s on attack",
+      "category": "property"
+    },
+    {
+      "key": "ItemExpansiveChanc1",
+      "id": 21886,
+      "file": "item-modifiers.json",
+      "enUS": "%d%% Chance to cast level %d %s on striking",
+      "category": "property"
+    },
+    {
+      "key": "ItemExpansiveChanc2",
+      "id": 21887,
+      "file": "item-modifiers.json",
+      "enUS": "%d%% Chance to cast level %d %s when struck",
+      "category": "property"
+    },
+    {
+      "key": "Moditemskondeath",
+      "id": 10994,
+      "file": "item-modifiers.json",
+      "enUS": "%d%% Chance to cast level %d %s when you Die",
+      "category": "property"
+    },
+    {
+      "key": "ModitemskonKill",
+      "id": 10996,
+      "file": "item-modifiers.json",
+      "enUS": "%d%% Chance to cast level %d %s when you Kill an Enemy",
+      "category": "property"
+    },
+    {
+      "key": "ModitemskonLevel",
+      "id": 10995,
+      "file": "item-modifiers.json",
+      "enUS": "%d%% Chance to cast level %d %s when you Level-Up",
+      "category": "property"
+    },
+    {
+      "key": "ModStr1w",
+      "id": 11032,
+      "file": "item-modifiers.json",
+      "enUS": "%d%% Extra Gold from Monsters",
+      "category": "property"
+    },
+    {
+      "key": "ModStr3g",
+      "id": 3531,
+      "file": "item-modifiers.json",
+      "enUS": "%d%% Increased Chance of Blocking",
+      "category": "property"
+    },
+    {
+      "key": "ModStr2z",
+      "id": 3524,
+      "file": "item-modifiers.json",
+      "enUS": "%d%% Life stolen per hit",
+      "category": "property"
+    },
+    {
+      "key": "ModStr2y",
+      "id": 3523,
+      "file": "item-modifiers.json",
+      "enUS": "%d%% Mana stolen per hit",
+      "category": "property"
+    },
+    {
+      "key": "ModStr6e",
+      "id": 10020,
+      "file": "item-modifiers.json",
+      "enUS": "%d%% Slower Stamina Drain",
+      "category": "property"
+    },
+    {
+      "key": "ModitemAttratvsM",
+      "id": 10982,
+      "file": "item-modifiers.json",
+      "enUS": "%d%% to Attack Rating versus",
+      "category": "property"
+    },
+    {
+      "key": "Moditemdamvsm",
+      "id": 10983,
+      "file": "item-modifiers.json",
+      "enUS": "%d%% to Damage versus",
+      "category": "property"
+    },
+    {
+      "key": "strModColdDamageRange",
+      "id": 10029,
+      "file": "item-modifiers.json",
+      "enUS": "Adds %d-%d cold damage",
+      "category": "property"
+    },
+    {
+      "key": "strModMinDamageRange",
+      "id": 10037,
+      "file": "item-modifiers.json",
+      "enUS": "Adds %d-%d damage",
+      "category": "property"
+    },
+    {
+      "key": "strModFireDamageRange",
+      "id": 10027,
+      "file": "item-modifiers.json",
+      "enUS": "Adds %d-%d fire damage",
+      "category": "property"
+    },
+    {
+      "key": "strModLightningDamageRange",
+      "id": 10031,
+      "file": "item-modifiers.json",
+      "enUS": "Adds %d-%d lightning damage",
+      "category": "property"
+    },
+    {
+      "key": "strModMagicDamageRange",
+      "id": 10033,
+      "file": "item-modifiers.json",
+      "enUS": "Adds %d-%d magic damage",
+      "category": "property"
+    },
+    {
+      "key": "strModPoisonDamageRange",
+      "id": 10035,
+      "file": "item-modifiers.json",
+      "enUS": "Adds %d-%d poison damage over %d seconds",
+      "category": "property"
+    },
+    {
+      "key": "strModAllResistances",
+      "id": 10024,
+      "file": "item-modifiers.json",
+      "enUS": "All Resistances %+d",
+      "category": "property"
+    },
+    {
+      "key": "ModStr1v",
+      "id": 3494,
+      "file": "item-modifiers.json",
+      "enUS": "Attacker Takes Damage of %d",
+      "category": "property"
+    },
+    {
+      "key": "ModStr3j",
+      "id": 3534,
+      "file": "item-modifiers.json",
+      "enUS": "Attacker Takes Lightning Damage of %d",
+      "category": "property"
+    },
+    {
+      "key": "ModStr5z",
+      "id": 3600,
+      "file": "item-modifiers.json",
+      "enUS": "Cannot Be Frozen",
+      "category": "property"
+    },
+    {
+      "key": "ItemStats1r",
+      "id": 11018,
+      "file": "item-modifiers.json",
+      "enUS": "Chance to Block: %d%%",
+      "category": "itemStats"
+    },
+    {
+      "key": "ItemStats1c",
+      "id": 3456,
+      "file": "item-modifiers.json",
+      "enUS": "Charges:",
+      "category": "itemStats"
+    },
+    {
+      "key": "ModStr5m",
+      "id": 3587,
+      "file": "item-modifiers.json",
+      "enUS": "Cold Absorb %+d%%",
+      "category": "property"
+    },
+    {
+      "key": "ModStr1k",
+      "id": 3483,
+      "file": "item-modifiers.json",
+      "enUS": "Cold Resist %+d%%",
+      "category": "property"
+    },
+    {
+      "key": "ModStr5b",
+      "id": 3576,
+      "file": "item-modifiers.json",
+      "enUS": "Damage %+d",
+      "category": "property"
+    },
+    {
+      "key": "ModStr2u",
+      "id": 3519,
+      "file": "item-modifiers.json",
+      "enUS": "Damage Reduced by %d",
+      "category": "property"
+    },
+    {
+      "key": "ItemStats1g",
+      "id": 3460,
+      "file": "item-modifiers.json",
+      "enUS": "Damage:",
+      "category": "itemStats"
+    },
+    {
+      "key": "ItemStats1h",
+      "id": 3461,
+      "file": "item-modifiers.json",
+      "enUS": "Defense: %d",
+      "category": "itemStats"
+    },
+    {
+      "key": "ItemStats1hRange",
+      "id": 27998,
+      "file": "item-modifiers.json",
+      "enUS": "Defense: ÿcU(%d-%d)ÿc3",
+      "category": "itemStats"
+    },
+    {
+      "key": "ModStr2w",
+      "id": 3521,
+      "file": "item-modifiers.json",
+      "enUS": "Drain Life %d",
+      "category": "property"
+    },
+    {
+      "key": "ManaRepNeg",
+      "id": 30220,
+      "file": "npcs.json",
+      "enUS": "Drain Mana %d",
+      "category": "property"
+    },
+    {
+      "key": "ItemStats1d",
+      "id": 3457,
+      "file": "item-modifiers.json",
+      "enUS": "Durability: %i of %i",
+      "category": "itemStats"
+    },
+    {
+      "key": "ModStr5g",
+      "id": 3581,
+      "file": "item-modifiers.json",
+      "enUS": "Fire Absorb %+d%%",
+      "category": "property"
+    },
+    {
+      "key": "ModStr1j",
+      "id": 3482,
+      "file": "item-modifiers.json",
+      "enUS": "Fire Resist %+d%%",
+      "category": "property"
+    },
+    {
+      "key": "ModStr6i",
+      "id": 3609,
+      "file": "item-modifiers.json",
+      "enUS": "Fires Explosive Arrows or Bolts",
+      "category": "property"
+    },
+    {
+      "key": "ModStr6h",
+      "id": 3608,
+      "file": "item-modifiers.json",
+      "enUS": "Fires Magic Arrows",
+      "category": "property"
+    },
+    {
+      "key": "ModStr3l",
+      "id": 3536,
+      "file": "item-modifiers.json",
+      "enUS": "Freezes target",
+      "category": "property"
+    },
+    {
+      "key": "ModStr4b",
+      "id": 3550,
+      "file": "item-modifiers.json",
+      "enUS": "Half Freeze Duration",
+      "category": "property"
+    },
+    {
+      "key": "ModStr3v",
+      "id": 3544,
+      "file": "item-modifiers.json",
+      "enUS": "Heal Stamina Plus %d%%",
+      "category": "property"
+    },
+    {
+      "key": "ItemStatsrejuv1",
+      "id": 3471,
+      "file": "item-modifiers.json",
+      "enUS": "Heals %d%% Life and Mana",
+      "category": "itemStats"
+    },
+    {
+      "key": "ItemStatsrejuv2",
+      "id": 3472,
+      "file": "item-modifiers.json",
+      "enUS": "Heals 100% Life and Mana",
+      "category": "itemStats"
+    },
+    {
+      "key": "ModStr6d",
+      "id": 11038,
+      "file": "item-modifiers.json",
+      "enUS": "Hit Blinds Target",
+      "category": "property"
+    },
+    {
+      "key": "ModStr3u",
+      "id": 11034,
+      "file": "item-modifiers.json",
+      "enUS": "Hit Causes Monster to Flee %+d%%",
+      "category": "property"
+    },
+    {
+      "key": "ModStr3y",
+      "id": 3547,
+      "file": "item-modifiers.json",
+      "enUS": "Ignore Target's Defense",
+      "category": "property"
+    },
+    {
+      "key": "CurseImm",
+      "id": 30270,
+      "file": "npcs.json",
+      "enUS": "Immunity to Curses",
+      "category": "property"
+    },
+    {
+      "key": "ModStr2i",
+      "id": 3507,
+      "file": "item-modifiers.json",
+      "enUS": "Increase Maximum Durability %d%%",
+      "category": "property"
+    },
+    {
+      "key": "ModStr2g",
+      "id": 3505,
+      "file": "item-modifiers.json",
+      "enUS": "Increase Maximum Life %d%%",
+      "category": "property"
+    },
+    {
+      "key": "ModStr2h",
+      "id": 3506,
+      "file": "item-modifiers.json",
+      "enUS": "Increase Maximum Mana %d%%",
+      "category": "property"
+    },
+    {
+      "key": "ModStre9i",
+      "id": 21239,
+      "file": "item-modifiers.json",
+      "enUS": "Increased Stack Size",
+      "category": "property"
+    },
+    {
+      "key": "ModStre9s",
+      "id": 21240,
+      "file": "item-modifiers.json",
+      "enUS": "Indestructible",
+      "category": "property"
+    },
+    {
+      "key": "ModStr1y",
+      "id": 3497,
+      "file": "item-modifiers.json",
+      "enUS": "Knockback",
+      "category": "property"
+    },
+    {
+      "key": "ModStre10d",
+      "id": 21251,
+      "file": "item-modifiers.json",
+      "enUS": "Level %d %s (%d/%d Charges)",
+      "category": "property"
+    },
+    {
+      "key": "ModitemAura",
+      "id": 10976,
+      "file": "item-modifiers.json",
+      "enUS": "Level %d %s Aura When Equipped",
+      "category": "property"
+    },
+    {
+      "key": "ModStr5i",
+      "id": 3583,
+      "file": "item-modifiers.json",
+      "enUS": "Lightning Absorb %+d%%",
+      "category": "property"
+    },
+    {
+      "key": "ModStr1l",
+      "id": 3484,
+      "file": "item-modifiers.json",
+      "enUS": "Lightning Resist %+d%%",
+      "category": "property"
+    },
+    {
+      "key": "ModStr5k",
+      "id": 3585,
+      "file": "item-modifiers.json",
+      "enUS": "Magic Absorb %+d%%",
+      "category": "property"
+    },
+    {
+      "key": "ModStr2t",
+      "id": 3518,
+      "file": "item-modifiers.json",
+      "enUS": "Magic Damage Reduced by %d",
+      "category": "property"
+    },
+    {
+      "key": "ModStr1m",
+      "id": 3485,
+      "file": "item-modifiers.json",
+      "enUS": "Magic Resist %+d%%",
+      "category": "property"
+    },
+    {
+      "key": "ModItemMonColdSunder",
+      "id": 27339,
+      "file": "item-modifiers.json",
+      "enUS": "Monster Cold Immunity is Sundered",
+      "category": "property"
+    },
+    {
+      "key": "ModItemMonFireSunder",
+      "id": 27340,
+      "file": "item-modifiers.json",
+      "enUS": "Monster Fire Immunity is Sundered",
+      "category": "property"
+    },
+    {
+      "key": "ModItemMonLightSunder",
+      "id": 27341,
+      "file": "item-modifiers.json",
+      "enUS": "Monster Lightning Immunity is Sundered",
+      "category": "property"
+    },
+    {
+      "key": "ModItemMonMagicSunder",
+      "id": 27344,
+      "file": "item-modifiers.json",
+      "enUS": "Monster Magic Immunity is Sundered",
+      "category": "property"
+    },
+    {
+      "key": "ModItemMonPhysicalSunder",
+      "id": 27343,
+      "file": "item-modifiers.json",
+      "enUS": "Monster Physical Immunity is Sundered",
+      "category": "property"
+    },
+    {
+      "key": "ModItemMonPoisonSunder",
+      "id": 27342,
+      "file": "item-modifiers.json",
+      "enUS": "Monster Poison Immunity is Sundered",
+      "category": "property"
+    },
+    {
+      "key": "ItemStats1j",
+      "id": 3463,
+      "file": "item-modifiers.json",
+      "enUS": "of",
+      "category": "itemStats"
+    },
+    {
+      "key": "ItemStats1l",
+      "id": 3465,
+      "file": "item-modifiers.json",
+      "enUS": "One-Hand Damage: %d to %d",
+      "category": "itemStats"
+    },
+    {
+      "key": "ModStr2uPercentNegative",
+      "id": 27351,
+      "file": "item-modifiers.json",
+      "enUS": "Physical Damage Received Increased by %d%%",
+      "category": "property"
+    },
+    {
+      "key": "ModStr2uPercent",
+      "id": 23001,
+      "file": "item-modifiers.json",
+      "enUS": "Physical Damage Received Reduced by %d%%",
+      "category": "property"
+    },
+    {
+      "key": "ItemStats1q",
+      "id": 3470,
+      "file": "item-modifiers.json",
+      "enUS": "Points: %d",
+      "category": "itemStats"
+    },
+    {
+      "key": "ModStr3rneg",
+      "id": 30083,
+      "file": "npcs.json",
+      "enUS": "Poison Length Increased by %d%%",
+      "category": "property"
+    },
+    {
+      "key": "ModStr3r",
+      "id": 3542,
+      "file": "item-modifiers.json",
+      "enUS": "Poison Length Reduced by %d%%",
+      "category": "property"
+    },
+    {
+      "key": "ModStr1n",
+      "id": 3486,
+      "file": "item-modifiers.json",
+      "enUS": "Poison Resist %+d%%",
+      "category": "property"
+    },
+    {
+      "key": "ModStr4a",
+      "id": 3549,
+      "file": "item-modifiers.json",
+      "enUS": "Prevent Monster Heal",
+      "category": "property"
+    },
+    {
+      "key": "ItemStats1i",
+      "id": 3462,
+      "file": "item-modifiers.json",
+      "enUS": "Quantity: %d of %d",
+      "category": "itemStats"
+    },
+    {
+      "key": "ModStr2hNegative",
+      "id": 30292,
+      "file": "npcs.json",
+      "enUS": "Reduce Maximum Mana %d%%",
+      "category": "property"
+    },
+    {
+      "key": "ModitemRedVendP",
+      "id": 10980,
+      "file": "item-modifiers.json",
+      "enUS": "Reduces all Vendor Prices %d%%",
+      "category": "property"
+    },
+    {
+      "key": "ModStr4g",
+      "id": 3555,
+      "file": "item-modifiers.json",
+      "enUS": "Regenerate Mana %d%%",
+      "category": "property"
+    },
+    {
+      "key": "ModStre9t",
+      "id": 21241,
+      "file": "item-modifiers.json",
+      "enUS": "Repairs %d durability per second",
+      "category": "property"
+    },
+    {
+      "key": "ModStr2l",
+      "id": 3510,
+      "file": "item-modifiers.json",
+      "enUS": "Replenish Life %+d",
+      "category": "property"
+    },
+    {
+      "key": "ManaRepPlus",
+      "id": 30219,
+      "file": "npcs.json",
+      "enUS": "Replenish Mana %+d",
+      "category": "property"
+    },
+    {
+      "key": "ModStre9v",
+      "id": 21243,
+      "file": "item-modifiers.json",
+      "enUS": "Replenishes quantity",
+      "category": "property"
+    },
+    {
+      "key": "ItemStats1f",
+      "id": 3459,
+      "file": "item-modifiers.json",
+      "enUS": "Required Dexterity: %d",
+      "category": "itemStats"
+    },
+    {
+      "key": "ItemStats1p",
+      "id": 3469,
+      "file": "item-modifiers.json",
+      "enUS": "Required Level: %d",
+      "category": "itemStats"
+    },
+    {
+      "key": "ItemStats1e",
+      "id": 3458,
+      "file": "item-modifiers.json",
+      "enUS": "Required Strength: %d",
+      "category": "itemStats"
+    },
+    {
+      "key": "ModStr3h",
+      "id": 3532,
+      "file": "item-modifiers.json",
+      "enUS": "Requirements %+d%%",
+      "category": "property"
+    },
+    {
+      "key": "ItemStats1a",
+      "id": 3454,
+      "file": "item-modifiers.json",
+      "enUS": "Requirements not met",
+      "category": "itemStats"
+    },
+    {
+      "key": "ModitemSMRIP",
+      "id": 10981,
+      "file": "item-modifiers.json",
+      "enUS": "Slain Monsters Rest in Peace",
+      "category": "property"
+    },
+    {
+      "key": "ModStr5r",
+      "id": 11036,
+      "file": "item-modifiers.json",
+      "enUS": "Slows Target by %d%%",
+      "category": "property"
+    },
+    {
+      "key": "ItemStats1o",
+      "id": 3468,
+      "file": "item-modifiers.json",
+      "enUS": "Smite Damage: %d to %d",
+      "category": "itemStats"
+    },
+    {
+      "key": "ItemStats1n",
+      "id": 3467,
+      "file": "item-modifiers.json",
+      "enUS": "Throw Damage: %d",
+      "category": "itemStats"
+    },
+    {
+      "key": "ModStr5a",
+      "id": 3575,
+      "file": "item-modifiers.json",
+      "enUS": "Throwable",
+      "category": "property"
+    },
+    {
+      "key": "ItemStats1m",
+      "id": 3466,
+      "file": "item-modifiers.json",
+      "enUS": "Two-Hand Damage: %d to %d",
+      "category": "itemStats"
+    },
+    {
+      "key": "ItemStats1b",
+      "id": 3455,
+      "file": "item-modifiers.json",
+      "enUS": "Unidentified",
+      "category": "itemStats"
+    },
+    {
+      "key": "BrokenItem",
+      "id": 30097,
+      "file": "npcs.json",
+      "enUS": "ÿc1Failure",
+      "category": "property"
+    },
+    {
+      "key": "Quantityadd1",
+      "id": 30002,
+      "file": "npcs.json",
+      "enUS": "ÿc4Items inside: %d",
+      "category": "property"
+    }
+  ],
+  "skills": [
+    {
+      "key": "skillname6",
+      "id": 4397,
+      "enUS": "Magic Arrow",
+      "charClass": "ama",
+      "className": "Amazon"
+    },
+    {
+      "key": "skillname7",
+      "id": 4401,
+      "enUS": "Fire Arrow",
+      "charClass": "ama",
+      "className": "Amazon"
+    },
+    {
+      "key": "skillname8",
+      "id": 4405,
+      "enUS": "Inner Sight",
+      "charClass": "ama",
+      "className": "Amazon"
+    },
+    {
+      "key": "skillname9",
+      "id": 4409,
+      "enUS": "Critical Strike",
+      "charClass": "ama",
+      "className": "Amazon"
+    },
+    {
+      "key": "skillname10",
+      "id": 4413,
+      "enUS": "Jab",
+      "charClass": "ama",
+      "className": "Amazon"
+    },
+    {
+      "key": "skillname11",
+      "id": 4417,
+      "enUS": "Cold Arrow",
+      "charClass": "ama",
+      "className": "Amazon"
+    },
+    {
+      "key": "skillname12",
+      "id": 4421,
+      "enUS": "Multiple Shot",
+      "charClass": "ama",
+      "className": "Amazon"
+    },
+    {
+      "key": "skillname13",
+      "id": 4425,
+      "enUS": "Dodge",
+      "charClass": "ama",
+      "className": "Amazon"
+    },
+    {
+      "key": "skillname14",
+      "id": 4429,
+      "enUS": "Power Strike",
+      "charClass": "ama",
+      "className": "Amazon"
+    },
+    {
+      "key": "skillname15",
+      "id": 4433,
+      "enUS": "Poison Javelin",
+      "charClass": "ama",
+      "className": "Amazon"
+    },
+    {
+      "key": "skillname16",
+      "id": 4437,
+      "enUS": "Exploding Arrow",
+      "charClass": "ama",
+      "className": "Amazon"
+    },
+    {
+      "key": "skillname17",
+      "id": 4441,
+      "enUS": "Slow Missiles",
+      "charClass": "ama",
+      "className": "Amazon"
+    },
+    {
+      "key": "skillname18",
+      "id": 4445,
+      "enUS": "Avoid",
+      "charClass": "ama",
+      "className": "Amazon"
+    },
+    {
+      "key": "skillname19",
+      "id": 4449,
+      "enUS": "Impale",
+      "charClass": "ama",
+      "className": "Amazon"
+    },
+    {
+      "key": "skillname20",
+      "id": 4453,
+      "enUS": "Lightning Bolt",
+      "charClass": "ama",
+      "className": "Amazon"
+    },
+    {
+      "key": "skillname21",
+      "id": 4457,
+      "enUS": "Ice Arrow",
+      "charClass": "ama",
+      "className": "Amazon"
+    },
+    {
+      "key": "skillname22",
+      "id": 4461,
+      "enUS": "Guided Arrow",
+      "charClass": "ama",
+      "className": "Amazon"
+    },
+    {
+      "key": "skillname23",
+      "id": 4465,
+      "enUS": "Penetrate",
+      "charClass": "ama",
+      "className": "Amazon"
+    },
+    {
+      "key": "skillname24",
+      "id": 4469,
+      "enUS": "Charged Strike",
+      "charClass": "ama",
+      "className": "Amazon"
+    },
+    {
+      "key": "skillname25",
+      "id": 4473,
+      "enUS": "Plague Javelin",
+      "charClass": "ama",
+      "className": "Amazon"
+    },
+    {
+      "key": "skillname26",
+      "id": 4477,
+      "enUS": "Strafe",
+      "charClass": "ama",
+      "className": "Amazon"
+    },
+    {
+      "key": "skillname27",
+      "id": 4481,
+      "enUS": "Immolation Arrow",
+      "charClass": "ama",
+      "className": "Amazon"
+    },
+    {
+      "key": "skillname28",
+      "id": 4485,
+      "enUS": "Decoy",
+      "charClass": "ama",
+      "className": "Amazon"
+    },
+    {
+      "key": "skillname29",
+      "id": 4489,
+      "enUS": "Evade",
+      "charClass": "ama",
+      "className": "Amazon"
+    },
+    {
+      "key": "skillname30",
+      "id": 4493,
+      "enUS": "Fend",
+      "charClass": "ama",
+      "className": "Amazon"
+    },
+    {
+      "key": "skillname31",
+      "id": 4497,
+      "enUS": "Freezing Arrow",
+      "charClass": "ama",
+      "className": "Amazon"
+    },
+    {
+      "key": "skillname32",
+      "id": 4501,
+      "enUS": "Valkyrie",
+      "charClass": "ama",
+      "className": "Amazon"
+    },
+    {
+      "key": "skillname33",
+      "id": 4505,
+      "enUS": "Pierce",
+      "charClass": "ama",
+      "className": "Amazon"
+    },
+    {
+      "key": "skillname34",
+      "id": 4509,
+      "enUS": "Lightning Strike",
+      "charClass": "ama",
+      "className": "Amazon"
+    },
+    {
+      "key": "skillname35",
+      "id": 4513,
+      "enUS": "Lightning Fury",
+      "charClass": "ama",
+      "className": "Amazon"
+    },
+    {
+      "key": "skillname36",
+      "id": 4517,
+      "enUS": "Fire Bolt",
+      "charClass": "sor",
+      "className": "Sorceress"
+    },
+    {
+      "key": "skillname37",
+      "id": 4521,
+      "enUS": "Warmth",
+      "charClass": "sor",
+      "className": "Sorceress"
+    },
+    {
+      "key": "skillname38",
+      "id": 4525,
+      "enUS": "Charged Bolt",
+      "charClass": "sor",
+      "className": "Sorceress"
+    },
+    {
+      "key": "skillname39",
+      "id": 4529,
+      "enUS": "Ice Bolt",
+      "charClass": "sor",
+      "className": "Sorceress"
+    },
+    {
+      "key": "skillname40",
+      "id": 4533,
+      "enUS": "Frozen Armor",
+      "charClass": "sor",
+      "className": "Sorceress"
+    },
+    {
+      "key": "skillname41",
+      "id": 4537,
+      "enUS": "Inferno",
+      "charClass": "sor",
+      "className": "Sorceress"
+    },
+    {
+      "key": "skillname42",
+      "id": 4541,
+      "enUS": "Static Field",
+      "charClass": "sor",
+      "className": "Sorceress"
+    },
+    {
+      "key": "skillname43",
+      "id": 4545,
+      "enUS": "Telekinesis",
+      "charClass": "sor",
+      "className": "Sorceress"
+    },
+    {
+      "key": "skillname44",
+      "id": 4549,
+      "enUS": "Frost Nova",
+      "charClass": "sor",
+      "className": "Sorceress"
+    },
+    {
+      "key": "skillname45",
+      "id": 4553,
+      "enUS": "Ice Blast",
+      "charClass": "sor",
+      "className": "Sorceress"
+    },
+    {
+      "key": "skillname46",
+      "id": 4557,
+      "enUS": "Blaze",
+      "charClass": "sor",
+      "className": "Sorceress"
+    },
+    {
+      "key": "skillname47",
+      "id": 4561,
+      "enUS": "Fire Ball",
+      "charClass": "sor",
+      "className": "Sorceress"
+    },
+    {
+      "key": "skillname48",
+      "id": 4565,
+      "enUS": "Nova",
+      "charClass": "sor",
+      "className": "Sorceress"
+    },
+    {
+      "key": "skillname49",
+      "id": 4569,
+      "enUS": "Lightning",
+      "charClass": "sor",
+      "className": "Sorceress"
+    },
+    {
+      "key": "skillname50",
+      "id": 4573,
+      "enUS": "Shiver Armor",
+      "charClass": "sor",
+      "className": "Sorceress"
+    },
+    {
+      "key": "skillname51",
+      "id": 4577,
+      "enUS": "Fire Wall",
+      "charClass": "sor",
+      "className": "Sorceress"
+    },
+    {
+      "key": "skillname52",
+      "id": 4581,
+      "enUS": "Enchant",
+      "charClass": "sor",
+      "className": "Sorceress"
+    },
+    {
+      "key": "skillname53",
+      "id": 4585,
+      "enUS": "Chain Lightning",
+      "charClass": "sor",
+      "className": "Sorceress"
+    },
+    {
+      "key": "skillname54",
+      "id": 4589,
+      "enUS": "Teleport",
+      "charClass": "sor",
+      "className": "Sorceress"
+    },
+    {
+      "key": "skillname55",
+      "id": 4593,
+      "enUS": "Glacial Spike",
+      "charClass": "sor",
+      "className": "Sorceress"
+    },
+    {
+      "key": "skillname56",
+      "id": 4597,
+      "enUS": "Meteor",
+      "charClass": "sor",
+      "className": "Sorceress"
+    },
+    {
+      "key": "skillname57",
+      "id": 4601,
+      "enUS": "Thunder Storm",
+      "charClass": "sor",
+      "className": "Sorceress"
+    },
+    {
+      "key": "skillname58",
+      "id": 4605,
+      "enUS": "Energy Shield",
+      "charClass": "sor",
+      "className": "Sorceress"
+    },
+    {
+      "key": "skillname59",
+      "id": 4609,
+      "enUS": "Blizzard",
+      "charClass": "sor",
+      "className": "Sorceress"
+    },
+    {
+      "key": "skillname60",
+      "id": 4613,
+      "enUS": "Chilling Armor",
+      "charClass": "sor",
+      "className": "Sorceress"
+    },
+    {
+      "key": "skillsname61",
+      "id": 4617,
+      "enUS": "Fire Mastery",
+      "charClass": "sor",
+      "className": "Sorceress"
+    },
+    {
+      "key": "skillname62",
+      "id": 4621,
+      "enUS": "Hydra",
+      "charClass": "sor",
+      "className": "Sorceress"
+    },
+    {
+      "key": "skillname63",
+      "id": 4625,
+      "enUS": "Lightning Mastery",
+      "charClass": "sor",
+      "className": "Sorceress"
+    },
+    {
+      "key": "skillname64",
+      "id": 4629,
+      "enUS": "Frozen Orb",
+      "charClass": "sor",
+      "className": "Sorceress"
+    },
+    {
+      "key": "skillname65",
+      "id": 4633,
+      "enUS": "Cold Mastery",
+      "charClass": "sor",
+      "className": "Sorceress"
+    },
+    {
+      "key": "skillname66",
+      "id": 4637,
+      "enUS": "Amplify Damage",
+      "charClass": "nec",
+      "className": "Necromancer"
+    },
+    {
+      "key": "skillname67",
+      "id": 4641,
+      "enUS": "Teeth",
+      "charClass": "nec",
+      "className": "Necromancer"
+    },
+    {
+      "key": "skillname68",
+      "id": 4645,
+      "enUS": "Bone Armor",
+      "charClass": "nec",
+      "className": "Necromancer"
+    },
+    {
+      "key": "skillname69",
+      "id": 4649,
+      "enUS": "Skeleton Mastery",
+      "charClass": "nec",
+      "className": "Necromancer"
+    },
+    {
+      "key": "skillname70",
+      "id": 4653,
+      "enUS": "Raise Skeleton",
+      "charClass": "nec",
+      "className": "Necromancer"
+    },
+    {
+      "key": "skillname71",
+      "id": 4657,
+      "enUS": "Dim Vision",
+      "charClass": "nec",
+      "className": "Necromancer"
+    },
+    {
+      "key": "skillname72",
+      "id": 4661,
+      "enUS": "Weaken",
+      "charClass": "nec",
+      "className": "Necromancer"
+    },
+    {
+      "key": "skillname73",
+      "id": 4665,
+      "enUS": "Poison Dagger",
+      "charClass": "nec",
+      "className": "Necromancer"
+    },
+    {
+      "key": "skillname74",
+      "id": 4669,
+      "enUS": "Corpse Explosion",
+      "charClass": "nec",
+      "className": "Necromancer"
+    },
+    {
+      "key": "skillname75",
+      "id": 4673,
+      "enUS": "Clay Golem",
+      "charClass": "nec",
+      "className": "Necromancer"
+    },
+    {
+      "key": "skillname76",
+      "id": 4677,
+      "enUS": "Iron Maiden",
+      "charClass": "nec",
+      "className": "Necromancer"
+    },
+    {
+      "key": "skillname77",
+      "id": 4681,
+      "enUS": "Terror",
+      "charClass": "nec",
+      "className": "Necromancer"
+    },
+    {
+      "key": "skillname78",
+      "id": 4685,
+      "enUS": "Bone Wall",
+      "charClass": "nec",
+      "className": "Necromancer"
+    },
+    {
+      "key": "skillname79",
+      "id": 4689,
+      "enUS": "Golem Mastery",
+      "charClass": "nec",
+      "className": "Necromancer"
+    },
+    {
+      "key": "skillname80",
+      "id": 4693,
+      "enUS": "Raise Skeletal Mage",
+      "charClass": "nec",
+      "className": "Necromancer"
+    },
+    {
+      "key": "skillname81",
+      "id": 4697,
+      "enUS": "Confuse",
+      "charClass": "nec",
+      "className": "Necromancer"
+    },
+    {
+      "key": "skillname82",
+      "id": 4701,
+      "enUS": "Life Tap",
+      "charClass": "nec",
+      "className": "Necromancer"
+    },
+    {
+      "key": "skillname83",
+      "id": 4705,
+      "enUS": "Poison Explosion",
+      "charClass": "nec",
+      "className": "Necromancer"
+    },
+    {
+      "key": "skillname84",
+      "id": 4709,
+      "enUS": "Bone Spear",
+      "charClass": "nec",
+      "className": "Necromancer"
+    },
+    {
+      "key": "skillname85",
+      "id": 4713,
+      "enUS": "Blood Golem",
+      "charClass": "nec",
+      "className": "Necromancer"
+    },
+    {
+      "key": "skillname86",
+      "id": 4717,
+      "enUS": "Attract",
+      "charClass": "nec",
+      "className": "Necromancer"
+    },
+    {
+      "key": "skillname87",
+      "id": 4721,
+      "enUS": "Decrepify",
+      "charClass": "nec",
+      "className": "Necromancer"
+    },
+    {
+      "key": "skillname88",
+      "id": 4725,
+      "enUS": "Bone Prison",
+      "charClass": "nec",
+      "className": "Necromancer"
+    },
+    {
+      "key": "skillname89",
+      "id": 4729,
+      "enUS": "Summon Resist",
+      "charClass": "nec",
+      "className": "Necromancer"
+    },
+    {
+      "key": "skillname90",
+      "id": 4733,
+      "enUS": "Iron Golem",
+      "charClass": "nec",
+      "className": "Necromancer"
+    },
+    {
+      "key": "skillname91",
+      "id": 4737,
+      "enUS": "Lower Resist",
+      "charClass": "nec",
+      "className": "Necromancer"
+    },
+    {
+      "key": "skillname92",
+      "id": 4741,
+      "enUS": "Poison Nova",
+      "charClass": "nec",
+      "className": "Necromancer"
+    },
+    {
+      "key": "skillname93",
+      "id": 4745,
+      "enUS": "Bone Spirit",
+      "charClass": "nec",
+      "className": "Necromancer"
+    },
+    {
+      "key": "skillname94",
+      "id": 4749,
+      "enUS": "Fire Golem",
+      "charClass": "nec",
+      "className": "Necromancer"
+    },
+    {
+      "key": "skillname95",
+      "id": 4753,
+      "enUS": "Revive",
+      "charClass": "nec",
+      "className": "Necromancer"
+    },
+    {
+      "key": "skillname96",
+      "id": 4757,
+      "enUS": "Sacrifice",
+      "charClass": "pal",
+      "className": "Paladin"
+    },
+    {
+      "key": "skillname97",
+      "id": 4761,
+      "enUS": "Smite",
+      "charClass": "pal",
+      "className": "Paladin"
+    },
+    {
+      "key": "skillname98",
+      "id": 4765,
+      "enUS": "Might",
+      "charClass": "pal",
+      "className": "Paladin"
+    },
+    {
+      "key": "skillname99",
+      "id": 4769,
+      "enUS": "Prayer",
+      "charClass": "pal",
+      "className": "Paladin"
+    },
+    {
+      "key": "skillname100",
+      "id": 4773,
+      "enUS": "Resist Fire",
+      "charClass": "pal",
+      "className": "Paladin"
+    },
+    {
+      "key": "skillname101",
+      "id": 4777,
+      "enUS": "Holy Bolt",
+      "charClass": "pal",
+      "className": "Paladin"
+    },
+    {
+      "key": "skillname102",
+      "id": 4781,
+      "enUS": "Holy Fire",
+      "charClass": "pal",
+      "className": "Paladin"
+    },
+    {
+      "key": "skillname103",
+      "id": 4785,
+      "enUS": "Thorns",
+      "charClass": "pal",
+      "className": "Paladin"
+    },
+    {
+      "key": "skillname104",
+      "id": 4789,
+      "enUS": "Defiance",
+      "charClass": "pal",
+      "className": "Paladin"
+    },
+    {
+      "key": "skillname105",
+      "id": 4793,
+      "enUS": "Resist Cold",
+      "charClass": "pal",
+      "className": "Paladin"
+    },
+    {
+      "key": "skillname106",
+      "id": 4797,
+      "enUS": "Zeal",
+      "charClass": "pal",
+      "className": "Paladin"
+    },
+    {
+      "key": "skillname107",
+      "id": 4801,
+      "enUS": "Charge",
+      "charClass": "pal",
+      "className": "Paladin"
+    },
+    {
+      "key": "skillname108",
+      "id": 4805,
+      "enUS": "Blessed Aim",
+      "charClass": "pal",
+      "className": "Paladin"
+    },
+    {
+      "key": "skillname109",
+      "id": 4809,
+      "enUS": "Cleansing",
+      "charClass": "pal",
+      "className": "Paladin"
+    },
+    {
+      "key": "skillname110",
+      "id": 4813,
+      "enUS": "Resist Lightning",
+      "charClass": "pal",
+      "className": "Paladin"
+    },
+    {
+      "key": "skillname111",
+      "id": 4817,
+      "enUS": "Vengeance",
+      "charClass": "pal",
+      "className": "Paladin"
+    },
+    {
+      "key": "skillname112",
+      "id": 4821,
+      "enUS": "Blessed Hammer",
+      "charClass": "pal",
+      "className": "Paladin"
+    },
+    {
+      "key": "skillname113",
+      "id": 4825,
+      "enUS": "Concentration",
+      "charClass": "pal",
+      "className": "Paladin"
+    },
+    {
+      "key": "skillname114",
+      "id": 4829,
+      "enUS": "Holy Freeze",
+      "charClass": "pal",
+      "className": "Paladin"
+    },
+    {
+      "key": "skillname115",
+      "id": 4833,
+      "enUS": "Vigor",
+      "charClass": "pal",
+      "className": "Paladin"
+    },
+    {
+      "key": "skillname116",
+      "id": 4837,
+      "enUS": "Conversion",
+      "charClass": "pal",
+      "className": "Paladin"
+    },
+    {
+      "key": "skillname117",
+      "id": 4841,
+      "enUS": "Holy Shield",
+      "charClass": "pal",
+      "className": "Paladin"
+    },
+    {
+      "key": "skillname118",
+      "id": 4845,
+      "enUS": "Holy Shock",
+      "charClass": "pal",
+      "className": "Paladin"
+    },
+    {
+      "key": "skillname119",
+      "id": 4849,
+      "enUS": "Sanctuary",
+      "charClass": "pal",
+      "className": "Paladin"
+    },
+    {
+      "key": "skillname120",
+      "id": 4853,
+      "enUS": "Meditation",
+      "charClass": "pal",
+      "className": "Paladin"
+    },
+    {
+      "key": "skillname121",
+      "id": 4857,
+      "enUS": "Fist of the Heavens",
+      "charClass": "pal",
+      "className": "Paladin"
+    },
+    {
+      "key": "skillname122",
+      "id": 4861,
+      "enUS": "Fanaticism",
+      "charClass": "pal",
+      "className": "Paladin"
+    },
+    {
+      "key": "skillname123",
+      "id": 4865,
+      "enUS": "Conviction",
+      "charClass": "pal",
+      "className": "Paladin"
+    },
+    {
+      "key": "skillname124",
+      "id": 4869,
+      "enUS": "Redemption",
+      "charClass": "pal",
+      "className": "Paladin"
+    },
+    {
+      "key": "skillname125",
+      "id": 4873,
+      "enUS": "Salvation",
+      "charClass": "pal",
+      "className": "Paladin"
+    },
+    {
+      "key": "skillname126",
+      "id": 4877,
+      "enUS": "Bash",
+      "charClass": "bar",
+      "className": "Barbarian"
+    },
+    {
+      "key": "skillname127",
+      "id": 4881,
+      "enUS": "Blade Mastery",
+      "charClass": "bar",
+      "className": "Barbarian"
+    },
+    {
+      "key": "skillname128",
+      "id": 4885,
+      "enUS": "Axe Mastery",
+      "charClass": "bar",
+      "className": "Barbarian"
+    },
+    {
+      "key": "skillname129",
+      "id": 4889,
+      "enUS": "Blunt Mastery",
+      "charClass": "bar",
+      "className": "Barbarian"
+    },
+    {
+      "key": "skillname130",
+      "id": 4893,
+      "enUS": "Howl",
+      "charClass": "bar",
+      "className": "Barbarian"
+    },
+    {
+      "key": "skillname131",
+      "id": 4897,
+      "enUS": "Find Potion",
+      "charClass": "bar",
+      "className": "Barbarian"
+    },
+    {
+      "key": "skillname132",
+      "id": 4901,
+      "enUS": "Leap",
+      "charClass": "bar",
+      "className": "Barbarian"
+    },
+    {
+      "key": "skillname133",
+      "id": 4905,
+      "enUS": "Double Swing",
+      "charClass": "bar",
+      "className": "Barbarian"
+    },
+    {
+      "key": "skillname134",
+      "id": 4909,
+      "enUS": "Polearm Mastery",
+      "charClass": "bar",
+      "className": "Barbarian"
+    },
+    {
+      "key": "skillname135",
+      "id": 4913,
+      "enUS": "Throwing Mastery",
+      "charClass": "bar",
+      "className": "Barbarian"
+    },
+    {
+      "key": "skillname136",
+      "id": 4917,
+      "enUS": "Spear Mastery",
+      "charClass": "bar",
+      "className": "Barbarian"
+    },
+    {
+      "key": "skillname137",
+      "id": 4921,
+      "enUS": "Taunt",
+      "charClass": "bar",
+      "className": "Barbarian"
+    },
+    {
+      "key": "skillname138",
+      "id": 4925,
+      "enUS": "Shout",
+      "charClass": "bar",
+      "className": "Barbarian"
+    },
+    {
+      "key": "skillname139",
+      "id": 4929,
+      "enUS": "Stun",
+      "charClass": "bar",
+      "className": "Barbarian"
+    },
+    {
+      "key": "skillname140",
+      "id": 4933,
+      "enUS": "Double Throw",
+      "charClass": "bar",
+      "className": "Barbarian"
+    },
+    {
+      "key": "skillname141",
+      "id": 4937,
+      "enUS": "Increased Stamina",
+      "charClass": "bar",
+      "className": "Barbarian"
+    },
+    {
+      "key": "skillname142",
+      "id": 4941,
+      "enUS": "Find Item",
+      "charClass": "bar",
+      "className": "Barbarian"
+    },
+    {
+      "key": "skillname143",
+      "id": 4945,
+      "enUS": "Leap Attack",
+      "charClass": "bar",
+      "className": "Barbarian"
+    },
+    {
+      "key": "skillname144",
+      "id": 4949,
+      "enUS": "Concentrate",
+      "charClass": "bar",
+      "className": "Barbarian"
+    },
+    {
+      "key": "skillname145",
+      "id": 4953,
+      "enUS": "Iron Skin",
+      "charClass": "bar",
+      "className": "Barbarian"
+    },
+    {
+      "key": "skillname146",
+      "id": 4957,
+      "enUS": "Battle Cry",
+      "charClass": "bar",
+      "className": "Barbarian"
+    },
+    {
+      "key": "skillname147",
+      "id": 4961,
+      "enUS": "Frenzy",
+      "charClass": "bar",
+      "className": "Barbarian"
+    },
+    {
+      "key": "skillname148",
+      "id": 4965,
+      "enUS": "Increased Speed",
+      "charClass": "bar",
+      "className": "Barbarian"
+    },
+    {
+      "key": "skillname149",
+      "id": 4969,
+      "enUS": "Battle Orders",
+      "charClass": "bar",
+      "className": "Barbarian"
+    },
+    {
+      "key": "skillname150",
+      "id": 4973,
+      "enUS": "Grim Ward",
+      "charClass": "bar",
+      "className": "Barbarian"
+    },
+    {
+      "key": "skillname151",
+      "id": 4977,
+      "enUS": "Whirlwind",
+      "charClass": "bar",
+      "className": "Barbarian"
+    },
+    {
+      "key": "skillname152",
+      "id": 4981,
+      "enUS": "Berserk",
+      "charClass": "bar",
+      "className": "Barbarian"
+    },
+    {
+      "key": "skillname153",
+      "id": 4985,
+      "enUS": "Natural Resistance",
+      "charClass": "bar",
+      "className": "Barbarian"
+    },
+    {
+      "key": "skillname154",
+      "id": 4989,
+      "enUS": "War Cry",
+      "charClass": "bar",
+      "className": "Barbarian"
+    },
+    {
+      "key": "skillname155",
+      "id": 4993,
+      "enUS": "Battle Command",
+      "charClass": "bar",
+      "className": "Barbarian"
+    },
+    {
+      "key": "Skillname222",
+      "id": 22038,
+      "enUS": "Raven",
+      "charClass": "dru",
+      "className": "Druid"
+    },
+    {
+      "key": "Skillname223",
+      "id": 22042,
+      "enUS": "Poison Creeper",
+      "charClass": "dru",
+      "className": "Druid"
+    },
+    {
+      "key": "Skillname224",
+      "id": 10997,
+      "enUS": "Werewolf",
+      "charClass": "dru",
+      "className": "Druid"
+    },
+    {
+      "key": "Skillname225",
+      "id": 22050,
+      "enUS": "Lycanthropy",
+      "charClass": "dru",
+      "className": "Druid"
+    },
+    {
+      "key": "Skillname226",
+      "id": 22054,
+      "enUS": "Firestorm",
+      "charClass": "dru",
+      "className": "Druid"
+    },
+    {
+      "key": "Skillname227",
+      "id": 22058,
+      "enUS": "Oak Sage",
+      "charClass": "dru",
+      "className": "Druid"
+    },
+    {
+      "key": "Skillname228",
+      "id": 22062,
+      "enUS": "Summon Spirit Wolf",
+      "charClass": "dru",
+      "className": "Druid"
+    },
+    {
+      "key": "Skillname229",
+      "id": 22066,
+      "enUS": "Werebear",
+      "charClass": "dru",
+      "className": "Druid"
+    },
+    {
+      "key": "Skillname230",
+      "id": 22070,
+      "enUS": "Molten Boulder",
+      "charClass": "dru",
+      "className": "Druid"
+    },
+    {
+      "key": "Skillname231",
+      "id": 22074,
+      "enUS": "Arctic Blast",
+      "charClass": "dru",
+      "className": "Druid"
+    },
+    {
+      "key": "Skillname242",
+      "id": 22118,
+      "enUS": "Solar Creeper",
+      "charClass": "dru",
+      "className": "Druid"
+    },
+    {
+      "key": "Skillname233",
+      "id": 22082,
+      "enUS": "Feral Rage",
+      "charClass": "dru",
+      "className": "Druid"
+    },
+    {
+      "key": "Skillname234",
+      "id": 22086,
+      "enUS": "Maul",
+      "charClass": "dru",
+      "className": "Druid"
+    },
+    {
+      "key": "Skillname235",
+      "id": 22090,
+      "enUS": "Fissure",
+      "charClass": "dru",
+      "className": "Druid"
+    },
+    {
+      "key": "Skillname236",
+      "id": 22094,
+      "enUS": "Cyclone Armor",
+      "charClass": "dru",
+      "className": "Druid"
+    },
+    {
+      "key": "Skillname237",
+      "id": 22098,
+      "enUS": "Heart of Wolverine",
+      "charClass": "dru",
+      "className": "Druid"
+    },
+    {
+      "key": "Skillname238",
+      "id": 22102,
+      "enUS": "Summon Dire Wolf",
+      "charClass": "dru",
+      "className": "Druid"
+    },
+    {
+      "key": "Skillname239",
+      "id": 22106,
+      "enUS": "Rabies",
+      "charClass": "dru",
+      "className": "Druid"
+    },
+    {
+      "key": "Skillname240",
+      "id": 22110,
+      "enUS": "Fire Claws",
+      "charClass": "dru",
+      "className": "Druid"
+    },
+    {
+      "key": "Skillname241",
+      "id": 22114,
+      "enUS": "Twister",
+      "charClass": "dru",
+      "className": "Druid"
+    },
+    {
+      "key": "Skillname241",
+      "id": 22114,
+      "enUS": "Twister",
+      "charClass": "dru",
+      "className": "Druid"
+    },
+    {
+      "key": "Skillname243",
+      "id": 22122,
+      "enUS": "Hunger",
+      "charClass": "dru",
+      "className": "Druid"
+    },
+    {
+      "key": "Skillname244",
+      "id": 22126,
+      "enUS": "Shock Wave",
+      "charClass": "dru",
+      "className": "Druid"
+    },
+    {
+      "key": "Skillname245",
+      "id": 22130,
+      "enUS": "Volcano",
+      "charClass": "dru",
+      "className": "Druid"
+    },
+    {
+      "key": "Skillname246",
+      "id": 22134,
+      "enUS": "Tornado",
+      "charClass": "dru",
+      "className": "Druid"
+    },
+    {
+      "key": "Skillname247",
+      "id": 22138,
+      "enUS": "Spirit of Barbs",
+      "charClass": "dru",
+      "className": "Druid"
+    },
+    {
+      "key": "Skillname248",
+      "id": 22142,
+      "enUS": "Summon Grizzly",
+      "charClass": "dru",
+      "className": "Druid"
+    },
+    {
+      "key": "Skillname249",
+      "id": 22146,
+      "enUS": "Fury",
+      "charClass": "dru",
+      "className": "Druid"
+    },
+    {
+      "key": "Skillname250",
+      "id": 22150,
+      "enUS": "Armageddon",
+      "charClass": "dru",
+      "className": "Druid"
+    },
+    {
+      "key": "Skillname251",
+      "id": 22154,
+      "enUS": "Hurricane",
+      "charClass": "dru",
+      "className": "Druid"
+    },
+    {
+      "key": "Skillname252",
+      "id": 22158,
+      "enUS": "Fire Blast",
+      "charClass": "ass",
+      "className": "Assassin"
+    },
+    {
+      "key": "Skillname253",
+      "id": 22162,
+      "enUS": "Claw Mastery",
+      "charClass": "ass",
+      "className": "Assassin"
+    },
+    {
+      "key": "Skillname254",
+      "id": 22166,
+      "enUS": "Psychic Hammer",
+      "charClass": "ass",
+      "className": "Assassin"
+    },
+    {
+      "key": "Skillname255",
+      "id": 22170,
+      "enUS": "Tiger Strike",
+      "charClass": "ass",
+      "className": "Assassin"
+    },
+    {
+      "key": "Skillname256",
+      "id": 22174,
+      "enUS": "Dragon Talon",
+      "charClass": "ass",
+      "className": "Assassin"
+    },
+    {
+      "key": "Skillname257",
+      "id": 22178,
+      "enUS": "Shock Web",
+      "charClass": "ass",
+      "className": "Assassin"
+    },
+    {
+      "key": "Skillname258",
+      "id": 22182,
+      "enUS": "Blade Sentinel",
+      "charClass": "ass",
+      "className": "Assassin"
+    },
+    {
+      "key": "Skillname259",
+      "id": 22186,
+      "enUS": "Burst of Speed",
+      "charClass": "ass",
+      "className": "Assassin"
+    },
+    {
+      "key": "Skillname260",
+      "id": 22190,
+      "enUS": "Fists of Fire",
+      "charClass": "ass",
+      "className": "Assassin"
+    },
+    {
+      "key": "Skillname261",
+      "id": 22194,
+      "enUS": "Dragon Claw",
+      "charClass": "ass",
+      "className": "Assassin"
+    },
+    {
+      "key": "Skillname262",
+      "id": 22198,
+      "enUS": "Charged Bolt Sentry",
+      "charClass": "ass",
+      "className": "Assassin"
+    },
+    {
+      "key": "Skillname263",
+      "id": 22202,
+      "enUS": "Wake of Fire",
+      "charClass": "ass",
+      "className": "Assassin"
+    },
+    {
+      "key": "Skillname264",
+      "id": 22206,
+      "enUS": "Weapon Block",
+      "charClass": "ass",
+      "className": "Assassin"
+    },
+    {
+      "key": "Skillname265",
+      "id": 22210,
+      "enUS": "Cloak of Shadows",
+      "charClass": "ass",
+      "className": "Assassin"
+    },
+    {
+      "key": "Skillname266",
+      "id": 22214,
+      "enUS": "Cobra Strike",
+      "charClass": "ass",
+      "className": "Assassin"
+    },
+    {
+      "key": "Skillname267",
+      "id": 22218,
+      "enUS": "Blade Fury",
+      "charClass": "ass",
+      "className": "Assassin"
+    },
+    {
+      "key": "Skillname268",
+      "id": 22222,
+      "enUS": "Fade",
+      "charClass": "ass",
+      "className": "Assassin"
+    },
+    {
+      "key": "Skillname269",
+      "id": 22226,
+      "enUS": "Shadow Warrior",
+      "charClass": "ass",
+      "className": "Assassin"
+    },
+    {
+      "key": "Skillname270",
+      "id": 22230,
+      "enUS": "Claws of Thunder",
+      "charClass": "ass",
+      "className": "Assassin"
+    },
+    {
+      "key": "Skillname271",
+      "id": 22234,
+      "enUS": "Dragon Tail",
+      "charClass": "ass",
+      "className": "Assassin"
+    },
+    {
+      "key": "Skillname272",
+      "id": 22238,
+      "enUS": "Lightning Sentry",
+      "charClass": "ass",
+      "className": "Assassin"
+    },
+    {
+      "key": "Skillname273",
+      "id": 22242,
+      "enUS": "Wake of Inferno",
+      "charClass": "ass",
+      "className": "Assassin"
+    },
+    {
+      "key": "Skillname274",
+      "id": 22246,
+      "enUS": "Mind Blast",
+      "charClass": "ass",
+      "className": "Assassin"
+    },
+    {
+      "key": "Skillname275",
+      "id": 22250,
+      "enUS": "Blades of Ice",
+      "charClass": "ass",
+      "className": "Assassin"
+    },
+    {
+      "key": "Skillname276",
+      "id": 22254,
+      "enUS": "Dragon Flight",
+      "charClass": "ass",
+      "className": "Assassin"
+    },
+    {
+      "key": "Skillname277",
+      "id": 22258,
+      "enUS": "Death Sentry",
+      "charClass": "ass",
+      "className": "Assassin"
+    },
+    {
+      "key": "Skillname278",
+      "id": 22262,
+      "enUS": "Blade Shield",
+      "charClass": "ass",
+      "className": "Assassin"
+    },
+    {
+      "key": "Skillname279",
+      "id": 22266,
+      "enUS": "Venom",
+      "charClass": "ass",
+      "className": "Assassin"
+    },
+    {
+      "key": "Skillname280",
+      "id": 22270,
+      "enUS": "Shadow Master",
+      "charClass": "ass",
+      "className": "Assassin"
+    },
+    {
+      "key": "Skillname281",
+      "id": 22274,
+      "enUS": "Phoenix Strike",
+      "charClass": "ass",
+      "className": "Assassin"
+    },
+    {
+      "key": "SummonGoatmanName",
+      "id": 27480,
+      "enUS": "Summon Goatman",
+      "charClass": "war",
+      "className": "Warlock"
+    },
+    {
+      "key": "DemonicMasteryName",
+      "id": 27484,
+      "enUS": "Demonic Mastery",
+      "charClass": "war",
+      "className": "Warlock"
+    },
+    {
+      "key": "DeathMarkName",
+      "id": 27488,
+      "enUS": "Death Mark",
+      "charClass": "war",
+      "className": "Warlock"
+    },
+    {
+      "key": "SummonTaintedName",
+      "id": 27492,
+      "enUS": "Summon Tainted",
+      "charClass": "war",
+      "className": "Warlock"
+    },
+    {
+      "key": "SummonDefilerName",
+      "id": 27496,
+      "enUS": "Summon Defiler",
+      "charClass": "war",
+      "className": "Warlock"
+    },
+    {
+      "key": "BloodOathName",
+      "id": 27500,
+      "enUS": "Blood Oath",
+      "charClass": "war",
+      "className": "Warlock"
+    },
+    {
+      "key": "EngorgeName",
+      "id": 27504,
+      "enUS": "Engorge",
+      "charClass": "war",
+      "className": "Warlock"
+    },
+    {
+      "key": "BloodBoilName",
+      "id": 27508,
+      "enUS": "Blood Boil",
+      "charClass": "war",
+      "className": "Warlock"
+    },
+    {
+      "key": "ConsumeName",
+      "id": 27512,
+      "enUS": "Consume",
+      "charClass": "war",
+      "className": "Warlock"
+    },
+    {
+      "key": "BindDemonName",
+      "id": 27516,
+      "enUS": "Bind Demon",
+      "charClass": "war",
+      "className": "Warlock"
+    },
+    {
+      "key": "LevitateName",
+      "id": 27440,
+      "enUS": "Levitation Mastery",
+      "charClass": "war",
+      "className": "Warlock"
+    },
+    {
+      "key": "EldritchBlastName",
+      "id": 27456,
+      "enUS": "Eldritch Blast",
+      "charClass": "war",
+      "className": "Warlock"
+    },
+    {
+      "key": "BaneHexName",
+      "id": 27448,
+      "enUS": "Hex: Bane",
+      "charClass": "war",
+      "className": "Warlock"
+    },
+    {
+      "key": "SiphonHexName",
+      "id": 27452,
+      "enUS": "Hex: Siphon",
+      "charClass": "war",
+      "className": "Warlock"
+    },
+    {
+      "key": "PsychicWardName",
+      "id": 27444,
+      "enUS": "Psychic Ward",
+      "charClass": "war",
+      "className": "Warlock"
+    },
+    {
+      "key": "EchoingStrikeName",
+      "id": 27460,
+      "enUS": "Echoing Strike",
+      "charClass": "war",
+      "className": "Warlock"
+    },
+    {
+      "key": "PurgeHexName",
+      "id": 27464,
+      "enUS": "Hex: Purge",
+      "charClass": "war",
+      "className": "Warlock"
+    },
+    {
+      "key": "BladeWarpName",
+      "id": 27468,
+      "enUS": "Blade Warp",
+      "charClass": "war",
+      "className": "Warlock"
+    },
+    {
+      "key": "CleaveName",
+      "id": 27472,
+      "enUS": "Cleave",
+      "charClass": "war",
+      "className": "Warlock"
+    },
+    {
+      "key": "MirroredBladesName",
+      "id": 27476,
+      "enUS": "Mirrored Blades",
+      "charClass": "war",
+      "className": "Warlock"
+    },
+    {
+      "key": "LethargySigilName",
+      "id": 27404,
+      "enUS": "Sigil: Lethargy",
+      "charClass": "war",
+      "className": "Warlock"
+    },
+    {
+      "key": "RingOfFireName",
+      "id": 27408,
+      "enUS": "Ring of Fire",
+      "charClass": "war",
+      "className": "Warlock"
+    },
+    {
+      "key": "MiasmaBoltName",
+      "id": 27400,
+      "enUS": "Miasma Bolt",
+      "charClass": "war",
+      "className": "Warlock"
+    },
+    {
+      "key": "RancorSigilName",
+      "id": 27412,
+      "enUS": "Sigil: Rancor",
+      "charClass": "war",
+      "className": "Warlock"
+    },
+    {
+      "key": "EnhancedEntropyName",
+      "id": 27416,
+      "enUS": "Enhanced Entropy",
+      "charClass": "war",
+      "className": "Warlock"
+    },
+    {
+      "key": "FlameWaveName",
+      "id": 27420,
+      "enUS": "Flame Wave",
+      "charClass": "war",
+      "className": "Warlock"
+    },
+    {
+      "key": "MiasmaChainName",
+      "id": 27424,
+      "enUS": "Miasma Chain",
+      "charClass": "war",
+      "className": "Warlock"
+    },
+    {
+      "key": "DeathSigilName",
+      "id": 27428,
+      "enUS": "Sigil: Death",
+      "charClass": "war",
+      "className": "Warlock"
+    },
+    {
+      "key": "ApocalypseName",
+      "id": 27432,
+      "enUS": "Apocalypse",
+      "charClass": "war",
+      "className": "Warlock"
+    },
+    {
+      "key": "AbyssName",
+      "id": 27436,
+      "enUS": "Abyss",
+      "charClass": "war",
+      "className": "Warlock"
+    }
+  ]
+}
