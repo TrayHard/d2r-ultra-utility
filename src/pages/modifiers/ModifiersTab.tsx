@@ -29,8 +29,21 @@ interface ModifiersTabProps {
 }
 type Kind = "modifiers" | "skills";
 
-const readable = (s: string) =>
-  s.replace(/%\+?d/g, "#").replace(/%i/g, "#").replace(/%s/g, "…");
+// Replace printf-style placeholders with example values by their TYPE, so the
+// preview reads like a real in-game line:
+//   %d -> 25 | %+d -> +25 | %d%% -> 25% | %i -> 3 | %s -> skill name |
+//   ranges "%d-%d" / "%d to %d" -> 10-20 / 10 to 20 | %% -> literal %
+const formatExample = (s: string) =>
+  s
+    .replace(/%d\s*to\s*%d/g, "10 to 20")
+    .replace(/%d\s*-\s*%d/g, "10-20")
+    .replace(/%\+?d%%/g, (m) => (m.startsWith("%+") ? "+25%" : "25%"))
+    .replace(/%%/g, "%")
+    .replace(/%\+d/g, "+25")
+    .replace(/%d/g, "25")
+    .replace(/%i/g, "3")
+    .replace(/%0/g, "0")
+    .replace(/%s/g, "Fireball");
 
 const UI_TO_GAME: Record<string, string> = {
   en: "enUS", ru: "ruRU", de: "deDE", es: "esES",
@@ -155,7 +168,7 @@ const Detail = React.memo(function Detail({
     });
 
   const previewSegments = parseRuns(valueFor(previewLocale)).map((r) => ({
-    text: readable(r.text),
+    text: formatExample(r.text),
     color: r.code ? colorCodeToHex[r.code] || defHex : defHex,
   }));
 
@@ -166,7 +179,7 @@ const Detail = React.memo(function Detail({
           isDarkTheme ? "text-white" : "text-gray-900"
         }`}
       >
-        {readable(baseEnUS || entryKey)}
+        {formatExample(baseEnUS || entryKey)}
       </h3>
 
       {/* preview */}
@@ -292,7 +305,7 @@ const ModifiersTab: React.FC<ModifiersTabProps> = ({ isDarkTheme }) => {
 
   const gameLoc = UI_TO_GAME[i18n.language] || "enUS";
   const labelOf = (k: string) =>
-    readable(catLocales[kind][k]?.[gameLoc] || enusByKey[kind][k] || k);
+    formatExample(catLocales[kind][k]?.[gameLoc] || enusByKey[kind][k] || k);
 
   // grouped + filtered list; search matches enUS + ruRU + current-language label
   const groups = useMemo(() => {
