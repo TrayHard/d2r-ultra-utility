@@ -2,17 +2,13 @@ import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Select } from "antd";
 import { useSettings } from "../../app/providers/SettingsContext.tsx";
-import ColorPallet from "../../shared/components/ColorPallet.tsx";
 import Switcher from "../../shared/components/Switcher.tsx";
-import Checkbox from "../../shared/components/Checkbox.tsx";
-import Button from "../../shared/components/Button.tsx";
 import SearchInput from "../../shared/components/SearchInput.tsx";
 import DebouncedTextarea from "../../shared/components/DebouncedTextarea";
 import ColorHint from "../../shared/components/ColorHint.tsx";
 import SymbolsHint from "../../shared/components/SymbolsHint";
 import ColorTextEditor from "../../shared/components/ColorTextEditor.tsx";
 import {
-  colorCodes,
   colorCodeToHex,
   localeOptions as allLocaleOptions,
 } from "../../shared/constants.ts";
@@ -44,8 +40,8 @@ const formatExample = (s: string) =>
     .replace(/%i/g, "3")
     .replace(/%0/g, "0")
     // "%+d to %s %s" = single skill, class-restricted (skill + "(Class Only)")
-    .replace(/%s %s/g, "Fireball (Class Only)")
-    .replace(/%s/g, "Fireball");
+    .replace(/%s %s/g, "Skill (Class Only)")
+    .replace(/%s/g, "Skill");
 
 const UI_TO_GAME: Record<string, string> = {
   en: "enUS", ru: "ruRU", de: "deDE", es: "esES",
@@ -65,22 +61,18 @@ const enusByKey: Record<Kind, Record<string, string>> = {
 interface RowProps {
   rowKey: string;
   label: string;
-  checked: boolean;
   selected: boolean;
   dotColor: string | null;
   isDarkTheme: boolean;
   onSelect: (key: string) => void;
-  onToggle: (key: string, c: boolean) => void;
 }
 const Row = React.memo(function Row({
   rowKey,
   label,
-  checked,
   selected,
   dotColor,
   isDarkTheme,
   onSelect,
-  onToggle,
 }: RowProps) {
   return (
     <div
@@ -95,15 +87,6 @@ const Row = React.memo(function Row({
       }`}
       onClick={() => onSelect(rowKey)}
     >
-      <div onClick={(e) => e.stopPropagation()} className="flex items-center">
-        <Checkbox
-          checked={checked}
-          onChange={(c) => onToggle(rowKey, c)}
-          isDarkTheme={isDarkTheme}
-          size="lg"
-          className="!transition-none focus:!ring-0"
-        />
-      </div>
       <span
         className="w-2.5 h-2.5 rounded-full flex-shrink-0 border"
         style={{
@@ -293,16 +276,13 @@ const Detail = React.memo(function Detail({
 /* ---------------- main tab ---------------- */
 const ModifiersTab: React.FC<ModifiersTabProps> = ({ isDarkTheme }) => {
   const { t, i18n } = useTranslation();
-  const { getColorizeEntry, updateColorizeEntry } = useSettings();
+  const { getColorizeEntry } = useSettings();
 
   const [kind, setKind] = useState<Kind>("modifiers");
   const [search, setSearch] = useState("");
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
-  const [checked, setChecked] = useState<Set<string>>(new Set());
-  const [bulkColor, setBulkColor] = useState("white");
 
   React.useEffect(() => {
-    setChecked(new Set());
     setSelectedKey(null);
   }, [kind]);
 
@@ -350,53 +330,50 @@ const ModifiersTab: React.FC<ModifiersTabProps> = ({ isDarkTheme }) => {
         if (match(s)) (byClass[s.className] ||= []).push(s.key);
       return Object.entries(byClass).map(([title, keys]) => ({ title, keys }));
     }
-    const prop: string[] = [];
-    const base: string[] = [];
-    for (const m of catalog.modifiers)
-      if (match(m)) (m.category === "itemStats" ? base : prop).push(m.key);
+    // classify each modifier into a group (checked in order):
+    //   baseStats  — the ItemStats* lines (Defense, Required Level, …)
+    //   ctc        — "X% Chance to cast …" procs
+    //   classSkills— anything about classes/skills (+to skills, skill tabs,
+    //                +to a single skill — those carry the %s skill placeholder)
+    //   property   — everything else
+    const buckets: Record<string, string[]> = {
+      property: [],
+      classSkills: [],
+      ctc: [],
+      baseStats: [],
+    };
+    for (const m of catalog.modifiers) {
+      if (!match(m)) continue;
+      const en = m.enUS.toLowerCase();
+      const group =
+        m.category === "itemStats"
+          ? "baseStats"
+          : en.includes("chance to cast")
+            ? "ctc"
+            : /skill/.test(en) || m.enUS.includes("%s")
+              ? "classSkills"
+              : "property";
+      buckets[group].push(m.key);
+    }
     const out: { title: string; keys: string[] }[] = [];
-    if (prop.length) out.push({ title: t("modifiersPage.groups.properties"), keys: prop });
-    if (base.length) out.push({ title: t("modifiersPage.groups.baseStats"), keys: base });
+    if (buckets.property.length)
+      out.push({ title: t("modifiersPage.groups.properties"), keys: buckets.property });
+    if (buckets.classSkills.length)
+      out.push({ title: t("modifiersPage.groups.classSkills"), keys: buckets.classSkills });
+    if (buckets.ctc.length)
+      out.push({ title: t("modifiersPage.groups.chanceToCast"), keys: buckets.ctc });
+    if (buckets.baseStats.length)
+      out.push({ title: t("modifiersPage.groups.baseStats"), keys: buckets.baseStats });
     return out;
   }, [kind, search, gameLoc, t, repGroups]);
 
-  const visibleKeys = useMemo(() => groups.flatMap((g) => g.keys), [groups]);
-  const allChecked =
-    visibleKeys.length > 0 && visibleKeys.every((k) => checked.has(k));
-
-  const toggle = React.useCallback((key: string, c: boolean) => {
-    setChecked((prev) => {
-      const n = new Set(prev);
-      c ? n.add(key) : n.delete(key);
-      return n;
-    });
-  }, []);
   const selectRow = React.useCallback((key: string) => setSelectedKey(key), []);
 
-  // bulk: wrap each selected entry's base text in the chosen color, all locales,
-  // fanning out to every key that shares the row's text
-  const applyBulkColor = () => {
-    const code = colorCodes[bulkColor as keyof typeof colorCodes];
-    if (!code) return;
-    for (const rep of checked) {
-      for (const k of keysOf(rep)) {
-        const cur = getColorizeEntry(kind, k);
-        const base = catLocales[kind][k] || {};
-        const next: Record<string, string> = { ...(cur.locales as any) };
-        for (const loc of Object.keys(base)) {
-          const text = (cur.locales as any)?.[loc] || base[loc] || "";
-          next[loc] = code + text.replace(/^ÿc./, "");
-        }
-        updateColorizeEntry(kind, k, { mode: "wysiwyg", locales: next as any });
-      }
-    }
-  };
-
   return (
-    <div className="flex h-full">
+    <div className="flex h-full min-h-0">
       {/* LEFT */}
       <div
-        className={`w-96 flex-shrink-0 border-r flex flex-col ${
+        className={`w-96 flex-shrink-0 border-r flex flex-col min-h-0 ${
           isDarkTheme ? "border-gray-700" : "border-gray-200"
         }`}
       >
@@ -433,40 +410,9 @@ const ModifiersTab: React.FC<ModifiersTabProps> = ({ isDarkTheme }) => {
             isDarkTheme={isDarkTheme}
             className="h-9"
           />
-          {/* fixed-height controls row — never shifts the list */}
-          <div className="h-9 flex items-center justify-between">
-            <Checkbox
-              checked={allChecked}
-              onChange={(c) => setChecked(c ? new Set(visibleKeys) : new Set())}
-              isDarkTheme={isDarkTheme}
-              size="md"
-              label={t("modifiersPage.selectAll")}
-              className="!transition-none focus:!ring-0"
-            />
-            <div
-              className={`flex items-center gap-1 transition-opacity ${
-                checked.size > 0 ? "opacity-100" : "opacity-0 pointer-events-none"
-              }`}
-            >
-              <ColorPallet
-                isDarkTheme={isDarkTheme}
-                value={bulkColor}
-                onChange={setBulkColor}
-                size="sm"
-              />
-              <Button
-                variant="primary"
-                size="sm"
-                isDarkTheme={isDarkTheme}
-                onClick={applyBulkColor}
-              >
-                {t("modifiersPage.applyColor")}
-              </Button>
-            </div>
-          </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-2 pb-3">
+        <div className="flex-1 min-h-0 overflow-y-auto px-2 pb-3">
           {groups.length === 0 && (
             <p className="text-center text-sm text-gray-500 py-8">
               {t("search.noResults") ?? "Nothing found"}
@@ -493,12 +439,10 @@ const ModifiersTab: React.FC<ModifiersTabProps> = ({ isDarkTheme }) => {
                       key={k}
                       rowKey={k}
                       label={labelOf(k)}
-                      checked={checked.has(k)}
                       selected={selectedKey === k}
                       dotColor={dominantColorHex(val, defaultHexFor(kind, k))}
                       isDarkTheme={isDarkTheme}
                       onSelect={selectRow}
-                      onToggle={toggle}
                     />
                   );
                 })}
@@ -509,7 +453,7 @@ const ModifiersTab: React.FC<ModifiersTabProps> = ({ isDarkTheme }) => {
       </div>
 
       {/* RIGHT */}
-      <div className="flex-1 overflow-y-auto p-5">
+      <div className="flex-1 min-h-0 overflow-y-auto p-5">
         {selectedKey ? (
           <Detail
             kind={kind}

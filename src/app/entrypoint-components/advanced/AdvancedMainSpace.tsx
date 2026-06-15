@@ -524,7 +524,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
 
   return (
     <div
-      className={`flex-1 grid ${error ? "grid-rows-[auto_auto_44px_1fr]" : "grid-rows-[auto_44px_1fr]"
+      className={`flex-1 min-h-0 grid ${error ? "grid-rows-[auto_auto_44px_1fr]" : "grid-rows-[auto_44px_1fr]"
         } ${isDarkTheme ? "bg-gray-900" : "bg-gray-50"}`}
     >
       {(isApplyAllLoading || isBulkLoading || isReadingCurrentLoading) && (
@@ -592,9 +592,16 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
         indicators={tabIndicators}
       />
 
-      {/* Tab Content */}
-      <div className="flex-1">
-        <div className={`h-full ${isDarkTheme ? "bg-gray-800" : "bg-white"}`}>
+      {/* Tab Content. This wrapper is the scroll container for tabs that don't
+          manage their own scroll (Common, Gems). Tabs that DO scroll internally
+          (Items, Runes, Modifiers) fill h-full exactly, so this never scrolls
+          for them — no double scrollbar. */}
+      <div className="min-h-0 overflow-hidden">
+        <div
+          className={`h-full min-h-0 overflow-y-auto ${
+            isDarkTheme ? "bg-gray-800" : "bg-white"
+          }`}
+        >
           <AdvancedMainSpaceBody
             activeTab={activeTab}
             isDarkTheme={isDarkTheme}

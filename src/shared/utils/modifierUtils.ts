@@ -15,6 +15,7 @@ export interface ModifierCatalogEntry {
   enUS: string;
   category: "property" | "itemStats";
   locales: Record<string, string>; // base text per game locale
+  defaultCode?: string; // engine's render color, when it differs from the category default
 }
 export interface SkillCatalogEntry {
   key: string;
@@ -61,14 +62,28 @@ export const DEFAULT_COLOR_CODE: Record<"modifiers" | "skills", string> = {
 
 // Default render color depends on the entry: affix modifiers render blue, but
 // base item stats (Defense, Required Level, …) and skill names render white.
+// A few base stats are exceptions the engine draws in another color (e.g.
+// "Requirements not met" / "Unidentified" are red) — those carry an explicit
+// `defaultCode` in the catalog, which wins over the category default.
 const modifierCategory: Record<string, "property" | "itemStats"> =
   Object.fromEntries((catalogJson as ModifiersCatalog).modifiers.map((m) => [m.key, m.category]));
+const entryDefaultCode: Record<string, string> = Object.fromEntries(
+  (catalogJson as ModifiersCatalog).modifiers
+    .filter((m) => m.defaultCode)
+    .map((m) => [m.key, m.defaultCode as string])
+);
 const isWhiteDefault = (kind: "modifiers" | "skills", key: string) =>
   kind === "skills" || modifierCategory[key] === "itemStats";
-export const defaultHexFor = (kind: "modifiers" | "skills", key: string) =>
-  isWhiteDefault(kind, key) ? "#ffffff" : DEFAULT_COLOR_HEX.modifiers;
-export const defaultCodeFor = (kind: "modifiers" | "skills", key: string) =>
-  isWhiteDefault(kind, key) ? colorCodes.white : DEFAULT_COLOR_CODE.modifiers;
+export const defaultHexFor = (kind: "modifiers" | "skills", key: string) => {
+  const code = entryDefaultCode[key];
+  if (code) return colorCodeToHex[code] || "#ffffff";
+  return isWhiteDefault(kind, key) ? "#ffffff" : DEFAULT_COLOR_HEX.modifiers;
+};
+export const defaultCodeFor = (kind: "modifiers" | "skills", key: string) => {
+  const code = entryDefaultCode[key];
+  if (code) return code;
+  return isWhiteDefault(kind, key) ? colorCodes.white : DEFAULT_COLOR_CODE.modifiers;
+};
 
 // Split a raw ÿc-coded string into runs carrying their active color code
 // ("" before any code = default). Powers the WYSIWYG editor + preview.

@@ -1813,7 +1813,9 @@
     },
     "groups": {
       "properties": "Właściwości",
-      "baseStats": "Statystyki bazowe"
+      "baseStats": "Statystyki bazowe",
+      "classSkills": "Klasy i umiejętności",
+      "chanceToCast": "Szansa rzucenia"
     },
     "selectAll": "Zaznacz wszystko",
     "selectedCount": "Zaznaczono: {{count}}",
