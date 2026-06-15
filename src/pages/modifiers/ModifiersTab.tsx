@@ -8,6 +8,8 @@ import DebouncedTextarea from "../../shared/components/DebouncedTextarea";
 import ColorHint from "../../shared/components/ColorHint.tsx";
 import SymbolsHint from "../../shared/components/SymbolsHint";
 import ColorTextEditor from "../../shared/components/ColorTextEditor.tsx";
+import UnsavedAsterisk from "../../shared/components/UnsavedAsterisk";
+import { useUnsavedChanges } from "../../shared/hooks/useUnsavedChanges";
 import {
   colorCodeToHex,
   localeOptions as allLocaleOptions,
@@ -63,6 +65,7 @@ interface RowProps {
   label: string;
   selected: boolean;
   dotColor: string | null;
+  changed: boolean;
   isDarkTheme: boolean;
   onSelect: (key: string) => void;
 }
@@ -71,6 +74,7 @@ const Row = React.memo(function Row({
   label,
   selected,
   dotColor,
+  changed,
   isDarkTheme,
   onSelect,
 }: RowProps) {
@@ -102,6 +106,7 @@ const Row = React.memo(function Row({
       >
         {label}
       </span>
+      {changed && <UnsavedAsterisk size={0.55} />}
     </div>
   );
 });
@@ -277,6 +282,7 @@ const Detail = React.memo(function Detail({
 const ModifiersTab: React.FC<ModifiersTabProps> = ({ isDarkTheme }) => {
   const { t, i18n } = useTranslation();
   const { getColorizeEntry } = useSettings();
+  const { baseline } = useUnsavedChanges();
 
   const [kind, setKind] = useState<Kind>("modifiers");
   const [search, setSearch] = useState("");
@@ -314,6 +320,18 @@ const ModifiersTab: React.FC<ModifiersTabProps> = ({ isDarkTheme }) => {
   }, [kind]);
   const isRep = (k: string) => repGroups.keyToRep.get(k) === k;
   const keysOf = (rep: string) => repGroups.repToKeys.get(rep) || [rep];
+
+  // Изменён ли ключ относительно активного профиля (для звёздочки в списке).
+  // Строка-представитель считается изменённой, если изменён любой из её ключей.
+  const isKeyChanged = (k: string): boolean => {
+    const base = (baseline as any)?.modifiers?.[kind]?.[k];
+    if (!base) return false;
+    const cur = getColorizeEntry(kind, k);
+    return (
+      JSON.stringify(cur?.locales || {}) !== JSON.stringify(base?.locales || {})
+    );
+  };
+  const isRepChanged = (rep: string) => keysOf(rep).some(isKeyChanged);
 
   // grouped + filtered list; search matches enUS + ruRU + current-language label
   const groups = useMemo(() => {
@@ -441,6 +459,7 @@ const ModifiersTab: React.FC<ModifiersTabProps> = ({ isDarkTheme }) => {
                       label={labelOf(k)}
                       selected={selectedKey === k}
                       dotColor={dominantColorHex(val, defaultHexFor(kind, k))}
+                      changed={isRepChanged(k)}
                       isDarkTheme={isDarkTheme}
                       onSelect={selectRow}
                     />

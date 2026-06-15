@@ -185,6 +185,28 @@
     },
     "tooltips": {
       "highlightOnGround": "Am Boden hervorheben"
+    },
+    "bodyParts": "Uber-Körperteile",
+    "ancientStatues": "Statuen der Ahnen",
+    "worldstoneShards": "Weltstein-Splitter",
+    "bodyPartsLevels": {
+      "level1": "Diablos Horn",
+      "level2": "Baals Auge",
+      "level3": "Mephistos Gehirn"
+    },
+    "ancientStatuesLevels": {
+      "level1": "Talics Qual",
+      "level2": "Korlics Schmerz",
+      "level3": "Madawcs Zorn",
+      "level4": "Bul-Kathos' Alptraum",
+      "level5": "Worsuks Ende"
+    },
+    "worldstoneShardsLevels": {
+      "level1": "Westlicher Weltsteinsplitter",
+      "level2": "Östlicher Weltsteinsplitter",
+      "level3": "Südlicher Weltsteinsplitter",
+      "level4": "Tiefer Weltsteinsplitter",
+      "level5": "Nördlicher Weltsteinsplitter"
     }
   },
   "gemsPage": {
@@ -1807,7 +1829,7 @@
   "runCounter": "Run Counter",
   "modifiersPage": {
     "tabs": {
-      "modifiers": "Modifikatoren",
+      "modifiers": "Werte",
       "skills": "Fertigkeiten"
     },
     "groups": {

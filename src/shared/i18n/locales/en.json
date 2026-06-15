@@ -56,6 +56,9 @@
     "essences": "Essences and Tokens",
     "poisonPotions": "Poison Potions",
     "firePotions": "Fire Potions",
+    "bodyParts": "Uber Body Parts",
+    "ancientStatues": "Ancients' Statues",
+    "worldstoneShards": "Worldstone Shards",
     "searchPlaceholder": "Search",
     "enableCustomization": "Enable customization",
     "healthPotionsLevels": {
@@ -95,6 +98,25 @@
       "level3": "Essence of Terror",
       "level4": "Essence of Destruction",
       "level5": "Token of Absolution"
+    },
+    "bodyPartsLevels": {
+      "level1": "Diablo's Horn",
+      "level2": "Baal's Eye",
+      "level3": "Mephisto's Brain"
+    },
+    "ancientStatuesLevels": {
+      "level1": "Talic's Anguish",
+      "level2": "Korlic's Pain",
+      "level3": "Madawc's Ire",
+      "level4": "Bul-Kathos' Nightmare",
+      "level5": "Worusk's End"
+    },
+    "worldstoneShardsLevels": {
+      "level1": "Western Worldstone Shard",
+      "level2": "Eastern Worldstone Shard",
+      "level3": "Southern Worldstone Shard",
+      "level4": "Deep Worldstone Shard",
+      "level5": "Northern Worldstone Shard"
     },
     "poisonPotionsLevels": {
       "level1": "Strangling Gas Potion",
@@ -1807,7 +1829,7 @@
   },
   "modifiersPage": {
     "tabs": {
-      "modifiers": "Modifiers",
+      "modifiers": "Stats",
       "skills": "Skills"
     },
     "groups": {

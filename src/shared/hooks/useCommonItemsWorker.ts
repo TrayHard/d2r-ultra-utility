@@ -1,7 +1,8 @@
 import { useState, useCallback } from "react";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import { useLogger } from "../utils/logger";
-import { ensureWritable } from "../utils/fsUtils";
+import { ensureWritable, ensureDirs } from "../utils/fsUtils";
+import shardModels from "../../pages/common/constants/shardModels.json";
 import {
   idToCommonItemMapper,
   commonItemToIdMapper,
@@ -23,6 +24,7 @@ import {
   generateFinalItemName,
   generateFinalPotionName,
   generateKeyHighlightData,
+  applyHighlightToModelConfig,
 } from "../utils/commonUtils";
 import { STORAGE_KEYS, MOD_ROOT } from "../constants";
 type SupportedLocaleKey = Exclude<keyof LocaleItem, "id" | "Key">;
@@ -55,7 +57,10 @@ type UpdatePotionLevelSettingsFunction = (
     | "uberKeys"
     | "essences"
     | "poisonPotions"
-    | "firePotions",
+    | "firePotions"
+    | "bodyParts"
+    | "ancientStatues"
+    | "worldstoneShards",
   level: number,
   settings: Partial<PotionLevelSettings>,
 ) => void;
@@ -369,6 +374,30 @@ export const useCommonItemsWorker = (
                 locales: itemLocales,
               });
             }
+          } else if (commonItemGroups.bodyParts.includes(commonItem)) {
+            const level = commonItemGroups.bodyParts.indexOf(commonItem);
+            if (updatePotionLevelSettings) {
+              updatePotionLevelSettings("bodyParts", level, {
+                enabled: isEnabled,
+                locales: itemLocales,
+              });
+            }
+          } else if (commonItemGroups.ancientStatues.includes(commonItem)) {
+            const level = commonItemGroups.ancientStatues.indexOf(commonItem);
+            if (updatePotionLevelSettings) {
+              updatePotionLevelSettings("ancientStatues", level, {
+                enabled: isEnabled,
+                locales: itemLocales,
+              });
+            }
+          } else if (commonItemGroups.worldstoneShards.includes(commonItem)) {
+            const level = commonItemGroups.worldstoneShards.indexOf(commonItem);
+            if (updatePotionLevelSettings) {
+              updatePotionLevelSettings("worldstoneShards", level, {
+                enabled: isEnabled,
+                locales: itemLocales,
+              });
+            }
           }
 
           processedItems++;
@@ -426,6 +455,7 @@ export const useCommonItemsWorker = (
       const affixesPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\${GAME_PATHS.NAMEAFFIXES_FILE}`;
       const modifiersPath = `${homeDir}\\${GAME_PATHS.LOCALES}\\item-modifiers.json`;
       const keysHighlightDir = `${homeDir}\\${MOD_ROOT}\\hd\\items\\misc\\key`;
+      const shardHighlightDir = `${homeDir}\\${MOD_ROOT}\\hd\\items\\misc\\shard`;
 
       logger.info(
         "Applying common items changes",
@@ -492,7 +522,10 @@ export const useCommonItemsWorker = (
               | "uberKeys"
               | "essences"
               | "poisonPotions"
-              | "firePotions";
+              | "firePotions"
+              | "bodyParts"
+              | "ancientStatues"
+              | "worldstoneShards";
             const potionGroup = commonSettings[
               potionType
             ] as PotionGroupSettings;
@@ -770,6 +803,87 @@ export const useCommonItemsWorker = (
       } catch (e) {
         logger.warn(
           "Unexpected error while applying key highlight templates",
+          { error: e instanceof Error ? e.message : String(e) },
+          "applyChanges",
+        );
+      }
+
+      // Подсветка статуй древних (cont_ua1-5) и мировых осколков (cont_xa1-5).
+      // У них есть готовые модели в hd/items/misc/shard — читаем модель,
+      // добавляем/убираем drop-light (glow) и пишем обратно.
+      const writeModelHighlight = async (
+        fileName: string,
+        isHighlighted: boolean,
+      ) => {
+        const targetPath = `${shardHighlightDir}\\${fileName}`;
+        try {
+          // Берём существующий loose-файл (точная модель мода); если его нет
+          // (модель упакована в .mpq), используем встроенный базовый конфиг —
+          // тогда создаётся loose-override, который игра грузит поверх .mpq.
+          let config: any = null;
+          let fromBundle = false;
+          try {
+            config = JSON.parse(await readTextFile(targetPath));
+          } catch {
+            config = (shardModels as any)[fileName] || null;
+            fromBundle = true;
+          }
+          if (!config) return;
+          const next = applyHighlightToModelConfig(config, isHighlighted);
+          await writeFileWithRetry(targetPath, JSON.stringify(next, null, 2));
+          logger.info(
+            "Model highlight applied",
+            { targetPath, isHighlighted, fromBundle },
+            "applyChanges",
+          );
+        } catch (e) {
+          logger.warn(
+            "Failed to apply model highlight",
+            {
+              targetPath,
+              isHighlighted,
+              error: e instanceof Error ? e.message : String(e),
+            },
+            "applyChanges",
+          );
+        }
+      };
+      // Каждый предмет пишем В ДВА файла: реальную модель (имя из items.json,
+      // которую грузит игра для упавшего предмета) и контейнер cont_*.
+      const highlightModelGroup = async (
+        group: PotionGroupSettings | undefined,
+        pairs: Array<{ asset: string; cont: string }>,
+      ) => {
+        if (!group || !Array.isArray(group.levels)) return;
+        try {
+          await ensureDirs([shardHighlightDir]);
+        } catch {
+          /* ignore */
+        }
+        for (let i = 0; i < pairs.length && i < group.levels.length; i++) {
+          const isHighlighted = group.levels[i]?.highlight || false;
+          await writeModelHighlight(pairs[i].asset, isHighlighted);
+          await writeModelHighlight(pairs[i].cont, isHighlighted);
+        }
+      };
+      try {
+        await highlightModelGroup(commonSettings.ancientStatues, [
+          { asset: "talics_anguish.json", cont: "cont_ua1.json" },
+          { asset: "korlics_pain.json", cont: "cont_ua2.json" },
+          { asset: "madawcs_ire.json", cont: "cont_ua3.json" },
+          { asset: "bulkathos_nightmare.json", cont: "cont_ua4.json" },
+          { asset: "worusks_end.json", cont: "cont_ua5.json" },
+        ]);
+        await highlightModelGroup(commonSettings.worldstoneShards, [
+          { asset: "mote_of_anguish.json", cont: "cont_xa1.json" },
+          { asset: "mote_of_pain.json", cont: "cont_xa2.json" },
+          { asset: "mote_of_hatred.json", cont: "cont_xa3.json" },
+          { asset: "mote_of_terror.json", cont: "cont_xa4.json" },
+          { asset: "mote_of_destruction.json", cont: "cont_xa5.json" },
+        ]);
+      } catch (e) {
+        logger.warn(
+          "Unexpected error while applying statue/shard highlight",
           { error: e instanceof Error ? e.message : String(e) },
           "applyChanges",
         );

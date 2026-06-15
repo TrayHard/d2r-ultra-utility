@@ -150,6 +150,9 @@ export interface CommonSettings {
   essences: PotionGroupSettings; // 4 essences + token
   poisonPotions: PotionGroupSettings; // 3 poison potions
   firePotions: PotionGroupSettings; // 3 fire potions
+  bodyParts: PotionGroupSettings; // 3 mini-uber organs
+  ancientStatues: PotionGroupSettings; // 5 ancient statues (ua1-5)
+  worldstoneShards: PotionGroupSettings; // 5 worldstone shards (xa1-5)
 }
 
 export interface GemSettings {
@@ -297,6 +300,9 @@ interface SettingsContextType {
       | "essences"
       | "poisonPotions"
       | "firePotions"
+      | "bodyParts"
+      | "ancientStatues"
+      | "worldstoneShards"
   ) => PotionGroupSettings;
   updateCommonItemSettings: (
     item:
@@ -325,7 +331,10 @@ interface SettingsContextType {
       | "uberKeys"
       | "essences"
       | "poisonPotions"
-      | "firePotions",
+      | "firePotions"
+      | "bodyParts"
+      | "ancientStatues"
+      | "worldstoneShards",
     newSettings: Partial<PotionGroupSettings>
   ) => void;
   updatePotionLevelSettings: (
@@ -338,7 +347,10 @@ interface SettingsContextType {
       | "uberKeys"
       | "essences"
       | "poisonPotions"
-      | "firePotions",
+      | "firePotions"
+      | "bodyParts"
+      | "ancientStatues"
+      | "worldstoneShards",
     level: number,
     newSettings: Partial<PotionLevelSettings>
   ) => void;
@@ -503,6 +515,9 @@ const cleanSettings = (oldCommon: any): CommonSettings => {
     "essences",
     "poisonPotions",
     "firePotions",
+    "bodyParts",
+    "ancientStatues",
+    "worldstoneShards",
   ].forEach((potionType) => {
     if (cleaned[potionType]) {
       cleaned[potionType] = {
@@ -511,7 +526,7 @@ const cleanSettings = (oldCommon: any): CommonSettings => {
             ? 2
             : potionType === "identify" || potionType === "portal"
               ? 2
-              : potionType === "uberKeys"
+              : potionType === "uberKeys" || potionType === "bodyParts"
                 ? 3
                 : potionType === "poisonPotions" || potionType === "firePotions"
                   ? 3
@@ -683,6 +698,9 @@ const getDefaultCommonSettings = (): CommonSettings => ({
   essences: getDefaultPotionGroupSettings(5), // 4 эссенции + токен
   poisonPotions: getDefaultPotionGroupSettings(3), // 3 уровня: Strangling/Choking/Rancid
   firePotions: getDefaultPotionGroupSettings(3), // 3 уровня: Fulminating/Exploding/Oil
+  bodyParts: getDefaultPotionGroupSettings(3), // 3 части тел мини-уберов
+  ancientStatues: getDefaultPotionGroupSettings(5), // 5 статуй древних (ua1-5)
+  worldstoneShards: getDefaultPotionGroupSettings(5), // 5 мировых осколков (xa1-5)
 });
 
 const getDefaultGemSettings = (): GemSettings => ({
@@ -2447,6 +2465,9 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         | "essences"
         | "poisonPotions"
         | "firePotions"
+        | "bodyParts"
+        | "ancientStatues"
+        | "worldstoneShards"
     ) => {
       return settings.common[item];
     },
@@ -2496,7 +2517,10 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         | "uberKeys"
         | "essences"
         | "poisonPotions"
-        | "firePotions",
+        | "firePotions"
+        | "bodyParts"
+        | "ancientStatues"
+        | "worldstoneShards",
       newSettings: Partial<PotionGroupSettings>
     ) => {
       setSettings((prevSettings) => ({
@@ -2524,7 +2548,10 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         | "uberKeys"
         | "essences"
         | "poisonPotions"
-        | "firePotions",
+        | "firePotions"
+        | "bodyParts"
+        | "ancientStatues"
+        | "worldstoneShards",
       level: number,
       newSettings: Partial<PotionLevelSettings>
     ) => {

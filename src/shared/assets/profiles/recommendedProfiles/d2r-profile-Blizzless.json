@@ -1929,6 +1929,271 @@
           }
         ],
         "activeTab": 1
+      },
+      "bodyParts": {
+        "enabled": true,
+        "levels": [
+          {
+            "enabled": true,
+            "highlight": false,
+            "locales": {
+              "enUS": "Diablo's Horn",
+              "ruRU": "Рог Диабло",
+              "zhTW": "迪亞布羅之角",
+              "deDE": "Diablos Horn",
+              "esES": "Cuerno de Diablo",
+              "frFR": "Corne de Diablo",
+              "itIT": "Corno di Diablo",
+              "koKR": "디아블로의 뿔",
+              "plPL": "Róg Diablo",
+              "esMX": "[ms]Cuerno de Diablo",
+              "jaJP": "ディアブロの角",
+              "ptBR": "[ms]Chifre de Diablo",
+              "zhCN": "迪亚波罗的角"
+            }
+          },
+          {
+            "enabled": true,
+            "highlight": false,
+            "locales": {
+              "enUS": "Baal's Eye",
+              "ruRU": "Глаз Баала",
+              "zhTW": "巴爾之眼",
+              "deDE": "Baals Auge",
+              "esES": "Ojo de Baal",
+              "frFR": "Œil de Baal",
+              "itIT": "Occhio di Baal",
+              "koKR": "바알의 눈",
+              "plPL": "Oko Baala",
+              "esMX": "[ms]Ojo de Baal",
+              "jaJP": "バールの目",
+              "ptBR": "[ms]Olho de Baal",
+              "zhCN": "巴尔的眼睛"
+            }
+          },
+          {
+            "enabled": true,
+            "highlight": false,
+            "locales": {
+              "enUS": "Mephisto's Brain",
+              "ruRU": "Мозг Мефисто",
+              "zhTW": "墨菲斯托之腦",
+              "deDE": "Mephistos Gehirn",
+              "esES": "Cerebro de Mefisto",
+              "frFR": "Cerveau de Méphisto",
+              "itIT": "Cervello di Mefisto",
+              "koKR": "메피스토의 뇌",
+              "plPL": "Mózg Mefista",
+              "esMX": "[ms]Cerebro de Mefisto",
+              "jaJP": "メフィストの脳",
+              "ptBR": "[ms]Cérebro de Mefisto",
+              "zhCN": "墨菲斯托的大脑"
+            }
+          }
+        ],
+        "activeTab": 0
+      },
+      "ancientStatues": {
+        "enabled": true,
+        "levels": [
+          {
+            "enabled": true,
+            "highlight": false,
+            "locales": {
+              "enUS": "Talic's Anguish",
+              "ruRU": "Мучение Талика",
+              "zhTW": "塔力克的怨慟",
+              "deDE": "[fs]Talics Qual",
+              "esES": "[fs]Angustia de Talic",
+              "frFR": "Angoisse de Talic",
+              "itIT": "Angoscia di Talic",
+              "koKR": "탈릭의 고뇌",
+              "plPL": "Cierpienie Talika",
+              "esMX": "Angustia de Talic",
+              "jaJP": "タリックの苦悶",
+              "ptBR": "Angústia de Talic",
+              "zhCN": "塔力克的痛苦"
+            }
+          },
+          {
+            "enabled": true,
+            "highlight": false,
+            "locales": {
+              "enUS": "Korlic's Pain",
+              "ruRU": "Боль Корлика",
+              "zhTW": "科力克的苦痛",
+              "deDE": "[ms]Korlics Schmerz",
+              "esES": "[ms]Dolor de Korlic",
+              "frFR": "Douleur de Korlic",
+              "itIT": "Dolore di Korlic",
+              "koKR": "콜릭의 고통",
+              "plPL": "Ból Korlika",
+              "esMX": "Dolor de Korlic",
+              "jaJP": "コーリックの苦痛",
+              "ptBR": "Dor de Korlic",
+              "zhCN": "科里克的痛楚"
+            }
+          },
+          {
+            "enabled": true,
+            "highlight": false,
+            "locales": {
+              "enUS": "Madawc's Ire",
+              "ruRU": "Гнев Мадавка",
+              "zhTW": "馬道克的怒火",
+              "deDE": "[ms]Madawcs Zorn",
+              "esES": "[fs]Ira de Madawc",
+              "frFR": "Colère de Madawc",
+              "itIT": "Ira di Madawc",
+              "koKR": "마도크의 분노",
+              "plPL": "Gniew Madoka",
+              "esMX": "Ira de Madawc",
+              "jaJP": "マドウクの激憤",
+              "ptBR": "Ira de Madawc",
+              "zhCN": "马道克的愤怒"
+            }
+          },
+          {
+            "enabled": true,
+            "highlight": false,
+            "locales": {
+              "enUS": "Bul-Kathos' Nightmare",
+              "ruRU": "Кошмар Бул-Катоса",
+              "zhTW": "布爾凱索的夢魘",
+              "deDE": "[ms]Bul-Kathos' Alptraum",
+              "esES": "[fs]Pesadilla de Bul-Kathos",
+              "frFR": "Cauchemar de Bul-Kathos",
+              "itIT": "Incubo di Bul-Kathos",
+              "koKR": "불카토스의 악몽",
+              "plPL": "Koszmar Bul-Kathosa",
+              "esMX": "Pesadilla de Bul-Kathos",
+              "jaJP": "バル=カソスの悪夢",
+              "ptBR": "Pesadelo de Bul-Kathos",
+              "zhCN": "布尔凯索的噩梦"
+            }
+          },
+          {
+            "enabled": true,
+            "highlight": false,
+            "locales": {
+              "enUS": "Worusk's End",
+              "ruRU": "Погибель Воруска",
+              "zhTW": "沃魯斯克的終結",
+              "deDE": "[ns]Worsuks Ende",
+              "esES": "[ms]Fin de Worusk",
+              "frFR": "Trépas de Worusk",
+              "itIT": "Fine di Worusk",
+              "koKR": "워루스크의 끝",
+              "plPL": "Koniec Woruska",
+              "esMX": "Final de Worusk",
+              "jaJP": "ウォルスクの最期",
+              "ptBR": "Fim de Worusk",
+              "zhCN": "沃鲁斯克的终结"
+            }
+          }
+        ],
+        "activeTab": 0
+      },
+      "worldstoneShards": {
+        "enabled": true,
+        "levels": [
+          {
+            "enabled": true,
+            "highlight": false,
+            "locales": {
+              "enUS": "Western Worldstone Shard",
+              "ruRU": "Западный осколок камня мироздания",
+              "zhTW": "西方的世界之石碎片",
+              "deDE": "Westlicher Weltsteinsplitter",
+              "esES": "Esquirla de la Piedra del Mundo occidental",
+              "frFR": "Fragment occidental de la pierre-monde",
+              "itIT": "Frammento della Pietra del Mondo Occidentale",
+              "koKR": "서부 세계석 조각",
+              "plPL": "Zachodni Odłamek Kamienia Świata",
+              "esMX": "Fragmento de la Piedra Ecuménica del Oeste",
+              "jaJP": "西のワールドストーン・シャード",
+              "ptBR": "Estilhaço do Oeste da Pedra do Mundo",
+              "zhCN": "西方世界之石碎片"
+            }
+          },
+          {
+            "enabled": true,
+            "highlight": false,
+            "locales": {
+              "enUS": "Eastern Worldstone Shard",
+              "ruRU": "Восточный осколок камня мироздания",
+              "zhTW": "東方的世界之石碎片",
+              "deDE": "Östlicher Weltsteinsplitter",
+              "esES": "Esquirla de la Piedra del Mundo oriental",
+              "frFR": "Fragment oriental de la pierre-monde",
+              "itIT": "Frammento della Pietra del Mondo Orientale",
+              "koKR": "동부 세계석 조각",
+              "plPL": "Wschodni Odłamek Kamienia Świata",
+              "esMX": "Fragmento de la Piedra Ecuménica del Este",
+              "jaJP": "東のワールドストーン・シャード",
+              "ptBR": "Estilhaço do Leste da Pedra do Mundo",
+              "zhCN": "东方世界之石碎片"
+            }
+          },
+          {
+            "enabled": true,
+            "highlight": false,
+            "locales": {
+              "enUS": "Southern Worldstone Shard",
+              "ruRU": "Южный осколок камня мироздания",
+              "zhTW": "南方的世界之石碎片",
+              "deDE": "Südlicher Weltsteinsplitter",
+              "esES": "Esquirla de la Piedra del Mundo meridional",
+              "frFR": "Fragment méridional de la pierre-monde",
+              "itIT": "Frammento della Pietra del Mondo Meridionale",
+              "koKR": "남부 세계석 조각",
+              "plPL": "Południowy Odłamek Kamienia Świata",
+              "esMX": "Fragmento de la Piedra Ecuménica del Sur",
+              "jaJP": "南のワールドストーン・シャード",
+              "ptBR": "Estilhaço do Sul da Pedra do Mundo",
+              "zhCN": "南方世界之石碎片"
+            }
+          },
+          {
+            "enabled": true,
+            "highlight": false,
+            "locales": {
+              "enUS": "Deep Worldstone Shard",
+              "ruRU": "Глубинный осколок камня мироздания",
+              "zhTW": "深處的世界之石碎片",
+              "deDE": "Tiefer Weltsteinsplitter",
+              "esES": "Esquirla de la Piedra del Mundo de las profundidades",
+              "frFR": "Fragment abyssal de la pierre-monde",
+              "itIT": "Frammento della Pietra del Mondo Profondo",
+              "koKR": "깊은 세계석 조각",
+              "plPL": "Głęboki Odłamek Kamienia Świata",
+              "esMX": "Fragmento de la Piedra Ecuménica de lo Profundo",
+              "jaJP": "深部のワールドストーン・シャード",
+              "ptBR": "Estilhaço Profundo da Pedra do Mundo",
+              "zhCN": "深层世界之石碎片"
+            }
+          },
+          {
+            "enabled": true,
+            "highlight": false,
+            "locales": {
+              "enUS": "Northern Worldstone Shard",
+              "ruRU": "Северный осколок камня мироздания",
+              "zhTW": "北方的世界之石碎片",
+              "deDE": "Nördlicher Weltsteinsplitter",
+              "esES": "Esquirla de la Piedra del Mundo septentrional",
+              "frFR": "Fragment septentrional de la pierre-monde",
+              "itIT": "Frammento della Pietra del Mondo Settentrionale",
+              "koKR": "북부 세계석 조각",
+              "plPL": "Północny Odłamek Kamienia Świata",
+              "esMX": "Fragmento de la Piedra Ecuménica del Norte",
+              "jaJP": "北のワールドストーン・シャード",
+              "ptBR": "Estilhaço do Norte da Pedra do Mundo",
+              "zhCN": "北方世界之石碎片"
+            }
+          }
+        ],
+        "activeTab": 0
       }
     },
     "gems": {

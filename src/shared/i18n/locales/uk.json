@@ -107,6 +107,28 @@
     },
     "tooltips": {
       "highlightOnGround": "Підсвітити на землі"
+    },
+    "bodyParts": "Частини тіл уберів",
+    "ancientStatues": "Статуї древніх",
+    "worldstoneShards": "Уламки каменя світу",
+    "bodyPartsLevels": {
+      "level1": "Diablo's Horn",
+      "level2": "Baal's Eye",
+      "level3": "Mephisto's Brain"
+    },
+    "ancientStatuesLevels": {
+      "level1": "Talic's Anguish",
+      "level2": "Korlic's Pain",
+      "level3": "Madawc's Ire",
+      "level4": "Bul-Kathos' Nightmare",
+      "level5": "Worusk's End"
+    },
+    "worldstoneShardsLevels": {
+      "level1": "Western Worldstone Shard",
+      "level2": "Eastern Worldstone Shard",
+      "level3": "Southern Worldstone Shard",
+      "level4": "Deep Worldstone Shard",
+      "level5": "Northern Worldstone Shard"
     }
   },
   "gemsPage": {
@@ -1807,7 +1829,7 @@
   "runCounter": "Run Counter",
   "modifiersPage": {
     "tabs": {
-      "modifiers": "Модифікатори",
+      "modifiers": "Стати",
       "skills": "Навички"
     },
     "groups": {

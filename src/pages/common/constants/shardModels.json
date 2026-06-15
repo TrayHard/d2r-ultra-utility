@@ -1,0 +1,1972 @@
+{
+  "talics_anguish.json": {
+    "dependencies": {
+      "particles": [],
+      "models": [
+        {
+          "path": "data/hd/items/misc/shard/talics_anguish/talics_anguish.model"
+        }
+      ],
+      "skeletons": [
+        {
+          "path": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton"
+        }
+      ],
+      "animations": [],
+      "textures": [
+        {
+          "path": "data/hd/items/misc/shard/talics_anguish/talics_anguish_ALB.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/talics_anguish/talics_anguish_NRM.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/talics_anguish/talics_anguish_ORM.texture"
+        }
+      ],
+      "physics": [],
+      "json": [
+        {
+          "path": "data/hd/items/dropped_items/dropped_items_jadestatue_flip.json"
+        }
+      ],
+      "variantdata": [],
+      "objecteffects": [],
+      "other": []
+    },
+    "type": "UnitDefinition",
+    "name": "talics_anguish",
+    "entities": [
+      {
+        "type": "Entity",
+        "name": "root_entity",
+        "id": 1625167704,
+        "components": [
+          {
+            "type": "UnitRootComponent",
+            "name": "root_entity_UnitRootComponent",
+            "state_machine_filename": "data/hd/items/dropped_items/dropped_items_jadestatue_flip.json",
+            "doNotInheritRotation": false,
+            "rotationOverride": {
+              "x": 0,
+              "y": 0.3826834,
+              "z": 0,
+              "w": 0.9238795
+            },
+            "doNotUseHDHeight": false,
+            "hideAllMeshWhenInOpenedMode": false,
+            "onCreateEventName": "",
+            "animations": []
+          },
+          {
+            "type": "SkeletonDefinitionComponent",
+            "name": "root_entity_SkeletonDefinition",
+            "filename": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton",
+            "enableWeaponAttachInertialization": false
+          },
+          {
+            "type": "TransformDefinitionComponent",
+            "name": "root_entity_TransformDefinition",
+            "position": {
+              "x": 0.125,
+              "y": 0,
+              "z": 0.1
+            },
+            "orientation": {
+              "x": 0,
+              "y": 0.0348994955,
+              "z": 0,
+              "w": 0.999390841
+            },
+            "scale": {
+              "x": 0.9,
+              "y": 0.9,
+              "z": 0.9
+            },
+            "inheritOnlyPosition": false
+          }
+        ]
+      },
+      {
+        "type": "Entity",
+        "name": "model_entity",
+        "id": 2157545957,
+        "components": [
+          {
+            "type": "ModelDefinitionComponent",
+            "name": "model_entity_ModelDefinitionComponent",
+            "filename": "data/hd/items/misc/shard/talics_anguish/talics_anguish.model",
+            "visibleLayers": 1,
+            "lightMask": 19,
+            "shadowMask": 3,
+            "ghostShadows": false,
+            "floorModel": false,
+            "terrainBlendEnableYUpBlend": false,
+            "terrainBlendMode": 1
+          }
+        ]
+      }
+    ]
+  },
+  "cont_ua1.json": {
+    "dependencies": {
+      "particles": [],
+      "models": [
+        {
+          "path": "data/hd/items/misc/shard/talics_anguish/talics_anguish.model"
+        }
+      ],
+      "skeletons": [
+        {
+          "path": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton"
+        }
+      ],
+      "animations": [],
+      "textures": [
+        {
+          "path": "data/hd/items/misc/shard/talics_anguish/talics_anguish_ALB.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/talics_anguish/talics_anguish_NRM.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/talics_anguish/talics_anguish_ORM.texture"
+        }
+      ],
+      "physics": [],
+      "json": [
+        {
+          "path": "data/hd/items/dropped_items/dropped_items_jadestatue_flip.json"
+        }
+      ],
+      "variantdata": [],
+      "objecteffects": [],
+      "other": []
+    },
+    "type": "UnitDefinition",
+    "name": "talics_anguish",
+    "entities": [
+      {
+        "type": "Entity",
+        "name": "root_entity",
+        "id": 1625167704,
+        "components": [
+          {
+            "type": "UnitRootComponent",
+            "name": "root_entity_UnitRootComponent",
+            "state_machine_filename": "data/hd/items/dropped_items/dropped_items_jadestatue_flip.json",
+            "doNotInheritRotation": false,
+            "rotationOverride": {
+              "x": 0,
+              "y": 0.3826834,
+              "z": 0,
+              "w": 0.9238795
+            },
+            "doNotUseHDHeight": false,
+            "hideAllMeshWhenInOpenedMode": false,
+            "onCreateEventName": "",
+            "animations": []
+          },
+          {
+            "type": "SkeletonDefinitionComponent",
+            "name": "root_entity_SkeletonDefinition",
+            "filename": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton",
+            "enableWeaponAttachInertialization": false
+          },
+          {
+            "type": "TransformDefinitionComponent",
+            "name": "root_entity_TransformDefinition",
+            "position": {
+              "x": 0.125,
+              "y": 0,
+              "z": 0.1
+            },
+            "orientation": {
+              "x": 0,
+              "y": 0.0348994955,
+              "z": 0,
+              "w": 0.999390841
+            },
+            "scale": {
+              "x": 0.9,
+              "y": 0.9,
+              "z": 0.9
+            },
+            "inheritOnlyPosition": false
+          }
+        ]
+      },
+      {
+        "type": "Entity",
+        "name": "model_entity",
+        "id": 2157545957,
+        "components": [
+          {
+            "type": "ModelDefinitionComponent",
+            "name": "model_entity_ModelDefinitionComponent",
+            "filename": "data/hd/items/misc/shard/talics_anguish/talics_anguish.model",
+            "visibleLayers": 1,
+            "lightMask": 19,
+            "shadowMask": 3,
+            "ghostShadows": false,
+            "floorModel": false,
+            "terrainBlendEnableYUpBlend": false,
+            "terrainBlendMode": 1
+          }
+        ]
+      }
+    ]
+  },
+  "korlics_pain.json": {
+    "dependencies": {
+      "particles": [],
+      "models": [
+        {
+          "path": "data/hd/items/misc/shard/korlics_pain/korlics_pain.model"
+        }
+      ],
+      "skeletons": [
+        {
+          "path": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton"
+        }
+      ],
+      "animations": [],
+      "textures": [
+        {
+          "path": "data/hd/items/misc/shard/korlics_pain/korlics_pain_ALB.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/korlics_pain/korlics_pain_NRM.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/korlics_pain/korlics_pain_ORM.texture"
+        }
+      ],
+      "physics": [],
+      "json": [
+        {
+          "path": "data/hd/items/dropped_items/dropped_items_jadestatue_flip.json"
+        }
+      ],
+      "variantdata": [],
+      "objecteffects": [],
+      "other": []
+    },
+    "type": "UnitDefinition",
+    "name": "korlics_pain",
+    "entities": [
+      {
+        "type": "Entity",
+        "name": "root_entity",
+        "id": 3363769870,
+        "components": [
+          {
+            "type": "UnitRootComponent",
+            "name": "root_entity_UnitRootComponent",
+            "state_machine_filename": "data/hd/items/dropped_items/dropped_items_jadestatue_flip.json",
+            "doNotInheritRotation": false,
+            "rotationOverride": {
+              "x": 0,
+              "y": 0.3826834,
+              "z": 0,
+              "w": 0.9238795
+            },
+            "doNotUseHDHeight": false,
+            "hideAllMeshWhenInOpenedMode": false,
+            "onCreateEventName": "",
+            "animations": []
+          },
+          {
+            "type": "SkeletonDefinitionComponent",
+            "name": "root_entity_SkeletonDefinition",
+            "filename": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton",
+            "enableWeaponAttachInertialization": false
+          },
+          {
+            "type": "TransformDefinitionComponent",
+            "name": "root_entity_TransformDefinition",
+            "position": {
+              "x": 0.125,
+              "y": 0,
+              "z": 0.1
+            },
+            "orientation": {
+              "x": 0,
+              "y": 0.0348994955,
+              "z": 0,
+              "w": 0.999390841
+            },
+            "scale": {
+              "x": 0.9,
+              "y": 0.9,
+              "z": 0.9
+            },
+            "inheritOnlyPosition": false
+          }
+        ]
+      },
+      {
+        "type": "Entity",
+        "name": "model_entity",
+        "id": 4235870919,
+        "components": [
+          {
+            "type": "ModelDefinitionComponent",
+            "name": "model_entity_ModelDefinitionComponent",
+            "filename": "data/hd/items/misc/shard/korlics_pain/korlics_pain.model",
+            "visibleLayers": 1,
+            "lightMask": 19,
+            "shadowMask": 3,
+            "ghostShadows": false,
+            "floorModel": false,
+            "terrainBlendEnableYUpBlend": false,
+            "terrainBlendMode": 1
+          }
+        ]
+      }
+    ]
+  },
+  "cont_ua2.json": {
+    "dependencies": {
+      "particles": [],
+      "models": [
+        {
+          "path": "data/hd/items/misc/shard/korlics_pain/korlics_pain.model"
+        }
+      ],
+      "skeletons": [
+        {
+          "path": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton"
+        }
+      ],
+      "animations": [],
+      "textures": [
+        {
+          "path": "data/hd/items/misc/shard/korlics_pain/korlics_pain_ALB.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/korlics_pain/korlics_pain_NRM.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/korlics_pain/korlics_pain_ORM.texture"
+        }
+      ],
+      "physics": [],
+      "json": [
+        {
+          "path": "data/hd/items/dropped_items/dropped_items_jadestatue_flip.json"
+        }
+      ],
+      "variantdata": [],
+      "objecteffects": [],
+      "other": []
+    },
+    "type": "UnitDefinition",
+    "name": "korlics_pain",
+    "entities": [
+      {
+        "type": "Entity",
+        "name": "root_entity",
+        "id": 3363769870,
+        "components": [
+          {
+            "type": "UnitRootComponent",
+            "name": "root_entity_UnitRootComponent",
+            "state_machine_filename": "data/hd/items/dropped_items/dropped_items_jadestatue_flip.json",
+            "doNotInheritRotation": false,
+            "rotationOverride": {
+              "x": 0,
+              "y": 0.3826834,
+              "z": 0,
+              "w": 0.9238795
+            },
+            "doNotUseHDHeight": false,
+            "hideAllMeshWhenInOpenedMode": false,
+            "onCreateEventName": "",
+            "animations": []
+          },
+          {
+            "type": "SkeletonDefinitionComponent",
+            "name": "root_entity_SkeletonDefinition",
+            "filename": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton",
+            "enableWeaponAttachInertialization": false
+          },
+          {
+            "type": "TransformDefinitionComponent",
+            "name": "root_entity_TransformDefinition",
+            "position": {
+              "x": 0.125,
+              "y": 0,
+              "z": 0.1
+            },
+            "orientation": {
+              "x": 0,
+              "y": 0.0348994955,
+              "z": 0,
+              "w": 0.999390841
+            },
+            "scale": {
+              "x": 0.9,
+              "y": 0.9,
+              "z": 0.9
+            },
+            "inheritOnlyPosition": false
+          }
+        ]
+      },
+      {
+        "type": "Entity",
+        "name": "model_entity",
+        "id": 4235870919,
+        "components": [
+          {
+            "type": "ModelDefinitionComponent",
+            "name": "model_entity_ModelDefinitionComponent",
+            "filename": "data/hd/items/misc/shard/korlics_pain/korlics_pain.model",
+            "visibleLayers": 1,
+            "lightMask": 19,
+            "shadowMask": 3,
+            "ghostShadows": false,
+            "floorModel": false,
+            "terrainBlendEnableYUpBlend": false,
+            "terrainBlendMode": 1
+          }
+        ]
+      }
+    ]
+  },
+  "madawcs_ire.json": {
+    "dependencies": {
+      "particles": [],
+      "models": [
+        {
+          "path": "data/hd/items/misc/shard/madawcs_ire/madawcs_ire.model"
+        }
+      ],
+      "skeletons": [
+        {
+          "path": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton"
+        }
+      ],
+      "animations": [],
+      "textures": [
+        {
+          "path": "data/hd/items/misc/shard/madawcs_ire/madawcs_ire_ALB.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/madawcs_ire/madawcs_ire_NRM.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/madawcs_ire/madawcs_ire_ORM.texture"
+        }
+      ],
+      "physics": [],
+      "json": [
+        {
+          "path": "data/hd/items/dropped_items/dropped_items_jadestatue_flip.json"
+        }
+      ],
+      "variantdata": [],
+      "objecteffects": [],
+      "other": []
+    },
+    "type": "UnitDefinition",
+    "name": "madawcs_ire",
+    "entities": [
+      {
+        "type": "Entity",
+        "name": "root_entity",
+        "id": 2594885322,
+        "components": [
+          {
+            "type": "UnitRootComponent",
+            "name": "root_entity_UnitRootComponent",
+            "state_machine_filename": "data/hd/items/dropped_items/dropped_items_jadestatue_flip.json",
+            "doNotInheritRotation": false,
+            "rotationOverride": {
+              "x": 0,
+              "y": 0.3826834,
+              "z": 0,
+              "w": 0.9238795
+            },
+            "doNotUseHDHeight": false,
+            "hideAllMeshWhenInOpenedMode": false,
+            "onCreateEventName": "",
+            "animations": []
+          },
+          {
+            "type": "SkeletonDefinitionComponent",
+            "name": "root_entity_SkeletonDefinition",
+            "filename": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton",
+            "enableWeaponAttachInertialization": false
+          },
+          {
+            "type": "TransformDefinitionComponent",
+            "name": "root_entity_TransformDefinition",
+            "position": {
+              "x": 0.125,
+              "y": 0,
+              "z": 0.1
+            },
+            "orientation": {
+              "x": 0,
+              "y": 0.0348994955,
+              "z": 0,
+              "w": 0.999390841
+            },
+            "scale": {
+              "x": 0.9,
+              "y": 0.9,
+              "z": 0.9
+            },
+            "inheritOnlyPosition": false
+          }
+        ]
+      },
+      {
+        "type": "Entity",
+        "name": "model_entity",
+        "id": 3450143619,
+        "components": [
+          {
+            "type": "ModelDefinitionComponent",
+            "name": "model_entity_ModelDefinitionComponent",
+            "filename": "data/hd/items/misc/shard/madawcs_ire/madawcs_ire.model",
+            "visibleLayers": 1,
+            "lightMask": 19,
+            "shadowMask": 3,
+            "ghostShadows": false,
+            "floorModel": false,
+            "terrainBlendEnableYUpBlend": false,
+            "terrainBlendMode": 1
+          }
+        ]
+      }
+    ]
+  },
+  "cont_ua3.json": {
+    "dependencies": {
+      "particles": [],
+      "models": [
+        {
+          "path": "data/hd/items/misc/shard/madawcs_ire/madawcs_ire.model"
+        }
+      ],
+      "skeletons": [
+        {
+          "path": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton"
+        }
+      ],
+      "animations": [],
+      "textures": [
+        {
+          "path": "data/hd/items/misc/shard/madawcs_ire/madawcs_ire_ALB.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/madawcs_ire/madawcs_ire_NRM.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/madawcs_ire/madawcs_ire_ORM.texture"
+        }
+      ],
+      "physics": [],
+      "json": [
+        {
+          "path": "data/hd/items/dropped_items/dropped_items_jadestatue_flip.json"
+        }
+      ],
+      "variantdata": [],
+      "objecteffects": [],
+      "other": []
+    },
+    "type": "UnitDefinition",
+    "name": "madawcs_ire",
+    "entities": [
+      {
+        "type": "Entity",
+        "name": "root_entity",
+        "id": 2594885322,
+        "components": [
+          {
+            "type": "UnitRootComponent",
+            "name": "root_entity_UnitRootComponent",
+            "state_machine_filename": "data/hd/items/dropped_items/dropped_items_jadestatue_flip.json",
+            "doNotInheritRotation": false,
+            "rotationOverride": {
+              "x": 0,
+              "y": 0.3826834,
+              "z": 0,
+              "w": 0.9238795
+            },
+            "doNotUseHDHeight": false,
+            "hideAllMeshWhenInOpenedMode": false,
+            "onCreateEventName": "",
+            "animations": []
+          },
+          {
+            "type": "SkeletonDefinitionComponent",
+            "name": "root_entity_SkeletonDefinition",
+            "filename": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton",
+            "enableWeaponAttachInertialization": false
+          },
+          {
+            "type": "TransformDefinitionComponent",
+            "name": "root_entity_TransformDefinition",
+            "position": {
+              "x": 0.125,
+              "y": 0,
+              "z": 0.1
+            },
+            "orientation": {
+              "x": 0,
+              "y": 0.0348994955,
+              "z": 0,
+              "w": 0.999390841
+            },
+            "scale": {
+              "x": 0.9,
+              "y": 0.9,
+              "z": 0.9
+            },
+            "inheritOnlyPosition": false
+          }
+        ]
+      },
+      {
+        "type": "Entity",
+        "name": "model_entity",
+        "id": 3450143619,
+        "components": [
+          {
+            "type": "ModelDefinitionComponent",
+            "name": "model_entity_ModelDefinitionComponent",
+            "filename": "data/hd/items/misc/shard/madawcs_ire/madawcs_ire.model",
+            "visibleLayers": 1,
+            "lightMask": 19,
+            "shadowMask": 3,
+            "ghostShadows": false,
+            "floorModel": false,
+            "terrainBlendEnableYUpBlend": false,
+            "terrainBlendMode": 1
+          }
+        ]
+      }
+    ]
+  },
+  "bulkathos_nightmare.json": {
+    "dependencies": {
+      "particles": [],
+      "models": [
+        {
+          "path": "data/hd/items/misc/shard/bulkathos_nightmare/bulkathos_nightmare.model"
+        }
+      ],
+      "skeletons": [
+        {
+          "path": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton"
+        }
+      ],
+      "animations": [],
+      "textures": [
+        {
+          "path": "data/hd/items/misc/shard/bulkathos_nightmare/bulkathos_nightmare_ALB.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/bulkathos_nightmare/bulkathos_nightmare_NRM.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/bulkathos_nightmare/bulkathos_nightmare_ORM.texture"
+        }
+      ],
+      "physics": [],
+      "json": [
+        {
+          "path": "data/hd/items/dropped_items/dropped_items_jadestatue_flip.json"
+        }
+      ],
+      "variantdata": [],
+      "objecteffects": [],
+      "other": []
+    },
+    "type": "UnitDefinition",
+    "name": "bulkathos_nightmare",
+    "entities": [
+      {
+        "type": "Entity",
+        "name": "root_entity",
+        "id": 2986294057,
+        "components": [
+          {
+            "type": "UnitRootComponent",
+            "name": "root_entity_UnitRootComponent",
+            "state_machine_filename": "data/hd/items/dropped_items/dropped_items_jadestatue_flip.json",
+            "doNotInheritRotation": false,
+            "rotationOverride": {
+              "x": 0,
+              "y": 0.3826834,
+              "z": 0,
+              "w": 0.9238795
+            },
+            "doNotUseHDHeight": false,
+            "hideAllMeshWhenInOpenedMode": false,
+            "onCreateEventName": "",
+            "animations": []
+          },
+          {
+            "type": "SkeletonDefinitionComponent",
+            "name": "root_entity_SkeletonDefinition",
+            "filename": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton",
+            "enableWeaponAttachInertialization": false
+          },
+          {
+            "type": "TransformDefinitionComponent",
+            "name": "root_entity_TransformDefinition",
+            "position": {
+              "x": 0.125,
+              "y": 0,
+              "z": 0.1
+            },
+            "orientation": {
+              "x": 0,
+              "y": 0.0348994955,
+              "z": 0,
+              "w": 0.999390841
+            },
+            "scale": {
+              "x": 0.9,
+              "y": 0.9,
+              "z": 0.9
+            },
+            "inheritOnlyPosition": false
+          }
+        ]
+      },
+      {
+        "type": "Entity",
+        "name": "model_entity",
+        "id": 3518672054,
+        "components": [
+          {
+            "type": "ModelDefinitionComponent",
+            "name": "model_entity_ModelDefinitionComponent",
+            "filename": "data/hd/items/misc/shard/bulkathos_nightmare/bulkathos_nightmare.model",
+            "visibleLayers": 1,
+            "lightMask": 19,
+            "shadowMask": 3,
+            "ghostShadows": false,
+            "floorModel": false,
+            "terrainBlendEnableYUpBlend": false,
+            "terrainBlendMode": 1
+          }
+        ]
+      }
+    ]
+  },
+  "cont_ua4.json": {
+    "dependencies": {
+      "particles": [],
+      "models": [
+        {
+          "path": "data/hd/items/misc/shard/bulkathos_nightmare/bulkathos_nightmare.model"
+        }
+      ],
+      "skeletons": [
+        {
+          "path": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton"
+        }
+      ],
+      "animations": [],
+      "textures": [
+        {
+          "path": "data/hd/items/misc/shard/bulkathos_nightmare/bulkathos_nightmare_ALB.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/bulkathos_nightmare/bulkathos_nightmare_NRM.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/bulkathos_nightmare/bulkathos_nightmare_ORM.texture"
+        }
+      ],
+      "physics": [],
+      "json": [
+        {
+          "path": "data/hd/items/dropped_items/dropped_items_jadestatue_flip.json"
+        }
+      ],
+      "variantdata": [],
+      "objecteffects": [],
+      "other": []
+    },
+    "type": "UnitDefinition",
+    "name": "bulkathos_nightmare",
+    "entities": [
+      {
+        "type": "Entity",
+        "name": "root_entity",
+        "id": 2986294057,
+        "components": [
+          {
+            "type": "UnitRootComponent",
+            "name": "root_entity_UnitRootComponent",
+            "state_machine_filename": "data/hd/items/dropped_items/dropped_items_jadestatue_flip.json",
+            "doNotInheritRotation": false,
+            "rotationOverride": {
+              "x": 0,
+              "y": 0.3826834,
+              "z": 0,
+              "w": 0.9238795
+            },
+            "doNotUseHDHeight": false,
+            "hideAllMeshWhenInOpenedMode": false,
+            "onCreateEventName": "",
+            "animations": []
+          },
+          {
+            "type": "SkeletonDefinitionComponent",
+            "name": "root_entity_SkeletonDefinition",
+            "filename": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton",
+            "enableWeaponAttachInertialization": false
+          },
+          {
+            "type": "TransformDefinitionComponent",
+            "name": "root_entity_TransformDefinition",
+            "position": {
+              "x": 0.125,
+              "y": 0,
+              "z": 0.1
+            },
+            "orientation": {
+              "x": 0,
+              "y": 0.0348994955,
+              "z": 0,
+              "w": 0.999390841
+            },
+            "scale": {
+              "x": 0.9,
+              "y": 0.9,
+              "z": 0.9
+            },
+            "inheritOnlyPosition": false
+          }
+        ]
+      },
+      {
+        "type": "Entity",
+        "name": "model_entity",
+        "id": 3518672054,
+        "components": [
+          {
+            "type": "ModelDefinitionComponent",
+            "name": "model_entity_ModelDefinitionComponent",
+            "filename": "data/hd/items/misc/shard/bulkathos_nightmare/bulkathos_nightmare.model",
+            "visibleLayers": 1,
+            "lightMask": 19,
+            "shadowMask": 3,
+            "ghostShadows": false,
+            "floorModel": false,
+            "terrainBlendEnableYUpBlend": false,
+            "terrainBlendMode": 1
+          }
+        ]
+      }
+    ]
+  },
+  "worusks_end.json": {
+    "dependencies": {
+      "particles": [],
+      "models": [
+        {
+          "path": "data/hd/items/misc/shard/worusks_end/worusks_end.model"
+        }
+      ],
+      "skeletons": [
+        {
+          "path": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton"
+        }
+      ],
+      "animations": [],
+      "textures": [
+        {
+          "path": "data/hd/items/misc/shard/worusks_end/worusks_end_ALB.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/worusks_end/worusks_end_NRM.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/worusks_end/worusks_end_ORM.texture"
+        }
+      ],
+      "physics": [],
+      "json": [
+        {
+          "path": "data/hd/items/dropped_items/dropped_items_jadestatue_flip.json"
+        }
+      ],
+      "variantdata": [],
+      "objecteffects": [],
+      "other": []
+    },
+    "type": "UnitDefinition",
+    "name": "worusks_end",
+    "entities": [
+      {
+        "type": "Entity",
+        "name": "root_entity",
+        "id": 4228155807,
+        "components": [
+          {
+            "type": "UnitRootComponent",
+            "name": "root_entity_UnitRootComponent",
+            "state_machine_filename": "data/hd/items/dropped_items/dropped_items_jadestatue_flip.json",
+            "doNotInheritRotation": false,
+            "rotationOverride": {
+              "x": 0,
+              "y": 0.3826834,
+              "z": 0,
+              "w": 0.9238795
+            },
+            "doNotUseHDHeight": false,
+            "hideAllMeshWhenInOpenedMode": false,
+            "onCreateEventName": "",
+            "animations": []
+          },
+          {
+            "type": "SkeletonDefinitionComponent",
+            "name": "root_entity_SkeletonDefinition",
+            "filename": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton",
+            "enableWeaponAttachInertialization": false
+          },
+          {
+            "type": "TransformDefinitionComponent",
+            "name": "root_entity_TransformDefinition",
+            "position": {
+              "x": 0.125,
+              "y": 0,
+              "z": 0.1
+            },
+            "orientation": {
+              "x": 0,
+              "y": 0.0348994955,
+              "z": 0,
+              "w": 0.999390841
+            },
+            "scale": {
+              "x": 0.9,
+              "y": 0.9,
+              "z": 0.9
+            },
+            "inheritOnlyPosition": false
+          }
+        ]
+      },
+      {
+        "type": "Entity",
+        "name": "model_entity",
+        "id": 805289560,
+        "components": [
+          {
+            "type": "ModelDefinitionComponent",
+            "name": "model_entity_ModelDefinitionComponent",
+            "filename": "data/hd/items/misc/shard/worusks_end/worusks_end.model",
+            "visibleLayers": 1,
+            "lightMask": 19,
+            "shadowMask": 3,
+            "ghostShadows": false,
+            "floorModel": false,
+            "terrainBlendEnableYUpBlend": false,
+            "terrainBlendMode": 1
+          }
+        ]
+      }
+    ]
+  },
+  "cont_ua5.json": {
+    "dependencies": {
+      "particles": [],
+      "models": [
+        {
+          "path": "data/hd/items/misc/shard/worusks_end/worusks_end.model"
+        }
+      ],
+      "skeletons": [
+        {
+          "path": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton"
+        }
+      ],
+      "animations": [],
+      "textures": [
+        {
+          "path": "data/hd/items/misc/shard/worusks_end/worusks_end_ALB.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/worusks_end/worusks_end_NRM.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/worusks_end/worusks_end_ORM.texture"
+        }
+      ],
+      "physics": [],
+      "json": [
+        {
+          "path": "data/hd/items/dropped_items/dropped_items_jadestatue_flip.json"
+        }
+      ],
+      "variantdata": [],
+      "objecteffects": [],
+      "other": []
+    },
+    "type": "UnitDefinition",
+    "name": "worusks_end",
+    "entities": [
+      {
+        "type": "Entity",
+        "name": "root_entity",
+        "id": 4228155807,
+        "components": [
+          {
+            "type": "UnitRootComponent",
+            "name": "root_entity_UnitRootComponent",
+            "state_machine_filename": "data/hd/items/dropped_items/dropped_items_jadestatue_flip.json",
+            "doNotInheritRotation": false,
+            "rotationOverride": {
+              "x": 0,
+              "y": 0.3826834,
+              "z": 0,
+              "w": 0.9238795
+            },
+            "doNotUseHDHeight": false,
+            "hideAllMeshWhenInOpenedMode": false,
+            "onCreateEventName": "",
+            "animations": []
+          },
+          {
+            "type": "SkeletonDefinitionComponent",
+            "name": "root_entity_SkeletonDefinition",
+            "filename": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton",
+            "enableWeaponAttachInertialization": false
+          },
+          {
+            "type": "TransformDefinitionComponent",
+            "name": "root_entity_TransformDefinition",
+            "position": {
+              "x": 0.125,
+              "y": 0,
+              "z": 0.1
+            },
+            "orientation": {
+              "x": 0,
+              "y": 0.0348994955,
+              "z": 0,
+              "w": 0.999390841
+            },
+            "scale": {
+              "x": 0.9,
+              "y": 0.9,
+              "z": 0.9
+            },
+            "inheritOnlyPosition": false
+          }
+        ]
+      },
+      {
+        "type": "Entity",
+        "name": "model_entity",
+        "id": 805289560,
+        "components": [
+          {
+            "type": "ModelDefinitionComponent",
+            "name": "model_entity_ModelDefinitionComponent",
+            "filename": "data/hd/items/misc/shard/worusks_end/worusks_end.model",
+            "visibleLayers": 1,
+            "lightMask": 19,
+            "shadowMask": 3,
+            "ghostShadows": false,
+            "floorModel": false,
+            "terrainBlendEnableYUpBlend": false,
+            "terrainBlendMode": 1
+          }
+        ]
+      }
+    ]
+  },
+  "mote_of_anguish.json": {
+    "dependencies": {
+      "particles": [],
+      "models": [
+        {
+          "path": "data/hd/items/misc/shard/mote_of_anguish/mote_of_anguish.model"
+        }
+      ],
+      "skeletons": [
+        {
+          "path": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton"
+        }
+      ],
+      "animations": [],
+      "textures": [
+        {
+          "path": "data/hd/items/misc/shard/mote_of_anguish/misc_mote_of_anguish_ALB.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/mote_of_anguish/misc_mote_of_anguish_NRM.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/mote_of_anguish/misc_mote_of_anguish_ORM.texture"
+        }
+      ],
+      "physics": [],
+      "json": [
+        {
+          "path": "data/hd/items/dropped_items/dropped_items_helms_flip_nw.json"
+        }
+      ],
+      "variantdata": [],
+      "objecteffects": [],
+      "other": []
+    },
+    "type": "UnitDefinition",
+    "name": "mote_of_anguish",
+    "entities": [
+      {
+        "type": "Entity",
+        "name": "root_entity",
+        "id": 2157396673,
+        "components": [
+          {
+            "type": "UnitRootComponent",
+            "name": "root_entity_UnitRootComponent",
+            "state_machine_filename": "data/hd/items/dropped_items/dropped_items_helms_flip_nw.json",
+            "doNotInheritRotation": false,
+            "rotationOverride": {
+              "x": 0,
+              "y": 0.3826834,
+              "z": 0,
+              "w": 0.9238795
+            },
+            "doNotUseHDHeight": false,
+            "hideAllMeshWhenInOpenedMode": false,
+            "onCreateEventName": "",
+            "animations": []
+          },
+          {
+            "type": "SkeletonDefinitionComponent",
+            "name": "root_entity_SkeletonDefinition",
+            "filename": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton",
+            "enableWeaponAttachInertialization": false
+          }
+        ]
+      },
+      {
+        "type": "Entity",
+        "name": "model_entity",
+        "id": 122232254,
+        "components": [
+          {
+            "type": "ModelDefinitionComponent",
+            "name": "model_entity_ModelDefinitionComponent",
+            "filename": "data/hd/items/misc/shard/mote_of_anguish/mote_of_anguish.model",
+            "visibleLayers": 1,
+            "lightMask": 19,
+            "shadowMask": 3,
+            "ghostShadows": false,
+            "floorModel": false,
+            "terrainBlendEnableYUpBlend": false,
+            "terrainBlendMode": 1
+          }
+        ]
+      }
+    ]
+  },
+  "cont_xa1.json": {
+    "dependencies": {
+      "particles": [],
+      "models": [
+        {
+          "path": "data/hd/items/misc/shard/mote_of_anguish/mote_of_anguish.model"
+        }
+      ],
+      "skeletons": [
+        {
+          "path": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton"
+        }
+      ],
+      "animations": [],
+      "textures": [
+        {
+          "path": "data/hd/items/misc/shard/mote_of_anguish/misc_mote_of_anguish_ALB.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/mote_of_anguish/misc_mote_of_anguish_NRM.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/mote_of_anguish/misc_mote_of_anguish_ORM.texture"
+        }
+      ],
+      "physics": [],
+      "json": [
+        {
+          "path": "data/hd/items/dropped_items/dropped_items_helms_flip_nw.json"
+        }
+      ],
+      "variantdata": [],
+      "objecteffects": [],
+      "other": []
+    },
+    "type": "UnitDefinition",
+    "name": "mote_of_anguish",
+    "entities": [
+      {
+        "type": "Entity",
+        "name": "root_entity",
+        "id": 2157396673,
+        "components": [
+          {
+            "type": "UnitRootComponent",
+            "name": "root_entity_UnitRootComponent",
+            "state_machine_filename": "data/hd/items/dropped_items/dropped_items_helms_flip_nw.json",
+            "doNotInheritRotation": false,
+            "rotationOverride": {
+              "x": 0,
+              "y": 0.3826834,
+              "z": 0,
+              "w": 0.9238795
+            },
+            "doNotUseHDHeight": false,
+            "hideAllMeshWhenInOpenedMode": false,
+            "onCreateEventName": "",
+            "animations": []
+          },
+          {
+            "type": "SkeletonDefinitionComponent",
+            "name": "root_entity_SkeletonDefinition",
+            "filename": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton",
+            "enableWeaponAttachInertialization": false
+          }
+        ]
+      },
+      {
+        "type": "Entity",
+        "name": "model_entity",
+        "id": 122232254,
+        "components": [
+          {
+            "type": "ModelDefinitionComponent",
+            "name": "model_entity_ModelDefinitionComponent",
+            "filename": "data/hd/items/misc/shard/mote_of_anguish/mote_of_anguish.model",
+            "visibleLayers": 1,
+            "lightMask": 19,
+            "shadowMask": 3,
+            "ghostShadows": false,
+            "floorModel": false,
+            "terrainBlendEnableYUpBlend": false,
+            "terrainBlendMode": 1
+          }
+        ]
+      }
+    ]
+  },
+  "mote_of_pain.json": {
+    "dependencies": {
+      "particles": [],
+      "models": [
+        {
+          "path": "data/hd/items/misc/shard/mote_of_pain/mote_of_pain.model"
+        }
+      ],
+      "skeletons": [
+        {
+          "path": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton"
+        }
+      ],
+      "animations": [],
+      "textures": [
+        {
+          "path": "data/hd/items/misc/shard/mote_of_pain/misc_mote_of_pain_ALB.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/mote_of_pain/misc_mote_of_pain_NRM.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/mote_of_pain/misc_mote_of_pain_ORM.texture"
+        }
+      ],
+      "physics": [],
+      "json": [
+        {
+          "path": "data/hd/items/dropped_items/dropped_items_helms_flip_nw.json"
+        }
+      ],
+      "variantdata": [],
+      "objecteffects": [],
+      "other": []
+    },
+    "type": "UnitDefinition",
+    "name": "mote_of_pain",
+    "entities": [
+      {
+        "type": "Entity",
+        "name": "root_entity",
+        "id": 1148957776,
+        "components": [
+          {
+            "type": "UnitRootComponent",
+            "name": "root_entity_UnitRootComponent",
+            "state_machine_filename": "data/hd/items/dropped_items/dropped_items_helms_flip_nw.json",
+            "doNotInheritRotation": false,
+            "rotationOverride": {
+              "x": 0,
+              "y": 0.3826834,
+              "z": 0,
+              "w": 0.9238795
+            },
+            "doNotUseHDHeight": false,
+            "hideAllMeshWhenInOpenedMode": false,
+            "onCreateEventName": "",
+            "animations": []
+          },
+          {
+            "type": "SkeletonDefinitionComponent",
+            "name": "root_entity_SkeletonDefinition",
+            "filename": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton",
+            "enableWeaponAttachInertialization": false
+          }
+        ]
+      },
+      {
+        "type": "Entity",
+        "name": "model_entity",
+        "id": 2004281608,
+        "components": [
+          {
+            "type": "ModelDefinitionComponent",
+            "name": "model_entity_ModelDefinitionComponent",
+            "filename": "data/hd/items/misc/shard/mote_of_pain/mote_of_pain.model",
+            "visibleLayers": 1,
+            "lightMask": 19,
+            "shadowMask": 3,
+            "ghostShadows": false,
+            "floorModel": false,
+            "terrainBlendEnableYUpBlend": false,
+            "terrainBlendMode": 1
+          }
+        ]
+      }
+    ]
+  },
+  "cont_xa2.json": {
+    "dependencies": {
+      "particles": [],
+      "models": [
+        {
+          "path": "data/hd/items/misc/shard/mote_of_pain/mote_of_pain.model"
+        }
+      ],
+      "skeletons": [
+        {
+          "path": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton"
+        }
+      ],
+      "animations": [],
+      "textures": [
+        {
+          "path": "data/hd/items/misc/shard/mote_of_pain/misc_mote_of_pain_ALB.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/mote_of_pain/misc_mote_of_pain_NRM.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/mote_of_pain/misc_mote_of_pain_ORM.texture"
+        }
+      ],
+      "physics": [],
+      "json": [
+        {
+          "path": "data/hd/items/dropped_items/dropped_items_helms_flip_nw.json"
+        }
+      ],
+      "variantdata": [],
+      "objecteffects": [],
+      "other": []
+    },
+    "type": "UnitDefinition",
+    "name": "mote_of_pain",
+    "entities": [
+      {
+        "type": "Entity",
+        "name": "root_entity",
+        "id": 1148957776,
+        "components": [
+          {
+            "type": "UnitRootComponent",
+            "name": "root_entity_UnitRootComponent",
+            "state_machine_filename": "data/hd/items/dropped_items/dropped_items_helms_flip_nw.json",
+            "doNotInheritRotation": false,
+            "rotationOverride": {
+              "x": 0,
+              "y": 0.3826834,
+              "z": 0,
+              "w": 0.9238795
+            },
+            "doNotUseHDHeight": false,
+            "hideAllMeshWhenInOpenedMode": false,
+            "onCreateEventName": "",
+            "animations": []
+          },
+          {
+            "type": "SkeletonDefinitionComponent",
+            "name": "root_entity_SkeletonDefinition",
+            "filename": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton",
+            "enableWeaponAttachInertialization": false
+          }
+        ]
+      },
+      {
+        "type": "Entity",
+        "name": "model_entity",
+        "id": 2004281608,
+        "components": [
+          {
+            "type": "ModelDefinitionComponent",
+            "name": "model_entity_ModelDefinitionComponent",
+            "filename": "data/hd/items/misc/shard/mote_of_pain/mote_of_pain.model",
+            "visibleLayers": 1,
+            "lightMask": 19,
+            "shadowMask": 3,
+            "ghostShadows": false,
+            "floorModel": false,
+            "terrainBlendEnableYUpBlend": false,
+            "terrainBlendMode": 1
+          }
+        ]
+      }
+    ]
+  },
+  "mote_of_hatred.json": {
+    "dependencies": {
+      "particles": [],
+      "models": [
+        {
+          "path": "data/hd/items/misc/shard/mote_of_hatred/mote_of_hatred.model"
+        }
+      ],
+      "skeletons": [
+        {
+          "path": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton"
+        }
+      ],
+      "animations": [],
+      "textures": [
+        {
+          "path": "data/hd/items/misc/shard/mote_of_hatred/misc_mote_of_hatred_ALB.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/mote_of_hatred/misc_mote_of_hatred_NRM.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/mote_of_hatred/misc_mote_of_hatred_ORM.texture"
+        }
+      ],
+      "physics": [],
+      "json": [
+        {
+          "path": "data/hd/items/dropped_items/dropped_items_helms_flip_nw.json"
+        }
+      ],
+      "variantdata": [],
+      "objecteffects": [],
+      "other": []
+    },
+    "type": "UnitDefinition",
+    "name": "mote_of_hatred",
+    "entities": [
+      {
+        "type": "Entity",
+        "name": "root_entity",
+        "id": 1304017214,
+        "components": [
+          {
+            "type": "UnitRootComponent",
+            "name": "root_entity_UnitRootComponent",
+            "state_machine_filename": "data/hd/items/dropped_items/dropped_items_helms_flip_nw.json",
+            "doNotInheritRotation": false,
+            "rotationOverride": {
+              "x": 0,
+              "y": 0.3826834,
+              "z": 0,
+              "w": 0.9238795
+            },
+            "doNotUseHDHeight": false,
+            "hideAllMeshWhenInOpenedMode": false,
+            "onCreateEventName": "",
+            "animations": []
+          },
+          {
+            "type": "SkeletonDefinitionComponent",
+            "name": "root_entity_SkeletonDefinition",
+            "filename": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton",
+            "enableWeaponAttachInertialization": false
+          }
+        ]
+      },
+      {
+        "type": "Entity",
+        "name": "model_entity",
+        "id": 1836395210,
+        "components": [
+          {
+            "type": "ModelDefinitionComponent",
+            "name": "model_entity_ModelDefinitionComponent",
+            "filename": "data/hd/items/misc/shard/mote_of_hatred/mote_of_hatred.model",
+            "visibleLayers": 1,
+            "lightMask": 19,
+            "shadowMask": 3,
+            "ghostShadows": false,
+            "floorModel": false,
+            "terrainBlendEnableYUpBlend": false,
+            "terrainBlendMode": 1
+          }
+        ]
+      }
+    ]
+  },
+  "cont_xa3.json": {
+    "dependencies": {
+      "particles": [],
+      "models": [
+        {
+          "path": "data/hd/items/misc/shard/mote_of_hatred/mote_of_hatred.model"
+        }
+      ],
+      "skeletons": [
+        {
+          "path": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton"
+        }
+      ],
+      "animations": [],
+      "textures": [
+        {
+          "path": "data/hd/items/misc/shard/mote_of_hatred/misc_mote_of_hatred_ALB.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/mote_of_hatred/misc_mote_of_hatred_NRM.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/mote_of_hatred/misc_mote_of_hatred_ORM.texture"
+        }
+      ],
+      "physics": [],
+      "json": [
+        {
+          "path": "data/hd/items/dropped_items/dropped_items_helms_flip_nw.json"
+        }
+      ],
+      "variantdata": [],
+      "objecteffects": [],
+      "other": []
+    },
+    "type": "UnitDefinition",
+    "name": "mote_of_hatred",
+    "entities": [
+      {
+        "type": "Entity",
+        "name": "root_entity",
+        "id": 1304017214,
+        "components": [
+          {
+            "type": "UnitRootComponent",
+            "name": "root_entity_UnitRootComponent",
+            "state_machine_filename": "data/hd/items/dropped_items/dropped_items_helms_flip_nw.json",
+            "doNotInheritRotation": false,
+            "rotationOverride": {
+              "x": 0,
+              "y": 0.3826834,
+              "z": 0,
+              "w": 0.9238795
+            },
+            "doNotUseHDHeight": false,
+            "hideAllMeshWhenInOpenedMode": false,
+            "onCreateEventName": "",
+            "animations": []
+          },
+          {
+            "type": "SkeletonDefinitionComponent",
+            "name": "root_entity_SkeletonDefinition",
+            "filename": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton",
+            "enableWeaponAttachInertialization": false
+          }
+        ]
+      },
+      {
+        "type": "Entity",
+        "name": "model_entity",
+        "id": 1836395210,
+        "components": [
+          {
+            "type": "ModelDefinitionComponent",
+            "name": "model_entity_ModelDefinitionComponent",
+            "filename": "data/hd/items/misc/shard/mote_of_hatred/mote_of_hatred.model",
+            "visibleLayers": 1,
+            "lightMask": 19,
+            "shadowMask": 3,
+            "ghostShadows": false,
+            "floorModel": false,
+            "terrainBlendEnableYUpBlend": false,
+            "terrainBlendMode": 1
+          }
+        ]
+      }
+    ]
+  },
+  "mote_of_terror.json": {
+    "dependencies": {
+      "particles": [],
+      "models": [
+        {
+          "path": "data/hd/items/misc/shard/mote_of_terror/mote_of_terror.model"
+        }
+      ],
+      "skeletons": [
+        {
+          "path": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton"
+        }
+      ],
+      "animations": [],
+      "textures": [
+        {
+          "path": "data/hd/items/misc/shard/mote_of_terror/misc_mote_of_terror_ALB.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/mote_of_terror/misc_mote_of_terror_NRM.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/mote_of_terror/misc_mote_of_terror_ORM.texture"
+        }
+      ],
+      "physics": [],
+      "json": [
+        {
+          "path": "data/hd/items/dropped_items/dropped_items_helms_flip_nw.json"
+        }
+      ],
+      "variantdata": [],
+      "objecteffects": [],
+      "other": []
+    },
+    "type": "UnitDefinition",
+    "name": "mote_of_terror",
+    "entities": [
+      {
+        "type": "Entity",
+        "name": "root_entity",
+        "id": 88825736,
+        "components": [
+          {
+            "type": "UnitRootComponent",
+            "name": "root_entity_UnitRootComponent",
+            "state_machine_filename": "data/hd/items/dropped_items/dropped_items_helms_flip_nw.json",
+            "doNotInheritRotation": false,
+            "rotationOverride": {
+              "x": 0,
+              "y": 0.3826834,
+              "z": 0,
+              "w": 0.9238795
+            },
+            "doNotUseHDHeight": false,
+            "hideAllMeshWhenInOpenedMode": false,
+            "onCreateEventName": "",
+            "animations": []
+          },
+          {
+            "type": "SkeletonDefinitionComponent",
+            "name": "root_entity_SkeletonDefinition",
+            "filename": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton",
+            "enableWeaponAttachInertialization": false
+          }
+        ]
+      },
+      {
+        "type": "Entity",
+        "name": "model_entity",
+        "id": 621203733,
+        "components": [
+          {
+            "type": "ModelDefinitionComponent",
+            "name": "model_entity_ModelDefinitionComponent",
+            "filename": "data/hd/items/misc/shard/mote_of_terror/mote_of_terror.model",
+            "visibleLayers": 1,
+            "lightMask": 19,
+            "shadowMask": 3,
+            "ghostShadows": false,
+            "floorModel": false,
+            "terrainBlendEnableYUpBlend": false,
+            "terrainBlendMode": 1
+          }
+        ]
+      }
+    ]
+  },
+  "cont_xa4.json": {
+    "dependencies": {
+      "particles": [],
+      "models": [
+        {
+          "path": "data/hd/items/misc/shard/mote_of_terror/mote_of_terror.model"
+        }
+      ],
+      "skeletons": [
+        {
+          "path": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton"
+        }
+      ],
+      "animations": [],
+      "textures": [
+        {
+          "path": "data/hd/items/misc/shard/mote_of_terror/misc_mote_of_terror_ALB.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/mote_of_terror/misc_mote_of_terror_NRM.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/mote_of_terror/misc_mote_of_terror_ORM.texture"
+        }
+      ],
+      "physics": [],
+      "json": [
+        {
+          "path": "data/hd/items/dropped_items/dropped_items_helms_flip_nw.json"
+        }
+      ],
+      "variantdata": [],
+      "objecteffects": [],
+      "other": []
+    },
+    "type": "UnitDefinition",
+    "name": "mote_of_terror",
+    "entities": [
+      {
+        "type": "Entity",
+        "name": "root_entity",
+        "id": 88825736,
+        "components": [
+          {
+            "type": "UnitRootComponent",
+            "name": "root_entity_UnitRootComponent",
+            "state_machine_filename": "data/hd/items/dropped_items/dropped_items_helms_flip_nw.json",
+            "doNotInheritRotation": false,
+            "rotationOverride": {
+              "x": 0,
+              "y": 0.3826834,
+              "z": 0,
+              "w": 0.9238795
+            },
+            "doNotUseHDHeight": false,
+            "hideAllMeshWhenInOpenedMode": false,
+            "onCreateEventName": "",
+            "animations": []
+          },
+          {
+            "type": "SkeletonDefinitionComponent",
+            "name": "root_entity_SkeletonDefinition",
+            "filename": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton",
+            "enableWeaponAttachInertialization": false
+          }
+        ]
+      },
+      {
+        "type": "Entity",
+        "name": "model_entity",
+        "id": 621203733,
+        "components": [
+          {
+            "type": "ModelDefinitionComponent",
+            "name": "model_entity_ModelDefinitionComponent",
+            "filename": "data/hd/items/misc/shard/mote_of_terror/mote_of_terror.model",
+            "visibleLayers": 1,
+            "lightMask": 19,
+            "shadowMask": 3,
+            "ghostShadows": false,
+            "floorModel": false,
+            "terrainBlendEnableYUpBlend": false,
+            "terrainBlendMode": 1
+          }
+        ]
+      }
+    ]
+  },
+  "mote_of_destruction.json": {
+    "dependencies": {
+      "particles": [],
+      "models": [
+        {
+          "path": "data/hd/items/misc/shard/mote_of_destruction/mote_of_destruction.model"
+        }
+      ],
+      "skeletons": [
+        {
+          "path": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton"
+        }
+      ],
+      "animations": [],
+      "textures": [
+        {
+          "path": "data/hd/items/misc/shard/mote_of_destruction/misc_mote_of_destruction_ALB.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/mote_of_destruction/misc_mote_of_destruction_NRM.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/mote_of_destruction/misc_mote_of_destruction_ORM.texture"
+        }
+      ],
+      "physics": [],
+      "json": [
+        {
+          "path": "data/hd/items/dropped_items/dropped_items_helms_flip_nw.json"
+        }
+      ],
+      "variantdata": [],
+      "objecteffects": [],
+      "other": []
+    },
+    "type": "UnitDefinition",
+    "name": "mote_of_destruction",
+    "entities": [
+      {
+        "type": "Entity",
+        "name": "root_entity",
+        "id": 423526644,
+        "components": [
+          {
+            "type": "UnitRootComponent",
+            "name": "root_entity_UnitRootComponent",
+            "state_machine_filename": "data/hd/items/dropped_items/dropped_items_helms_flip_nw.json",
+            "doNotInheritRotation": false,
+            "rotationOverride": {
+              "x": 0,
+              "y": 0.3826834,
+              "z": 0,
+              "w": 0.9238795
+            },
+            "doNotUseHDHeight": false,
+            "hideAllMeshWhenInOpenedMode": false,
+            "onCreateEventName": "",
+            "animations": []
+          },
+          {
+            "type": "SkeletonDefinitionComponent",
+            "name": "root_entity_SkeletonDefinition",
+            "filename": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton",
+            "enableWeaponAttachInertialization": false
+          }
+        ]
+      },
+      {
+        "type": "Entity",
+        "name": "model_entity",
+        "id": 1295627693,
+        "components": [
+          {
+            "type": "ModelDefinitionComponent",
+            "name": "model_entity_ModelDefinitionComponent",
+            "filename": "data/hd/items/misc/shard/mote_of_destruction/mote_of_destruction.model",
+            "visibleLayers": 1,
+            "lightMask": 19,
+            "shadowMask": 3,
+            "ghostShadows": false,
+            "floorModel": false,
+            "terrainBlendEnableYUpBlend": false,
+            "terrainBlendMode": 1
+          }
+        ]
+      }
+    ]
+  },
+  "cont_xa5.json": {
+    "dependencies": {
+      "particles": [],
+      "models": [
+        {
+          "path": "data/hd/items/misc/shard/mote_of_destruction/mote_of_destruction.model"
+        }
+      ],
+      "skeletons": [
+        {
+          "path": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton"
+        }
+      ],
+      "animations": [],
+      "textures": [
+        {
+          "path": "data/hd/items/misc/shard/mote_of_destruction/misc_mote_of_destruction_ALB.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/mote_of_destruction/misc_mote_of_destruction_NRM.texture"
+        },
+        {
+          "path": "data/hd/items/misc/shard/mote_of_destruction/misc_mote_of_destruction_ORM.texture"
+        }
+      ],
+      "physics": [],
+      "json": [
+        {
+          "path": "data/hd/items/dropped_items/dropped_items_helms_flip_nw.json"
+        }
+      ],
+      "variantdata": [],
+      "objecteffects": [],
+      "other": []
+    },
+    "type": "UnitDefinition",
+    "name": "mote_of_destruction",
+    "entities": [
+      {
+        "type": "Entity",
+        "name": "root_entity",
+        "id": 423526644,
+        "components": [
+          {
+            "type": "UnitRootComponent",
+            "name": "root_entity_UnitRootComponent",
+            "state_machine_filename": "data/hd/items/dropped_items/dropped_items_helms_flip_nw.json",
+            "doNotInheritRotation": false,
+            "rotationOverride": {
+              "x": 0,
+              "y": 0.3826834,
+              "z": 0,
+              "w": 0.9238795
+            },
+            "doNotUseHDHeight": false,
+            "hideAllMeshWhenInOpenedMode": false,
+            "onCreateEventName": "",
+            "animations": []
+          },
+          {
+            "type": "SkeletonDefinitionComponent",
+            "name": "root_entity_SkeletonDefinition",
+            "filename": "data/hd/items/dropped_items/skeleton/dropped_items.skeleton",
+            "enableWeaponAttachInertialization": false
+          }
+        ]
+      },
+      {
+        "type": "Entity",
+        "name": "model_entity",
+        "id": 1295627693,
+        "components": [
+          {
+            "type": "ModelDefinitionComponent",
+            "name": "model_entity_ModelDefinitionComponent",
+            "filename": "data/hd/items/misc/shard/mote_of_destruction/mote_of_destruction.model",
+            "visibleLayers": 1,
+            "lightMask": 19,
+            "shadowMask": 3,
+            "ghostShadows": false,
+            "floorModel": false,
+            "terrainBlendEnableYUpBlend": false,
+            "terrainBlendMode": 1
+          }
+        ]
+      }
+    ]
+  }
+}
