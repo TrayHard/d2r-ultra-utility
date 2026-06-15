@@ -171,10 +171,16 @@ function buildModifiers(modDir) {
           locales: pickLocales(e),
         });
     }
-    // also collect the base item-display lines (ItemStats*) from item-modifiers
     if (file === "item-modifiers.json") {
       for (const e of data) {
-        if (typeof e.Key === "string" && e.Key.startsWith("ItemStats")) add(e.Key);
+        const k = typeof e.Key === "string" ? e.Key : "";
+        const en = e.enUS || "";
+        // base item-display lines
+        if (k.startsWith("ItemStats")) add(k);
+        // "+to skills" families: descfunc 13/14 reference only the FIRST key in
+        // descstrpos and the engine indexes the rest, so collect the whole set:
+        //   class skill levels (enUS "… Skill Levels") + skill tabs (StrSklTabItem#)
+        if (/Skill Levels/i.test(en) || /^StrSklTabItem\d+$/.test(k)) add(k);
       }
     }
   }
