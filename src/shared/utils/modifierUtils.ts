@@ -48,6 +48,36 @@ export const catalog: ModifiersCatalog = {
 export const SKILLS_FILE = "skills.json";
 export const MODIFIER_FILES = ["item-modifiers.json", "npcs.json"] as const;
 
+// Color D2R renders an UNCOLORED line in, per kind (sampled in-game): item
+// modifiers show in a periwinkle blue, skills in white. Used as the default in
+// the live preview/editor and as the reset code for mid-line default runs.
+export const DEFAULT_COLOR_HEX: Record<"modifiers" | "skills", string> = {
+  modifiers: "#7777e9",
+  skills: "#ffffff",
+};
+export const DEFAULT_COLOR_CODE: Record<"modifiers" | "skills", string> = {
+  modifiers: "ÿcB", // blue (#7676ed) ≈ the engine's default modifier color
+  skills: colorCodes.white, // ÿc0
+};
+
+// Split a raw ÿc-coded string into runs carrying their active color code
+// ("" before any code = default). Powers the WYSIWYG editor + preview.
+export const parseRuns = (raw: string): Array<{ text: string; code: string }> => {
+  const runs: Array<{ text: string; code: string }> = [];
+  if (!raw) return runs;
+  const re = /ÿc./g;
+  let last = 0;
+  let code = "";
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(raw))) {
+    if (m.index > last) runs.push({ text: raw.slice(last, m.index), code });
+    code = m[0];
+    last = re.lastIndex;
+  }
+  if (last < raw.length) runs.push({ text: raw.slice(last), code });
+  return runs;
+};
+
 const SYMBOL_SET = new Set(diabloSymbols);
 const codeToColorName = new Map(
   Object.entries(colorCodes).map(([name, code]) => [code, name])

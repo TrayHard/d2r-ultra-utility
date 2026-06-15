@@ -1824,6 +1824,7 @@
     "enable": "Enable coloring",
     "prefix": "Prefix",
     "suffix": "Suffix",
-    "selectEntry": "Select an entry to edit"
+    "selectEntry": "Select an entry to edit",
+    "wysiwygHint": "Edit the text here — select part (or nothing for the whole line) and pick a color; use ＋ to insert symbols."
   }
 }

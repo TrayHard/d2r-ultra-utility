@@ -1824,6 +1824,7 @@
     "enable": "Färbung aktivieren",
     "prefix": "Präfix",
     "suffix": "Suffix",
-    "selectEntry": "Eintrag zum Bearbeiten wählen"
+    "selectEntry": "Eintrag zum Bearbeiten wählen",
+    "wysiwygHint": "Text hier bearbeiten — Teil markieren (oder nichts für die ganze Zeile) und Farbe wählen; ＋ fügt Symbole ein."
   }
 }

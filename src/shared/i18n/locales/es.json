@@ -1824,6 +1824,7 @@
     "enable": "Activar coloreado",
     "prefix": "Prefijo",
     "suffix": "Sufijo",
-    "selectEntry": "Selecciona una entrada para editar"
+    "selectEntry": "Selecciona una entrada para editar",
+    "wysiwygHint": "Edita el texto aquí — selecciona una parte (o nada para toda la línea) y elige un color; ＋ inserta símbolos."
   }
 }

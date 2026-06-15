@@ -8,17 +8,21 @@ import Switcher from "../../shared/components/Switcher.tsx";
 import Checkbox from "../../shared/components/Checkbox.tsx";
 import Button from "../../shared/components/Button.tsx";
 import SearchInput from "../../shared/components/SearchInput.tsx";
-import DebouncedTextarea from "../../shared/components/DebouncedTextarea";
-import ColorHint from "../../shared/components/ColorHint.tsx";
-import SymbolsHint from "../../shared/components/SymbolsHint";
+import ColorTextEditor from "../../shared/components/ColorTextEditor.tsx";
 import UnsavedAsterisk from "../../shared/components/UnsavedAsterisk";
 import {
   colorNameToHex,
+  colorCodeToHex,
   diabloSymbols,
   localeOptions as allLocaleOptions,
 } from "../../shared/constants.ts";
-import { catalog, applyColoring } from "../../shared/utils/modifierUtils.ts";
-import { parseColoredText } from "../../shared/utils/runeUtils.ts";
+import {
+  catalog,
+  applyColoring,
+  parseRuns,
+  DEFAULT_COLOR_HEX,
+  DEFAULT_COLOR_CODE,
+} from "../../shared/utils/modifierUtils.ts";
 
 interface ModifiersTabProps {
   isDarkTheme: boolean;
@@ -96,6 +100,7 @@ const Row = React.memo(function Row({
           onChange={(c) => onToggle(rowKey, c)}
           isDarkTheme={isDarkTheme}
           size="lg"
+          className="!transition-none focus:!ring-0"
         />
       </div>
       <span
@@ -166,15 +171,17 @@ const Detail = React.memo(function Detail({
     updateColorizeEntry(kind, entryKey, { mode: "manual", locales: filled as any });
   };
 
+  const defHex = DEFAULT_COLOR_HEX[kind];
   const baseFor = (loc: string) => base[loc] || baseEnUS || "";
   const finalFor = (loc: string) =>
     entry.mode === "manual"
       ? (entry.locales as any)?.[loc] || baseFor(loc)
       : applyColoring(baseFor(loc), entry);
 
-  const previewSegments = parseColoredText(finalFor(previewLocale), d2rColor).map(
-    (seg) => ({ text: readable(seg.text), color: seg.color })
-  );
+  const previewSegments = parseRuns(finalFor(previewLocale)).map((r) => ({
+    text: readable(r.text),
+    color: r.code ? colorCodeToHex[r.code] || defHex : defHex,
+  }));
 
   return (
     <div className="max-w-2xl mx-auto space-y-5">
@@ -292,10 +299,9 @@ const Detail = React.memo(function Detail({
         </div>
       ) : (
         <div className="space-y-3">
-          <div className="flex items-center gap-2">
-            <SymbolsHint isDarkTheme={isDarkTheme} />
-            <ColorHint isDarkTheme={isDarkTheme} />
-          </div>
+          <p className="text-xs text-gray-400">
+            {t("modifiersPage.wysiwygHint")}
+          </p>
           {selectedLocales.map((loc) => (
             <div key={loc} className="space-y-1">
               <label
@@ -305,19 +311,16 @@ const Detail = React.memo(function Detail({
               >
                 {t(`runePage.controls.languageLabels.${loc}`)} ({loc})
               </label>
-              <DebouncedTextarea
+              <ColorTextEditor
                 value={(entry.locales as any)?.[loc] ?? ""}
                 onChange={(v) =>
                   updateColorizeEntry(kind, entryKey, {
                     locales: { ...(entry.locales as any), [loc]: v },
                   })
                 }
-                rows={2}
-                className={`w-full px-3 py-2 text-sm rounded-lg border resize-vertical ${
-                  isDarkTheme
-                    ? "bg-gray-700 border-gray-600 text-white"
-                    : "bg-white border-gray-300 text-gray-900"
-                }`}
+                defaultHex={defHex}
+                defaultCode={DEFAULT_COLOR_CODE[kind]}
+                isDarkTheme={isDarkTheme}
               />
             </div>
           ))}
@@ -453,6 +456,7 @@ const ModifiersTab: React.FC<ModifiersTabProps> = ({ isDarkTheme }) => {
               isDarkTheme={isDarkTheme}
               size="md"
               label={t("modifiersPage.selectAll")}
+              className="!transition-none focus:!ring-0"
             />
             <div
               className={`flex items-center gap-1 transition-opacity ${
