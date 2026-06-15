@@ -6,7 +6,8 @@
     "gems": "Камені",
     "other": "Інше",
     "stash": "Stash Rename",
-    "tweaks": "Tweaks"
+    "tweaks": "Tweaks",
+    "modifiers": "Модифікатори"
   },
   "update": {
     "checking": "Перевірка оновлень...",
@@ -212,7 +213,8 @@
   },
   "search": {
     "placeholder": "Пошук рун...",
-    "noResults": "Руни не знайдено"
+    "noResults": "Руни не знайдено",
+    "placeholderGeneric": "Пошук..."
   },
   "sorting": {
     "name": "Назва",
@@ -592,7 +594,8 @@
       "modalTitle": "Масове редагування предметів",
       "difficultyClassLabel": "Клас складності",
       "apply": "Застосувати",
-      "cancel": "Скасувати"
+      "cancel": "Скасувати",
+      "selectedCount": "Вибрано: {{count}}"
     },
     "selectItem": "Оберіть предмет для редагування налаштувань",
     "attributes": "Атрибути",
@@ -1801,5 +1804,33 @@
     }
   },
   "tweaks": "Tweaks",
-  "runCounter": "Run Counter"
+  "runCounter": "Run Counter",
+  "modifiersPage": {
+    "tabs": {
+      "modifiers": "Модифікатори",
+      "skills": "Навички"
+    },
+    "groups": {
+      "properties": "Властивості",
+      "baseStats": "Базові стати",
+      "classSkills": "Класи та навички",
+      "chanceToCast": "Шанс наслати"
+    },
+    "selectAll": "Вибрати все",
+    "selectedCount": "Вибрано: {{count}}",
+    "applyColor": "Застосувати колір",
+    "disable": "Вимкнути",
+    "mode": {
+      "auto": "Колір",
+      "manual": "Свій текст",
+      "visual": "Візуальний",
+      "raw": "Свій текст"
+    },
+    "enable": "Увімкнути розфарбування",
+    "prefix": "Префікс",
+    "suffix": "Суфікс",
+    "selectEntry": "Виберіть запис для редагування",
+    "wysiwygHint": "Редагуйте текст тут — виділіть частину (або нічого для всього рядка) і виберіть колір; ＋ вставляє символи.",
+    "rawHint": "Вводьте колірні коди (ÿc…) і символи напряму."
+  }
 }
