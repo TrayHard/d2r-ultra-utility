@@ -196,7 +196,7 @@ const ColorTextEditor: React.FC<ColorTextEditorProps> = ({
           </div>
         )}
       </div>
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-row items-center gap-1">
         <ColorPallet
           isDarkTheme={isDarkTheme}
           value="white"
