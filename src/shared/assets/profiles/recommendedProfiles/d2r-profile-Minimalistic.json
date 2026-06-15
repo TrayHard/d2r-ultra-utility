@@ -1998,7 +1998,7 @@
         "levels": [
           {
             "enabled": true,
-            "highlight": false,
+            "highlight": true,
             "locales": {
               "enUS": "Talic's Anguish",
               "ruRU": "Мучение Талика",
@@ -2017,7 +2017,7 @@
           },
           {
             "enabled": true,
-            "highlight": false,
+            "highlight": true,
             "locales": {
               "enUS": "Korlic's Pain",
               "ruRU": "Боль Корлика",
@@ -2036,7 +2036,7 @@
           },
           {
             "enabled": true,
-            "highlight": false,
+            "highlight": true,
             "locales": {
               "enUS": "Madawc's Ire",
               "ruRU": "Гнев Мадавка",
@@ -2055,7 +2055,7 @@
           },
           {
             "enabled": true,
-            "highlight": false,
+            "highlight": true,
             "locales": {
               "enUS": "Bul-Kathos' Nightmare",
               "ruRU": "Кошмар Бул-Катоса",
@@ -2074,7 +2074,7 @@
           },
           {
             "enabled": true,
-            "highlight": false,
+            "highlight": true,
             "locales": {
               "enUS": "Worusk's End",
               "ruRU": "Погибель Воруска",
@@ -2099,7 +2099,7 @@
         "levels": [
           {
             "enabled": true,
-            "highlight": false,
+            "highlight": true,
             "locales": {
               "enUS": "Western Worldstone Shard",
               "ruRU": "Западный осколок камня мироздания",
@@ -2118,7 +2118,7 @@
           },
           {
             "enabled": true,
-            "highlight": false,
+            "highlight": true,
             "locales": {
               "enUS": "Eastern Worldstone Shard",
               "ruRU": "Восточный осколок камня мироздания",
@@ -2137,7 +2137,7 @@
           },
           {
             "enabled": true,
-            "highlight": false,
+            "highlight": true,
             "locales": {
               "enUS": "Southern Worldstone Shard",
               "ruRU": "Южный осколок камня мироздания",
@@ -2156,7 +2156,7 @@
           },
           {
             "enabled": true,
-            "highlight": false,
+            "highlight": true,
             "locales": {
               "enUS": "Deep Worldstone Shard",
               "ruRU": "Глубинный осколок камня мироздания",
@@ -2175,7 +2175,7 @@
           },
           {
             "enabled": true,
-            "highlight": false,
+            "highlight": true,
             "locales": {
               "enUS": "Northern Worldstone Shard",
               "ruRU": "Северный осколок камня мироздания",

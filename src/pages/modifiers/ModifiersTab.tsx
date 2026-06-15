@@ -287,6 +287,7 @@ const ModifiersTab: React.FC<ModifiersTabProps> = ({ isDarkTheme }) => {
   const [kind, setKind] = useState<Kind>("modifiers");
   const [search, setSearch] = useState("");
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
+  const [changedOnly, setChangedOnly] = useState(false);
 
   React.useEffect(() => {
     setSelectedKey(null);
@@ -322,14 +323,29 @@ const ModifiersTab: React.FC<ModifiersTabProps> = ({ isDarkTheme }) => {
   const keysOf = (rep: string) => repGroups.repToKeys.get(rep) || [rep];
 
   // Изменён ли ключ относительно активного профиля (для звёздочки в списке).
-  // Строка-представитель считается изменённой, если изменён любой из её ключей.
+  // Сравниваем ЭФФЕКТИВНОЕ значение: текущее vs профиль (а если в профиле записи
+  // нет — vs ванильную строку из каталога). Так невредактированные записи не
+  // светятся, а отредактированные — светятся, даже если профиль модификаторы
+  // не отслеживает. Строка-представитель изменена, если изменён любой ключ.
   const isKeyChanged = (k: string): boolean => {
-    const base = (baseline as any)?.modifiers?.[kind]?.[k];
-    if (!base) return false;
-    const cur = getColorizeEntry(kind, k);
-    return (
-      JSON.stringify(cur?.locales || {}) !== JSON.stringify(base?.locales || {})
-    );
+    const cur = (getColorizeEntry(kind, k)?.locales || {}) as unknown as Record<
+      string,
+      string
+    >;
+    const base = ((baseline as any)?.modifiers?.[kind]?.[k]?.locales ||
+      {}) as Record<string, string>;
+    const vanilla = (catLocales[kind][k] || {}) as Record<string, string>;
+    const locs = new Set<string>([
+      ...Object.keys(cur),
+      ...Object.keys(base),
+      ...Object.keys(vanilla),
+    ]);
+    for (const loc of locs) {
+      const c = cur[loc] || vanilla[loc] || "";
+      const b = base[loc] || vanilla[loc] || "";
+      if (c !== b) return true;
+    }
+    return false;
   };
   const isRepChanged = (rep: string) => keysOf(rep).some(isKeyChanged);
 
@@ -428,46 +444,74 @@ const ModifiersTab: React.FC<ModifiersTabProps> = ({ isDarkTheme }) => {
             isDarkTheme={isDarkTheme}
             className="h-9"
           />
+          <label className="flex items-center gap-2 cursor-pointer select-none">
+            <Switcher
+              checked={changedOnly}
+              onChange={setChangedOnly}
+              isDarkTheme={isDarkTheme}
+              size="sm"
+            />
+            <span
+              className={`text-sm ${
+                isDarkTheme ? "text-gray-300" : "text-gray-700"
+              }`}
+            >
+              {t("modifiersPage.changedOnly")}
+            </span>
+          </label>
         </div>
 
         <div className="flex-1 min-h-0 overflow-y-auto px-2 pb-3">
-          {groups.length === 0 && (
-            <p className="text-center text-sm text-gray-500 py-8">
-              {t("search.noResults") ?? "Nothing found"}
-            </p>
-          )}
-          {groups.map((g) => (
-            <div key={g.title} className="mb-3">
-              <h4
-                className={`text-xs font-semibold uppercase tracking-wide mb-1 px-1 ${
-                  isDarkTheme ? "text-gray-400" : "text-gray-500"
-                }`}
-              >
-                {g.title}
-              </h4>
-              <div className="space-y-0.5">
-                {g.keys.map((k) => {
-                  const e = getColorizeEntry(kind, k);
-                  const val =
-                    (e.locales as any)?.[gameLoc] ||
-                    catLocales[kind][k]?.[gameLoc] ||
-                    "";
-                  return (
-                    <Row
-                      key={k}
-                      rowKey={k}
-                      label={labelOf(k)}
-                      selected={selectedKey === k}
-                      dotColor={dominantColorHex(val, defaultHexFor(kind, k))}
-                      changed={isRepChanged(k)}
-                      isDarkTheme={isDarkTheme}
-                      onSelect={selectRow}
-                    />
-                  );
-                })}
+          {(() => {
+            const shown = changedOnly
+              ? groups
+                  .map((g) => ({
+                    title: g.title,
+                    keys: g.keys.filter(isRepChanged),
+                  }))
+                  .filter((g) => g.keys.length > 0)
+              : groups;
+            if (shown.length === 0)
+              return (
+                <p className="text-center text-sm text-gray-500 py-8">
+                  {changedOnly
+                    ? t("modifiersPage.noChanged") ?? "No changed entries"
+                    : t("search.noResults") ?? "Nothing found"}
+                </p>
+              );
+            return shown.map((g) => (
+              <div key={g.title} className="mb-3">
+                <h4
+                  className={`text-xs font-semibold uppercase tracking-wide mb-1 px-1 ${
+                    isDarkTheme ? "text-gray-400" : "text-gray-500"
+                  }`}
+                >
+                  {g.title}
+                </h4>
+                <div className="space-y-0.5">
+                  {g.keys.map((k) => {
+                    const e = getColorizeEntry(kind, k);
+                    const val =
+                      (e.locales as any)?.[gameLoc] ||
+                      catLocales[kind][k]?.[gameLoc] ||
+                      "";
+                    return (
+                      <Row
+                        key={k}
+                        rowKey={k}
+                        label={labelOf(k)}
+                        selected={selectedKey === k}
+                        dotColor={dominantColorHex(val, defaultHexFor(kind, k))}
+                        changed={isRepChanged(k)}
+                        isDarkTheme={isDarkTheme}
+                        onSelect={selectRow}
+                      />
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          ))}
+            ));
+          })()}
         </div>
       </div>
 

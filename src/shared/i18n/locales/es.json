@@ -1853,6 +1853,8 @@
     "suffix": "Sufijo",
     "selectEntry": "Selecciona una entrada para editar",
     "wysiwygHint": "Edita el texto aquí — selecciona una parte (o nada para toda la línea) y elige un color; ＋ inserta símbolos.",
-    "rawHint": "Escribe códigos de color (ÿc…) y símbolos directamente."
+    "rawHint": "Escribe códigos de color (ÿc…) y símbolos directamente.",
+    "changedOnly": "Solo cambiados",
+    "noChanged": "Sin entradas cambiadas"
   }
 }

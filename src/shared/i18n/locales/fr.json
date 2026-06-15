@@ -1853,6 +1853,8 @@
     "suffix": "Suffixe",
     "selectEntry": "Sélectionnez une entrée à modifier",
     "wysiwygHint": "Modifiez le texte ici — sélectionnez une partie (ou rien pour toute la ligne) et choisissez une couleur ; ＋ insère des symboles.",
-    "rawHint": "Saisissez les codes couleur (ÿc…) et symboles directement."
+    "rawHint": "Saisissez les codes couleur (ÿc…) et symboles directement.",
+    "changedOnly": "Modifiés seulement",
+    "noChanged": "Aucune entrée modifiée"
   }
 }

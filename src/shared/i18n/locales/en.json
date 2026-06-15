@@ -1852,6 +1852,8 @@
     "prefix": "Prefix",
     "suffix": "Suffix",
     "selectEntry": "Select an entry to edit",
+    "changedOnly": "Changed only",
+    "noChanged": "No changed entries",
     "wysiwygHint": "Edit the text here — select part (or nothing for the whole line) and pick a color; use ＋ to insert symbols.",
     "rawHint": "Type color codes (ÿc…) and symbols directly."
   }
