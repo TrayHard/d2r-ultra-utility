@@ -357,7 +357,7 @@ function App() {
     return (
       <div className="h-screen flex flex-col bg-gradient-to-br from-gray-900 to-black">
         <CustomTitleBar />
-        <div className="flex-1">
+        <div className="flex-1 min-h-0">
           <WorkSpace onChangeClick={handleChangePath} onBackClick={handleBackToMainMenu} />
         </div>
       </div>

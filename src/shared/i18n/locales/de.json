@@ -7,7 +7,8 @@
     "gems": "Edelsteine",
     "other": "Sonstiges",
     "stash": "Stash Rename",
-    "tweaks": "Tweaks"
+    "tweaks": "Tweaks",
+    "modifiers": "Modifikatoren"
   },
   "update": {
     "checking": "Nach Updates wird gesucht...",
@@ -100,7 +101,8 @@
   },
   "search": {
     "placeholder": "Runen suchen...",
-    "noResults": "Keine Runen gefunden"
+    "noResults": "Keine Runen gefunden",
+    "placeholderGeneric": "Suche..."
   },
   "sorting": {
     "name": "Name",
@@ -607,7 +609,8 @@
       "modalTitle": "Massenbearbeitung von Gegenständen",
       "difficultyClassLabel": "Schwierigkeitsklasse",
       "apply": "Anwenden",
-      "cancel": "Abbrechen"
+      "cancel": "Abbrechen",
+      "selectedCount": "{{count}} ausgewählt"
     },
     "selectItem": "Wähle einen Gegenstand zum Bearbeiten",
     "attributes": "Attribute",
@@ -1801,5 +1804,33 @@
       "hide": "Ausblenden"
     }
   },
-  "runCounter": "Run Counter"
+  "runCounter": "Run Counter",
+  "modifiersPage": {
+    "tabs": {
+      "modifiers": "Modifikatoren",
+      "skills": "Fertigkeiten"
+    },
+    "groups": {
+      "properties": "Eigenschaften",
+      "classSkills": "Klassen & Fertigkeiten",
+      "chanceToCast": "Zauberchance",
+      "baseStats": "Basiswerte"
+    },
+    "selectAll": "Alle auswählen",
+    "selectedCount": "{{count}} ausgewählt",
+    "applyColor": "Farbe anwenden",
+    "disable": "Deaktivieren",
+    "mode": {
+      "auto": "Farbe",
+      "manual": "Eigener Text",
+      "visual": "Visuell",
+      "raw": "Eigener Text"
+    },
+    "enable": "Färbung aktivieren",
+    "prefix": "Präfix",
+    "suffix": "Suffix",
+    "selectEntry": "Eintrag zum Bearbeiten wählen",
+    "wysiwygHint": "Text hier bearbeiten — Teil markieren (oder nichts für die ganze Zeile) und Farbe wählen; ＋ fügt Symbole ein.",
+    "rawHint": "Farbcodes (ÿc…) und Symbole direkt eingeben."
+  }
 }

@@ -6,7 +6,8 @@
     "gems": "Gemas",
     "other": "Otros",
     "stash": "Stash Rename",
-    "tweaks": "Tweaks"
+    "tweaks": "Tweaks",
+    "modifiers": "Modificadores"
   },
   "update": {
     "checking": "Buscando actualizaciones...",
@@ -463,7 +464,8 @@
   },
   "search": {
     "placeholder": "Buscar runas...",
-    "noResults": "No se encontraron runas"
+    "noResults": "No se encontraron runas",
+    "placeholderGeneric": "Buscar..."
   },
   "sorting": {
     "name": "Nombre",
@@ -555,7 +557,8 @@
       "modalTitle": "Mass Edit Items",
       "difficultyClassLabel": "Difficulty Class",
       "apply": "Apply",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "selectedCount": "{{count}} seleccionados"
     },
     "filters": {
       "reqLevelTooltip": "Indica tu nivel para mostrar solo objetos apropiados",
@@ -1801,5 +1804,33 @@
     }
   },
   "tweaks": "Tweaks",
-  "runCounter": "Run Counter"
+  "runCounter": "Run Counter",
+  "modifiersPage": {
+    "tabs": {
+      "modifiers": "Modificadores",
+      "skills": "Habilidades"
+    },
+    "groups": {
+      "properties": "Propiedades",
+      "baseStats": "Estadísticas base",
+      "classSkills": "Clases y habilidades",
+      "chanceToCast": "Probabilidad de lanzar"
+    },
+    "selectAll": "Seleccionar todo",
+    "selectedCount": "{{count}} seleccionados",
+    "applyColor": "Aplicar color",
+    "disable": "Desactivar",
+    "mode": {
+      "auto": "Color",
+      "manual": "Texto propio",
+      "visual": "Visual",
+      "raw": "Texto propio"
+    },
+    "enable": "Activar coloreado",
+    "prefix": "Prefijo",
+    "suffix": "Sufijo",
+    "selectEntry": "Selecciona una entrada para editar",
+    "wysiwygHint": "Edita el texto aquí — selecciona una parte (o nada para toda la línea) y elige un color; ＋ inserta símbolos.",
+    "rawHint": "Escribe códigos de color (ÿc…) y símbolos directamente."
+  }
 }

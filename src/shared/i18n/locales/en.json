@@ -7,7 +7,8 @@
     "gems": "Gems",
     "stash": "Stash Rename",
     "tweaks": "Tweaks",
-    "other": "Other"
+    "other": "Other",
+    "modifiers": "Modifiers"
   },
   "update": {
     "checking": "Checking for updates...",
@@ -249,7 +250,8 @@
   },
   "search": {
     "placeholder": "Search runes...",
-    "noResults": "No runes found"
+    "noResults": "No runes found",
+    "placeholderGeneric": "Search..."
   },
   "sorting": {
     "name": "Name",
@@ -619,7 +621,8 @@
       "modalTitle": "Mass Edit Items",
       "difficultyClassLabel": "Difficulty Class",
       "apply": "Apply",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "selectedCount": "{{count}} selected"
     },
     "selectItem": "Select an item to edit its settings",
     "attributes": "Attributes",
@@ -1801,5 +1804,33 @@
       "show": "Show",
       "hide": "Hide"
     }
+  },
+  "modifiersPage": {
+    "tabs": {
+      "modifiers": "Modifiers",
+      "skills": "Skills"
+    },
+    "groups": {
+      "properties": "Properties",
+      "classSkills": "Classes & skills",
+      "chanceToCast": "Chance to cast",
+      "baseStats": "Base stats"
+    },
+    "selectAll": "Select all",
+    "selectedCount": "{{count}} selected",
+    "applyColor": "Apply color",
+    "disable": "Disable",
+    "mode": {
+      "auto": "Color",
+      "manual": "Custom text",
+      "visual": "Visual",
+      "raw": "Custom text"
+    },
+    "enable": "Enable coloring",
+    "prefix": "Prefix",
+    "suffix": "Suffix",
+    "selectEntry": "Select an entry to edit",
+    "wysiwygHint": "Edit the text here — select part (or nothing for the whole line) and pick a color; use ＋ to insert symbols.",
+    "rawHint": "Type color codes (ÿc…) and symbols directly."
   }
 }

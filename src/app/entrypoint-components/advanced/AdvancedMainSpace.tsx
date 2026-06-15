@@ -12,6 +12,7 @@ import { useTextWorker } from "../../../shared/hooks/useTextWorker.ts";
 import { useCommonItemsWorker } from "../../../shared/hooks/useCommonItemsWorker.ts";
 import { useGemsWorker } from "../../../shared/hooks/useGemsWorker.ts";
 import { useItemsWorker } from "../../../shared/hooks/useItemsWorker.ts";
+import { useModifiersWorker } from "../../../shared/hooks/useModifiersWorker.ts";
 import { useApplyAllWorker } from "../../../shared/hooks/useApplyAllWorker.ts";
 // useTweaksWorker moved to separate Tweaks section
 import basesData from "../../../pages/items/bases.json";
@@ -42,10 +43,12 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     updateGemLevelSettings,
     updateItemsLevelSettings,
     updateItemSettings,
-    
+    updateColorizeEntry,
+
     getCommonSettings,
     getGemSettings,
     getItemsSettings,
+    getModifiersSettings,
     getAllSettings,
     getSelectedLocales,
     settings,
@@ -170,6 +173,28 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     getAppMode
   );
 
+  // Хук для раскраски модификаторов и скиллов
+  const {
+    isLoading: isModifiersLoading,
+    error: modifiersError,
+    readFromFiles: readModifiersFromFiles,
+    applyChanges: applyModifiersChanges,
+  } = useModifiersWorker(
+    updateColorizeEntry,
+    (
+      message: string,
+      type?: "success" | "error" | "warning" | "info",
+      title?: string
+    ) => {
+      if (isBulkLoading && type === "success") return;
+      sendMessage(message, { type, title });
+    },
+    t,
+    getModifiersSettings,
+    "advanced",
+    getAppMode
+  );
+
   // Tweaks moved to separate section
 
   // Единый агрегатор записи
@@ -210,7 +235,9 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
           ? isGemsLoading
           : activeTab === "items"
             ? isItemsLoading
-            : false;
+            : activeTab === "modifiers"
+              ? isModifiersLoading
+              : false;
   const error =
     activeTab === "runes"
       ? runesError
@@ -220,7 +247,9 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
           ? gemsError
           : activeTab === "items"
             ? itemsError
-            : null;
+            : activeTab === "modifiers"
+              ? modifiersError
+              : null;
   const readFromFiles =
     activeTab === "runes"
       ? readRunesFromFiles
@@ -230,7 +259,9 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
           ? readGemsFromFiles
           : activeTab === "items"
             ? readItemsFromFiles
-            : () => { };
+            : activeTab === "modifiers"
+              ? readModifiersFromFiles
+              : () => { };
   const applyChanges =
     activeTab === "runes"
       ? applyRunesChanges
@@ -240,7 +271,9 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
           ? applyGemsChanges
           : activeTab === "items"
             ? applyItemsChanges
-            : () => { };
+            : activeTab === "modifiers"
+              ? applyModifiersChanges
+              : () => { };
 
   const executeReadAll = useCallback(async () => {
     logger.info(
@@ -255,6 +288,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       readItemsFromFiles(),
       readRunesFromFiles(),
       readGemsFromFiles(),
+      readModifiersFromFiles(),
     ]);
     setIsBulkLoading(false);
     unmute();
@@ -320,6 +354,18 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       "executeApplyAll"
     );
     await applyAllChanges();
+    // Modifier/skill coloring writes the same item-modifiers.json (potions) +
+    // npcs.json + skills.json; run after the aggregate so colors land on top
+    // without clobbering the potion/essence edits.
+    try {
+      await applyModifiersChanges();
+    } catch (e) {
+      logger.warn(
+        "Failed to apply modifier coloring during apply-all",
+        { error: e instanceof Error ? e.message : String(e) },
+        "executeApplyAll"
+      );
+    }
     try {
       if (saveToProfile && activeProfileId && !isActiveProfileImmutable) {
         await saveProfile(activeProfileId, settings);
@@ -332,7 +378,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
       undefined,
       "executeApplyAll"
     );
-  }, [applyAllChanges, logger, saveToProfile, activeProfileId, isActiveProfileImmutable, saveProfile, settings]);
+  }, [applyAllChanges, applyModifiersChanges, logger, saveToProfile, activeProfileId, isActiveProfileImmutable, saveProfile, settings]);
 
   const handleConfirm = async () => {
     const action = confirmAction;
@@ -377,6 +423,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     { id: "items", label: t("tabs.items") },
     { id: "runes", label: t("tabs.runes") },
     { id: "gems", label: t("tabs.gems") },
+    { id: "modifiers", label: t("tabs.modifiers") },
   ];
 
   // Индикаторы изменений по табам относительно активного профиля
@@ -460,12 +507,16 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     const hasRunesChanges =
       JSON.stringify(baseline.runes) !==
       JSON.stringify((debounced as any).settings.runes);
+    const hasModifiersChanges =
+      JSON.stringify((baseline as any).modifiers || {}) !==
+      JSON.stringify((debounced as any).settings.modifiers || {});
 
     return {
       common: hasCommonChanges,
       items: hasItemsChanges,
       runes: hasRunesChanges,
       gems: hasGemsChanges,
+      modifiers: hasModifiersChanges,
     } as Record<string, boolean>;
   }, [baseline, debounced, activeProfileId]);
 
@@ -473,7 +524,7 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
 
   return (
     <div
-      className={`flex-1 grid ${error ? "grid-rows-[auto_auto_44px_1fr]" : "grid-rows-[auto_44px_1fr]"
+      className={`flex-1 min-h-0 grid ${error ? "grid-rows-[auto_auto_44px_1fr]" : "grid-rows-[auto_44px_1fr]"
         } ${isDarkTheme ? "bg-gray-900" : "bg-gray-50"}`}
     >
       {(isApplyAllLoading || isBulkLoading || isReadingCurrentLoading) && (
@@ -541,9 +592,16 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
         indicators={tabIndicators}
       />
 
-      {/* Tab Content */}
-      <div className="flex-1">
-        <div className={`h-full ${isDarkTheme ? "bg-gray-800" : "bg-white"}`}>
+      {/* Tab Content. This wrapper is the scroll container for tabs that don't
+          manage their own scroll (Common, Gems). Tabs that DO scroll internally
+          (Items, Runes, Modifiers) fill h-full exactly, so this never scrolls
+          for them — no double scrollbar. */}
+      <div className="min-h-0 overflow-hidden">
+        <div
+          className={`h-full min-h-0 overflow-y-auto ${
+            isDarkTheme ? "bg-gray-800" : "bg-white"
+          }`}
+        >
           <AdvancedMainSpaceBody
             activeTab={activeTab}
             isDarkTheme={isDarkTheme}

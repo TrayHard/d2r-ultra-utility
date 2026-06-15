@@ -6,7 +6,8 @@
     "gems": "Gemmes",
     "other": "Autres",
     "stash": "Stash Rename",
-    "tweaks": "Tweaks"
+    "tweaks": "Tweaks",
+    "modifiers": "Modificateurs"
   },
   "update": {
     "checking": "Vérification des mises à jour...",
@@ -473,7 +474,8 @@
   },
   "search": {
     "placeholder": "Rechercher des runes...",
-    "noResults": "Aucune rune trouvée"
+    "noResults": "Aucune rune trouvée",
+    "placeholderGeneric": "Rechercher..."
   },
   "sorting": {
     "name": "Nom",
@@ -565,7 +567,8 @@
       "modalTitle": "Mass Edit Items",
       "difficultyClassLabel": "Difficulty Class",
       "apply": "Apply",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "selectedCount": "{{count}} sélectionnés"
     },
     "filters": {
       "reqLevelTooltip": "Indiquez votre niveau pour n'afficher que les objets appropriés",
@@ -1801,5 +1804,33 @@
     }
   },
   "tweaks": "Tweaks",
-  "runCounter": "Run Counter"
+  "runCounter": "Run Counter",
+  "modifiersPage": {
+    "tabs": {
+      "modifiers": "Modificateurs",
+      "skills": "Compétences"
+    },
+    "groups": {
+      "properties": "Propriétés",
+      "baseStats": "Stats de base",
+      "classSkills": "Classes et compétences",
+      "chanceToCast": "Chance de lancer"
+    },
+    "selectAll": "Tout sélectionner",
+    "selectedCount": "{{count}} sélectionnés",
+    "applyColor": "Appliquer la couleur",
+    "disable": "Désactiver",
+    "mode": {
+      "auto": "Couleur",
+      "manual": "Texte personnalisé",
+      "visual": "Visuel",
+      "raw": "Texte personnalisé"
+    },
+    "enable": "Activer la coloration",
+    "prefix": "Préfixe",
+    "suffix": "Suffixe",
+    "selectEntry": "Sélectionnez une entrée à modifier",
+    "wysiwygHint": "Modifiez le texte ici — sélectionnez une partie (ou rien pour toute la ligne) et choisissez une couleur ; ＋ insère des symboles.",
+    "rawHint": "Saisissez les codes couleur (ÿc…) et symboles directement."
+  }
 }

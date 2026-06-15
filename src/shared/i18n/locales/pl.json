@@ -6,7 +6,8 @@
     "gems": "Kamyki",
     "other": "Inne",
     "stash": "Stash Rename",
-    "tweaks": "Tweaks"
+    "tweaks": "Tweaks",
+    "modifiers": "Modyfikatory"
   },
   "update": {
     "checking": "Sprawdzanie aktualizacji...",
@@ -473,7 +474,8 @@
   },
   "search": {
     "placeholder": "Szukaj run...",
-    "noResults": "Nie znaleziono run"
+    "noResults": "Nie znaleziono run",
+    "placeholderGeneric": "Szukaj..."
   },
   "sorting": {
     "name": "Nazwa",
@@ -565,7 +567,8 @@
       "modalTitle": "Mass Edit Items",
       "difficultyClassLabel": "Difficulty Class",
       "apply": "Apply",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "selectedCount": "Zaznaczono: {{count}}"
     },
     "filters": {
       "reqLevelTooltip": "Podaj swój poziom, aby wyświetlać tylko odpowiednie przedmioty",
@@ -1802,5 +1805,33 @@
     }
   },
   "tweaks": "Tweaks",
-  "runCounter": "Run Counter"
+  "runCounter": "Run Counter",
+  "modifiersPage": {
+    "tabs": {
+      "modifiers": "Modyfikatory",
+      "skills": "Umiejętności"
+    },
+    "groups": {
+      "properties": "Właściwości",
+      "baseStats": "Statystyki bazowe",
+      "classSkills": "Klasy i umiejętności",
+      "chanceToCast": "Szansa rzucenia"
+    },
+    "selectAll": "Zaznacz wszystko",
+    "selectedCount": "Zaznaczono: {{count}}",
+    "applyColor": "Zastosuj kolor",
+    "disable": "Wyłącz",
+    "mode": {
+      "auto": "Kolor",
+      "manual": "Własny tekst",
+      "visual": "Wizualny",
+      "raw": "Własny tekst"
+    },
+    "enable": "Włącz kolorowanie",
+    "prefix": "Prefiks",
+    "suffix": "Sufiks",
+    "selectEntry": "Wybierz wpis do edycji",
+    "wysiwygHint": "Edytuj tekst tutaj — zaznacz fragment (lub nic dla całej linii) i wybierz kolor; ＋ wstawia symbole.",
+    "rawHint": "Wpisuj kody kolorów (ÿc…) i symbole bezpośrednio."
+  }
 }
