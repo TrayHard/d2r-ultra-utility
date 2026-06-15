@@ -101,7 +101,8 @@
   },
   "search": {
     "placeholder": "Runen suchen...",
-    "noResults": "Keine Runen gefunden"
+    "noResults": "Keine Runen gefunden",
+    "placeholderGeneric": "Suche..."
   },
   "sorting": {
     "name": "Name",
@@ -1815,6 +1816,14 @@
     "selectAll": "Alle auswählen",
     "selectedCount": "{{count}} ausgewählt",
     "applyColor": "Farbe anwenden",
-    "disable": "Deaktivieren"
+    "disable": "Deaktivieren",
+    "mode": {
+      "auto": "Farbe",
+      "manual": "Eigener Text"
+    },
+    "enable": "Färbung aktivieren",
+    "prefix": "Präfix",
+    "suffix": "Suffix",
+    "selectEntry": "Eintrag zum Bearbeiten wählen"
   }
 }

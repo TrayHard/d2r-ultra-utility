@@ -474,7 +474,8 @@
   },
   "search": {
     "placeholder": "Rechercher des runes...",
-    "noResults": "Aucune rune trouvée"
+    "noResults": "Aucune rune trouvée",
+    "placeholderGeneric": "Rechercher..."
   },
   "sorting": {
     "name": "Nom",
@@ -1815,6 +1816,14 @@
     "selectAll": "Tout sélectionner",
     "selectedCount": "{{count}} sélectionnés",
     "applyColor": "Appliquer la couleur",
-    "disable": "Désactiver"
+    "disable": "Désactiver",
+    "mode": {
+      "auto": "Couleur",
+      "manual": "Texte personnalisé"
+    },
+    "enable": "Activer la coloration",
+    "prefix": "Préfixe",
+    "suffix": "Suffixe",
+    "selectEntry": "Sélectionnez une entrée à modifier"
   }
 }

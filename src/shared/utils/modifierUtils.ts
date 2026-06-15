@@ -81,8 +81,14 @@ export const applyColoring = (
 };
 
 // Best-effort detect current coloring of a stored string (for readFromFiles).
-export const detectColoring = (raw: string): ColorizeEntrySettings => {
-  const def: ColorizeEntrySettings = {
+// Returns only the color-related fields; mode/locales are merged in by the caller.
+export const detectColoring = (
+  raw: string
+): Pick<
+  ColorizeEntrySettings,
+  "enabled" | "color" | "prefixSymbol" | "suffixSymbol"
+> => {
+  const def = {
     enabled: false,
     color: "white",
     prefixSymbol: "",

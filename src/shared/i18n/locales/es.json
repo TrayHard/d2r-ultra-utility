@@ -464,7 +464,8 @@
   },
   "search": {
     "placeholder": "Buscar runas...",
-    "noResults": "No se encontraron runas"
+    "noResults": "No se encontraron runas",
+    "placeholderGeneric": "Buscar..."
   },
   "sorting": {
     "name": "Nombre",
@@ -1815,6 +1816,14 @@
     "selectAll": "Seleccionar todo",
     "selectedCount": "{{count}} seleccionados",
     "applyColor": "Aplicar color",
-    "disable": "Desactivar"
+    "disable": "Desactivar",
+    "mode": {
+      "auto": "Color",
+      "manual": "Texto propio"
+    },
+    "enable": "Activar coloreado",
+    "prefix": "Prefijo",
+    "suffix": "Sufijo",
+    "selectEntry": "Selecciona una entrada para editar"
   }
 }

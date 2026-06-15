@@ -182,12 +182,16 @@ export interface TweaksSettings {
   skipIntroVideos: boolean;
 }
 
-// Раскраска одной записи (модификатора или скилла): цвет из палитры + опц. символы
+// Раскраска одной записи (модификатора или скилла).
+// mode "auto"   — простой режим: цвет из палитры + опц. символы поверх базы;
+// mode "manual" — полный кастом: свой текст по каждой игровой локали (как у рун/предметов).
 export interface ColorizeEntrySettings {
-  enabled: boolean; // перекрашивать ли эту запись
+  enabled: boolean; // трогать ли эту запись вообще
+  mode: "auto" | "manual";
   color: string; // имя цвета из colorCodes (например "red")
   prefixSymbol: string; // символ-префикс ("" = нет)
   suffixSymbol: string; // символ-суффикс ("" = нет)
+  locales: Locales; // полный текст по локалям (ручной режим)
 }
 
 // Раскраска модификаторов и названий скиллов (ключи — из catalog.json)
@@ -730,9 +734,11 @@ const getDefaultTweaksSettings = (): TweaksSettings => ({
 // Дефолт раскраски одной записи (выключено = без перекраски)
 export const getDefaultColorizeEntrySettings = (): ColorizeEntrySettings => ({
   enabled: false,
+  mode: "auto",
   color: "white",
   prefixSymbol: "",
   suffixSymbol: "",
+  locales: createFilledLocales(""),
 });
 
 const getDefaultModifiersSettings = (): ModifiersSettings => ({
