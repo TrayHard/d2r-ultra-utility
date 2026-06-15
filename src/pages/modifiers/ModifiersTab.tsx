@@ -2,24 +2,24 @@ import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Select } from "antd";
 import { useSettings } from "../../app/providers/SettingsContext.tsx";
-import { useUnsavedChanges } from "../../shared/hooks/useUnsavedChanges";
 import ColorPallet from "../../shared/components/ColorPallet.tsx";
 import Switcher from "../../shared/components/Switcher.tsx";
 import Checkbox from "../../shared/components/Checkbox.tsx";
 import Button from "../../shared/components/Button.tsx";
 import SearchInput from "../../shared/components/SearchInput.tsx";
+import DebouncedTextarea from "../../shared/components/DebouncedTextarea";
+import ColorHint from "../../shared/components/ColorHint.tsx";
+import SymbolsHint from "../../shared/components/SymbolsHint";
 import ColorTextEditor from "../../shared/components/ColorTextEditor.tsx";
-import UnsavedAsterisk from "../../shared/components/UnsavedAsterisk";
 import {
-  colorNameToHex,
+  colorCodes,
   colorCodeToHex,
-  diabloSymbols,
   localeOptions as allLocaleOptions,
 } from "../../shared/constants.ts";
 import {
   catalog,
-  applyColoring,
   parseRuns,
+  firstColorCode,
   DEFAULT_COLOR_HEX,
   DEFAULT_COLOR_CODE,
 } from "../../shared/utils/modifierUtils.ts";
@@ -29,18 +29,14 @@ interface ModifiersTabProps {
 }
 type Kind = "modifiers" | "skills";
 
-const DIABLO_FONT = "Diablo, monospace";
-const d2rColor = (name: string) => colorNameToHex[name] || "#FFFFFF";
 const readable = (s: string) =>
   s.replace(/%\+?d/g, "#").replace(/%i/g, "#").replace(/%s/g, "…");
 
-// App UI language (short) -> game locale column in the catalog.
 const UI_TO_GAME: Record<string, string> = {
   en: "enUS", ru: "ruRU", de: "deDE", es: "esES",
   fr: "frFR", pl: "plPL", uk: "enUS",
 };
 
-// catalog base text per locale, indexed by kind+key
 const catLocales: Record<Kind, Record<string, Record<string, string>>> = {
   modifiers: Object.fromEntries(catalog.modifiers.map((m) => [m.key, m.locales])),
   skills: Object.fromEntries(catalog.skills.map((s) => [s.key, s.locales])),
@@ -50,22 +46,13 @@ const enusByKey: Record<Kind, Record<string, string>> = {
   skills: Object.fromEntries(catalog.skills.map((s) => [s.key, s.enUS])),
 };
 
-const symbolOptions = [
-  { value: "", label: "—" },
-  ...diabloSymbols.map((s) => ({
-    value: s,
-    label: <span style={{ fontFamily: DIABLO_FONT }}>{s}</span>,
-  })),
-];
-
-/* ---------------- list row (memoized to avoid flicker) ---------------- */
+/* ---------------- list row (memoized) ---------------- */
 interface RowProps {
   rowKey: string;
   label: string;
   checked: boolean;
   selected: boolean;
   dotColor: string | null;
-  dirty: boolean;
   isDarkTheme: boolean;
   onSelect: (key: string) => void;
   onToggle: (key: string, c: boolean) => void;
@@ -76,7 +63,6 @@ const Row = React.memo(function Row({
   checked,
   selected,
   dotColor,
-  dirty,
   isDarkTheme,
   onSelect,
   onToggle,
@@ -118,7 +104,6 @@ const Row = React.memo(function Row({
       >
         {label}
       </span>
-      {dirty && <UnsavedAsterisk size={0.5} />}
     </div>
   );
 });
@@ -141,6 +126,8 @@ const Detail = React.memo(function Detail({
   const selectedLocales = getSelectedLocales();
   const base = catLocales[kind][entryKey] || {};
   const baseEnUS = enusByKey[kind][entryKey] || "";
+  const defHex = DEFAULT_COLOR_HEX[kind];
+  const isRaw = entry.mode === "raw";
 
   const [previewLocale, setPreviewLocale] = useState(
     selectedLocales[0] || "enUS"
@@ -158,27 +145,16 @@ const Detail = React.memo(function Detail({
     [selectedLocales]
   );
 
-  const switchMode = (manual: boolean) => {
-    if (!manual) {
-      updateColorizeEntry(kind, entryKey, { mode: "auto" });
-      return;
-    }
-    // Prefill custom text with what's there now (settings override or base).
-    const filled: Record<string, string> = { ...(entry.locales as any) };
-    for (const loc of selectedLocales) {
-      if (!filled[loc]) filled[loc] = base[loc] || baseEnUS || "";
-    }
-    updateColorizeEntry(kind, entryKey, { mode: "manual", locales: filled as any });
-  };
+  // current value for a locale = user's text, else the base
+  const valueFor = (loc: string) =>
+    (entry.locales as any)?.[loc] || base[loc] || baseEnUS || "";
 
-  const defHex = DEFAULT_COLOR_HEX[kind];
-  const baseFor = (loc: string) => base[loc] || baseEnUS || "";
-  const finalFor = (loc: string) =>
-    entry.mode === "manual"
-      ? (entry.locales as any)?.[loc] || baseFor(loc)
-      : applyColoring(baseFor(loc), entry);
+  const setLocale = (loc: string, v: string) =>
+    updateColorizeEntry(kind, entryKey, {
+      locales: { ...(entry.locales as any), [loc]: v },
+    });
 
-  const previewSegments = parseRuns(finalFor(previewLocale)).map((r) => ({
+  const previewSegments = parseRuns(valueFor(previewLocale)).map((r) => ({
     text: readable(r.text),
     color: r.code ? colorCodeToHex[r.code] || defHex : defHex,
   }));
@@ -209,7 +185,7 @@ const Detail = React.memo(function Detail({
             />
           </div>
         </div>
-        <div className="text-base" style={{ fontFamily: DIABLO_FONT }}>
+        <div className="text-base" style={{ fontFamily: "Diablo, monospace" }}>
           {previewSegments.length ? (
             previewSegments.map((s, i) => (
               <span key={i} style={{ color: s.color }}>
@@ -222,86 +198,58 @@ const Detail = React.memo(function Detail({
         </div>
       </div>
 
-      {/* mode switch */}
+      {/* mode switch: Visual (main) <-> Custom text (raw) */}
       <div className="flex items-center justify-center gap-3">
-        <span className={`text-sm ${entry.mode === "auto" ? "font-medium" : "opacity-50"}`}>
-          {t("modifiersPage.mode.auto")}
+        <span className={`text-sm ${!isRaw ? "font-medium" : "opacity-50"}`}>
+          {t("modifiersPage.mode.visual")}
         </span>
         <Switcher
-          checked={entry.mode === "manual"}
-          onChange={switchMode}
+          checked={isRaw}
+          onChange={(c) =>
+            updateColorizeEntry(kind, entryKey, { mode: c ? "raw" : "wysiwyg" })
+          }
           isDarkTheme={isDarkTheme}
           size="md"
         />
-        <span className={`text-sm ${entry.mode === "manual" ? "font-medium" : "opacity-50"}`}>
-          {t("modifiersPage.mode.manual")}
+        <span className={`text-sm ${isRaw ? "font-medium" : "opacity-50"}`}>
+          {t("modifiersPage.mode.raw")}
         </span>
       </div>
 
-      {entry.mode === "auto" ? (
-        <div className="space-y-4">
-          <div className="flex items-center gap-3">
-            <Switcher
-              checked={entry.enabled}
-              onChange={(c) => updateColorizeEntry(kind, entryKey, { enabled: c })}
-              isDarkTheme={isDarkTheme}
-              size="md"
-            />
-            <span className="text-sm">{t("modifiersPage.enable")}</span>
+      {isRaw ? (
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <SymbolsHint isDarkTheme={isDarkTheme} />
+            <ColorHint isDarkTheme={isDarkTheme} />
+            <span className="text-xs text-gray-400">
+              {t("modifiersPage.rawHint")}
+            </span>
           </div>
-          <div
-            className={`flex flex-wrap items-end gap-4 ${
-              entry.enabled ? "" : "opacity-40 pointer-events-none"
-            }`}
-          >
-            <div>
-              <label className="block text-xs font-semibold mb-1">
-                {t("runePage.controls.color")}
+          {selectedLocales.map((loc) => (
+            <div key={loc} className="space-y-1">
+              <label
+                className={`text-xs font-medium ${
+                  isDarkTheme ? "text-gray-400" : "text-gray-600"
+                }`}
+              >
+                {t(`runePage.controls.languageLabels.${loc}`)} ({loc})
               </label>
-              <ColorPallet
-                isDarkTheme={isDarkTheme}
-                value={entry.color}
-                onChange={(c) => updateColorizeEntry(kind, entryKey, { color: c })}
-                size="sm"
+              <DebouncedTextarea
+                value={valueFor(loc)}
+                onChange={(v) => setLocale(loc, v)}
+                rows={2}
+                className={`w-full px-3 py-2 text-sm rounded-lg border resize-vertical ${
+                  isDarkTheme
+                    ? "bg-gray-700 border-gray-600 text-white"
+                    : "bg-white border-gray-300 text-gray-900"
+                }`}
               />
             </div>
-            <div>
-              <label className="block text-xs font-semibold mb-1">
-                {t("modifiersPage.prefix")}
-              </label>
-              <Select
-                value={entry.prefixSymbol}
-                onChange={(v) =>
-                  updateColorizeEntry(kind, entryKey, { prefixSymbol: String(v) })
-                }
-                options={symbolOptions}
-                size="middle"
-                style={{ width: 80 }}
-                popupMatchSelectWidth={false}
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold mb-1">
-                {t("modifiersPage.suffix")}
-              </label>
-              <Select
-                value={entry.suffixSymbol}
-                onChange={(v) =>
-                  updateColorizeEntry(kind, entryKey, { suffixSymbol: String(v) })
-                }
-                options={symbolOptions}
-                size="middle"
-                style={{ width: 80 }}
-                popupMatchSelectWidth={false}
-              />
-            </div>
-          </div>
+          ))}
         </div>
       ) : (
         <div className="space-y-3">
-          <p className="text-xs text-gray-400">
-            {t("modifiersPage.wysiwygHint")}
-          </p>
+          <p className="text-xs text-gray-400">{t("modifiersPage.wysiwygHint")}</p>
           {selectedLocales.map((loc) => (
             <div key={loc} className="space-y-1">
               <label
@@ -312,12 +260,8 @@ const Detail = React.memo(function Detail({
                 {t(`runePage.controls.languageLabels.${loc}`)} ({loc})
               </label>
               <ColorTextEditor
-                value={(entry.locales as any)?.[loc] ?? ""}
-                onChange={(v) =>
-                  updateColorizeEntry(kind, entryKey, {
-                    locales: { ...(entry.locales as any), [loc]: v },
-                  })
-                }
+                value={valueFor(loc)}
+                onChange={(v) => setLocale(loc, v)}
                 defaultHex={defHex}
                 defaultCode={DEFAULT_COLOR_CODE[kind]}
                 isDarkTheme={isDarkTheme}
@@ -333,8 +277,7 @@ const Detail = React.memo(function Detail({
 /* ---------------- main tab ---------------- */
 const ModifiersTab: React.FC<ModifiersTabProps> = ({ isDarkTheme }) => {
   const { t, i18n } = useTranslation();
-  const { getColorizeEntry, updateMultipleColorizeEntries } = useSettings();
-  const { baseline } = useUnsavedChanges();
+  const { getColorizeEntry, updateColorizeEntry } = useSettings();
 
   const [kind, setKind] = useState<Kind>("modifiers");
   const [search, setSearch] = useState("");
@@ -351,33 +294,14 @@ const ModifiersTab: React.FC<ModifiersTabProps> = ({ isDarkTheme }) => {
   const labelOf = (k: string) =>
     readable(catLocales[kind][k]?.[gameLoc] || enusByKey[kind][k] || k);
 
-  const isDirty = (k: string) => {
-    const b = (baseline as any)?.modifiers?.[kind]?.[k];
-    const c = getColorizeEntry(kind, k);
-    if (!b) return c.enabled || c.mode === "manual";
-    if ((b.enabled ?? false) !== c.enabled) return true;
-    if ((b.mode ?? "auto") !== c.mode) return true;
-    if (b.color !== c.color) return true;
-    if ((b.prefixSymbol ?? "") !== c.prefixSymbol) return true;
-    if ((b.suffixSymbol ?? "") !== c.suffixSymbol) return true;
-    const bl = b.locales || {};
-    const cl = c.locales || {};
-    for (const l of new Set([...Object.keys(bl), ...Object.keys(cl)]))
-      if ((bl as any)[l] !== (cl as any)[l]) return true;
-    return false;
-  };
-
   // grouped + filtered list; search matches enUS + ruRU + current-language label
   const groups = useMemo(() => {
     const q = search.trim().toLowerCase();
-    const match = (e: { key: string; enUS: string; locales: Record<string, string> }) => {
-      if (!q) return true;
-      return (
-        e.enUS.toLowerCase().includes(q) ||
-        (e.locales.ruRU || "").toLowerCase().includes(q) ||
-        (e.locales[gameLoc] || "").toLowerCase().includes(q)
-      );
-    };
+    const match = (e: { enUS: string; locales: Record<string, string> }) =>
+      !q ||
+      e.enUS.toLowerCase().includes(q) ||
+      (e.locales.ruRU || "").toLowerCase().includes(q) ||
+      (e.locales[gameLoc] || "").toLowerCase().includes(q);
     if (kind === "skills") {
       const byClass: Record<string, string[]> = {};
       for (const s of catalog.skills)
@@ -406,6 +330,23 @@ const ModifiersTab: React.FC<ModifiersTabProps> = ({ isDarkTheme }) => {
     });
   }, []);
   const selectRow = React.useCallback((key: string) => setSelectedKey(key), []);
+
+  // bulk: wrap each selected entry's base text in the chosen color, all locales
+  const applyBulkColor = () => {
+    const code = colorCodes[bulkColor as keyof typeof colorCodes];
+    if (!code) return;
+    for (const k of checked) {
+      const cur = getColorizeEntry(kind, k);
+      const base = catLocales[kind][k] || {};
+      const next: Record<string, string> = { ...(cur.locales as any) };
+      for (const loc of Object.keys(base)) {
+        const text = (cur.locales as any)?.[loc] || base[loc] || "";
+        // re-color: drop a leading code then prepend the chosen one
+        next[loc] = code + text.replace(/^ÿc./, "");
+      }
+      updateColorizeEntry(kind, k, { mode: "wysiwyg", locales: next as any });
+    }
+  };
 
   return (
     <div className="flex h-full">
@@ -473,13 +414,7 @@ const ModifiersTab: React.FC<ModifiersTabProps> = ({ isDarkTheme }) => {
                 variant="primary"
                 size="sm"
                 isDarkTheme={isDarkTheme}
-                onClick={() =>
-                  updateMultipleColorizeEntries(kind, [...checked], {
-                    enabled: true,
-                    mode: "auto",
-                    color: bulkColor,
-                  })
-                }
+                onClick={applyBulkColor}
               >
                 {t("modifiersPage.applyColor")}
               </Button>
@@ -505,6 +440,11 @@ const ModifiersTab: React.FC<ModifiersTabProps> = ({ isDarkTheme }) => {
               <div className="space-y-0.5">
                 {g.keys.map((k) => {
                   const e = getColorizeEntry(kind, k);
+                  const val =
+                    (e.locales as any)?.[gameLoc] ||
+                    catLocales[kind][k]?.[gameLoc] ||
+                    "";
+                  const code = firstColorCode(val);
                   return (
                     <Row
                       key={k}
@@ -512,8 +452,7 @@ const ModifiersTab: React.FC<ModifiersTabProps> = ({ isDarkTheme }) => {
                       label={labelOf(k)}
                       checked={checked.has(k)}
                       selected={selectedKey === k}
-                      dotColor={e.enabled ? d2rColor(e.color) : null}
-                      dirty={isDirty(k)}
+                      dotColor={code ? colorCodeToHex[code] || null : null}
                       isDarkTheme={isDarkTheme}
                       onSelect={selectRow}
                       onToggle={toggle}
