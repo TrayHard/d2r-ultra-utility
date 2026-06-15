@@ -5,7 +5,7 @@
 // written to the game file verbatim. parseRuns() splits a raw string into colored
 // runs for live rendering.
 
-import { colorCodes } from "../constants";
+import { colorCodes, colorCodeToHex } from "../constants";
 import catalogJson from "../../pages/modifiers/catalog.json";
 
 export interface ModifierCatalogEntry {
@@ -77,8 +77,22 @@ export const parseRuns = (raw: string): Array<{ text: string; code: string }> =>
   return runs;
 };
 
-// First ÿc color code in a string (for the list color dot), or "" if none.
-export const firstColorCode = (raw: string): string => {
-  const m = (raw || "").match(/ÿc./);
-  return m ? m[0] : "";
+// The color that covers the most characters in a string (default color counts
+// too). Used for the list color dot. Whitespace is ignored; empty -> default.
+export const dominantColorHex = (raw: string, defaultHex: string): string => {
+  const tally = new Map<string, number>();
+  for (const r of parseRuns(raw || "")) {
+    const n = [...r.text].filter((c) => c.trim() !== "").length;
+    if (!n) continue;
+    const hex = r.code ? colorCodeToHex[r.code] || defaultHex : defaultHex;
+    tally.set(hex, (tally.get(hex) || 0) + n);
+  }
+  let best = defaultHex;
+  let bestN = -1;
+  for (const [hex, n] of tally)
+    if (n > bestN) {
+      best = hex;
+      bestN = n;
+    }
+  return best;
 };

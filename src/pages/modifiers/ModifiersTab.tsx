@@ -19,7 +19,7 @@ import {
 import {
   catalog,
   parseRuns,
-  firstColorCode,
+  dominantColorHex,
   DEFAULT_COLOR_HEX,
   DEFAULT_COLOR_CODE,
 } from "../../shared/utils/modifierUtils.ts";
@@ -444,7 +444,6 @@ const ModifiersTab: React.FC<ModifiersTabProps> = ({ isDarkTheme }) => {
                     (e.locales as any)?.[gameLoc] ||
                     catLocales[kind][k]?.[gameLoc] ||
                     "";
-                  const code = firstColorCode(val);
                   return (
                     <Row
                       key={k}
@@ -452,7 +451,7 @@ const ModifiersTab: React.FC<ModifiersTabProps> = ({ isDarkTheme }) => {
                       label={labelOf(k)}
                       checked={checked.has(k)}
                       selected={selectedKey === k}
-                      dotColor={code ? colorCodeToHex[code] || null : null}
+                      dotColor={dominantColorHex(val, DEFAULT_COLOR_HEX[kind])}
                       isDarkTheme={isDarkTheme}
                       onSelect={selectRow}
                       onToggle={toggle}
