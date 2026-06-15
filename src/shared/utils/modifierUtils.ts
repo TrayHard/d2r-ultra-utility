@@ -15,6 +15,7 @@ export interface ModifierCatalogEntry {
   file: string; // "item-modifiers.json" | "npcs.json"
   enUS: string;
   category: "property" | "itemStats";
+  locales: Record<string, string>; // base text per game locale
 }
 export interface SkillCatalogEntry {
   key: string;
@@ -22,6 +23,7 @@ export interface SkillCatalogEntry {
   enUS: string;
   charClass: string;
   className: string;
+  locales: Record<string, string>; // base name per game locale
 }
 export interface ModifiersCatalog {
   modifiers: ModifierCatalogEntry[];
