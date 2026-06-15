@@ -1856,5 +1856,8 @@
     "rawHint": "Farbcodes (ÿc…) und Symbole direkt eingeben.",
     "changedOnly": "Nur geänderte",
     "noChanged": "Keine geänderten Einträge"
+  },
+  "editor": {
+    "resetColor": "Farbe auf Standard zurücksetzen"
   }
 }

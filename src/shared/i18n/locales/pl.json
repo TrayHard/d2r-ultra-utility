@@ -1857,5 +1857,8 @@
     "rawHint": "Wpisuj kody kolorów (ÿc…) i symbole bezpośrednio.",
     "changedOnly": "Tylko zmienione",
     "noChanged": "Brak zmienionych"
+  },
+  "editor": {
+    "resetColor": "Resetuj kolor do domyślnego"
   }
 }
