@@ -8,7 +8,7 @@ import {
   catalog,
   SKILLS_FILE,
   parseRuns,
-  DEFAULT_COLOR_CODE,
+  defaultCodeFor,
 } from "../utils/modifierUtils";
 import type {
   ModifiersSettings,
@@ -227,14 +227,15 @@ export const useModifiersWorker = (
           for (const s of catalog.skills) {
             const entry = mods.skills[s.key];
             const row = byId.get(s.id);
-            if (entry && row) applyToRow(row, entry, DEFAULT_COLOR_CODE.skills);
+            if (entry && row)
+              applyToRow(row, entry, defaultCodeFor("skills", s.key));
           }
         }
         for (const m of modsByFile.get(file) || []) {
           const entry = mods.modifiers[m.key];
           const row = byId.get(m.id);
           if (entry && row)
-            applyToRow(row, entry, DEFAULT_COLOR_CODE.modifiers);
+            applyToRow(row, entry, defaultCodeFor("modifiers", m.key));
         }
 
         await writeFileWithRetry(

@@ -59,6 +59,17 @@ export const DEFAULT_COLOR_CODE: Record<"modifiers" | "skills", string> = {
   skills: colorCodes.white, // ÿc0
 };
 
+// Default render color depends on the entry: affix modifiers render blue, but
+// base item stats (Defense, Required Level, …) and skill names render white.
+const modifierCategory: Record<string, "property" | "itemStats"> =
+  Object.fromEntries((catalogJson as ModifiersCatalog).modifiers.map((m) => [m.key, m.category]));
+const isWhiteDefault = (kind: "modifiers" | "skills", key: string) =>
+  kind === "skills" || modifierCategory[key] === "itemStats";
+export const defaultHexFor = (kind: "modifiers" | "skills", key: string) =>
+  isWhiteDefault(kind, key) ? "#ffffff" : DEFAULT_COLOR_HEX.modifiers;
+export const defaultCodeFor = (kind: "modifiers" | "skills", key: string) =>
+  isWhiteDefault(kind, key) ? colorCodes.white : DEFAULT_COLOR_CODE.modifiers;
+
 // Split a raw ÿc-coded string into runs carrying their active color code
 // ("" before any code = default). Powers the WYSIWYG editor + preview.
 export const parseRuns = (raw: string): Array<{ text: string; code: string }> => {
