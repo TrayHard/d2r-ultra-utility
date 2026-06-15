@@ -1853,6 +1853,8 @@
     "suffix": "Suffix",
     "selectEntry": "Eintrag zum Bearbeiten wählen",
     "wysiwygHint": "Text hier bearbeiten — Teil markieren (oder nichts für die ganze Zeile) und Farbe wählen; ＋ fügt Symbole ein.",
-    "rawHint": "Farbcodes (ÿc…) und Symbole direkt eingeben."
+    "rawHint": "Farbcodes (ÿc…) und Symbole direkt eingeben.",
+    "changedOnly": "Nur geänderte",
+    "noChanged": "Keine geänderten Einträge"
   }
 }
