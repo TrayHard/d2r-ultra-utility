@@ -1825,6 +1825,7 @@
     "enable": "Włącz kolorowanie",
     "prefix": "Prefiks",
     "suffix": "Sufiks",
-    "selectEntry": "Wybierz wpis do edycji"
+    "selectEntry": "Wybierz wpis do edycji",
+    "wysiwygHint": "Edytuj tekst tutaj — zaznacz fragment (lub nic dla całej linii) i wybierz kolor; ＋ wstawia symbole."
   }
 }

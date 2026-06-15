@@ -1824,6 +1824,7 @@
     "enable": "Activer la coloration",
     "prefix": "Préfixe",
     "suffix": "Suffixe",
-    "selectEntry": "Sélectionnez une entrée à modifier"
+    "selectEntry": "Sélectionnez une entrée à modifier",
+    "wysiwygHint": "Modifiez le texte ici — sélectionnez une partie (ou rien pour toute la ligne) et choisissez une couleur ; ＋ insère des symboles."
   }
 }
