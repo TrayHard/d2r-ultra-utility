@@ -573,6 +573,28 @@
       }
     },
     {
+      "key": "ChronicleRandomClassSkillLevel",
+      "id": 28014,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to a Random Class' Skill Levels",
+      "category": "property",
+      "locales": {
+        "enUS": "%+d to a Random Class' Skill Levels",
+        "ruRU": "%+d к уровням умений случайного класса",
+        "zhTW": "%+d 隨機職業的技能等級",
+        "deDE": "%+d zu Fertigkeitsstufen einer zufälligen Klasse",
+        "esES": "%+d a los niveles de habilidad de una clase aleatoria",
+        "frFR": "%+d au niv. de compétence d’une classe aléatoire",
+        "itIT": "%+d ai livelli di abilità di una classe casuale",
+        "koKR": "무작위 직업의 기술 레벨 %+d",
+        "plPL": "%+d do umiejętności losowej klasy",
+        "esMX": "%+d a los niveles de habilidad de una clase aleatoria",
+        "jaJP": "ランダムなクラスのスキルレベル向上（%+d）",
+        "ptBR": "%+d para os níveis de habilidade de uma classe aleatória",
+        "zhCN": "+%d 随机职业技能等级"
+      }
+    },
+    {
       "key": "Moditem2allattrib",
       "id": 10977,
       "file": "item-modifiers.json",
@@ -592,6 +614,28 @@
         "jaJP": "全能力値（%+d）",
         "ptBR": "%+d para todos os atributos",
         "zhCN": "%+d 所有属性"
+      }
+    },
+    {
+      "key": "strModAllSkillLevels",
+      "id": 10025,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to All Skill Levels",
+      "category": "property",
+      "locales": {
+        "enUS": "%+d to All Skill Levels",
+        "ruRU": "%+d к уровню всех умений",
+        "zhTW": "%+d 所有技能等級",
+        "deDE": "%+d zu allen Fertigkeitenstufen",
+        "esES": "%+d a todos los niveles de habilidad",
+        "frFR": "%+d à toutes les compétences",
+        "itIT": "%+d a tutte le abilità",
+        "koKR": "모든 기술 레벨 %+d",
+        "plPL": "%+d do wszystkich umiejętności",
+        "esMX": "%+d a todos los niveles de habilidad",
+        "jaJP": "全スキルレベル向上（%+d）",
+        "ptBR": "%+d para todos os níveis de habilidade",
+        "zhCN": "%+d 所有技能等级"
       }
     },
     {
@@ -636,6 +680,28 @@
         "jaJP": "〈アマゾネス〉スキルレベル向上（%+d）",
         "ptBR": "%+d de níveis de habilidade de Amazona",
         "zhCN": "%+d 亚马逊技能等级"
+      }
+    },
+    {
+      "key": "ModStre8b",
+      "id": 11158,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Assassin Skill Levels",
+      "category": "property",
+      "locales": {
+        "enUS": "%+d to Assassin Skill Levels",
+        "ruRU": "%+d к уровню умений ассасина",
+        "zhTW": "%+d 刺客技能等級",
+        "deDE": "%+d zu Assassinenfertigkeiten",
+        "esES": "%+d a los niveles de habilidad de la asesina",
+        "frFR": "%+d aux niv. de compétence d’Assassin",
+        "itIT": "%+d alle abilità dell'Assassina",
+        "koKR": "암살자 기술 레벨 %+d",
+        "plPL": "%+d do umiejętności zabójczyni",
+        "esMX": "%+d a los niveles de habilidad de la Asesina",
+        "jaJP": "〈アサシン〉スキルレベル向上（%+d）",
+        "ptBR": "%+d de níveis de habilidade de Assassina",
+        "zhCN": "%+d 猎法者技能等级"
       }
     },
     {
@@ -705,6 +771,50 @@
       }
     },
     {
+      "key": "ModStr3e",
+      "id": 3529,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Barbarian Skill Levels",
+      "category": "property",
+      "locales": {
+        "enUS": "%+d to Barbarian Skill Levels",
+        "ruRU": "%+d к уровню умений варвара",
+        "zhTW": "%+d 野蠻人技能等級",
+        "deDE": "%+d zu Barbarenfertigkeiten",
+        "esES": "%+d a los niveles de habilidad del bárbaro",
+        "frFR": "%+d aux niv. de compétence du Barbare",
+        "itIT": "%+d alle abilità del Barbaro",
+        "koKR": "야만용사 기술 레벨 %+d",
+        "plPL": "%+d do umiejętności barbarzyńcy",
+        "esMX": "%+d a los niveles de habilidad del Bárbaro",
+        "jaJP": "〈バーバリアン〉スキルレベル向上（%+d）",
+        "ptBR": "%+d de níveis de habilidade de Bárbaro",
+        "zhCN": "%+d 野蛮人技能等级"
+      }
+    },
+    {
+      "key": "StrSklTabItem3",
+      "id": 10056,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Bow and Crossbow Skills",
+      "category": "property",
+      "locales": {
+        "enUS": "%+d to Bow and Crossbow Skills",
+        "ruRU": "%+d к умениям обращения с луками и арбалетами",
+        "zhTW": "%+d 弓與弩技能",
+        "deDE": "%+d zu Bogen- und Armbrustfertigkeiten",
+        "esES": "%+d a las habilidades de arco y ballesta",
+        "frFR": "%+d à l’arc et à l’arbalète",
+        "itIT": "%+d alle Abilità con archi e balestre",
+        "koKR": "활과 쇠뇌 기술 %+d",
+        "plPL": "%+d do umiejętności Łuku i Kuszy",
+        "esMX": "%+d a las habilidades de Arco y ballesta",
+        "jaJP": "〈弓/クロスボウ〉スキル向上（%+d）",
+        "ptBR": "%+d para habilidades Arcos e Bestas",
+        "zhCN": "%+d 弓和弩技能"
+      }
+    },
+    {
       "key": "ModStrColdskills",
       "id": 30126,
       "file": "npcs.json",
@@ -727,6 +837,116 @@
       }
     },
     {
+      "key": "StrSklTabItem13",
+      "id": 10066,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Cold Skills",
+      "category": "property",
+      "locales": {
+        "enUS": "%+d to Cold Skills",
+        "ruRU": "%+d к магии льда",
+        "zhTW": "%+d 冰寒技能",
+        "deDE": "%+d zu Kältefertigkeiten",
+        "esES": "%+d a los hechizos de frío",
+        "frFR": "%+d aux compétences de Froid",
+        "itIT": "%+d alle Magie del freddo",
+        "koKR": "냉기 기술 %+d",
+        "plPL": "%+d do umiejętności Zimna",
+        "esMX": "%+d a las habilidades de Frío",
+        "jaJP": "〈冷気〉スキル向上（%+d）",
+        "ptBR": "%+d para habilidades Gelo",
+        "zhCN": "%+d 冰系法术"
+      }
+    },
+    {
+      "key": "StrSklTabItem6",
+      "id": 10059,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Combat Skills",
+      "category": "property",
+      "locales": {
+        "enUS": "%+d to Combat Skills",
+        "ruRU": "%+d к боевым навыкам",
+        "zhTW": "%+d 戰鬥技能",
+        "deDE": "%+d zu Kampffertigkeiten",
+        "esES": "%+d a las habilidades de combate",
+        "frFR": "%+d aux compétences de combat",
+        "itIT": "%+d alle Abilità belliche",
+        "koKR": "전투 기술 %+d",
+        "plPL": "%+d do umiejętności Walki",
+        "esMX": "%+d a las habilidades de Combate",
+        "jaJP": "〈戦闘〉スキル向上（%+d）",
+        "ptBR": "%+d para Habilidades de Combate",
+        "zhCN": "%+d 战斗技能"
+      }
+    },
+    {
+      "key": "StrSklTabItem11",
+      "id": 10064,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Combat Skills",
+      "category": "property",
+      "locales": {
+        "enUS": "%+d to Combat Skills",
+        "ruRU": "%+d к боевым навыкам",
+        "zhTW": "%+d 戰鬥技能",
+        "deDE": "%+d zu Kampffertigkeiten",
+        "esES": "%+d a las habilidades de combate",
+        "frFR": "%+d aux compétences de combat",
+        "itIT": "%+d alle Abilità belliche",
+        "koKR": "전투 기술 %+d",
+        "plPL": "%+d do umiejętności Zdolności Bojowych",
+        "esMX": "%+d a las habilidades de Combate",
+        "jaJP": "〈戦闘〉スキル向上（%+d）",
+        "ptBR": "%+d para Habilidades de Combate",
+        "zhCN": "%+d 战斗技能"
+      }
+    },
+    {
+      "key": "StrSklTabItem8",
+      "id": 10062,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Curses",
+      "category": "property",
+      "locales": {
+        "enUS": "%+d to Curses",
+        "ruRU": "%+d к проклятиям",
+        "zhTW": "%+d 詛咒",
+        "deDE": "%+d zu Flüchen",
+        "esES": "%+d a las maldiciones",
+        "frFR": "%+d en malédictions",
+        "itIT": "%+d alle Maledizioni",
+        "koKR": "저주 %+d",
+        "plPL": "%+d do umiejętności Klątw",
+        "esMX": "%+d a las Maldiciones",
+        "jaJP": "〈呪い〉スキル向上（%+d）",
+        "ptBR": "%+d para Maldições",
+        "zhCN": "%+d 诅咒术"
+      }
+    },
+    {
+      "key": "StrSklTabItem4",
+      "id": 10057,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Defensive Auras",
+      "category": "property",
+      "locales": {
+        "enUS": "%+d to Defensive Auras",
+        "ruRU": "%+d к защитным аурам",
+        "zhTW": "%+d 防禦靈氣",
+        "deDE": "%+d zu Defensivauren",
+        "esES": "%+d a las auras defensivas",
+        "frFR": "%+d aux auras défensives",
+        "itIT": "%+d alle Aure difensive",
+        "koKR": "방어 오라 %+d",
+        "plPL": "%+d do umiejętności Aur Defensywnych",
+        "esMX": "%+d a las Auras defensivas",
+        "jaJP": "〈防御オーラ〉スキル向上（%+d）",
+        "ptBR": "%+d para Auras Defensivas",
+        "zhCN": "%+d 防御光环"
+      }
+    },
+    {
       "key": "ModStr1b",
       "id": 3474,
       "file": "item-modifiers.json",
@@ -746,6 +966,50 @@
         "jaJP": "敏捷性（%+d）",
         "ptBR": "%+d de destreza",
         "zhCN": "%+d 敏捷"
+      }
+    },
+    {
+      "key": "ModStre8a",
+      "id": 21205,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Druid Skill Levels",
+      "category": "property",
+      "locales": {
+        "enUS": "%+d to Druid Skill Levels",
+        "ruRU": "%+d к уровню умений друида",
+        "zhTW": "%+d 德魯伊技能等級",
+        "deDE": "%+d zu Druidenfertigkeiten",
+        "esES": "%+d a los niveles de habilidad del druida",
+        "frFR": "%+d aux niv. de comp. du druide",
+        "itIT": "%+d alle abilità del Druido",
+        "koKR": "드루이드 기술 레벨 %+d",
+        "plPL": "%+d do umiejętności druida",
+        "esMX": "%+d a los niveles de habilidad del Druida",
+        "jaJP": "〈ドルイド〉スキルレベル向上（%+d）",
+        "ptBR": "%+d de níveis de habilidade de Druida",
+        "zhCN": "%+d 德鲁伊技能等级"
+      }
+    },
+    {
+      "key": "StrSklTabItem18",
+      "id": 10071,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Elemental Skills",
+      "category": "property",
+      "locales": {
+        "enUS": "%+d to Elemental Skills",
+        "ruRU": "%+d к силам стихий",
+        "zhTW": "%+d 元素技能",
+        "deDE": "%+d zu Elementarfertigkeiten",
+        "esES": "%+d a las habilidades elementales",
+        "frFR": "%+d en élémentaires",
+        "itIT": "%+d alle Magie elementali",
+        "koKR": "원소 기술 %+d",
+        "plPL": "%+d do umiejętności Żywiołów",
+        "esMX": "%+d a las habilidades Elementales",
+        "jaJP": "〈自然の力〉スキル向上（%+d）",
+        "ptBR": "%+d para habilidades Elementos",
+        "zhCN": "%+d 元素技能"
       }
     },
     {
@@ -790,6 +1054,28 @@
         "jaJP": "〈火炎〉スキル向上（%+d）",
         "ptBR": "%+d para habilidades ígneas",
         "zhCN": "%+d 火焰技能"
+      }
+    },
+    {
+      "key": "StrSklTabItem15",
+      "id": 10068,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Fire Skills",
+      "category": "property",
+      "locales": {
+        "enUS": "%+d to Fire Skills",
+        "ruRU": "%+d к магии огня",
+        "zhTW": "%+d 火焰技能",
+        "deDE": "%+d zu Feuerfertigkeiten",
+        "esES": "%+d a los hechizos de fuego",
+        "frFR": "%+d aux compétences de Feu",
+        "itIT": "%+d alle Magie del fuoco",
+        "koKR": "화염 기술 %+d",
+        "plPL": "%+d do umiejętności Ognia",
+        "esMX": "%+d a las habilidades de Fuego",
+        "jaJP": "〈火炎〉スキル向上（%+d）",
+        "ptBR": "%+d para habilidades Fogo",
+        "zhCN": "%+d 火系法术"
       }
     },
     {
@@ -881,6 +1167,28 @@
       }
     },
     {
+      "key": "StrSklTabItem14",
+      "id": 10067,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Lightning Skills",
+      "category": "property",
+      "locales": {
+        "enUS": "%+d to Lightning Skills",
+        "ruRU": "%+d к магии молнии",
+        "zhTW": "%+d 閃電技能",
+        "deDE": "%+d zu Blitzfertigkeiten",
+        "esES": "%+d a los hechizos de rayos",
+        "frFR": "%+d aux compétences de Foudre",
+        "itIT": "%+d alle Magie del fulmine",
+        "koKR": "번개 기술 %+d",
+        "plPL": "%+d do umiejętności Błyskawic",
+        "esMX": "%+d a las habilidades de Rayo",
+        "jaJP": "〈電撃〉スキル向上（%+d）",
+        "ptBR": "%+d para habilidades Eletricidade",
+        "zhCN": "%+d 雷系法术"
+      }
+    },
+    {
       "key": "ModStrMagicskills",
       "id": 30129,
       "file": "npcs.json",
@@ -947,6 +1255,160 @@
       }
     },
     {
+      "key": "StrSklTabItem21",
+      "id": 10074,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Martial Arts",
+      "category": "property",
+      "locales": {
+        "enUS": "%+d to Martial Arts",
+        "ruRU": "%+d к боевым искусствам",
+        "zhTW": "%+d 武學技藝",
+        "deDE": "%+d zu Kampfkünsten",
+        "esES": "%+d a las artes marciales",
+        "frFR": "%+d en arts martiaux",
+        "itIT": "%+d alle Arti marziali",
+        "koKR": "무술 %+d",
+        "plPL": "%+d do umiejętności Sztuk Walki",
+        "esMX": "%+d a las Artes marciales",
+        "jaJP": "〈マーシャルアーツ〉スキル向上（%+d）",
+        "ptBR": "%+d para Artes Marciais",
+        "zhCN": "%+d 武学技艺"
+      }
+    },
+    {
+      "key": "StrSklTabItem12",
+      "id": 10065,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Masteries",
+      "category": "property",
+      "locales": {
+        "enUS": "%+d to Masteries",
+        "ruRU": "%+d к боевому мастерству",
+        "zhTW": "%+d 戰鬥專精",
+        "deDE": "%+d zu Beherrschungsfertigkeiten",
+        "esES": "%+d a dominio del combate",
+        "frFR": "%+d aux maîtrises",
+        "itIT": "%+d ai Domini bellici",
+        "koKR": "숙련 %+d",
+        "plPL": "%+d do umiejętności Mistrzostw Bojowych",
+        "esMX": "%+d a los Dominios",
+        "jaJP": "〈武器術〉スキル向上（%+d）",
+        "ptBR": "%+d para Maestrias",
+        "zhCN": "%+d 精通类技能"
+      }
+    },
+    {
+      "key": "ModStr3c",
+      "id": 3527,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Necromancer Skill Levels",
+      "category": "property",
+      "locales": {
+        "enUS": "%+d to Necromancer Skill Levels",
+        "ruRU": "%+d к уровню умений некроманта",
+        "zhTW": "%+d 死靈法師技能等級",
+        "deDE": "%+d zu Totenbeschwörerfertigkeiten",
+        "esES": "%+d a los niveles de habilidad del nigromante",
+        "frFR": "%+d aux niv. de compétence du Nécromancien",
+        "itIT": "%+d alle abilità del Negromante",
+        "koKR": "강령술사 기술 레벨 %+d",
+        "plPL": "%+d do umiejętności nekromanty",
+        "esMX": "%+d a los niveles de habilidad del Nigromante",
+        "jaJP": "〈ネクロマンサー〉スキルレベル向上（%+d）",
+        "ptBR": "%+d de níveis de habilidade de Necromante",
+        "zhCN": "%+d 死灵法师技能等级"
+      }
+    },
+    {
+      "key": "StrSklTabItem5",
+      "id": 10058,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Offensive Auras",
+      "category": "property",
+      "locales": {
+        "enUS": "%+d to Offensive Auras",
+        "ruRU": "%+d к боевым аурам",
+        "zhTW": "%+d 攻擊靈氣",
+        "deDE": "%+d zu Offensivauren",
+        "esES": "%+d a las auras ofensivas",
+        "frFR": "%+d aux auras offensives",
+        "itIT": "%+d alle Aure offensive",
+        "koKR": "공격 오라 %+d",
+        "plPL": "%+d do umiejętności Aur Ofensywnych",
+        "esMX": "%+d a las Auras ofensivas",
+        "jaJP": "〈攻撃オーラ〉スキル向上（%+d）",
+        "ptBR": "%+d para Auras Ofensivas",
+        "zhCN": "%+d 攻击光环"
+      }
+    },
+    {
+      "key": "ModStr3b",
+      "id": 3526,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Paladin Skill Levels",
+      "category": "property",
+      "locales": {
+        "enUS": "%+d to Paladin Skill Levels",
+        "ruRU": "%+d к уровню умений паладина",
+        "zhTW": "%+d 聖騎士技能等級",
+        "deDE": "%+d zu Paladinfertigkeiten",
+        "esES": "%+d a los niveles de habilidad del paladín",
+        "frFR": "%+d aux niv. de compétence du Paladin",
+        "itIT": "%+d alle abilità del Paladino",
+        "koKR": "성기사 기술 레벨 %+d",
+        "plPL": "%+d do umiejętności paladyna",
+        "esMX": "%+d a los niveles de habilidad del Paladín",
+        "jaJP": "〈パラディン〉スキルレベル向上（%+d）",
+        "ptBR": "%+d de níveis de habilidade de Paladino",
+        "zhCN": "%+d 圣骑士技能等级"
+      }
+    },
+    {
+      "key": "StrSklTabItem2",
+      "id": 10055,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Passive and Magic Skills",
+      "category": "property",
+      "locales": {
+        "enUS": "%+d to Passive and Magic Skills",
+        "ruRU": "%+d к пассивным и магическим навыкам",
+        "zhTW": "%+d 被動與魔法技能",
+        "deDE": "%+d zu passiven und magischen Fertigkeiten",
+        "esES": "%+d a las habilidades pasivas y mágicas",
+        "frFR": "%+d aux compétences passives et magiques",
+        "itIT": "%+d alle Passive e magie",
+        "koKR": "지속 효과와 마법 기술 %+d",
+        "plPL": "%+d do umiejętności Pasywnych i Magii",
+        "esMX": "%+d a las habilidades de Pasivas y magia",
+        "jaJP": "〈常時発動/魔法〉スキル向上（%+d）",
+        "ptBR": "%+d para habilidades Passivas e Magia",
+        "zhCN": "%+d 被动和魔法技能"
+      }
+    },
+    {
+      "key": "StrSklTabItem7",
+      "id": 10061,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Poison and Bone Skills",
+      "category": "property",
+      "locales": {
+        "enUS": "%+d to Poison and Bone Skills",
+        "ruRU": "%+d к умениям ядов и костей",
+        "zhTW": "%+d 毒素與骸骨技能",
+        "deDE": "%+d zu Gift- und Knochenfertigkeiten",
+        "esES": "%+d a las habilidades de veneno y hueso",
+        "frFR": "%+d en comp. de Poison et d’os",
+        "itIT": "%+d alle Magie di ossa e veleno",
+        "koKR": "독과 뼈 기술 %+d",
+        "plPL": "%+d do umiejętności Trucizn i Kości",
+        "esMX": "%+d a las habilidades de Veneno y huesos",
+        "jaJP": "〈ポイズン/ボーン〉スキル向上（%+d）",
+        "ptBR": "%+d para habilidades Veneno e Ossos",
+        "zhCN": "%+d 毒素和白骨术"
+      }
+    },
+    {
       "key": "ModStrPoisonskills",
       "id": 30128,
       "file": "npcs.json",
@@ -966,6 +1428,72 @@
         "jaJP": " <毒> スキル向上 (%+d）",
         "ptBR": "%+d para habilidades venenosas",
         "zhCN": "%+d 毒技能"
+      }
+    },
+    {
+      "key": "StrSklTabItem20",
+      "id": 10073,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Shadow Disciplines",
+      "category": "property",
+      "locales": {
+        "enUS": "%+d to Shadow Disciplines",
+        "ruRU": "%+d к теневым навыкам",
+        "zhTW": "%+d 暗影修行",
+        "deDE": "%+d zu Schattendisziplinen",
+        "esES": "%+d a la disciplina de las sombras",
+        "frFR": "%+d en disciplines de l’ombre",
+        "itIT": "%+d alle Discipline dell'ombra",
+        "koKR": "그림자 단련 %+d",
+        "plPL": "%+d do umiejętności Dyscyplin Cienia",
+        "esMX": "%+d a las Disciplinas de las sombras",
+        "jaJP": "〈シャドウアーツ〉スキル向上（%+d）",
+        "ptBR": "%+d para Disciplinas Sombrias",
+        "zhCN": "%+d 影身训练"
+      }
+    },
+    {
+      "key": "StrSklTabItem17",
+      "id": 10070,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Shape Shifting Skills",
+      "category": "property",
+      "locales": {
+        "enUS": "%+d to Shape Shifting Skills",
+        "ruRU": "%+d к умениям смены облика",
+        "zhTW": "%+d 變形技能",
+        "deDE": "%+d zu Gestaltwandlerfertigkeiten",
+        "esES": "%+d a las habilidades de cambio de forma",
+        "frFR": "%+d en métamorphose",
+        "itIT": "%+d alle Abilità mutaforma",
+        "koKR": "변신 기술 %+d",
+        "plPL": "%+d do umiejętności Zmiany Kształtu",
+        "esMX": "%+d a las habilidades de Metamorfosis",
+        "jaJP": "〈変身〉スキル向上（%+d）",
+        "ptBR": "%+d para habilidades Metamorfose",
+        "zhCN": "%+d 变形技能"
+      }
+    },
+    {
+      "key": "ModStr3d",
+      "id": 3528,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Sorceress Skill Levels",
+      "category": "property",
+      "locales": {
+        "enUS": "%+d to Sorceress Skill Levels",
+        "ruRU": "%+d к уровню умений волшебницы",
+        "zhTW": "%+d 魔法使技能等級",
+        "deDE": "%+d zu Zauberinfertigkeiten",
+        "esES": "%+d a los niveles de habilidad de la hechicera",
+        "frFR": "%+d aux niv. de compétence de la Sorcière",
+        "itIT": "%+d alle abilità dell'Incantatrice",
+        "koKR": "원소술사 기술 레벨 %+d",
+        "plPL": "%+d do umiejętności czarodziejki",
+        "esMX": "%+d a los niveles de habilidad de la Hechicera",
+        "jaJP": "〈ソーサレス〉スキルレベル向上（%+d）",
+        "ptBR": "%+d de níveis de habilidade de Maga",
+        "zhCN": "%+d 巫师技能等级"
       }
     },
     {
@@ -991,6 +1519,50 @@
       }
     },
     {
+      "key": "StrSklTabItem16",
+      "id": 10069,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Summoning Skills",
+      "category": "property",
+      "locales": {
+        "enUS": "%+d to Summoning Skills",
+        "ruRU": "%+d к умениям спутников",
+        "zhTW": "%+d 召喚技能",
+        "deDE": "%+d zu Herbeirufungfertigkeiten",
+        "esES": "%+d a las habilidades de invocación",
+        "frFR": "%+d en invocation",
+        "itIT": "%+d alle Magie di evocazione",
+        "koKR": "소환 기술 %+d",
+        "plPL": "%+d do umiejętności Przyzwania",
+        "esMX": "%+d a las habilidades de Invocación",
+        "jaJP": "〈召喚〉スキル向上（%+d）",
+        "ptBR": "%+d para habilidades Invocação",
+        "zhCN": "%+d 召唤技能"
+      }
+    },
+    {
+      "key": "StrSklTabItem19",
+      "id": 10072,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Traps",
+      "category": "property",
+      "locales": {
+        "enUS": "%+d to Traps",
+        "ruRU": "%+d к ловушкам",
+        "zhTW": "%+d 陷阱",
+        "deDE": "%+d zu Fallen",
+        "esES": "%+d a las trampas",
+        "frFR": "%+d en pièges",
+        "itIT": "%+d alle Trappole",
+        "koKR": "덫 %+d",
+        "plPL": "%+d do umiejętności Pułapek",
+        "esMX": "%+d a las Trampas",
+        "jaJP": "〈トラップ〉スキル向上（%+d）",
+        "ptBR": "%+d para Armadilhas",
+        "zhCN": "%+d 陷阱"
+      }
+    },
+    {
       "key": "ModStr1c",
       "id": 3475,
       "file": "item-modifiers.json",
@@ -1010,6 +1582,28 @@
         "jaJP": "生命力（%+d）",
         "ptBR": "%+d de vitalidade",
         "zhCN": "%+d 活力"
+      }
+    },
+    {
+      "key": "StrSklTabItem10",
+      "id": 10063,
+      "file": "item-modifiers.json",
+      "enUS": "%+d to Warcries",
+      "category": "property",
+      "locales": {
+        "enUS": "%+d to Warcries",
+        "ruRU": "%+d к боевым кличам",
+        "zhTW": "%+d 戰吼",
+        "deDE": "%+d zu Kriegsschreien",
+        "esES": "%+d a los gritos de guerra",
+        "frFR": "%+d aux cris de guerre",
+        "itIT": "%+d alle Grida di guerra",
+        "koKR": "함성 %+d",
+        "plPL": "%+d do umiejętności Okrzyków",
+        "esMX": "%+d a los Gritos de guerra",
+        "jaJP": "〈雄叫び〉スキル向上（%+d）",
+        "ptBR": "%+d para Gritos de Guerra",
+        "zhCN": "%+d 呐喊技能"
       }
     },
     {
@@ -2044,6 +2638,94 @@
         "jaJP": "へのダメージ（%d%%）",
         "ptBR": "%d%% de dano contra",
         "zhCN": "%d%% 提高伤害, 对"
+      }
+    },
+    {
+      "key": "StrSklTabItem23",
+      "id": 27890,
+      "file": "item-modifiers.json",
+      "enUS": "+%d to Chaos Skills",
+      "category": "property",
+      "locales": {
+        "enUS": "+%d to Chaos Skills",
+        "ruRU": "+%d к хаотическим умениям",
+        "zhTW": "+%d 混沌技能",
+        "deDE": "+%d zu Chaosfertigkeiten",
+        "esES": "+%d a las habilidades del caos",
+        "frFR": "+%d aux compétences chaotiques",
+        "itIT": "+%d alle abilità del Caos",
+        "koKR": "혼돈 기술 +%d",
+        "plPL": "+%d do umiejętności chaotycznych",
+        "esMX": "+%d a las habilidades de Caos",
+        "jaJP": "混沌スキル向上（+%d）",
+        "ptBR": "+%d para habilidades de caos",
+        "zhCN": "+%d 混沌技能"
+      }
+    },
+    {
+      "key": "StrSklTabItem24",
+      "id": 27888,
+      "file": "item-modifiers.json",
+      "enUS": "+%d to Demon Skills",
+      "category": "property",
+      "locales": {
+        "enUS": "+%d to Demon Skills",
+        "ruRU": "+%d к демоническим умениям",
+        "zhTW": "+%d 惡魔技能",
+        "deDE": "+%d zu Dämonenfertigkeiten",
+        "esES": "+%d a las habilidades demoníacas",
+        "frFR": "+%d aux compétences démoniaques",
+        "itIT": "+%d alle abilità Demoniache",
+        "koKR": "악마 기술 +%d",
+        "plPL": "+%d do umiejętności demonicznych",
+        "esMX": "+%d a las habilidades de Demonio",
+        "jaJP": "悪魔スキル向上（+%d）",
+        "ptBR": "+%d para habilidades de demônio",
+        "zhCN": "+%d 恶魔技能"
+      }
+    },
+    {
+      "key": "StrSklTabItem22",
+      "id": 27889,
+      "file": "item-modifiers.json",
+      "enUS": "+%d to Eldritch Skills",
+      "category": "property",
+      "locales": {
+        "enUS": "+%d to Eldritch Skills",
+        "ruRU": "+%d к потусторонним умениям",
+        "zhTW": "+%d 邪異技能",
+        "deDE": "+%d zu abscheuliche Fertigkeiten",
+        "esES": "+%d a las habilidades sobrenaturales",
+        "frFR": "+%d aux compétences sinistres",
+        "itIT": "+%d alle abilità Ultraterrene",
+        "koKR": "기괴 기술 +%d",
+        "plPL": "+%d do umiejętności wynaturzenia",
+        "esMX": "+%d a las habilidades de Espanto",
+        "jaJP": "エルドリッチスキル向上（+%d）",
+        "ptBR": "+%d para habilidades sobrenaturais",
+        "zhCN": "+%d 邪术技能"
+      }
+    },
+    {
+      "key": "StrSklTabItem9",
+      "id": 11003,
+      "file": "item-modifiers.json",
+      "enUS": "+%d to Summoning Skills",
+      "category": "property",
+      "locales": {
+        "enUS": "+%d to Summoning Skills",
+        "ruRU": "+%d к умениям призыва",
+        "zhTW": "+%d 召喚技能",
+        "deDE": "+%d zu Herbeirufungfertigkeiten",
+        "esES": "+%d a las habilidades de invocación",
+        "frFR": "+%d en invocation",
+        "itIT": "+%d alle Magie di evocazione",
+        "koKR": "소환 기술 +%d",
+        "plPL": "+%d do umiejętności Przywoływania",
+        "esMX": "+%d a las habilidades de Invocación",
+        "jaJP": "〈召喚〉スキル向上（+%d）",
+        "ptBR": "+%d para habilidades Evocação",
+        "zhCN": "+%d 召唤术"
       }
     },
     {
