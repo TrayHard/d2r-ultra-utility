@@ -4,12 +4,7 @@ import { ensureWritable } from "../utils/fsUtils";
 import { useLogger } from "../utils/logger";
 import { STORAGE_KEYS } from "../constants";
 import { GAME_PATHS, SUPPORTED_LOCALES } from "../utils/runeUtils";
-import {
-  catalog,
-  SKILLS_FILE,
-  applyColoring,
-  detectColoring,
-} from "../utils/modifierUtils";
+import { catalog, SKILLS_FILE } from "../utils/modifierUtils";
 import type {
   ModifiersSettings,
   ColorizeEntrySettings,
@@ -142,19 +137,13 @@ export const useModifiersWorker = (
         for (const m of catalog.modifiers) {
           const row = byFile.get(m.file)?.get(m.id);
           if (row)
-            updateColorizeEntry("modifiers", m.key, {
-              ...detectColoring(row.enUS || ""),
-              locales: rowLocales(row),
-            });
+            updateColorizeEntry("modifiers", m.key, { locales: rowLocales(row) });
         }
         const skillMap = byFile.get(fileForSkills);
         for (const s of catalog.skills) {
           const row = skillMap?.get(s.id);
           if (row)
-            updateColorizeEntry("skills", s.key, {
-              ...detectColoring(row.enUS || ""),
-              locales: rowLocales(row),
-            });
+            updateColorizeEntry("skills", s.key, { locales: rowLocales(row) });
         }
       }
 
@@ -203,14 +192,9 @@ export const useModifiersWorker = (
           if (!selectedLocales.includes(loc)) continue;
           const cur = (row as any)[loc];
           if (typeof cur !== "string") continue;
-          if (entry.mode === "manual") {
-            // full custom text: only override locales the user actually filled
-            const v = entry.locales?.[loc as keyof typeof entry.locales];
-            if (typeof v === "string" && v.length > 0) (row as any)[loc] = v;
-          } else {
-            // auto: color+symbols on base (or restore base when disabled)
-            (row as any)[loc] = applyColoring(cur, entry);
-          }
+          // write the user's full custom text; only override locales they filled
+          const v = entry.locales?.[loc as keyof typeof entry.locales];
+          if (typeof v === "string" && v.length > 0) (row as any)[loc] = v;
         }
       };
 

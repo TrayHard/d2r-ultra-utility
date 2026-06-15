@@ -182,16 +182,12 @@ export interface TweaksSettings {
   skipIntroVideos: boolean;
 }
 
-// Раскраска одной записи (модификатора или скилла).
-// mode "auto"   — простой режим: цвет из палитры + опц. символы поверх базы;
-// mode "manual" — полный кастом: свой текст по каждой игровой локали (как у рун/предметов).
+// Раскраска одной записи (модификатора или скилла) — свой текст по каждой
+// игровой локали (с встроенными цветовыми кодами/символами).
+// mode "wysiwyg" — визуальный редактор; mode "raw" — прямой ввод текста с кодами.
 export interface ColorizeEntrySettings {
-  enabled: boolean; // трогать ли эту запись вообще
-  mode: "auto" | "manual";
-  color: string; // имя цвета из colorCodes (например "red")
-  prefixSymbol: string; // символ-префикс ("" = нет)
-  suffixSymbol: string; // символ-суффикс ("" = нет)
-  locales: Locales; // полный текст по локалям (ручной режим)
+  mode: "wysiwyg" | "raw";
+  locales: Locales;
 }
 
 // Раскраска модификаторов и названий скиллов (ключи — из catalog.json)
@@ -731,13 +727,9 @@ const getDefaultTweaksSettings = (): TweaksSettings => ({
   skipIntroVideos: false,
 });
 
-// Дефолт раскраски одной записи (выключено = без перекраски)
+// Дефолт раскраски одной записи (пустой текст = без изменений)
 export const getDefaultColorizeEntrySettings = (): ColorizeEntrySettings => ({
-  enabled: false,
-  mode: "auto",
-  color: "white",
-  prefixSymbol: "",
-  suffixSymbol: "",
+  mode: "wysiwyg",
   locales: createFilledLocales(""),
 });
 

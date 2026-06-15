@@ -1820,12 +1820,15 @@
     "disable": "Wyłącz",
     "mode": {
       "auto": "Kolor",
-      "manual": "Własny tekst"
+      "manual": "Własny tekst",
+      "visual": "Wizualny",
+      "raw": "Własny tekst"
     },
     "enable": "Włącz kolorowanie",
     "prefix": "Prefiks",
     "suffix": "Sufiks",
     "selectEntry": "Wybierz wpis do edycji",
-    "wysiwygHint": "Edytuj tekst tutaj — zaznacz fragment (lub nic dla całej linii) i wybierz kolor; ＋ wstawia symbole."
+    "wysiwygHint": "Edytuj tekst tutaj — zaznacz fragment (lub nic dla całej linii) i wybierz kolor; ＋ wstawia symbole.",
+    "rawHint": "Wpisuj kody kolorów (ÿc…) i symbole bezpośrednio."
   }
 }
