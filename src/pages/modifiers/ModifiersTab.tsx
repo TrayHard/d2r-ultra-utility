@@ -20,8 +20,8 @@ import {
   catalog,
   parseRuns,
   dominantColorHex,
-  DEFAULT_COLOR_HEX,
-  DEFAULT_COLOR_CODE,
+  defaultHexFor,
+  defaultCodeFor,
 } from "../../shared/utils/modifierUtils.ts";
 
 interface ModifiersTabProps {
@@ -43,6 +43,8 @@ const formatExample = (s: string) =>
     .replace(/%d/g, "25")
     .replace(/%i/g, "3")
     .replace(/%0/g, "0")
+    // "%+d to %s %s" = single skill, class-restricted (skill + "(Class Only)")
+    .replace(/%s %s/g, "Fireball (Class Only)")
     .replace(/%s/g, "Fireball");
 
 const UI_TO_GAME: Record<string, string> = {
@@ -124,22 +126,25 @@ const Row = React.memo(function Row({
 /* ---------------- detail editor (memoized) ---------------- */
 interface DetailProps {
   kind: Kind;
-  entryKey: string;
+  entryKeys: string[]; // all keys sharing the row's text; edits apply to all
   isDarkTheme: boolean;
 }
 const Detail = React.memo(function Detail({
   kind,
-  entryKey,
+  entryKeys,
   isDarkTheme,
 }: DetailProps) {
   const { t } = useTranslation();
   const { getColorizeEntry, updateColorizeEntry, getSelectedLocales } =
     useSettings();
+  const entryKey = entryKeys[0]; // representative (for display/reads)
+  const update = (partial: Partial<ReturnType<typeof getColorizeEntry>>) =>
+    entryKeys.forEach((k) => updateColorizeEntry(kind, k, partial));
   const entry = getColorizeEntry(kind, entryKey);
   const selectedLocales = getSelectedLocales();
   const base = catLocales[kind][entryKey] || {};
   const baseEnUS = enusByKey[kind][entryKey] || "";
-  const defHex = DEFAULT_COLOR_HEX[kind];
+  const defHex = defaultHexFor(kind, entryKey);
   const isRaw = entry.mode === "raw";
 
   const [previewLocale, setPreviewLocale] = useState(
@@ -163,9 +168,7 @@ const Detail = React.memo(function Detail({
     (entry.locales as any)?.[loc] || base[loc] || baseEnUS || "";
 
   const setLocale = (loc: string, v: string) =>
-    updateColorizeEntry(kind, entryKey, {
-      locales: { ...(entry.locales as any), [loc]: v },
-    });
+    update({ locales: { ...(entry.locales as any), [loc]: v } });
 
   const previewSegments = parseRuns(valueFor(previewLocale)).map((r) => ({
     text: formatExample(r.text),
@@ -219,7 +222,7 @@ const Detail = React.memo(function Detail({
         <Switcher
           checked={isRaw}
           onChange={(c) =>
-            updateColorizeEntry(kind, entryKey, { mode: c ? "raw" : "wysiwyg" })
+            update({ mode: c ? "raw" : "wysiwyg" })
           }
           isDarkTheme={isDarkTheme}
           size="md"
@@ -276,7 +279,7 @@ const Detail = React.memo(function Detail({
                 value={valueFor(loc)}
                 onChange={(v) => setLocale(loc, v)}
                 defaultHex={defHex}
-                defaultCode={DEFAULT_COLOR_CODE[kind]}
+                defaultCode={defaultCodeFor(kind, entryKey)}
                 isDarkTheme={isDarkTheme}
               />
             </div>
@@ -307,14 +310,40 @@ const ModifiersTab: React.FC<ModifiersTabProps> = ({ isDarkTheme }) => {
   const labelOf = (k: string) =>
     formatExample(catLocales[kind][k]?.[gameLoc] || enusByKey[kind][k] || k);
 
+  // Several keys share the same English text (e.g. the elemental-skill stat and
+  // the class skill-tab both show "+to Cold Skills"; two classes' "Combat Skills").
+  // Group them by enUS so the list shows one row whose edits color ALL of them.
+  const repGroups = useMemo(() => {
+    const list = kind === "skills" ? catalog.skills : catalog.modifiers;
+    const byText = new Map<string, string[]>();
+    for (const e of list) {
+      // group by the DISPLAYED text so visually-identical lines that differ only
+      // in placeholder form ("+%d" vs "%+d to …") collapse into one row too
+      const t = formatExample(e.enUS);
+      const arr = byText.get(t) || [];
+      arr.push(e.key);
+      byText.set(t, arr);
+    }
+    const repToKeys = new Map<string, string[]>();
+    const keyToRep = new Map<string, string>();
+    for (const keys of byText.values()) {
+      repToKeys.set(keys[0], keys);
+      for (const k of keys) keyToRep.set(k, keys[0]);
+    }
+    return { repToKeys, keyToRep };
+  }, [kind]);
+  const isRep = (k: string) => repGroups.keyToRep.get(k) === k;
+  const keysOf = (rep: string) => repGroups.repToKeys.get(rep) || [rep];
+
   // grouped + filtered list; search matches enUS + ruRU + current-language label
   const groups = useMemo(() => {
     const q = search.trim().toLowerCase();
-    const match = (e: { enUS: string; locales: Record<string, string> }) =>
-      !q ||
-      e.enUS.toLowerCase().includes(q) ||
-      (e.locales.ruRU || "").toLowerCase().includes(q) ||
-      (e.locales[gameLoc] || "").toLowerCase().includes(q);
+    const match = (e: { key: string; enUS: string; locales: Record<string, string> }) =>
+      isRep(e.key) &&
+      (!q ||
+        e.enUS.toLowerCase().includes(q) ||
+        (e.locales.ruRU || "").toLowerCase().includes(q) ||
+        (e.locales[gameLoc] || "").toLowerCase().includes(q));
     if (kind === "skills") {
       const byClass: Record<string, string[]> = {};
       for (const s of catalog.skills)
@@ -329,7 +358,7 @@ const ModifiersTab: React.FC<ModifiersTabProps> = ({ isDarkTheme }) => {
     if (prop.length) out.push({ title: t("modifiersPage.groups.properties"), keys: prop });
     if (base.length) out.push({ title: t("modifiersPage.groups.baseStats"), keys: base });
     return out;
-  }, [kind, search, gameLoc, t]);
+  }, [kind, search, gameLoc, t, repGroups]);
 
   const visibleKeys = useMemo(() => groups.flatMap((g) => g.keys), [groups]);
   const allChecked =
@@ -344,20 +373,22 @@ const ModifiersTab: React.FC<ModifiersTabProps> = ({ isDarkTheme }) => {
   }, []);
   const selectRow = React.useCallback((key: string) => setSelectedKey(key), []);
 
-  // bulk: wrap each selected entry's base text in the chosen color, all locales
+  // bulk: wrap each selected entry's base text in the chosen color, all locales,
+  // fanning out to every key that shares the row's text
   const applyBulkColor = () => {
     const code = colorCodes[bulkColor as keyof typeof colorCodes];
     if (!code) return;
-    for (const k of checked) {
-      const cur = getColorizeEntry(kind, k);
-      const base = catLocales[kind][k] || {};
-      const next: Record<string, string> = { ...(cur.locales as any) };
-      for (const loc of Object.keys(base)) {
-        const text = (cur.locales as any)?.[loc] || base[loc] || "";
-        // re-color: drop a leading code then prepend the chosen one
-        next[loc] = code + text.replace(/^ÿc./, "");
+    for (const rep of checked) {
+      for (const k of keysOf(rep)) {
+        const cur = getColorizeEntry(kind, k);
+        const base = catLocales[kind][k] || {};
+        const next: Record<string, string> = { ...(cur.locales as any) };
+        for (const loc of Object.keys(base)) {
+          const text = (cur.locales as any)?.[loc] || base[loc] || "";
+          next[loc] = code + text.replace(/^ÿc./, "");
+        }
+        updateColorizeEntry(kind, k, { mode: "wysiwyg", locales: next as any });
       }
-      updateColorizeEntry(kind, k, { mode: "wysiwyg", locales: next as any });
     }
   };
 
@@ -464,7 +495,7 @@ const ModifiersTab: React.FC<ModifiersTabProps> = ({ isDarkTheme }) => {
                       label={labelOf(k)}
                       checked={checked.has(k)}
                       selected={selectedKey === k}
-                      dotColor={dominantColorHex(val, DEFAULT_COLOR_HEX[kind])}
+                      dotColor={dominantColorHex(val, defaultHexFor(kind, k))}
                       isDarkTheme={isDarkTheme}
                       onSelect={selectRow}
                       onToggle={toggle}
@@ -480,7 +511,11 @@ const ModifiersTab: React.FC<ModifiersTabProps> = ({ isDarkTheme }) => {
       {/* RIGHT */}
       <div className="flex-1 overflow-y-auto p-5">
         {selectedKey ? (
-          <Detail kind={kind} entryKey={selectedKey} isDarkTheme={isDarkTheme} />
+          <Detail
+            kind={kind}
+            entryKeys={keysOf(selectedKey)}
+            isDarkTheme={isDarkTheme}
+          />
         ) : (
           <div className="h-full flex items-center justify-center text-gray-500">
             {t("modifiersPage.selectEntry")}
