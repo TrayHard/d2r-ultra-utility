@@ -507,12 +507,16 @@ const AdvancedMainSpace: React.FC<MainSpaceProps> = ({ isDarkTheme }) => {
     const hasRunesChanges =
       JSON.stringify(baseline.runes) !==
       JSON.stringify((debounced as any).settings.runes);
+    const hasModifiersChanges =
+      JSON.stringify((baseline as any).modifiers || {}) !==
+      JSON.stringify((debounced as any).settings.modifiers || {});
 
     return {
       common: hasCommonChanges,
       items: hasItemsChanges,
       runes: hasRunesChanges,
       gems: hasGemsChanges,
+      modifiers: hasModifiersChanges,
     } as Record<string, boolean>;
   }, [baseline, debounced, activeProfileId]);
 

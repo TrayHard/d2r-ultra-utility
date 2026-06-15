@@ -474,7 +474,8 @@
   },
   "search": {
     "placeholder": "Szukaj run...",
-    "noResults": "Nie znaleziono run"
+    "noResults": "Nie znaleziono run",
+    "placeholderGeneric": "Szukaj..."
   },
   "sorting": {
     "name": "Nazwa",
@@ -1816,6 +1817,14 @@
     "selectAll": "Zaznacz wszystko",
     "selectedCount": "Zaznaczono: {{count}}",
     "applyColor": "Zastosuj kolor",
-    "disable": "Wyłącz"
+    "disable": "Wyłącz",
+    "mode": {
+      "auto": "Kolor",
+      "manual": "Własny tekst"
+    },
+    "enable": "Włącz kolorowanie",
+    "prefix": "Prefiks",
+    "suffix": "Sufiks",
+    "selectEntry": "Wybierz wpis do edycji"
   }
 }

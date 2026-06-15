@@ -131,15 +131,30 @@ export const useModifiersWorker = (
         byFile.set(file, map);
       }
 
+      // Pull the current per-locale strings off a row (for the manual editor).
+      const rowLocales = (row: LocaleRow) => {
+        const out: Record<string, string> = {};
+        for (const loc of SUPPORTED_LOCALES) out[loc] = (row as any)[loc] ?? "";
+        return out as any;
+      };
+
       if (updateColorizeEntry) {
         for (const m of catalog.modifiers) {
           const row = byFile.get(m.file)?.get(m.id);
-          if (row) updateColorizeEntry("modifiers", m.key, detectColoring(row.enUS || ""));
+          if (row)
+            updateColorizeEntry("modifiers", m.key, {
+              ...detectColoring(row.enUS || ""),
+              locales: rowLocales(row),
+            });
         }
         const skillMap = byFile.get(fileForSkills);
         for (const s of catalog.skills) {
           const row = skillMap?.get(s.id);
-          if (row) updateColorizeEntry("skills", s.key, detectColoring(row.enUS || ""));
+          if (row)
+            updateColorizeEntry("skills", s.key, {
+              ...detectColoring(row.enUS || ""),
+              locales: rowLocales(row),
+            });
         }
       }
 
@@ -188,7 +203,14 @@ export const useModifiersWorker = (
           if (!selectedLocales.includes(loc)) continue;
           const cur = (row as any)[loc];
           if (typeof cur !== "string") continue;
-          (row as any)[loc] = applyColoring(cur, entry);
+          if (entry.mode === "manual") {
+            // full custom text: only override locales the user actually filled
+            const v = entry.locales?.[loc as keyof typeof entry.locales];
+            if (typeof v === "string" && v.length > 0) (row as any)[loc] = v;
+          } else {
+            // auto: color+symbols on base (or restore base when disabled)
+            (row as any)[loc] = applyColoring(cur, entry);
+          }
         }
       };
 

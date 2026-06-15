@@ -250,7 +250,8 @@
   },
   "search": {
     "placeholder": "Поиск рун...",
-    "noResults": "Руны не найдены"
+    "noResults": "Руны не найдены",
+    "placeholderGeneric": "Поиск..."
   },
   "sorting": {
     "name": "Название",
@@ -1815,6 +1816,14 @@
     "selectAll": "Выбрать все",
     "selectedCount": "Выбрано: {{count}}",
     "applyColor": "Применить цвет",
-    "disable": "Отключить"
+    "disable": "Отключить",
+    "mode": {
+      "auto": "Цвет",
+      "manual": "Свой текст"
+    },
+    "enable": "Включить раскраску",
+    "prefix": "Префикс",
+    "suffix": "Суффикс",
+    "selectEntry": "Выберите запись для редактирования"
   }
 }

@@ -250,7 +250,8 @@
   },
   "search": {
     "placeholder": "Search runes...",
-    "noResults": "No runes found"
+    "noResults": "No runes found",
+    "placeholderGeneric": "Search..."
   },
   "sorting": {
     "name": "Name",
@@ -1815,6 +1816,14 @@
     "selectAll": "Select all",
     "selectedCount": "{{count}} selected",
     "applyColor": "Apply color",
-    "disable": "Disable"
+    "disable": "Disable",
+    "mode": {
+      "auto": "Color",
+      "manual": "Custom text"
+    },
+    "enable": "Enable coloring",
+    "prefix": "Prefix",
+    "suffix": "Suffix",
+    "selectEntry": "Select an entry to edit"
   }
 }

@@ -213,7 +213,8 @@
   },
   "search": {
     "placeholder": "Пошук рун...",
-    "noResults": "Руни не знайдено"
+    "noResults": "Руни не знайдено",
+    "placeholderGeneric": "Пошук..."
   },
   "sorting": {
     "name": "Назва",
@@ -1815,6 +1816,14 @@
     "selectAll": "Вибрати все",
     "selectedCount": "Вибрано: {{count}}",
     "applyColor": "Застосувати колір",
-    "disable": "Вимкнути"
+    "disable": "Вимкнути",
+    "mode": {
+      "auto": "Колір",
+      "manual": "Свій текст"
+    },
+    "enable": "Увімкнути розфарбування",
+    "prefix": "Префікс",
+    "suffix": "Суфікс",
+    "selectEntry": "Виберіть запис для редагування"
   }
 }
