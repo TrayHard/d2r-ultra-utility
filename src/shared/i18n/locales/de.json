@@ -609,7 +609,8 @@
       "modalTitle": "Massenbearbeitung von Gegenständen",
       "difficultyClassLabel": "Schwierigkeitsklasse",
       "apply": "Anwenden",
-      "cancel": "Abbrechen"
+      "cancel": "Abbrechen",
+      "selectedCount": "{{count}} ausgewählt"
     },
     "selectItem": "Wähle einen Gegenstand zum Bearbeiten",
     "attributes": "Attribute",

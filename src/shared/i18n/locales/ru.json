@@ -621,7 +621,8 @@
       "modalTitle": "Массовое редактирование предметов",
       "difficultyClassLabel": "Класс сложности",
       "apply": "Применить",
-      "cancel": "Отмена"
+      "cancel": "Отмена",
+      "selectedCount": "Выбрано: {{count}}"
     },
     "selectItem": "Выберите предмет для редактирования его настроек",
     "attributes": "Атрибуты",

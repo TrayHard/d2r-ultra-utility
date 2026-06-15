@@ -33,13 +33,19 @@ npm run build      # tsc + vite build (frontend bundle)
 npm run tbuild     # tauri build + postbuild-rename + generate-latest-json (full release artifacts)
 ```
 
-There is **no test runner and no linter** configured. `npm run tcheck` is the only correctness gate — always run it after changes that could affect types (this is an explicit project rule).
+There is **no test runner and no linter** configured. `npm run tcheck` (tsc) is the type gate — always run it after changes that could affect types.
+
+**`tcheck` and `vite build` are NOT sufficient verification for UI changes.** They do NOT catch: missing/typo'd i18n keys (`t("…")` is just a string lookup — a wrong key renders the raw key text on screen), runtime errors, or layout/visual bugs. Do not claim a UI change "works" from tcheck/build alone.
+
+- **Whenever you add or change a `t("…")` key OR edit any locale file, run `node scripts/check-i18n.cjs`** — it verifies every static `t()` key used in `src` exists in `en.json` and that all locale files match `en.json`. It exits non-zero on any gap. This is a required gate for UI/i18n work.
+- For visible UI changes, verify the actual running app (`npm run tdev`), not just a build. Note i18n is initialized **once** at startup — Vite HMR will hot-reload a `.tsx` (showing new UI) but NOT re-init i18n after you edit a locale JSON, so newly added keys appear unresolved until a full app reload/restart. Always reload before judging i18n.
 
 ### Locale tooling (run after editing `en.json`)
 
 ```bash
 node scripts/sync-locales.cjs           # fill missing keys in every locale from en.json (source of truth)
 node scripts/auto-translate-locales.cjs # auto-translate missing strings
+node scripts/check-i18n.cjs             # verify all t() keys exist + all locales match en.json (run before claiming done)
 ```
 
 ### Releases (Windows-only, partly manual)
