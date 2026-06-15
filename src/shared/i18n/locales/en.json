@@ -1827,6 +1827,9 @@
       "hide": "Hide"
     }
   },
+  "editor": {
+    "resetColor": "Reset color to default"
+  },
   "modifiersPage": {
     "tabs": {
       "modifiers": "Stats",

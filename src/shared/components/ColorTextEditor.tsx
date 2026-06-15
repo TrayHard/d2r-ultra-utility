@@ -1,5 +1,8 @@
 import React from "react";
 import { Select } from "antd";
+import { useTranslation } from "react-i18next";
+import Icon from "@mdi/react";
+import { mdiFormatColorMarkerCancel } from "@mdi/js";
 import ColorPallet from "./ColorPallet.tsx";
 import { colorCodes, colorCodeToHex, diabloSymbols } from "../constants";
 import { parseRuns } from "../utils/modifierUtils";
@@ -80,6 +83,7 @@ const ColorTextEditor: React.FC<ColorTextEditorProps> = ({
   isDarkTheme,
   adornment,
 }) => {
+  const { t } = useTranslation();
   const ref = React.useRef<HTMLDivElement>(null);
 
   // sync external value -> DOM (skip while the user is typing in this editor).
@@ -158,6 +162,15 @@ const ColorTextEditor: React.FC<ColorTextEditorProps> = ({
     serialize();
   };
 
+  // Strip every ÿc color code -> the whole line falls back to the default color.
+  const resetColor = () => {
+    const ed = ref.current;
+    if (!ed) return;
+    const plain = domToRaw(ed, defaultCode).replace(/ÿc./g, "");
+    onChange(plain);
+    ed.innerHTML = runsToHtml(plain, defaultHex);
+  };
+
   return (
     <div className="flex items-start gap-2">
       <div className="relative flex-1">
@@ -198,6 +211,19 @@ const ColorTextEditor: React.FC<ColorTextEditorProps> = ({
           style={{ width: 56 }}
           popupMatchSelectWidth={false}
         />
+        <button
+          type="button"
+          onClick={resetColor}
+          title={t("editor.resetColor")}
+          className={`flex items-center justify-center h-6 rounded border ${
+            isDarkTheme
+              ? "border-gray-600 bg-gray-700 hover:bg-gray-600 text-gray-200"
+              : "border-gray-300 bg-white hover:bg-gray-100 text-gray-700"
+          }`}
+          style={{ width: 56 }}
+        >
+          <Icon path={mdiFormatColorMarkerCancel} size={0.7} />
+        </button>
       </div>
     </div>
   );
