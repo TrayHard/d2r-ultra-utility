@@ -4,7 +4,12 @@ import { ensureWritable } from "../utils/fsUtils";
 import { useLogger } from "../utils/logger";
 import { STORAGE_KEYS } from "../constants";
 import { GAME_PATHS, SUPPORTED_LOCALES } from "../utils/runeUtils";
-import { catalog, SKILLS_FILE } from "../utils/modifierUtils";
+import {
+  catalog,
+  SKILLS_FILE,
+  parseRuns,
+  DEFAULT_COLOR_CODE,
+} from "../utils/modifierUtils";
 import type {
   ModifiersSettings,
   ColorizeEntrySettings,
@@ -187,14 +192,26 @@ export const useModifiersWorker = (
         modsByFile.set(m.file, list);
       }
 
-      const applyToRow = (row: LocaleRow, entry: ColorizeEntrySettings) => {
+      const applyToRow = (
+        row: LocaleRow,
+        entry: ColorizeEntrySettings,
+        defaultCode: string
+      ) => {
         for (const loc of SUPPORTED_LOCALES) {
           if (!selectedLocales.includes(loc)) continue;
           const cur = (row as any)[loc];
           if (typeof cur !== "string") continue;
           // write the user's full custom text; only override locales they filled
-          const v = entry.locales?.[loc as keyof typeof entry.locales];
-          if (typeof v === "string" && v.length > 0) (row as any)[loc] = v;
+          let v = entry.locales?.[loc as keyof typeof entry.locales];
+          if (typeof v !== "string" || v.length === 0) continue;
+          // WYSIWYG: if the line ends in a non-default color, append the default
+          // color code so the color doesn't bleed onto following lines in-game.
+          if (entry.mode !== "raw") {
+            const runs = parseRuns(v);
+            const lastCode = runs.length ? runs[runs.length - 1].code : "";
+            if (lastCode && lastCode !== defaultCode) v += defaultCode;
+          }
+          (row as any)[loc] = v;
         }
       };
 
@@ -210,13 +227,14 @@ export const useModifiersWorker = (
           for (const s of catalog.skills) {
             const entry = mods.skills[s.key];
             const row = byId.get(s.id);
-            if (entry && row) applyToRow(row, entry);
+            if (entry && row) applyToRow(row, entry, DEFAULT_COLOR_CODE.skills);
           }
         }
         for (const m of modsByFile.get(file) || []) {
           const entry = mods.modifiers[m.key];
           const row = byId.get(m.id);
-          if (entry && row) applyToRow(row, entry);
+          if (entry && row)
+            applyToRow(row, entry, DEFAULT_COLOR_CODE.modifiers);
         }
 
         await writeFileWithRetry(
