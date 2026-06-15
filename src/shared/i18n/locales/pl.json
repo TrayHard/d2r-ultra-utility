@@ -567,7 +567,8 @@
       "modalTitle": "Mass Edit Items",
       "difficultyClassLabel": "Difficulty Class",
       "apply": "Apply",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "selectedCount": "Zaznaczono: {{count}}"
     },
     "filters": {
       "reqLevelTooltip": "Podaj swój poziom, aby wyświetlać tylko odpowiednie przedmioty",

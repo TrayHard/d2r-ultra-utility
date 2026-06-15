@@ -621,7 +621,8 @@
       "modalTitle": "Mass Edit Items",
       "difficultyClassLabel": "Difficulty Class",
       "apply": "Apply",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "selectedCount": "{{count}} selected"
     },
     "selectItem": "Select an item to edit its settings",
     "attributes": "Attributes",

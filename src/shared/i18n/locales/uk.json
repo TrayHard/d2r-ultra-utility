@@ -594,7 +594,8 @@
       "modalTitle": "Масове редагування предметів",
       "difficultyClassLabel": "Клас складності",
       "apply": "Застосувати",
-      "cancel": "Скасувати"
+      "cancel": "Скасувати",
+      "selectedCount": "Вибрано: {{count}}"
     },
     "selectItem": "Оберіть предмет для редагування налаштувань",
     "attributes": "Атрибути",
