@@ -196,31 +196,30 @@ const ColorTextEditor: React.FC<ColorTextEditorProps> = ({
           </div>
         )}
       </div>
-      <div className="flex flex-row items-center gap-1">
+      <div className="flex flex-row items-stretch gap-1" style={{ minHeight: 38 }}>
         <ColorPallet
           isDarkTheme={isDarkTheme}
           value="white"
           onChange={applyColor}
-          size="sm"
+          size="md"
         />
         <Select
           value=""
           onChange={(v) => insertSymbol(String(v))}
           options={symbolOptions}
-          size="small"
-          style={{ width: 56 }}
+          style={{ width: 56, height: 38 }}
           popupMatchSelectWidth={false}
         />
         <button
           type="button"
           onClick={resetColor}
           title={t("editor.resetColor")}
-          className={`flex items-center justify-center h-6 rounded border ${
+          className={`flex items-center justify-center rounded border ${
             isDarkTheme
               ? "border-gray-600 bg-gray-700 hover:bg-gray-600 text-gray-200"
               : "border-gray-300 bg-white hover:bg-gray-100 text-gray-700"
           }`}
-          style={{ width: 56 }}
+          style={{ width: 56, height: 38 }}
         >
           <Icon path={mdiFormatColorMarkerCancel} size={0.7} />
         </button>
