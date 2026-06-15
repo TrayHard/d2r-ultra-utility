@@ -1812,7 +1812,9 @@
     },
     "groups": {
       "properties": "Свойства",
-      "baseStats": "Базовые статы"
+      "baseStats": "Базовые статы",
+      "classSkills": "Классы и навыки",
+      "chanceToCast": "Шанс наложить"
     },
     "selectAll": "Выбрать все",
     "selectedCount": "Выбрано: {{count}}",

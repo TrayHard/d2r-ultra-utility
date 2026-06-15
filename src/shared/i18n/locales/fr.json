@@ -1812,7 +1812,9 @@
     },
     "groups": {
       "properties": "Propriétés",
-      "baseStats": "Stats de base"
+      "baseStats": "Stats de base",
+      "classSkills": "Classes et compétences",
+      "chanceToCast": "Chance de lancer"
     },
     "selectAll": "Tout sélectionner",
     "selectedCount": "{{count}} sélectionnés",

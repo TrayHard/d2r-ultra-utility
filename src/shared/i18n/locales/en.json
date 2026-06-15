@@ -1812,6 +1812,8 @@
     },
     "groups": {
       "properties": "Properties",
+      "classSkills": "Classes & skills",
+      "chanceToCast": "Chance to cast",
       "baseStats": "Base stats"
     },
     "selectAll": "Select all",

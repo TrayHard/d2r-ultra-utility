@@ -4398,7 +4398,8 @@
         "jaJP": "装備条件を満たしていません",
         "ptBR": "Requisitos não atendidos",
         "zhCN": "未满足条件"
-      }
+      },
+      "defaultCode": "ÿc1"
     },
     {
       "key": "ModitemSMRIP",
@@ -4552,7 +4553,8 @@
         "jaJP": "未鑑定",
         "ptBR": "Não identificado",
         "zhCN": "未辨识"
-      }
+      },
+      "defaultCode": "ÿc1"
     }
   ],
   "skills": [

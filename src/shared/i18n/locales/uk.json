@@ -1812,7 +1812,9 @@
     },
     "groups": {
       "properties": "Властивості",
-      "baseStats": "Базові стати"
+      "baseStats": "Базові стати",
+      "classSkills": "Класи та навички",
+      "chanceToCast": "Шанс наслати"
     },
     "selectAll": "Вибрати все",
     "selectedCount": "Вибрано: {{count}}",

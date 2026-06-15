@@ -1812,6 +1812,8 @@
     },
     "groups": {
       "properties": "Eigenschaften",
+      "classSkills": "Klassen & Fertigkeiten",
+      "chanceToCast": "Zauberchance",
       "baseStats": "Basiswerte"
     },
     "selectAll": "Alle auswählen",

@@ -38,6 +38,15 @@ const path = require("path");
 const ROOT = path.resolve(__dirname, "..");
 const OUT_PATH = path.join(ROOT, "src", "pages", "modifiers", "catalog.json");
 
+// Base item-stat lines the engine renders in a non-default color (everything else
+// is white). Sampled in-game: the two "warning" lines are red. "Defense: (range)"
+// (ItemStats1hRange) is NOT here — it already carries its own ÿc codes in the
+// string. Color codes: ÿc1 = red.
+const DEFAULT_CODE_OVERRIDE = {
+  ItemStats1a: "ÿc1", // "Requirements not met" — red
+  ItemStats1b: "ÿc1", // "Unidentified" — red
+};
+
 // The 13 in-game locale columns (= SUPPORTED_LOCALES). Bundled per entry so the UI
 // can show/search/preview every language without first reading the game files.
 const GAME_LOCALES = [
@@ -201,14 +210,20 @@ function buildModifiers(modDir) {
       nativelyColored.push(key);
       continue;
     }
-    modifiers.push({
+    const entry = {
       key,
       id: hit.id,
       file: hit.file,
       enUS: hit.enUS,
       category: key.startsWith("ItemStats") ? "itemStats" : "property",
       locales: hit.locales,
-    });
+    };
+    // Per-entry default (uncolored) render color, when the engine draws this line
+    // in something other than the category default (affixes blue, base stats &
+    // skills white). Only the exceptions are listed; everything else falls back to
+    // the category default in modifierUtils.defaultCodeFor/defaultHexFor.
+    if (DEFAULT_CODE_OVERRIDE[key]) entry.defaultCode = DEFAULT_CODE_OVERRIDE[key];
+    modifiers.push(entry);
   }
   modifiers.sort((a, b) => a.enUS.localeCompare(b.enUS));
   return { modifiers, unresolved, nativelyColored };
