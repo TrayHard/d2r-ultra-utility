@@ -10,6 +10,7 @@ interface ColorTextEditorProps {
   defaultHex: string; // color shown for uncolored text
   defaultCode: string; // ÿc code used to reset to default mid-line
   isDarkTheme: boolean;
+  adornment?: React.ReactNode; // overlaid at the input's top-right (e.g. unsaved marker)
 }
 
 const DIABLO_FONT = "Diablo, monospace";
@@ -77,6 +78,7 @@ const ColorTextEditor: React.FC<ColorTextEditorProps> = ({
   defaultHex,
   defaultCode,
   isDarkTheme,
+  adornment,
 }) => {
   const ref = React.useRef<HTMLDivElement>(null);
 
@@ -158,19 +160,29 @@ const ColorTextEditor: React.FC<ColorTextEditorProps> = ({
 
   return (
     <div className="flex items-start gap-2">
-      <div
-        ref={ref}
-        contentEditable
-        suppressContentEditableWarning
-        onInput={serialize}
-        spellCheck={false}
-        className={`flex-1 min-h-[38px] px-3 py-2 text-sm rounded-lg border focus:ring-2 focus:ring-yellow-500 focus:outline-none ${
-          isDarkTheme
-            ? "bg-gray-700 border-gray-600"
-            : "bg-white border-gray-300"
-        }`}
-        style={{ fontFamily: DIABLO_FONT, whiteSpace: "pre-wrap", wordBreak: "break-word" }}
-      />
+      <div className="relative flex-1">
+        <div
+          ref={ref}
+          contentEditable
+          suppressContentEditableWarning
+          onInput={serialize}
+          spellCheck={false}
+          className={`w-full min-h-[38px] px-3 py-2 pr-7 text-sm rounded-lg border focus:ring-2 focus:ring-yellow-500 focus:outline-none ${
+            isDarkTheme
+              ? "bg-gray-700 border-gray-600"
+              : "bg-white border-gray-300"
+          }`}
+          style={{ fontFamily: DIABLO_FONT, whiteSpace: "pre-wrap", wordBreak: "break-word" }}
+        />
+        {adornment && (
+          <div
+            className="absolute pointer-events-none"
+            style={{ right: 8, top: "50%", transform: "translateY(-50%)" }}
+          >
+            {adornment}
+          </div>
+        )}
+      </div>
       <div className="flex flex-col gap-1">
         <ColorPallet
           isDarkTheme={isDarkTheme}

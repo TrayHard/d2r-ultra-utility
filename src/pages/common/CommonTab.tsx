@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSettings } from "../../app/providers/SettingsContext";
-import { localeOptions, colorCodeToHex } from "../../shared/constants";
+import { localeOptions, colorCodeToHex, colorCodes } from "../../shared/constants";
 import Collapse from "../../shared/components/Collapse";
 import { Tooltip } from "antd";
 import Switch from "../../shared/components/Switch";
@@ -12,7 +12,10 @@ import ColorHint from "../../shared/components/ColorHint";
 import SymbolsHint from "../../shared/components/SymbolsHint";
 import UnsavedAsterisk from "../../shared/components/UnsavedAsterisk";
 import DebouncedInput from "../../shared/components/DebouncedInput";
+import ColorTextEditor from "../../shared/components/ColorTextEditor.tsx";
+import EditorModeToggle from "../../shared/components/EditorModeToggle";
 import { useUnsavedChanges } from "../../shared/hooks/useUnsavedChanges";
+import { useEditorMode } from "../../shared/hooks/useEditorMode";
 import type {
   CommonItemSettings,
   PotionGroupSettings,
@@ -41,6 +44,8 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
   const [focusedLocale, setFocusedLocale] = useState<string | null>(null);
 
   // Локальные состояния для коллапсов
+  const [editorMode, setEditorMode] = useEditorMode("common");
+
   const [collapseStates, setCollapseStates] = useState({
     arrows: false,
     bolts: false,
@@ -62,6 +67,9 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
     essences: false,
     poisonPotions: false,
     firePotions: false,
+    bodyParts: false,
+    ancientStatues: false,
+    worldstoneShards: false,
     gold: false,
     keys: false,
   });
@@ -91,6 +99,9 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
   const essences = getPotionGroupSettings("essences");
   const poisonPotions = getPotionGroupSettings("poisonPotions");
   const firePotions = getPotionGroupSettings("firePotions");
+  const bodyParts = getPotionGroupSettings("bodyParts");
+  const ancientStatues = getPotionGroupSettings("ancientStatues");
+  const worldstoneShards = getPotionGroupSettings("worldstoneShards");
 
   // Проверяем что все настройки загружены
   if (
@@ -115,7 +126,10 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
     !uberKeys ||
     !essences ||
     !poisonPotions ||
-    !firePotions
+    !firePotions ||
+    !bodyParts ||
+    !ancientStatues ||
+    !worldstoneShards
   ) {
     return <div className="p-8 max-w-4xl mx-auto">Loading...</div>;
   }
@@ -271,7 +285,10 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
       | "identify"
       | "portal"
       | "uberKeys"
-      | "essences",
+      | "essences"
+      | "bodyParts"
+      | "ancientStatues"
+      | "worldstoneShards",
     level: number,
     locale: string,
     value: string
@@ -428,57 +445,92 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
                     <>{locale.label}:</>
                   )}
                 </span>
-                <div className="flex-1 flex items-center space-x-2 relative">
-                  <DebouncedInput
-                    type="text"
-                    value={
-                      itemSettings.locales[
-                        locale.value as keyof typeof itemSettings.locales
-                      ] ?? ""
-                    }
-                    onChange={(v) =>
-                      handleLocaleChange(itemType, locale.value, v)
-                    }
-                    onFocus={() => setFocusedLocale(locale.value)}
-                    onBlur={() => setFocusedLocale(null)}
-                    disabled={!itemSettings.enabled}
-                    placeholder={t(
-                      `runePage.controls.placeholders.${locale.value}`
-                    )}
-                    className={`
-                      flex-1 px-3 py-2 rounded-md border transition-colors
-                      ${
-                        isDarkTheme
-                          ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                          : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
+                {editorMode === "visual" ? (
+                  <div
+                    className={`flex-1 ${
+                      !itemSettings.enabled
+                        ? "opacity-50 pointer-events-none"
+                        : ""
+                    }`}
+                  >
+                    <ColorTextEditor
+                      value={
+                        itemSettings.locales[
+                          locale.value as keyof typeof itemSettings.locales
+                        ] ?? ""
                       }
-                      ${
-                        !itemSettings.enabled
-                          ? "opacity-50 cursor-not-allowed"
-                          : isDarkTheme
-                            ? "focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
-                            : "focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
+                      onChange={(v) =>
+                        handleLocaleChange(itemType, locale.value, v)
                       }
-                    `}
-                  />
-                  {base &&
-                    base.locales?.[
-                      locale.value as keyof typeof base.locales
-                    ] !==
-                      itemSettings.locales[
-                        locale.value as keyof typeof itemSettings.locales
-                      ] && (
-                      <UnsavedAsterisk
-                        size={0.55}
-                        className="absolute"
-                        style={{ right: 6, top: 6 }}
-                      />
-                    )}
-                  <div className="flex items-center gap-1">
-                    <SymbolsHint isDarkTheme={isDarkTheme} />
-                    <ColorHint isDarkTheme={isDarkTheme} />
+                      defaultHex="#ffffff"
+                      defaultCode={colorCodes.white}
+                      isDarkTheme={isDarkTheme}
+                      adornment={
+                        base &&
+                        base.locales?.[
+                          locale.value as keyof typeof base.locales
+                        ] !==
+                          itemSettings.locales[
+                            locale.value as keyof typeof itemSettings.locales
+                          ] ? (
+                          <UnsavedAsterisk size={0.55} />
+                        ) : null
+                      }
+                    />
                   </div>
-                </div>
+                ) : (
+                  <div className="flex-1 flex items-center space-x-2 relative">
+                    <DebouncedInput
+                      type="text"
+                      value={
+                        itemSettings.locales[
+                          locale.value as keyof typeof itemSettings.locales
+                        ] ?? ""
+                      }
+                      onChange={(v) =>
+                        handleLocaleChange(itemType, locale.value, v)
+                      }
+                      onFocus={() => setFocusedLocale(locale.value)}
+                      onBlur={() => setFocusedLocale(null)}
+                      disabled={!itemSettings.enabled}
+                      placeholder={t(
+                        `runePage.controls.placeholders.${locale.value}`
+                      )}
+                      className={`
+                        flex-1 px-3 py-2 rounded-md border transition-colors
+                        ${
+                          isDarkTheme
+                            ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                            : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
+                        }
+                        ${
+                          !itemSettings.enabled
+                            ? "opacity-50 cursor-not-allowed"
+                            : isDarkTheme
+                              ? "focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
+                              : "focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
+                        }
+                      `}
+                    />
+                    {base &&
+                      base.locales?.[
+                        locale.value as keyof typeof base.locales
+                      ] !==
+                        itemSettings.locales[
+                          locale.value as keyof typeof itemSettings.locales
+                        ] && (
+                        <UnsavedAsterisk
+                          size={0.55}
+                          className="absolute"
+                          style={{ right: 6, top: 6 }}
+                        />
+                      )}
+                    <div className="flex items-center gap-1">
+                      <SymbolsHint isDarkTheme={isDarkTheme} />
+                      <ColorHint isDarkTheme={isDarkTheme} />
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
         </div>
@@ -633,6 +685,7 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
         settings={potionSettings}
         selectedLocales={selectedLocales}
         isDarkTheme={isDarkTheme}
+        editorMode={editorMode}
         imagePaths={potionSettings.levels.map((_, index) =>
           getPotionImagePath(itemType, index)
         )}
@@ -653,7 +706,14 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
 
   // Универсальный блок с уровнями (идентификация, порталы, убер-ключи, эссенции)
   const renderMultiBlock = (
-    itemType: "identify" | "portal" | "uberKeys" | "essences",
+    itemType:
+      | "identify"
+      | "portal"
+      | "uberKeys"
+      | "essences"
+      | "bodyParts"
+      | "ancientStatues"
+      | "worldstoneShards",
     potionSettings: PotionGroupSettings,
     imagePaths: string[],
     headerIcon: string
@@ -664,6 +724,18 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
         ? potionSettings.activeTab
         : 0;
     const activeLevel = potionSettings.levels[activeIndex];
+    // Группы с поддержкой подсветки на земле (пишет glow в модель предмета)
+    const canHighlight =
+      itemType === "uberKeys" ||
+      itemType === "ancientStatues" ||
+      itemType === "worldstoneShards";
+    // Квест-предметы (органы/статуи/осколки) в игре по умолчанию оранжевые
+    const isQuestColored =
+      itemType === "bodyParts" ||
+      itemType === "ancientStatues" ||
+      itemType === "worldstoneShards";
+    const nameHex = isQuestColored ? "#ffa800" : "#ffffff";
+    const nameCode = isQuestColored ? colorCodes.orange : colorCodes.white;
     return (
       <MultipleLeveledLocales
         title={t(`commonPage.${itemType}`)}
@@ -671,6 +743,9 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
         settings={potionSettings}
         selectedLocales={selectedLocales}
         isDarkTheme={isDarkTheme}
+        editorMode={editorMode}
+        defaultColorHex={nameHex}
+        defaultColorCode={nameCode}
         imagePaths={imagePaths}
         headerIcon={headerIcon}
         isOpen={collapseStates[itemType]}
@@ -684,15 +759,15 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
         onLocaleChange={(level, locale, value) =>
           handlePotionLocaleChange(itemType, level, locale, value)
         }
-        showTopEnableSwitch={itemType === "uberKeys"}
-        showHighlightSwitch={itemType === "uberKeys"}
+        showTopEnableSwitch={canHighlight}
+        showHighlightSwitch={canHighlight}
         highlightEnabled={
-          itemType === "uberKeys" ? Boolean(activeLevel?.highlight) : undefined
+          canHighlight ? Boolean(activeLevel?.highlight) : undefined
         }
         onHighlightToggle={
-          itemType === "uberKeys"
+          canHighlight
             ? (enabled) =>
-                updatePotionLevelSettings("uberKeys", activeIndex, {
+                updatePotionLevelSettings(itemType, activeIndex, {
                   highlight: enabled,
                 })
             : undefined
@@ -709,18 +784,23 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
 
   return (
     <div className="p-8 max-w-4xl mx-auto">
-      {/* Поисковая строка */}
-      <div className="mb-6">
+      {/* Поисковая строка + переключатель режима редактора */}
+      <div className="mb-6 flex items-center gap-3">
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder={t("commonPage.searchPlaceholder") || "Search blocks..."}
-          className={`w-full px-3 py-2 rounded-md border text-sm ${
+          className={`flex-1 px-3 py-2 rounded-md border text-sm ${
             isDarkTheme
               ? "bg-gray-800 border-gray-600 text-white placeholder-gray-400"
               : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
           }`}
+        />
+        <EditorModeToggle
+          mode={editorMode}
+          onChange={setEditorMode}
+          isDarkTheme={isDarkTheme}
         />
       </div>
       <div className="space-y-6">
@@ -861,6 +941,49 @@ const CommonTab: React.FC<CommonTabProps> = ({ isDarkTheme }) => {
               "/img/common/token.png",
             ],
             "/img/common/token.png"
+          )}
+
+        {/* Части тел мини-уберов */}
+        {shouldShow(t("commonPage.bodyParts")) &&
+          renderMultiBlock(
+            "bodyParts",
+            bodyParts,
+            [
+              "/img/common/misc/body_part/horn.png",
+              "/img/common/misc/body_part/eye.png",
+              "/img/common/misc/body_part/brain.png",
+            ],
+            "/img/common/misc/body_part/horn.png"
+          )}
+
+        {/* Статуи древних */}
+        {shouldShow(t("commonPage.ancientStatues")) &&
+          renderMultiBlock(
+            "ancientStatues",
+            ancientStatues,
+            [
+              "/img/common/misc/shard/talics_anguish.png",
+              "/img/common/misc/shard/korlics_pain.png",
+              "/img/common/misc/shard/madawcs_ire.png",
+              "/img/common/misc/shard/bulkathos_nightmare.png",
+              "/img/common/misc/shard/worusks_end.png",
+            ],
+            "/img/common/misc/shard/talics_anguish.png"
+          )}
+
+        {/* Мировые осколки */}
+        {shouldShow(t("commonPage.worldstoneShards")) &&
+          renderMultiBlock(
+            "worldstoneShards",
+            worldstoneShards,
+            [
+              "/img/common/misc/shard/mote_of_anguish.png",
+              "/img/common/misc/shard/mote_of_destruction.png",
+              "/img/common/misc/shard/mote_of_hatred.png",
+              "/img/common/misc/shard/mote_of_pain.png",
+              "/img/common/misc/shard/mote_of_terror.png",
+            ],
+            "/img/common/misc/shard/mote_of_anguish.png"
           )}
       </div>
     </div>

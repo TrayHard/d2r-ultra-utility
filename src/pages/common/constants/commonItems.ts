@@ -43,6 +43,22 @@ export enum ECommonItem {
   "pFire1" = "pFire1", // Fulminating Potion
   "pFire2" = "pFire2", // Exploding Potion
   "pFire3" = "pFire3", // Oil Potion
+  // Части тел мини-уберов (item-names.json)
+  "diabloHorn" = "diabloHorn",
+  "baalEye" = "baalEye",
+  "mephistoBrain" = "mephistoBrain",
+  // Статуи древних, ua1-5 (item-names.json)
+  "statueTalic" = "statueTalic",
+  "statueKorlic" = "statueKorlic",
+  "statueMadawc" = "statueMadawc",
+  "statueBulkathos" = "statueBulkathos",
+  "statueWorusk" = "statueWorusk",
+  // Мировые осколки, xa1-5 (item-modifiers.json)
+  "shardWestern" = "shardWestern",
+  "shardEastern" = "shardEastern",
+  "shardSouthern" = "shardSouthern",
+  "shardDeep" = "shardDeep",
+  "shardNorthern" = "shardNorthern",
 }
 
 // Маппинг ID к предметам
@@ -90,6 +106,19 @@ export const idToCommonItemMapper: Record<number, ECommonItem> = {
   2183: ECommonItem.pFire1,
   2185: ECommonItem.pFire2,
   2187: ECommonItem.pFire3,
+  11149: ECommonItem.diabloHorn,
+  11150: ECommonItem.baalEye,
+  11151: ECommonItem.mephistoBrain,
+  27609: ECommonItem.statueTalic,
+  27610: ECommonItem.statueKorlic,
+  27611: ECommonItem.statueMadawc,
+  27612: ECommonItem.statueBulkathos,
+  27613: ECommonItem.statueWorusk,
+  27579: ECommonItem.shardWestern,
+  27580: ECommonItem.shardEastern,
+  27581: ECommonItem.shardSouthern,
+  27582: ECommonItem.shardDeep,
+  27583: ECommonItem.shardNorthern,
 };
 
 // Обратный маппинг для записи
@@ -137,6 +166,19 @@ export const commonItemToIdMapper: Record<ECommonItem, number> = {
   [ECommonItem.pFire1]: 2183,
   [ECommonItem.pFire2]: 2185,
   [ECommonItem.pFire3]: 2187,
+  [ECommonItem.diabloHorn]: 11149,
+  [ECommonItem.baalEye]: 11150,
+  [ECommonItem.mephistoBrain]: 11151,
+  [ECommonItem.statueTalic]: 27609,
+  [ECommonItem.statueKorlic]: 27610,
+  [ECommonItem.statueMadawc]: 27611,
+  [ECommonItem.statueBulkathos]: 27612,
+  [ECommonItem.statueWorusk]: 27613,
+  [ECommonItem.shardWestern]: 27579,
+  [ECommonItem.shardEastern]: 27580,
+  [ECommonItem.shardSouthern]: 27581,
+  [ECommonItem.shardDeep]: 27582,
+  [ECommonItem.shardNorthern]: 27583,
 };
 
 // Группировка предметов по типам
@@ -191,6 +233,25 @@ export const commonItemGroups = {
     ECommonItem.pPoison3,
   ],
   firePotions: [ECommonItem.pFire1, ECommonItem.pFire2, ECommonItem.pFire3],
+  bodyParts: [
+    ECommonItem.diabloHorn,
+    ECommonItem.baalEye,
+    ECommonItem.mephistoBrain,
+  ],
+  ancientStatues: [
+    ECommonItem.statueTalic,
+    ECommonItem.statueKorlic,
+    ECommonItem.statueMadawc,
+    ECommonItem.statueBulkathos,
+    ECommonItem.statueWorusk,
+  ],
+  worldstoneShards: [
+    ECommonItem.shardWestern,
+    ECommonItem.shardEastern,
+    ECommonItem.shardSouthern,
+    ECommonItem.shardDeep,
+    ECommonItem.shardNorthern,
+  ],
 };
 
 // Маппинг для получения ECommonItem из настроек
@@ -217,6 +278,9 @@ export const settingsKeyToCommonItemMapper = {
   essences: commonItemGroups.essences,
   poisonPotions: commonItemGroups.poisonPotions,
   firePotions: commonItemGroups.firePotions,
+  bodyParts: commonItemGroups.bodyParts,
+  ancientStatues: commonItemGroups.ancientStatues,
+  worldstoneShards: commonItemGroups.worldstoneShards,
 };
 
 // В каком файле хранится локализация конкретного предмета
@@ -267,4 +331,17 @@ export const commonItemFileMapper: Record<
   [ECommonItem.pFire1]: "item-names",
   [ECommonItem.pFire2]: "item-names",
   [ECommonItem.pFire3]: "item-names",
+  [ECommonItem.diabloHorn]: "item-names",
+  [ECommonItem.baalEye]: "item-names",
+  [ECommonItem.mephistoBrain]: "item-names",
+  [ECommonItem.statueTalic]: "item-names",
+  [ECommonItem.statueKorlic]: "item-names",
+  [ECommonItem.statueMadawc]: "item-names",
+  [ECommonItem.statueBulkathos]: "item-names",
+  [ECommonItem.statueWorusk]: "item-names",
+  [ECommonItem.shardWestern]: "item-modifiers",
+  [ECommonItem.shardEastern]: "item-modifiers",
+  [ECommonItem.shardSouthern]: "item-modifiers",
+  [ECommonItem.shardDeep]: "item-modifiers",
+  [ECommonItem.shardNorthern]: "item-modifiers",
 };

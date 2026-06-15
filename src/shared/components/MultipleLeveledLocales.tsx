@@ -1,13 +1,15 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Tooltip } from "antd";
-import { localeOptions, colorCodeToHex } from "../constants";
+import { localeOptions, colorCodeToHex, colorCodes } from "../constants";
 import Collapse from "./Collapse";
 import Switch from "./Switch";
 import ColorHint from "./ColorHint";
 import SymbolsHint from "./SymbolsHint";
 import UnsavedAsterisk from "./UnsavedAsterisk";
 import DebouncedInput from "./DebouncedInput";
+import ColorTextEditor from "./ColorTextEditor.tsx";
+import type { EditorMode } from "../hooks/useEditorMode";
 import { useUnsavedChanges } from "../hooks/useUnsavedChanges";
 import Icon from "@mdi/react";
 import {
@@ -46,6 +48,12 @@ interface MultipleLeveledLocalesProps {
   getBaselineGroup?: (root: AppSettings) => PotionGroupSettings;
   // Переопределение активного уровня (UI-состояние, не из профиля)
   activeTabIndexProp?: number;
+  // Режим редактора имён: "visual" (WYSIWYG) или "raw" (текст с ÿc-кодами)
+  editorMode?: EditorMode;
+  // Цвет, которым предмет рисуется в игре БЕЗ кодов (для превью и WYSIWYG-сброса).
+  // По умолчанию белый; для квест-предметов (органы/статуи/осколки) — оранжевый.
+  defaultColorHex?: string;
+  defaultColorCode?: string;
 }
 
 const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
@@ -69,6 +77,9 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
   onHighlightToggle,
   getBaselineGroup,
   activeTabIndexProp,
+  editorMode = "raw",
+  defaultColorHex = "#ffffff",
+  defaultColorCode = colorCodes.white,
 }) => {
   const { t } = useTranslation();
   const { hasChanged, baseline } = useUnsavedChanges();
@@ -126,57 +137,90 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
                   <>{locale.label}:</>
                 )}
               </span>
-              <div className="flex-1 flex items-center space-x-2">
-                <div className="relative flex-1">
-                  <DebouncedInput
-                    type="text"
+              {editorMode === "visual" ? (
+                <div
+                  className={`flex-1 ${
+                    !hideToggle && !levelSettings.enabled
+                      ? "opacity-50 pointer-events-none"
+                      : ""
+                  }`}
+                >
+                  <ColorTextEditor
                     value={
                       levelSettings.locales[
                         locale.value as keyof typeof levelSettings.locales
                       ] ?? ""
                     }
                     onChange={(v) => onLocaleChange(level, locale.value, v)}
-                    onFocus={() => setFocusedLocale(locale.value)}
-                    onBlur={() => setFocusedLocale(null)}
-                    disabled={!hideToggle && !levelSettings.enabled}
-                    placeholder={t(
-                      `runePage.controls.placeholders.${locale.value}`
-                    )}
-                    className={`
-                      w-full pl-3 pr-8 py-2 rounded-md border transition-colors
-                      ${
-                        isDarkTheme
-                          ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                          : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
-                      }
-                      ${
-                        !hideToggle && !levelSettings.enabled
-                          ? "opacity-50 cursor-not-allowed"
-                          : isDarkTheme
-                            ? "focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
-                            : "focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
-                      }
-                    `}
+                    defaultHex={defaultColorHex}
+                    defaultCode={defaultColorCode}
+                    isDarkTheme={isDarkTheme}
+                    adornment={
+                      getBaselineGroup &&
+                      hasChanged(
+                        (root) =>
+                          getBaselineGroup(root).levels[level]?.locales[
+                            locale.value as keyof typeof levelSettings.locales
+                          ]
+                      ) ? (
+                        <UnsavedAsterisk size={0.65} />
+                      ) : null
+                    }
                   />
-                  {getBaselineGroup &&
-                    hasChanged(
-                      (root) =>
-                        getBaselineGroup(root).levels[level]?.locales[
+                </div>
+              ) : (
+                <div className="flex-1 flex items-center space-x-2">
+                  <div className="relative flex-1">
+                    <DebouncedInput
+                      type="text"
+                      value={
+                        levelSettings.locales[
                           locale.value as keyof typeof levelSettings.locales
-                        ]
-                    ) && (
-                      <UnsavedAsterisk
-                        size={0.65}
-                        className="absolute"
-                        style={{ right: 12, top: 12 }}
-                      />
-                    )}
+                        ] ?? ""
+                      }
+                      onChange={(v) => onLocaleChange(level, locale.value, v)}
+                      onFocus={() => setFocusedLocale(locale.value)}
+                      onBlur={() => setFocusedLocale(null)}
+                      disabled={!hideToggle && !levelSettings.enabled}
+                      placeholder={t(
+                        `runePage.controls.placeholders.${locale.value}`
+                      )}
+                      className={`
+                        w-full pl-3 pr-8 py-2 rounded-md border transition-colors
+                        ${
+                          isDarkTheme
+                            ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                            : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
+                        }
+                        ${
+                          !hideToggle && !levelSettings.enabled
+                            ? "opacity-50 cursor-not-allowed"
+                            : isDarkTheme
+                              ? "focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
+                              : "focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
+                        }
+                      `}
+                    />
+                    {getBaselineGroup &&
+                      hasChanged(
+                        (root) =>
+                          getBaselineGroup(root).levels[level]?.locales[
+                            locale.value as keyof typeof levelSettings.locales
+                          ]
+                      ) && (
+                        <UnsavedAsterisk
+                          size={0.65}
+                          className="absolute"
+                          style={{ right: 12, top: 12 }}
+                        />
+                      )}
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <SymbolsHint isDarkTheme={isDarkTheme} />
+                    <ColorHint isDarkTheme={isDarkTheme} />
+                  </div>
                 </div>
-                <div className="flex items-center gap-1">
-                  <SymbolsHint isDarkTheme={isDarkTheme} />
-                  <ColorHint isDarkTheme={isDarkTheme} />
-                </div>
-              </div>
+              )}
             </div>
           ))}
       </div>
@@ -188,7 +232,8 @@ const MultipleLeveledLocales: React.FC<MultipleLeveledLocalesProps> = ({
     if (!text) return null;
     const tokenRegex = /(ÿc[0-9a-zA-Z@:;MNOPQRSTAU])/g;
     const parts = text.split(tokenRegex);
-    let currentColor: string | null = null;
+    // Текст без кода рисуется дефолтным цветом предмета (белый/оранжевый), как в игре.
+    let currentColor: string | null = defaultColorHex;
     const nodes: React.ReactNode[] = [];
     for (let i = 0; i < parts.length; i++) {
       const part = parts[i];

@@ -107,6 +107,28 @@
     },
     "tooltips": {
       "highlightOnGround": "Surligner au sol"
+    },
+    "bodyParts": "Parties de corps uber",
+    "ancientStatues": "Statues des Anciens",
+    "worldstoneShards": "Fragments de la pierre-monde",
+    "bodyPartsLevels": {
+      "level1": "Corne de Diablo",
+      "level2": "Œil de Baal",
+      "level3": "Cerveau de Méphisto"
+    },
+    "ancientStatuesLevels": {
+      "level1": "Angoisse de Talic",
+      "level2": "Douleur de Korlic",
+      "level3": "Colère de Madawc",
+      "level4": "Cauchemar de Bul-Kathos",
+      "level5": "Trépas de Worusk"
+    },
+    "worldstoneShardsLevels": {
+      "level1": "Fragment occidental de la pierre-monde",
+      "level2": "Fragment oriental de la pierre-monde",
+      "level3": "Fragment méridional de la pierre-monde",
+      "level4": "Fragment abyssal de la pierre-monde",
+      "level5": "Fragment septentrional de la pierre-monde"
     }
   },
   "gemsPage": {
@@ -1807,7 +1829,7 @@
   "runCounter": "Run Counter",
   "modifiersPage": {
     "tabs": {
-      "modifiers": "Modificateurs",
+      "modifiers": "Statistiques",
       "skills": "Compétences"
     },
     "groups": {
