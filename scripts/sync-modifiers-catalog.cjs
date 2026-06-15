@@ -38,6 +38,18 @@ const path = require("path");
 const ROOT = path.resolve(__dirname, "..");
 const OUT_PATH = path.join(ROOT, "src", "pages", "modifiers", "catalog.json");
 
+// The 13 in-game locale columns (= SUPPORTED_LOCALES). Bundled per entry so the UI
+// can show/search/preview every language without first reading the game files.
+const GAME_LOCALES = [
+  "enUS", "ruRU", "zhTW", "deDE", "esES", "frFR", "itIT",
+  "koKR", "plPL", "esMX", "jaJP", "ptBR", "zhCN",
+];
+const pickLocales = (row) => {
+  const out = {};
+  for (const l of GAME_LOCALES) out[l] = row[l] || "";
+  return out;
+};
+
 const CLASS_NAMES = {
   ama: "Amazon",
   sor: "Sorceress",
@@ -152,7 +164,12 @@ function buildModifiers(modDir) {
     for (const e of data) {
       if (e.Key == null) continue;
       if (!byKey.has(e.Key))
-        byKey.set(e.Key, { id: e.id, enUS: e.enUS || "", file });
+        byKey.set(e.Key, {
+          id: e.id,
+          enUS: e.enUS || "",
+          file,
+          locales: pickLocales(e),
+        });
     }
     // also collect the base item-display lines (ItemStats*) from item-modifiers
     if (file === "item-modifiers.json") {
@@ -184,6 +201,7 @@ function buildModifiers(modDir) {
       file: hit.file,
       enUS: hit.enUS,
       category: key.startsWith("ItemStats") ? "itemStats" : "property",
+      locales: hit.locales,
     });
   }
   modifiers.sort((a, b) => a.enUS.localeCompare(b.enUS));
@@ -247,6 +265,7 @@ function buildSkills(modDir) {
       enUS: (entry.enUS || "").trim(),
       charClass: cc,
       className: CLASS_NAMES[cc] || cc,
+      locales: pickLocales(entry),
     });
   });
   if (missed.length)
