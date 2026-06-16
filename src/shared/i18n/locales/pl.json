@@ -1877,7 +1877,8 @@
       "add": "Nowy cel",
       "rename": "Zmień nazwę",
       "delete": "Usuń",
-      "deleteConfirm": "Usunąć ten cel?"
+      "deleteConfirm": "Usunąć ten cel?",
+      "lockedHint": "Zakończ sesję, aby zmienić cel"
     },
     "controls": {
       "start": "Start",

@@ -10,6 +10,7 @@ import { isTauri } from "../../shared/runcounter/hotkeys";
 import MainSpaceToolbar from "../../widgets/Toolbar/MainSpaceToolbar";
 import AppSettingsPage from "../../pages/settings/AppSettingsPage";
 import RunCounterPage from "../../pages/runcounter/RunCounterPage";
+import DisplayToggleButton from "../../pages/runcounter/components/DisplayToggleButton";
 import "../../shared/assets/antd-theme.css";
 
 interface RunCounterWorkspaceProps {
@@ -76,7 +77,7 @@ const RunCounterWorkspaceContent: React.FC<RunCounterWorkspaceProps> = ({
                 />
 
                 <div className="flex-1 overflow-auto">
-                  <div className="max-w-[600px] px-4 py-6 mx-auto">
+                  <div className="relative max-w-[600px] px-4 py-6 mx-auto flex items-center justify-center">
                     <h1
                       className={`text-4xl font-bold text-center diablo-font ${
                         isDarkTheme ? "text-white" : "text-gray-900"
@@ -84,6 +85,9 @@ const RunCounterWorkspaceContent: React.FC<RunCounterWorkspaceProps> = ({
                     >
                       {t("runCounter")}
                     </h1>
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                      <DisplayToggleButton />
+                    </div>
                   </div>
                   <RunCounterPage isDarkTheme={isDarkTheme} />
                 </div>

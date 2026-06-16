@@ -1833,7 +1833,8 @@
       "add": "New target",
       "rename": "Rename",
       "delete": "Delete",
-      "deleteConfirm": "Delete this target?"
+      "deleteConfirm": "Delete this target?",
+      "lockedHint": "Finish the session to change the target"
     },
     "controls": {
       "start": "Start",
