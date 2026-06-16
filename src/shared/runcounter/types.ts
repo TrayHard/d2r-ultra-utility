@@ -66,6 +66,10 @@ export interface ElementStyle {
 export interface DisplayConfig {
   width: number;
   height: number;
+  /** panel background colour (CSS color string, may include alpha) */
+  bgColor: string;
+  /** panel border colour (CSS color string, may include alpha) */
+  borderColor: string;
   /** show the top row (target name) */
   showHeader: boolean;
   /** show the run number under the timer */

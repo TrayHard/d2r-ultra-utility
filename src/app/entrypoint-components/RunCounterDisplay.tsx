@@ -181,7 +181,8 @@ const RunCounterDisplay: React.FC = () => {
     <div className="relative w-screen h-screen p-2" style={{ background: "transparent" }}>
       <div
         data-tauri-drag-region
-        className="relative h-full w-full rounded-xl border border-yellow-500/40 bg-gray-900/90 text-gray-100 px-4 py-3 flex flex-col overflow-hidden cursor-move select-none shadow-2xl"
+        className="relative h-full w-full rounded-xl border text-gray-100 px-4 py-3 flex flex-col overflow-hidden cursor-move select-none shadow-2xl"
+        style={{ backgroundColor: cfg.bgColor, borderColor: cfg.borderColor }}
       >
         <button
           className="absolute top-1.5 right-1.5 bg-transparent border-0 p-0 text-gray-500 hover:text-white z-10"
