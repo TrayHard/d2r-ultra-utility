@@ -1908,7 +1908,25 @@
       "obsHint": "Always-on-top stats panel — pin it over the game or capture it in OBS via Window Capture",
       "title": "Display",
       "previewHint": "Toggle what shows; drag the display's corner to resize it like a window",
-      "resizeHint": "Drag to resize"
+      "resizeHint": "Drag to resize",
+      "style": {
+        "title": "Text style",
+        "bold": "Bold",
+        "italic": "Italic",
+        "elements": {
+          "timer": "Timer",
+          "statValue": "Stat values",
+          "statLabel": "Stat labels",
+          "runNumber": "Run number",
+          "target": "Target"
+        },
+        "fonts": {
+          "default": "Default",
+          "sans": "Sans",
+          "mono": "Mono",
+          "diablo": "Diablo"
+        }
+      }
     },
     "overlay": {
       "title": "Add loot",

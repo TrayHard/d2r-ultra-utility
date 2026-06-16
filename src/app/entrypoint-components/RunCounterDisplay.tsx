@@ -6,6 +6,8 @@ import Icon from "@mdi/react";
 import { mdiClose } from "@mdi/js";
 import { RC_EVENTS, DisplayStatePayload } from "../../shared/runcounter/constants";
 import { isTauri } from "../../shared/runcounter/hotkeys";
+import { useHelperLanguageSync } from "../../shared/runcounter/useHelperLanguageSync";
+import { elementCss } from "../../shared/runcounter/displayStyle";
 import {
   findCurrentRun,
   runElapsedMs,
@@ -25,6 +27,7 @@ const MAIN_WINDOW_LABEL = "main";
  */
 const RunCounterDisplay: React.FC = () => {
   const { t } = useTranslation();
+  useHelperLanguageSync();
   const [data, setData] = useState<RunCounterData | null>(null);
   const [now, setNow] = useState<number>(() => Date.now());
   const [visible, setVisible] = useState(false);
@@ -154,6 +157,9 @@ const RunCounterDisplay: React.FC = () => {
     data?.targets.find((tg) => tg.id === data?.activeTargetId)?.name ??
     "—";
   const elapsed = currentRun ? runElapsedMs(currentRun, now) : 0;
+  // Default timer colour reflects the state; a custom timer colour (if set) overrides it.
+  const timerColor =
+    currentRun?.status === "paused" ? "#facc15" : isRunning ? "#4ade80" : "#e5e7eb";
 
   const statItems = [
     cfg.showRuns && { label: t("runCounterPage.stats.runs"), value: `${stats.completedCount}` },
@@ -187,28 +193,21 @@ const RunCounterDisplay: React.FC = () => {
 
         {cfg.showHeader && (
           <div className="flex items-center justify-center pointer-events-none shrink-0">
-            <span className="font-semibold truncate">{targetName}</span>
+            <span className="truncate" style={elementCss(cfg.styles.target)}>
+              {targetName}
+            </span>
           </div>
         )}
 
         <div className="flex-1 min-h-0 flex flex-col items-center justify-center overflow-hidden pointer-events-none">
-          <span
-            className={`font-mono tabular-nums text-4xl font-bold leading-none ${
-              currentRun?.status === "paused"
-                ? "text-yellow-400"
-                : isRunning
-                  ? "text-green-400"
-                  : "text-gray-200"
-            }`}
-          >
+          <span className="tabular-nums" style={elementCss(cfg.styles.timer, timerColor)}>
             {formatDuration(elapsed)}
           </span>
           {/* Always reserve the run-number line so starting a session doesn't shift the timer. */}
           {cfg.showRunNumber && (
             <span
-              className={`text-sm text-gray-400 font-mono mt-1 leading-none ${
-                currentRun ? "" : "invisible"
-              }`}
+              className={`tabular-nums mt-1 ${currentRun ? "" : "invisible"}`}
+              style={elementCss(cfg.styles.runNumber, "#9ca3af")}
             >
               {currentRun ? `#${currentRun.index}` : " "}
             </span>
@@ -218,7 +217,13 @@ const RunCounterDisplay: React.FC = () => {
         {statItems.length > 0 && (
           <div className="flex flex-wrap justify-center gap-x-5 gap-y-1 text-center pointer-events-none shrink-0">
             {statItems.map((s) => (
-              <DisplayStat key={s.label} label={s.label} value={s.value} />
+              <DisplayStat
+                key={s.label}
+                label={s.label}
+                value={s.value}
+                valueStyle={elementCss(cfg.styles.statValue, "#f3f4f6")}
+                labelStyle={elementCss(cfg.styles.statLabel, "#6b7280")}
+              />
             ))}
           </div>
         )}
@@ -250,10 +255,19 @@ const RunCounterDisplay: React.FC = () => {
   );
 };
 
-const DisplayStat: React.FC<{ label: string; value: string }> = ({ label, value }) => (
+const DisplayStat: React.FC<{
+  label: string;
+  value: string;
+  valueStyle: React.CSSProperties;
+  labelStyle: React.CSSProperties;
+}> = ({ label, value, valueStyle, labelStyle }) => (
   <div>
-    <div className="text-[10px] uppercase tracking-wide text-gray-500">{label}</div>
-    <div className="text-sm font-semibold font-mono tabular-nums text-gray-100">{value}</div>
+    <div className="uppercase tracking-wide" style={labelStyle}>
+      {label}
+    </div>
+    <div className="tabular-nums" style={valueStyle}>
+      {value}
+    </div>
   </div>
 );
 

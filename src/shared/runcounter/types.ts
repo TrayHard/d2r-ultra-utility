@@ -44,11 +44,29 @@ export interface RunTarget {
   createdAt: number;
 }
 
+/** The styleable text elements on the display. */
+export type DisplayElement =
+  | "timer"
+  | "statValue"
+  | "statLabel"
+  | "runNumber"
+  | "target";
+
+/** Per-element typography. color/fontFamily empty string = use the default. */
+export interface ElementStyle {
+  bold: boolean;
+  italic: boolean;
+  fontSize: number;
+  color: string;
+  /** "" (default) | "sans" | "mono" | "diablo" */
+  fontFamily: string;
+}
+
 /** Per-user configuration of the always-on-top broadcast/display window. */
 export interface DisplayConfig {
   width: number;
   height: number;
-  /** show the top row (status dot + target name) */
+  /** show the top row (target name) */
   showHeader: boolean;
   /** show the run number under the timer */
   showRunNumber: boolean;
@@ -56,6 +74,7 @@ export interface DisplayConfig {
   showAvg: boolean;
   showBest: boolean;
   showPerHour: boolean;
+  styles: Record<DisplayElement, ElementStyle>;
 }
 
 export type HotkeyAction =

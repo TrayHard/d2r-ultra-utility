@@ -2,7 +2,14 @@
 // No React, no I/O — every function takes the current data + an explicit `now`
 // (epoch ms) and returns new data, so behaviour is deterministic and reviewable.
 
-import { RunCounterData, RunRecord, RunSession, RunStatus, DisplayConfig } from "./types";
+import {
+  RunCounterData,
+  RunRecord,
+  RunSession,
+  RunStatus,
+  DisplayConfig,
+  DisplayElement,
+} from "./types";
 import { DEFAULT_HOTKEYS } from "./constants";
 
 /** Hard cap on archived sessions kept in localStorage, to avoid hitting the quota. */
@@ -18,6 +25,25 @@ export const DEFAULT_DISPLAY_CONFIG: DisplayConfig = {
   showAvg: true,
   showBest: true,
   showPerHour: true,
+  styles: {
+    timer: { bold: true, italic: false, fontSize: 36, color: "", fontFamily: "mono" },
+    statValue: { bold: true, italic: false, fontSize: 14, color: "", fontFamily: "mono" },
+    statLabel: { bold: false, italic: false, fontSize: 10, color: "", fontFamily: "" },
+    runNumber: { bold: false, italic: false, fontSize: 14, color: "", fontFamily: "mono" },
+    target: { bold: true, italic: false, fontSize: 16, color: "", fontFamily: "" },
+  },
+};
+
+/** Merge a (possibly partial / older) saved display config onto the defaults. */
+export const withDisplayDefaults = (partial?: Partial<DisplayConfig>): DisplayConfig => {
+  const base = DEFAULT_DISPLAY_CONFIG;
+  const styles = { ...base.styles };
+  if (partial?.styles) {
+    for (const key of Object.keys(base.styles) as DisplayElement[]) {
+      styles[key] = { ...base.styles[key], ...(partial.styles[key] ?? {}) };
+    }
+  }
+  return { ...base, ...partial, styles };
 };
 
 export const uid = (): string =>

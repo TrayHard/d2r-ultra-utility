@@ -8,6 +8,7 @@ import React, {
   useState,
 } from "react";
 import { listen, emitTo } from "@tauri-apps/api/event";
+import i18n from "../i18n";
 import { STORAGE_KEYS } from "../constants";
 import {
   RunCounterData,
@@ -21,7 +22,9 @@ import {
   StartSessionPayload,
   RC_EVENTS,
   DEFAULT_HOTKEYS,
+  OVERLAY_WINDOW_LABEL,
   DISPLAY_WINDOW_LABEL,
+  SESSION_WINDOW_LABEL,
 } from "./constants";
 import { isTauri } from "./hotkeys";
 import {
@@ -33,7 +36,7 @@ import {
 } from "./overlay";
 import {
   defaultData,
-  DEFAULT_DISPLAY_CONFIG,
+  withDisplayDefaults,
   findCurrentRun,
   reduceAddLoot,
   reduceAddTarget,
@@ -61,7 +64,7 @@ const loadData = (): RunCounterData => {
       ...parsed,
       // ensure every hotkey action has a binding even if the saved blob is older
       hotkeys: { ...DEFAULT_HOTKEYS, ...(parsed.hotkeys ?? {}) },
-      displayConfig: { ...DEFAULT_DISPLAY_CONFIG, ...(parsed.displayConfig ?? {}) },
+      displayConfig: withDisplayDefaults(parsed.displayConfig),
       targets: parsed.targets ?? [],
       history: parsed.history ?? [],
     };
@@ -176,6 +179,23 @@ export const RunCounterProvider: React.FC<RunCounterProviderProps> = ({
   // Only a running run needs a live clock; paused/stopped elapsed is frozen.
   const hasRunningRun =
     !!data.current && data.current.runs.some((r) => r.status === "running");
+
+  // Broadcast the UI language to the helper windows (they have their own i18n
+  // instance that otherwise only reads the saved language at startup).
+  useEffect(() => {
+    if (!isTauri()) return;
+    const broadcast = (lng: string) => {
+      [OVERLAY_WINDOW_LABEL, DISPLAY_WINDOW_LABEL, SESSION_WINDOW_LABEL].forEach((w) =>
+        emitTo(w, RC_EVENTS.LANGUAGE, { lng }).catch(() => {})
+      );
+    };
+    broadcast(i18n.language);
+    const onChange = (lng: string) => broadcast(lng);
+    i18n.on("languageChanged", onChange);
+    return () => {
+      i18n.off("languageChanged", onChange);
+    };
+  }, []);
 
   // Tick for live timer displays (cheap — elapsed is derived from timestamps).
   useEffect(() => {

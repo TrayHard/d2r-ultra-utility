@@ -1958,7 +1958,25 @@
       "obsHint": "Panel de estadísticas siempre visible: fíjalo sobre el juego o captúralo en OBS con «Captura de ventana»",
       "title": "Pantalla",
       "previewHint": "Activa o desactiva elementos; arrastra la esquina para cambiar el tamaño como una ventana",
-      "resizeHint": "Arrastra para cambiar el tamaño"
+      "resizeHint": "Arrastra para cambiar el tamaño",
+      "style": {
+        "title": "Estilo de texto",
+        "bold": "Negrita",
+        "italic": "Cursiva",
+        "elements": {
+          "timer": "Cronómetro",
+          "statValue": "Valores",
+          "statLabel": "Etiquetas",
+          "runNumber": "Número de run",
+          "target": "Objetivo"
+        },
+        "fonts": {
+          "default": "Predet.",
+          "sans": "Sans",
+          "mono": "Mono",
+          "diablo": "Diablo"
+        }
+      }
     }
   }
 }

@@ -6,6 +6,7 @@ import { mdiClose, mdiPlay, mdiPlus } from "@mdi/js";
 import { RC_EVENTS, OpenSessionPayload } from "../../shared/runcounter/constants";
 import { hideSessionOverlay, emitStartSession } from "../../shared/runcounter/overlay";
 import { isTauri } from "../../shared/runcounter/hotkeys";
+import { useHelperLanguageSync } from "../../shared/runcounter/useHelperLanguageSync";
 import { RunTarget } from "../../shared/runcounter/types";
 
 /**
@@ -15,6 +16,7 @@ import { RunTarget } from "../../shared/runcounter/types";
  */
 const RunCounterSessionOverlay: React.FC = () => {
   const { t } = useTranslation();
+  useHelperLanguageSync();
   const inputRef = useRef<HTMLInputElement>(null);
   const [targets, setTargets] = useState<RunTarget[]>([]);
   const [activeTargetId, setActiveTargetId] = useState<string | null>(null);
