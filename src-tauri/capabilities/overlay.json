@@ -1,0 +1,17 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "overlay-cap",
+  "description": "Capability for the Run Counter loot quick-add overlay window",
+  "windows": ["overlay"],
+  "permissions": [
+    "core:default",
+    "core:webview:default",
+    "core:window:default",
+    "core:event:default",
+    "core:window:allow-show",
+    "core:window:allow-hide",
+    "core:window:allow-set-focus",
+    "core:window:allow-set-always-on-top",
+    "core:window:allow-start-dragging"
+  ]
+}

@@ -1813,7 +1813,7 @@
     "descriptions": {
       "tweaks": "Spiel-Tweaks: Introvideos",
       "lootFilters": "Manage loot filters: runes, gems, items",
-      "runCounter": "Track your game runs"
+      "runCounter": "Verfolge deine Runs"
     }
   },
   "tweaksPage": {
@@ -1826,7 +1826,7 @@
       "hide": "Ausblenden"
     }
   },
-  "runCounter": "Run Counter",
+  "runCounter": "Run-Zähler",
   "modifiersPage": {
     "tabs": {
       "modifiers": "Werte",
@@ -1859,5 +1859,87 @@
   },
   "editor": {
     "resetColor": "Farbe auf Standard zurücksetzen"
+  },
+  "runCounterPage": {
+    "defaultTarget": "Farmen",
+    "status": {
+      "idle": "Bereit",
+      "running": "Läuft",
+      "paused": "Pausiert",
+      "stopped": "Gestoppt"
+    },
+    "target": {
+      "label": "Ziel",
+      "placeholder": "Zielname",
+      "none": "Kein Ziel",
+      "empty": "Erstelle ein Ziel zum Starten",
+      "add": "Neues Ziel",
+      "rename": "Umbenennen",
+      "delete": "Löschen",
+      "deleteConfirm": "Dieses Ziel löschen?"
+    },
+    "controls": {
+      "start": "Start",
+      "stopNext": "Stopp & Weiter",
+      "pause": "Pause",
+      "resume": "Fortsetzen",
+      "stop": "Stopp",
+      "addLoot": "Beute hinzufügen",
+      "finishSession": "Session beenden",
+      "finishConfirm": "Diese Session im Verlauf archivieren?"
+    },
+    "stats": {
+      "runs": "Runs",
+      "avg": "Ø",
+      "best": "Beste",
+      "last": "Letzte",
+      "perHour": "Runs/h",
+      "total": "Session"
+    },
+    "loot": {
+      "title": "Beute",
+      "empty": "Noch keine Beute erfasst",
+      "remove": "Entfernen"
+    },
+    "runsList": {
+      "title": "Runs dieser Session",
+      "run": "Run {{n}}",
+      "lootCount": "{{count}} Beute"
+    },
+    "hotkeys": {
+      "title": "Tastenkürzel",
+      "press": "Tasten drücken … (Esc zum Abbrechen)",
+      "reset": "Auf Standard zurücksetzen",
+      "failed": "Nicht belegbar: {{list}}",
+      "noModifierWarning": "Tipp: Füge einen Modifier (Ctrl/Alt) hinzu, damit die Taste im Spiel weiter funktioniert",
+      "caveat": "Funktioniert am besten mit D2R im Fenstermodus (nicht im exklusiven Vollbild)",
+      "browserNote": "Globale Tastenkürzel funktionieren nur in der Desktop-App",
+      "actions": {
+        "start": "Run starten",
+        "stopNext": "Stopp & nächster Run",
+        "pause": "Pause / Fortsetzen",
+        "stop": "Run stoppen",
+        "addLoot": "Beute hinzufügen"
+      },
+      "duplicateWarning": "Dieses Tastenkürzel ist bereits einer anderen Aktion zugewiesen"
+    },
+    "history": {
+      "title": "Verlauf",
+      "empty": "Noch keine beendeten Sessions",
+      "runs": "{{count}} Runs",
+      "clear": "Verlauf löschen",
+      "clearConfirm": "Gesamten Verlauf löschen?"
+    },
+    "messages": {
+      "targetAdded": "Ziel \"{{name}}\" hinzugefügt",
+      "noRun": "Starte zuerst einen Run, um Beute zu erfassen"
+    },
+    "overlay": {
+      "title": "Beute hinzufügen",
+      "close": "Schließen",
+      "placeholder": "Item-Name (Enter zum Hinzufügen)",
+      "noRun": "Kein aktiver Run – starte zuerst einen",
+      "hint": "Enter = hinzufügen · Esc = schließen"
+    }
   }
 }
