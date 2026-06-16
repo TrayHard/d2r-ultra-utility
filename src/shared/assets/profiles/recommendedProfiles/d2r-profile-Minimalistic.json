@@ -1,7 +1,7 @@
 {
   "id": "1755975799629",
   "name": "Minimalistic",
-  "version": "1.1",
+  "version": "1.2",
   "settings": {
     "runes": {
       "el": {
@@ -34,6 +34,38 @@
             "jaJP": "エル・ルーン",
             "ptBR": "Runa El",
             "zhCN": "艾尔符文"
+          }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
           }
         }
       },
@@ -68,6 +100,38 @@
             "ptBR": "Runa Eld",
             "zhCN": "艾德符文"
           }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
+          }
         }
       },
       "tir": {
@@ -100,6 +164,38 @@
             "jaJP": "ティア・ルーン",
             "ptBR": "Runa Tir",
             "zhCN": "提尔符文"
+          }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
           }
         }
       },
@@ -134,6 +230,38 @@
             "ptBR": "Runa Nef",
             "zhCN": "奈夫符文"
           }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
+          }
         }
       },
       "eth": {
@@ -166,6 +294,38 @@
             "jaJP": "エス・ルーン",
             "ptBR": "Runa Eth",
             "zhCN": "艾斯符文"
+          }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
           }
         }
       },
@@ -200,6 +360,38 @@
             "ptBR": "Runa Ith",
             "zhCN": "伊司符文"
           }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
+          }
         }
       },
       "tal": {
@@ -232,6 +424,38 @@
             "jaJP": "タル・ルーン",
             "ptBR": "Runa Tal",
             "zhCN": "塔尔符文"
+          }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
           }
         }
       },
@@ -266,6 +490,38 @@
             "ptBR": "Runa Ral",
             "zhCN": "拉尔符文"
           }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
+          }
         }
       },
       "ort": {
@@ -298,6 +554,38 @@
             "jaJP": "オルト・ルーン",
             "ptBR": "Runa Ort",
             "zhCN": "欧特符文"
+          }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
           }
         }
       },
@@ -332,6 +620,38 @@
             "ptBR": "Runa Thul",
             "zhCN": "图尔符文"
           }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
+          }
         }
       },
       "amn": {
@@ -364,6 +684,38 @@
             "jaJP": "アムン・ルーン",
             "ptBR": "Runa Amn",
             "zhCN": "安姆符文"
+          }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
           }
         }
       },
@@ -398,6 +750,38 @@
             "ptBR": "Runa Sol",
             "zhCN": "索尔符文"
           }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
+          }
         }
       },
       "shael": {
@@ -430,6 +814,38 @@
             "jaJP": "シャエル・ルーン",
             "ptBR": "Runa Shael",
             "zhCN": "沙伊符文"
+          }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
           }
         }
       },
@@ -464,6 +880,38 @@
             "ptBR": "Runa Dol",
             "zhCN": "多尔符文"
           }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
+          }
         }
       },
       "hel": {
@@ -496,6 +944,38 @@
             "jaJP": "ヘル・ルーン",
             "ptBR": "Runa Hel",
             "zhCN": "海尔符文"
+          }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
           }
         }
       },
@@ -530,6 +1010,38 @@
             "ptBR": "Runa Io",
             "zhCN": "艾欧符文"
           }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
+          }
         }
       },
       "lum": {
@@ -562,6 +1074,38 @@
             "jaJP": "ラム・ルーン",
             "ptBR": "Runa Lum",
             "zhCN": "卢姆符文"
+          }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
           }
         }
       },
@@ -596,6 +1140,38 @@
             "ptBR": "Runa Ko",
             "zhCN": "科符文"
           }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
+          }
         }
       },
       "fal": {
@@ -628,6 +1204,38 @@
             "jaJP": "ファル・ルーン",
             "ptBR": "Runa Fal",
             "zhCN": "法尔符文"
+          }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
           }
         }
       },
@@ -662,6 +1270,38 @@
             "ptBR": "Runa Lem",
             "zhCN": "兰姆符文"
           }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
+          }
         }
       },
       "pul": {
@@ -694,6 +1334,38 @@
             "jaJP": "プル・ルーン",
             "ptBR": "Runa Pul",
             "zhCN": "普尔符文"
+          }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
           }
         }
       },
@@ -728,6 +1400,38 @@
             "ptBR": "Runa Um",
             "zhCN": "乌姆符文"
           }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
+          }
         }
       },
       "mal": {
@@ -760,6 +1464,38 @@
             "jaJP": "マル・ルーン",
             "ptBR": "Runa Mal",
             "zhCN": "玛尔符文"
+          }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
           }
         }
       },
@@ -794,6 +1530,38 @@
             "ptBR": "Runa Ist",
             "zhCN": "伊司特符文"
           }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
+          }
         }
       },
       "gul": {
@@ -826,6 +1594,38 @@
             "jaJP": "ガル・ルーン",
             "ptBR": "Runa Gul",
             "zhCN": "古尔符文"
+          }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
           }
         }
       },
@@ -860,6 +1660,38 @@
             "ptBR": "Runa Vex",
             "zhCN": "伐克斯符文"
           }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
+          }
         }
       },
       "ohm": {
@@ -892,6 +1724,38 @@
             "jaJP": "オーム・ルーン",
             "ptBR": "Runa Ohm",
             "zhCN": "欧姆符文"
+          }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
           }
         }
       },
@@ -926,6 +1790,38 @@
             "ptBR": "Runa Lo",
             "zhCN": "罗符文"
           }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
+          }
         }
       },
       "sur": {
@@ -958,6 +1854,38 @@
             "jaJP": "サー・ルーン",
             "ptBR": "Runa Sur",
             "zhCN": "瑟符文"
+          }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
           }
         }
       },
@@ -992,6 +1920,38 @@
             "ptBR": "Runa Ber",
             "zhCN": "贝符文"
           }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
+          }
         }
       },
       "jah": {
@@ -1024,6 +1984,38 @@
             "jaJP": "ジャー・ルーン",
             "ptBR": "Runa Jah",
             "zhCN": "扎哈符文"
+          }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
           }
         }
       },
@@ -1058,6 +2050,38 @@
             "ptBR": "Runa Cham",
             "zhCN": "查姆符文"
           }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
+          }
         }
       },
       "zod": {
@@ -1090,6 +2114,38 @@
             "jaJP": "ゾッド・ルーン",
             "ptBR": "Runa Zod",
             "zhCN": "佐德符文"
+          }
+        },
+        "container": {
+          "mode": "auto",
+          "autoSettings": {
+            "numbering": {
+              "show": false,
+              "dividerType": "parentheses",
+              "dividerColor": "white",
+              "numberColor": "yellow"
+            },
+            "boxSize": 0,
+            "boxLimiters": "~",
+            "boxLimitersColor": "white",
+            "color": "white"
+          },
+          "manualSettings": {
+            "locales": {
+              "enUS": "",
+              "ruRU": "",
+              "zhTW": "",
+              "deDE": "",
+              "esES": "",
+              "frFR": "",
+              "itIT": "",
+              "koKR": "",
+              "plPL": "",
+              "esMX": "",
+              "jaJP": "",
+              "ptBR": "",
+              "zhCN": ""
+            }
           }
         }
       }
@@ -12618,9 +13674,13 @@
           }
         }
       }
+    },
+    "modifiers": {
+      "modifiers": {},
+      "skills": {}
     }
   },
   "createdAt": "2025-08-31T01:28:16.555Z",
-  "modifiedAt": "2025-08-31T01:28:29.855Z",
+  "modifiedAt": "2026-06-16T11:18:49.000Z",
   "isImmutable": true
 }
