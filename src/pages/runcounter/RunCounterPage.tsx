@@ -1,6 +1,7 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Select, Input, Collapse, Popconfirm, Tooltip, Empty, Tag } from "antd";
+import { listen } from "@tauri-apps/api/event";
+import { Select, Input, Collapse, Popconfirm, Tooltip, Empty, Tag, Modal } from "antd";
 import Icon from "@mdi/react";
 import {
   mdiPlay,
@@ -13,13 +14,17 @@ import {
   mdiDelete,
   mdiClose,
   mdiCheck,
+  mdiRestart,
+  mdiFlagCheckered,
+  mdiBroadcast,
 } from "@mdi/js";
 import Button from "../../shared/components/Button";
 import { useGlobalMessage } from "../../shared/components/Message/MessageProvider";
 import { useRunCounter } from "../../shared/runcounter/RunCounterContext";
 import { useGlobalHotkeys } from "../../shared/runcounter/useGlobalHotkeys";
 import { runElapsedMs, formatDuration } from "../../shared/runcounter/engine";
-import { HOTKEY_ACTIONS } from "../../shared/runcounter/constants";
+import { HOTKEY_ACTIONS, RC_EVENTS } from "../../shared/runcounter/constants";
+import { focusMainWindow } from "../../shared/runcounter/overlay";
 import { formatHotkeyForDisplay, hasModifier, isTauri } from "../../shared/runcounter/hotkeys";
 import { HotkeyAction } from "../../shared/runcounter/types";
 import HotkeyCapture from "./components/HotkeyCapture";
@@ -52,7 +57,64 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
     resetHotkeys,
     clearHistory,
     openLootOverlay,
+    startSession,
+    openDisplay,
+    closeDisplay,
   } = rc;
+
+  // --- new-session modal + display toggle + history expansion ----------------
+  const [newSessionOpen, setNewSessionOpen] = useState(false);
+  const [newSessionTargetId, setNewSessionTargetId] = useState<string | undefined>(undefined);
+  const [newSessionNewName, setNewSessionNewName] = useState("");
+  const [displayOpen, setDisplayOpen] = useState(false);
+  const [expandedSessionId, setExpandedSessionId] = useState<string | null>(null);
+
+  const openNewSession = () => {
+    setNewSessionTargetId(activeTarget?.id);
+    setNewSessionNewName("");
+    setNewSessionOpen(true);
+  };
+
+  // The new-session hotkey can fire while the window is minimized — bring it forward.
+  const handleNewSessionHotkey = () => {
+    focusMainWindow();
+    openNewSession();
+  };
+
+  const confirmNewSession = () => {
+    const name = newSessionNewName.trim();
+    if (name) startSession({ name });
+    else if (newSessionTargetId) startSession({ id: newSessionTargetId });
+    else return;
+    setNewSessionOpen(false);
+  };
+
+  const toggleDisplay = () => {
+    if (displayOpen) {
+      closeDisplay();
+      setDisplayOpen(false);
+    } else {
+      openDisplay();
+      setDisplayOpen(true);
+    }
+  };
+
+  // Keep the toggle in sync when the display is closed from its own window (X / Alt+F4).
+  useEffect(() => {
+    if (!isTauri()) return;
+    let cancelled = false;
+    let unlisten: (() => void) | null = null;
+    listen(RC_EVENTS.DISPLAY_CLOSED, () => setDisplayOpen(false))
+      .then((fn) => {
+        if (cancelled) fn();
+        else unlisten = fn;
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+      if (unlisten) unlisten();
+    };
+  }, []);
 
   // Register global hotkeys while this page is mounted.
   const failures = useGlobalHotkeys({
@@ -64,6 +126,8 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
       pause: togglePause,
       stop,
       addLoot: openLootOverlay,
+      newSession: handleNewSessionHotkey,
+      finishSession,
     },
   });
 
@@ -240,8 +304,8 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
         </div>
       </div>
 
-      {/* Controls */}
-      <div className="grid grid-cols-2 gap-2">
+      {/* Controls — four timer actions per row */}
+      <div className="grid grid-cols-4 gap-2">
         <ControlButton
           label={t("runCounterPage.controls.start")}
           hotkey={actionHotkey("start")}
@@ -286,8 +350,48 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
           isDarkTheme={isDarkTheme}
           disabled={!currentRun}
           onClick={onAddLootClick}
-          className="col-span-2"
+          className="col-span-4"
         />
+      </div>
+
+      {/* Session + broadcast actions */}
+      <div className="flex flex-wrap items-center gap-2">
+        <Button
+          size="sm"
+          variant="secondary"
+          isDarkTheme={isDarkTheme}
+          icon={mdiRestart}
+          onClick={openNewSession}
+        >
+          {t("runCounterPage.controls.newSession")}
+        </Button>
+        <Popconfirm
+          title={t("runCounterPage.controls.finishConfirm")}
+          onConfirm={finishSession}
+          okText={t("runCounterPage.controls.finishSession")}
+          disabled={!data.current}
+        >
+          <Button
+            size="sm"
+            variant="secondary"
+            isDarkTheme={isDarkTheme}
+            icon={mdiFlagCheckered}
+            disabled={!data.current}
+          >
+            {t("runCounterPage.controls.finishSession")}
+          </Button>
+        </Popconfirm>
+        <Button
+          size="sm"
+          variant={displayOpen ? "primary" : "secondary"}
+          active={displayOpen}
+          isDarkTheme={isDarkTheme}
+          icon={mdiBroadcast}
+          onClick={toggleDisplay}
+          title={t("runCounterPage.display.obsHint")}
+        >
+          {displayOpen ? t("runCounterPage.display.close") : t("runCounterPage.display.open")}
+        </Button>
       </div>
 
       {failures.length > 0 && (
@@ -346,7 +450,7 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
                 >
                   <span className="truncate">{l.name}</span>
                   <button
-                    className={`ml-2 shrink-0 ${sub} hover:text-red-500`}
+                    className={`ml-2 shrink-0 bg-transparent border-0 p-0 ${sub} hover:text-red-500`}
                     onClick={() => removeLoot(currentRun.id, l.id)}
                     title={t("runCounterPage.loot.remove")}
                   >
@@ -362,25 +466,16 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
       {/* Runs this session */}
       {runs.length > 0 && (
         <div className={`rounded-lg border p-3 ${cardBg}`}>
-          <div className="flex items-center justify-between mb-2">
+          <div className="mb-2">
             <span className={`text-sm font-medium ${heading}`}>
               {t("runCounterPage.runsList.title")}
             </span>
-            <Popconfirm
-              title={t("runCounterPage.controls.finishConfirm")}
-              onConfirm={finishSession}
-              okText={t("runCounterPage.controls.finishSession")}
-            >
-              <Button size="sm" variant="secondary" isDarkTheme={isDarkTheme}>
-                {t("runCounterPage.controls.finishSession")}
-              </Button>
-            </Popconfirm>
           </div>
-          <ul className="flex flex-col gap-1">
+          <ul className="flex flex-col gap-1 max-h-48 overflow-y-auto pr-1">
             {runs.map((r) => (
               <li
                 key={r.id}
-                className={`flex items-center justify-between rounded px-2 py-1 text-sm ${
+                className={`rounded px-2 py-1 text-sm ${
                   r.id === currentRun?.id
                     ? isDarkTheme
                       ? "bg-yellow-900/30"
@@ -390,15 +485,24 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
                       : "bg-gray-100"
                 }`}
               >
-                <span className={heading}>{t("runCounterPage.runsList.run", { n: r.index })}</span>
-                <span className="flex items-center gap-3">
-                  {r.loot.length > 0 && (
-                    <span className={`text-xs ${sub}`}>
-                      {t("runCounterPage.runsList.lootCount", { count: r.loot.length })}
-                    </span>
-                  )}
+                <div className="flex items-center justify-between">
+                  <span className={heading}>{t("runCounterPage.runsList.run", { n: r.index })}</span>
                   <span className="font-mono tabular-nums">{formatDuration(runElapsedMs(r, now))}</span>
-                </span>
+                </div>
+                {r.loot.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {r.loot.map((l) => (
+                      <span
+                        key={l.id}
+                        className={`rounded px-1.5 py-0.5 text-xs ${
+                          isDarkTheme ? "bg-gray-600/50 text-gray-200" : "bg-gray-200 text-gray-700"
+                        }`}
+                      >
+                        {l.name}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </li>
             ))}
           </ul>
@@ -437,13 +541,13 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
                       <HotkeyCapture
                         value={data.hotkeys[action]}
                         isDarkTheme={isDarkTheme}
+                        danger={accelCounts[data.hotkeys[action]] > 1}
                         onChange={(accel) => setHotkey(action, accel)}
                       />
                     </div>
                   </div>
                 ))}
-                <div className="flex justify-between items-center mt-1">
-                  <span className={`text-xs ${sub}`}>{t("runCounterPage.hotkeys.caveat")}</span>
+                <div className="flex justify-end items-center mt-1">
                   <Button size="sm" variant="secondary" isDarkTheme={isDarkTheme} onClick={resetHotkeys}>
                     {t("runCounterPage.hotkeys.reset")}
                   </Button>
@@ -463,26 +567,69 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
                     const completed = s.runs.filter((r) => r.status === "stopped");
                     const total = s.runs.reduce((a, r) => a + runElapsedMs(r, s.endedAt ?? now), 0);
                     const lootTotal = s.runs.reduce((a, r) => a + r.loot.length, 0);
+                    const expanded = expandedSessionId === s.id;
                     return (
                       <div
                         key={s.id}
-                        className={`rounded px-3 py-2 text-sm ${
+                        className={`rounded text-sm overflow-hidden ${
                           isDarkTheme ? "bg-gray-700/40" : "bg-gray-100"
                         }`}
                       >
-                        <div className="flex items-center justify-between">
-                          <span className={`font-medium ${heading}`}>{s.targetName}</span>
-                          <span className={`text-xs ${sub}`}>
-                            {new Date(s.startedAt).toLocaleString()}
-                          </span>
-                        </div>
-                        <div className={`flex items-center gap-3 text-xs ${sub} mt-1`}>
-                          <span>{t("runCounterPage.history.runs", { count: completed.length })}</span>
-                          <span>{t("runCounterPage.stats.total")}: {formatDuration(total)}</span>
-                          {lootTotal > 0 && (
-                            <span>{t("runCounterPage.runsList.lootCount", { count: lootTotal })}</span>
-                          )}
-                        </div>
+                        <button
+                          className="w-full text-left px-3 py-2 bg-transparent border-0 cursor-pointer"
+                          onClick={() => setExpandedSessionId(expanded ? null : s.id)}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className={`font-medium ${heading}`}>{s.targetName}</span>
+                            <span className={`text-xs ${sub}`}>
+                              {new Date(s.startedAt).toLocaleString()}
+                            </span>
+                          </div>
+                          <div className={`flex items-center gap-3 text-xs ${sub} mt-1`}>
+                            <span>{t("runCounterPage.history.runs", { count: completed.length })}</span>
+                            <span>{t("runCounterPage.stats.total")}: {formatDuration(total)}</span>
+                            {lootTotal > 0 && (
+                              <span>{t("runCounterPage.runsList.lootCount", { count: lootTotal })}</span>
+                            )}
+                          </div>
+                        </button>
+                        {expanded && (
+                          <div className="px-3 pb-2 flex flex-col gap-1">
+                            {s.runs.map((r) => (
+                              <div
+                                key={r.id}
+                                className={`rounded px-2 py-1 ${
+                                  isDarkTheme ? "bg-gray-800/60" : "bg-white"
+                                }`}
+                              >
+                                <div className="flex items-center justify-between">
+                                  <span className={heading}>
+                                    {t("runCounterPage.runsList.run", { n: r.index })}
+                                  </span>
+                                  <span className="font-mono tabular-nums text-xs">
+                                    {formatDuration(runElapsedMs(r, s.endedAt ?? now))}
+                                  </span>
+                                </div>
+                                {r.loot.length > 0 && (
+                                  <div className="flex flex-wrap gap-1 mt-1">
+                                    {r.loot.map((l) => (
+                                      <span
+                                        key={l.id}
+                                        className={`rounded px-1.5 py-0.5 text-xs ${
+                                          isDarkTheme
+                                            ? "bg-gray-600/50 text-gray-200"
+                                            : "bg-gray-200 text-gray-700"
+                                        }`}
+                                      >
+                                        {l.name}
+                                      </span>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     );
                   })}
@@ -500,6 +647,48 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
           },
         ]}
       />
+
+      {/* New session modal */}
+      <Modal
+        title={t("runCounterPage.newSession.title")}
+        open={newSessionOpen}
+        onOk={confirmNewSession}
+        onCancel={() => setNewSessionOpen(false)}
+        okText={t("runCounterPage.controls.start")}
+        cancelText={t("common.cancel")}
+        okButtonProps={{ disabled: !newSessionNewName.trim() && !newSessionTargetId }}
+        width={380}
+      >
+        <div className="flex flex-col gap-3">
+          <div>
+            <div className={`text-xs mb-1 ${sub}`}>
+              {t("runCounterPage.newSession.selectTarget")}
+            </div>
+            <Select
+              className="w-full"
+              value={newSessionTargetId}
+              placeholder={t("runCounterPage.target.none")}
+              onChange={(id) => {
+                setNewSessionTargetId(id);
+                setNewSessionNewName("");
+              }}
+              options={data.targets.map((tg) => ({ value: tg.id, label: tg.name }))}
+              allowClear
+            />
+          </div>
+          <div>
+            <div className={`text-xs mb-1 ${sub}`}>
+              {t("runCounterPage.newSession.orCreate")}
+            </div>
+            <Input
+              value={newSessionNewName}
+              placeholder={t("runCounterPage.target.placeholder")}
+              onChange={(e) => setNewSessionNewName(e.target.value)}
+              onPressEnter={confirmNewSession}
+            />
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
@@ -546,15 +735,15 @@ const ControlButton: React.FC<ControlButtonProps> = ({
   <button
     onClick={onClick}
     disabled={disabled}
-    className={`flex flex-col items-center justify-center gap-0.5 rounded-lg border px-3 py-2 transition-colors ${
+    className={`flex flex-col items-center justify-center gap-0.5 rounded-lg border px-2 py-2 min-w-0 overflow-hidden transition-colors ${
       disabled ? "opacity-40 cursor-not-allowed" : "cursor-pointer"
     } ${variantClass} ${className ?? ""}`}
   >
-    <span className="flex items-center gap-1.5 font-medium text-sm leading-none">
-      <Icon path={icon} size={0.8} />
-      {label}
+    <span className="flex items-center gap-1 font-medium text-xs leading-tight min-w-0 max-w-full">
+      <Icon path={icon} size={0.75} className="shrink-0" />
+      <span className="truncate">{label}</span>
     </span>
-    <span className="text-[10px] opacity-70 font-mono leading-none">{hotkey}</span>
+    <span className="text-[10px] opacity-70 font-mono leading-none truncate max-w-full">{hotkey}</span>
   </button>
   );
 };

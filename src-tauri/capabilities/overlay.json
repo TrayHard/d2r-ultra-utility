@@ -1,8 +1,8 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "overlay-cap",
-  "description": "Capability for the Run Counter loot quick-add overlay window",
-  "windows": ["overlay"],
+  "description": "Capability for the Run Counter helper windows (loot overlay + stats display)",
+  "windows": ["overlay", "display"],
   "permissions": [
     "core:default",
     "core:webview:default",

@@ -22,6 +22,7 @@
     "core:window:allow-hide",
     "core:window:allow-set-focus",
     "core:window:allow-set-always-on-top",
+    "core:window:allow-unminimize",
     "core:window:allow-get-all-windows",
     "core:event:default",
     "global-shortcut:allow-register",

@@ -1886,7 +1886,8 @@
       "stop": "Arrêter",
       "addLoot": "Ajouter un loot",
       "finishSession": "Terminer la session",
-      "finishConfirm": "Archiver cette session dans l'historique ?"
+      "finishConfirm": "Archiver cette session dans l'historique ?",
+      "newSession": "Nouvelle session"
     },
     "stats": {
       "runs": "Runs",
@@ -1912,14 +1913,15 @@
       "reset": "Réinitialiser par défaut",
       "failed": "Impossible d'associer : {{list}}",
       "noModifierWarning": "Astuce : ajoutez un modificateur (Ctrl/Alt) pour que la touche fonctionne aussi en jeu",
-      "caveat": "Fonctionne mieux avec D2R en mode fenêtré (pas en plein écran exclusif)",
       "browserNote": "Les raccourcis globaux ne fonctionnent que dans l'application de bureau",
       "actions": {
         "start": "Démarrer un run",
         "stopNext": "Arrêter et run suivant",
         "pause": "Pause / reprise",
         "stop": "Arrêter le run",
-        "addLoot": "Ajouter un loot"
+        "addLoot": "Ajouter un loot",
+        "newSession": "Nouvelle session",
+        "finishSession": "Terminer la session"
       },
       "duplicateWarning": "Ce raccourci est déjà attribué à une autre action"
     },
@@ -1940,6 +1942,16 @@
       "placeholder": "Nom de l'objet (Entrée pour ajouter)",
       "noRun": "Aucun run actif — démarrez-en un d'abord",
       "hint": "Entrée = ajouter · Esc = fermer"
+    },
+    "newSession": {
+      "title": "Démarrer une nouvelle session",
+      "selectTarget": "Choisir une cible",
+      "orCreate": "ou en créer une nouvelle"
+    },
+    "display": {
+      "open": "Affichage",
+      "close": "Masquer l'affichage",
+      "obsHint": "Panneau de stats toujours au-dessus — épinglez-le sur le jeu ou capturez-le dans OBS via « Capture de fenêtre »"
     }
   }
 }

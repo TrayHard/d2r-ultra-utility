@@ -6,11 +6,18 @@ import { eventToAccelerator, formatHotkeyForDisplay } from "../../../shared/runc
 interface HotkeyCaptureProps {
   value: string;
   isDarkTheme: boolean;
+  /** Highlight in red, e.g. when this accelerator collides with another action. */
+  danger?: boolean;
   onChange: (accelerator: string) => void;
 }
 
 /** A button that, when clicked, captures the next key combo into a Tauri accelerator. */
-const HotkeyCapture: React.FC<HotkeyCaptureProps> = ({ value, isDarkTheme, onChange }) => {
+const HotkeyCapture: React.FC<HotkeyCaptureProps> = ({
+  value,
+  isDarkTheme,
+  danger,
+  onChange,
+}) => {
   const { t } = useTranslation();
   const [capturing, setCapturing] = useState(false);
 
@@ -42,7 +49,9 @@ const HotkeyCapture: React.FC<HotkeyCaptureProps> = ({ value, isDarkTheme, onCha
       active={capturing}
       isDarkTheme={isDarkTheme}
       onClick={() => setCapturing((c) => !c)}
-      className="font-mono whitespace-nowrap"
+      className={`font-mono whitespace-nowrap ${
+        danger && !capturing ? "!border-red-500 !text-red-500" : ""
+      }`}
     >
       {capturing ? t("runCounterPage.hotkeys.press") : formatHotkeyForDisplay(value)}
     </Button>

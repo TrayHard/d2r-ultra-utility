@@ -3,12 +3,21 @@ import { HotkeyAction, HotkeyConfig } from "./types";
 /** Label of the always-on-top loot quick-add window declared in tauri.conf.json. */
 export const OVERLAY_WINDOW_LABEL = "overlay";
 
-/** Tauri event names used to talk between the main window and the loot overlay. */
+/** Label of the always-on-top broadcast/stats display window (for OBS / the player). */
+export const DISPLAY_WINDOW_LABEL = "display";
+
+/** Tauri event names used to talk between the main window and the helper windows. */
 export const RC_EVENTS = {
   /** main -> overlay: show & focus the loot input, with context payload */
   OPEN_LOOT: "rc:open-loot",
   /** overlay -> main: a loot item was submitted */
   ADD_LOOT: "rc:add-loot",
+  /** main -> display: full run-counter state snapshot to render */
+  DISPLAY_STATE: "rc:display-state",
+  /** main -> display: whether the display window is currently visible (gates its tick) */
+  DISPLAY_VISIBILITY: "rc:display-visibility",
+  /** display -> main: the display was closed/hidden from its own UI */
+  DISPLAY_CLOSED: "rc:display-closed",
 } as const;
 
 export interface OpenLootPayload {
@@ -36,6 +45,8 @@ export const DEFAULT_HOTKEYS: HotkeyConfig = {
   pause: "Ctrl+Alt+F11",
   stop: "Ctrl+Alt+F12",
   addLoot: "Ctrl+Alt+L",
+  newSession: "Ctrl+Alt+N",
+  finishSession: "Ctrl+Alt+E",
 };
 
 /** Fixed display order of the hotkey actions in the UI. */
@@ -45,4 +56,10 @@ export const HOTKEY_ACTIONS: HotkeyAction[] = [
   "pause",
   "stop",
   "addLoot",
+  "newSession",
+  "finishSession",
 ];
+
+export interface DisplayStatePayload {
+  data: import("./types").RunCounterData;
+}

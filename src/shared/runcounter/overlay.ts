@@ -4,7 +4,13 @@
 
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { emitTo } from "@tauri-apps/api/event";
-import { OVERLAY_WINDOW_LABEL, RC_EVENTS, OpenLootPayload, AddLootPayload } from "./constants";
+import {
+  OVERLAY_WINDOW_LABEL,
+  DISPLAY_WINDOW_LABEL,
+  RC_EVENTS,
+  OpenLootPayload,
+  AddLootPayload,
+} from "./constants";
 import { isTauri } from "./hotkeys";
 
 const MAIN_WINDOW_LABEL = "main";
@@ -44,5 +50,43 @@ export const emitLootToMain = async (name: string): Promise<void> => {
     await emitTo(MAIN_WINDOW_LABEL, RC_EVENTS.ADD_LOOT, payload);
   } catch (err) {
     console.warn("emitLootToMain failed", err);
+  }
+};
+
+/** Main window: reveal the always-on-top stats display window (OBS / the player). */
+export const showDisplayWindow = async (): Promise<void> => {
+  if (!isTauri()) return;
+  try {
+    const win = await WebviewWindow.getByLabel(DISPLAY_WINDOW_LABEL);
+    if (!win) return;
+    await win.setAlwaysOnTop(true);
+    await win.show();
+  } catch (err) {
+    console.warn("showDisplayWindow failed", err);
+  }
+};
+
+/** Hide the stats display window. */
+export const hideDisplayWindow = async (): Promise<void> => {
+  if (!isTauri()) return;
+  try {
+    const win = await WebviewWindow.getByLabel(DISPLAY_WINDOW_LABEL);
+    await win?.hide();
+  } catch (err) {
+    console.warn("hideDisplayWindow failed", err);
+  }
+};
+
+/** Bring the main window to the front (used when a global hotkey must show UI). */
+export const focusMainWindow = async (): Promise<void> => {
+  if (!isTauri()) return;
+  try {
+    const win = await WebviewWindow.getByLabel(MAIN_WINDOW_LABEL);
+    if (!win) return;
+    await win.unminimize();
+    await win.show();
+    await win.setFocus();
+  } catch (err) {
+    console.warn("focusMainWindow failed", err);
   }
 };
