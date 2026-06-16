@@ -1956,10 +1956,8 @@
       "close": "Ocultar pantalla",
       "obsHint": "Panel de estadísticas siempre visible: fíjalo sobre el juego o captúralo en OBS con «Captura de ventana»",
       "title": "Pantalla",
-      "width": "Ancho",
-      "height": "Alto",
-      "showHeader": "Encabezado de objetivo",
-      "showRunNumber": "Número de run"
+      "previewHint": "Activa o desactiva elementos; arrastra la esquina para cambiar el tamaño como una ventana",
+      "resizeHint": "Arrastra para cambiar el tamaño"
     }
   }
 }

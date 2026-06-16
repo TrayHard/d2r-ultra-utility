@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { listen, emitTo } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
@@ -28,6 +28,8 @@ const RunCounterDisplay: React.FC = () => {
   const [data, setData] = useState<RunCounterData | null>(null);
   const [now, setNow] = useState<number>(() => Date.now());
   const [visible, setVisible] = useState(false);
+  // Latest configured size, so onResized can ignore the programmatic-setSize round-trip.
+  const cfgSizeRef = useRef({ w: DEFAULT_DISPLAY_CONFIG.width, h: DEFAULT_DISPLAY_CONFIG.height });
 
   // Listen for state snapshots + visibility toggles from the main window.
   useEffect(() => {
@@ -88,6 +90,47 @@ const RunCounterDisplay: React.FC = () => {
     };
   }, [closeSelf]);
 
+  // Persist the size after the user drag-resizes the window (debounced).
+  useEffect(() => {
+    if (!isTauri()) return;
+    let cancelled = false;
+    let unlisten: (() => void) | null = null;
+    let timer = 0;
+    getCurrentWindow()
+      .onResized(() => {
+        window.clearTimeout(timer);
+        timer = window.setTimeout(() => {
+          // innerWidth/innerHeight are logical CSS px of the (borderless) webview.
+          const w = Math.round(window.innerWidth);
+          const h = Math.round(window.innerHeight);
+          // Ignore sub-pixel deltas from the programmatic setSize round-trip (DPI
+          // rounding) so the persisted size never drifts — only real user resizes.
+          if (Math.abs(w - cfgSizeRef.current.w) <= 2 && Math.abs(h - cfgSizeRef.current.h) <= 2) {
+            return;
+          }
+          emitTo(MAIN_WINDOW_LABEL, RC_EVENTS.DISPLAY_RESIZED, { width: w, height: h }).catch(
+            () => {}
+          );
+        }, 250);
+      })
+      .then((fn) => {
+        if (cancelled) fn();
+        else unlisten = fn;
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+      if (unlisten) unlisten();
+    };
+  }, []);
+
+  const startResize = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (isTauri()) getCurrentWindow().startResizeDragging("SouthEast").catch(() => {});
+  };
+
   const currentRun = data ? findCurrentRun(data) : null;
   const isRunning = currentRun?.status === "running";
 
@@ -101,6 +144,7 @@ const RunCounterDisplay: React.FC = () => {
 
   const stats = sessionStats(data?.current ?? null, now);
   const cfg = data?.displayConfig ?? DEFAULT_DISPLAY_CONFIG;
+  cfgSizeRef.current = { w: cfg.width, h: cfg.height };
   const targetName =
     data?.current?.targetName ??
     data?.targets.find((tg) => tg.id === data?.activeTargetId)?.name ??
@@ -144,6 +188,17 @@ const RunCounterDisplay: React.FC = () => {
         >
           <Icon path={mdiClose} size={0.7} />
         </button>
+
+        {/* Resize grip — drag to resize the window like a normal window */}
+        <div
+          onMouseDown={startResize}
+          className="absolute bottom-0.5 right-0.5 w-3.5 h-3.5 cursor-nwse-resize text-gray-500 hover:text-yellow-400 z-10"
+          title={t("runCounterPage.display.resizeHint")}
+        >
+          <svg viewBox="0 0 10 10" className="w-full h-full">
+            <path d="M9 3 L3 9 M9 6 L6 9" stroke="currentColor" strokeWidth="1.2" fill="none" />
+          </svg>
+        </div>
 
         {cfg.showHeader && (
           <div className="flex items-center gap-2 pointer-events-none">

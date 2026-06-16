@@ -1956,10 +1956,8 @@
       "close": "Anzeige ausblenden",
       "obsHint": "Immer-im-Vordergrund-Statistikpanel — über dem Spiel anheften oder in OBS per Fensteraufnahme erfassen",
       "title": "Anzeige",
-      "width": "Breite",
-      "height": "Höhe",
-      "showHeader": "Ziel-Kopfzeile",
-      "showRunNumber": "Run-Nummer"
+      "previewHint": "Elemente ein-/ausblenden; an der Ecke ziehen, um die Größe wie bei einem Fenster zu ändern",
+      "resizeHint": "Zum Ändern der Größe ziehen"
     }
   }
 }

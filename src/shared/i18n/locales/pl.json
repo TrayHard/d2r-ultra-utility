@@ -1957,10 +1957,8 @@
       "close": "Ukryj wyświetlacz",
       "obsHint": "Panel statystyk zawsze na wierzchu — przypnij go nad grą lub przechwyć w OBS przez „Przechwytywanie okna”",
       "title": "Wyświetlacz",
-      "width": "Szerokość",
-      "height": "Wysokość",
-      "showHeader": "Nagłówek celu",
-      "showRunNumber": "Numer biegu"
+      "previewHint": "Włączaj/wyłączaj elementy; przeciągnij róg, aby zmienić rozmiar jak w oknie",
+      "resizeHint": "Przeciągnij, aby zmienić rozmiar"
     }
   }
 }
