@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { listen } from "@tauri-apps/api/event";
-import { Select, Input, Collapse, Popconfirm, Tooltip, Empty, Tag, InputNumber, Switch } from "antd";
+import { Select, Input, Collapse, Popconfirm, Tooltip, Empty } from "antd";
 import Icon from "@mdi/react";
 import {
   mdiPlay,
@@ -17,6 +17,8 @@ import {
   mdiRestart,
   mdiFlagCheckered,
   mdiBroadcast,
+  mdiEye,
+  mdiEyeOff,
 } from "@mdi/js";
 import Button from "../../shared/components/Button";
 import { useGlobalMessage } from "../../shared/components/Message/MessageProvider";
@@ -117,22 +119,6 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
   const isActive = !!currentRun && currentRun.status !== "stopped";
   const isPaused = currentRun?.status === "paused";
   const currentElapsed = currentRun ? runElapsedMs(currentRun, now) : 0;
-
-  const statusLabel = !currentRun
-    ? t("runCounterPage.status.idle")
-    : currentRun.status === "running"
-      ? t("runCounterPage.status.running")
-      : currentRun.status === "paused"
-        ? t("runCounterPage.status.paused")
-        : t("runCounterPage.status.stopped");
-
-  const statusColor = !currentRun
-    ? "default"
-    : currentRun.status === "running"
-      ? "success"
-      : currentRun.status === "paused"
-        ? "warning"
-        : "default";
 
   // --- target management -----------------------------------------------------
   const [editingTarget, setEditingTarget] = useState<null | "add" | "rename">(null);
@@ -272,7 +258,6 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
             {activeTarget?.name ?? t("runCounterPage.target.none")}
             {currentRun ? ` · #${currentRun.index}` : ""}
           </span>
-          <Tag color={statusColor}>{statusLabel}</Tag>
         </div>
         <div
           className={`font-mono tabular-nums text-5xl font-bold ${
@@ -335,47 +320,41 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
 
       {/* Session + broadcast actions */}
       <div className="flex flex-wrap items-center gap-2">
-        <Button
-          size="sm"
+        <ControlButton
+          label={t("runCounterPage.controls.newSession")}
+          hotkey={actionHotkey("newSession")}
+          icon={mdiRestart}
           variant="secondary"
           isDarkTheme={isDarkTheme}
-          icon={mdiRestart}
           onClick={openSessionOverlay}
           className="shrink-0"
-        >
-          {t("runCounterPage.controls.newSession")}
-          <span className="opacity-60 font-mono ml-1">{actionHotkey("newSession")}</span>
-        </Button>
+        />
         <Popconfirm
           title={t("runCounterPage.controls.finishConfirm")}
           onConfirm={finishSession}
           okText={t("runCounterPage.controls.finishSession")}
           disabled={!data.current}
         >
-          <Button
-            size="sm"
+          <ControlButton
+            label={t("runCounterPage.controls.finishSession")}
+            hotkey={actionHotkey("finishSession")}
+            icon={mdiFlagCheckered}
             variant="secondary"
             isDarkTheme={isDarkTheme}
-            icon={mdiFlagCheckered}
             disabled={!data.current}
             className="shrink-0"
-          >
-            {t("runCounterPage.controls.finishSession")}
-            <span className="opacity-60 font-mono ml-1">{actionHotkey("finishSession")}</span>
-          </Button>
+          />
         </Popconfirm>
-        <Button
-          size="sm"
-          variant={displayOpen ? "primary" : "secondary"}
-          active={displayOpen}
-          isDarkTheme={isDarkTheme}
-          icon={mdiBroadcast}
-          onClick={toggleDisplay}
-          title={t("runCounterPage.display.obsHint")}
-          className="shrink-0"
-        >
-          {displayOpen ? t("runCounterPage.display.close") : t("runCounterPage.display.open")}
-        </Button>
+        <Tooltip title={t("runCounterPage.display.obsHint")}>
+          <ControlButton
+            label={displayOpen ? t("runCounterPage.display.close") : t("runCounterPage.display.open")}
+            icon={mdiBroadcast}
+            variant={displayOpen ? "info" : "secondary"}
+            isDarkTheme={isDarkTheme}
+            onClick={toggleDisplay}
+            className="shrink-0"
+          />
+        </Tooltip>
       </div>
 
       {failures.length > 0 && (
@@ -544,66 +523,70 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
             label: t("runCounterPage.display.title"),
             children: (
               <div className="flex flex-col gap-2">
-                <div className="flex items-center gap-3 flex-wrap">
-                  <span className={`text-sm ${heading}`}>{t("runCounterPage.display.width")}</span>
-                  <InputNumber
-                    size="small"
-                    min={220}
-                    max={900}
-                    value={cfg.width}
-                    onChange={(v) =>
-                      v != null &&
-                      setDisplayConfig({ width: Math.min(900, Math.max(220, Math.round(Number(v)))) })
-                    }
-                  />
-                  <span className={`text-sm ${heading}`}>{t("runCounterPage.display.height")}</span>
-                  <InputNumber
-                    size="small"
-                    min={140}
-                    max={700}
-                    value={cfg.height}
-                    onChange={(v) =>
-                      v != null &&
-                      setDisplayConfig({ height: Math.min(700, Math.max(140, Math.round(Number(v)))) })
-                    }
-                  />
+                <div className={`text-xs ${sub}`}>{t("runCounterPage.display.previewHint")}</div>
+                {/* Live preview — toggle each element with the eye next to it */}
+                <div className="mx-auto w-full max-w-[280px] rounded-xl border border-yellow-500/40 bg-gray-900/90 text-gray-100 p-3 flex flex-col items-center gap-1.5">
+                  <PreviewToggle
+                    enabled={cfg.showHeader}
+                    onToggle={() => setDisplayConfig({ showHeader: !cfg.showHeader })}
+                  >
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-green-500" />
+                      <span className="font-semibold">
+                        {activeTarget?.name ?? t("runCounterPage.target.none")}
+                      </span>
+                    </span>
+                  </PreviewToggle>
+
+                  <div className="font-mono tabular-nums text-3xl font-bold text-yellow-400 leading-none">
+                    {formatDuration(currentElapsed)}
+                  </div>
+
+                  <PreviewToggle
+                    enabled={cfg.showRunNumber}
+                    onToggle={() => setDisplayConfig({ showRunNumber: !cfg.showRunNumber })}
+                  >
+                    <span className="font-mono text-sm text-gray-400">
+                      #{currentRun?.index ?? 1}
+                    </span>
+                  </PreviewToggle>
+
+                  <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 mt-1">
+                    <PreviewToggle
+                      enabled={cfg.showRuns}
+                      onToggle={() => setDisplayConfig({ showRuns: !cfg.showRuns })}
+                    >
+                      <PreviewStat label={t("runCounterPage.stats.runs")} value={`${stats.completedCount}`} />
+                    </PreviewToggle>
+                    <PreviewToggle
+                      enabled={cfg.showAvg}
+                      onToggle={() => setDisplayConfig({ showAvg: !cfg.showAvg })}
+                    >
+                      <PreviewStat
+                        label={t("runCounterPage.stats.avg")}
+                        value={stats.completedCount ? formatDuration(stats.avgMs) : "—"}
+                      />
+                    </PreviewToggle>
+                    <PreviewToggle
+                      enabled={cfg.showBest}
+                      onToggle={() => setDisplayConfig({ showBest: !cfg.showBest })}
+                    >
+                      <PreviewStat
+                        label={t("runCounterPage.stats.best")}
+                        value={stats.completedCount ? formatDuration(stats.bestMs) : "—"}
+                      />
+                    </PreviewToggle>
+                    <PreviewToggle
+                      enabled={cfg.showPerHour}
+                      onToggle={() => setDisplayConfig({ showPerHour: !cfg.showPerHour })}
+                    >
+                      <PreviewStat
+                        label={t("runCounterPage.stats.perHour")}
+                        value={stats.completedCount ? stats.runsPerHour.toFixed(1) : "—"}
+                      />
+                    </PreviewToggle>
+                  </div>
                 </div>
-                <DisplayToggle
-                  label={t("runCounterPage.display.showHeader")}
-                  checked={cfg.showHeader}
-                  heading={heading}
-                  onChange={(v) => setDisplayConfig({ showHeader: v })}
-                />
-                <DisplayToggle
-                  label={t("runCounterPage.display.showRunNumber")}
-                  checked={cfg.showRunNumber}
-                  heading={heading}
-                  onChange={(v) => setDisplayConfig({ showRunNumber: v })}
-                />
-                <DisplayToggle
-                  label={t("runCounterPage.stats.runs")}
-                  checked={cfg.showRuns}
-                  heading={heading}
-                  onChange={(v) => setDisplayConfig({ showRuns: v })}
-                />
-                <DisplayToggle
-                  label={t("runCounterPage.stats.avg")}
-                  checked={cfg.showAvg}
-                  heading={heading}
-                  onChange={(v) => setDisplayConfig({ showAvg: v })}
-                />
-                <DisplayToggle
-                  label={t("runCounterPage.stats.best")}
-                  checked={cfg.showBest}
-                  heading={heading}
-                  onChange={(v) => setDisplayConfig({ showBest: v })}
-                />
-                <DisplayToggle
-                  label={t("runCounterPage.stats.perHour")}
-                  checked={cfg.showPerHour}
-                  heading={heading}
-                  onChange={(v) => setDisplayConfig({ showPerHour: v })}
-                />
               </div>
             ),
           },
@@ -705,14 +688,14 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
 
 interface ControlButtonProps {
   label: string;
-  hotkey: string;
+  hotkey?: string;
   icon: string;
   variant: "primary" | "secondary" | "success" | "danger" | "info";
   isDarkTheme: boolean;
-  disabled?: boolean;
-  onClick: () => void;
-  className?: string;
 }
+
+type ControlButtonAllProps = ControlButtonProps &
+  Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof ControlButtonProps>;
 
 const CONTROL_VARIANT_DARK: Record<ControlButtonProps["variant"], string> = {
   primary: "bg-blue-600 border-blue-500 text-white hover:bg-blue-700",
@@ -730,33 +713,29 @@ const CONTROL_VARIANT_LIGHT: Record<ControlButtonProps["variant"], string> = {
   secondary: "bg-gray-200 border-gray-300 text-gray-800 hover:bg-gray-300",
 };
 
-const ControlButton: React.FC<ControlButtonProps> = ({
-  label,
-  hotkey,
-  icon,
-  variant,
-  isDarkTheme,
-  disabled,
-  onClick,
-  className,
-}) => {
-  const variantClass = (isDarkTheme ? CONTROL_VARIANT_DARK : CONTROL_VARIANT_LIGHT)[variant];
-  return (
-  <button
-    onClick={onClick}
-    disabled={disabled}
-    className={`flex flex-col items-center justify-center gap-0.5 rounded-lg border px-2 py-2 min-w-0 overflow-hidden transition-colors ${
-      disabled ? "opacity-40 cursor-not-allowed" : "cursor-pointer"
-    } ${variantClass} ${className ?? ""}`}
-  >
-    <span className="flex items-center gap-1 font-medium text-xs leading-tight min-w-0 max-w-full">
-      <Icon path={icon} size={0.75} className="shrink-0" />
-      <span className="truncate">{label}</span>
-    </span>
-    <span className="text-[10px] opacity-70 font-mono leading-none truncate max-w-full">{hotkey}</span>
-  </button>
-  );
-};
+const ControlButton = React.forwardRef<HTMLButtonElement, ControlButtonAllProps>(
+  ({ label, hotkey, icon, variant, isDarkTheme, className, ...rest }, ref) => {
+    const variantClass = (isDarkTheme ? CONTROL_VARIANT_DARK : CONTROL_VARIANT_LIGHT)[variant];
+    return (
+      <button
+        ref={ref}
+        {...rest}
+        className={`flex flex-col items-center justify-center gap-0.5 rounded-lg border px-2 py-2 min-w-0 overflow-hidden transition-colors ${
+          rest.disabled ? "opacity-40 cursor-not-allowed" : "cursor-pointer"
+        } ${variantClass} ${className ?? ""}`}
+      >
+        <span className="flex items-center gap-1 font-medium text-xs leading-tight min-w-0 max-w-full">
+          <Icon path={icon} size={0.75} className="shrink-0" />
+          <span className="truncate">{label}</span>
+        </span>
+        <span className="text-[10px] opacity-70 font-mono leading-none truncate max-w-full">
+          {hotkey || " "}
+        </span>
+      </button>
+    );
+  }
+);
+ControlButton.displayName = "ControlButton";
 
 interface StatCardProps {
   label: string;
@@ -779,16 +758,28 @@ const StatCard: React.FC<StatCardProps> = ({ label, value, isDarkTheme }) => (
   </div>
 );
 
-const DisplayToggle: React.FC<{
-  label: string;
-  checked: boolean;
-  heading: string;
-  onChange: (v: boolean) => void;
-}> = ({ label, checked, heading, onChange }) => (
-  <div className="flex items-center justify-between">
-    <span className={`text-sm ${heading}`}>{label}</span>
-    <Switch size="small" checked={checked} onChange={onChange} />
+/** A preview element with an inline eye toggle that shows/hides it on the display. */
+const PreviewToggle: React.FC<{
+  enabled: boolean;
+  onToggle: () => void;
+  children: React.ReactNode;
+}> = ({ enabled, onToggle, children }) => (
+  <div className="flex items-center gap-1">
+    <span className={enabled ? "" : "opacity-30"}>{children}</span>
+    <button
+      onClick={onToggle}
+      className="bg-transparent border-0 p-0 text-gray-500 hover:text-yellow-400 shrink-0"
+    >
+      <Icon path={enabled ? mdiEye : mdiEyeOff} size={0.6} />
+    </button>
   </div>
+);
+
+const PreviewStat: React.FC<{ label: string; value: string }> = ({ label, value }) => (
+  <span className="text-center">
+    <span className="block text-[9px] uppercase tracking-wide text-gray-500 leading-none">{label}</span>
+    <span className="block text-xs font-mono tabular-nums text-gray-100">{value}</span>
+  </span>
 );
 
 export default RunCounterPage;

@@ -1906,10 +1906,8 @@
       "close": "Hide display",
       "obsHint": "Always-on-top stats panel — pin it over the game or capture it in OBS via Window Capture",
       "title": "Display",
-      "width": "Width",
-      "height": "Height",
-      "showHeader": "Target header",
-      "showRunNumber": "Run number"
+      "previewHint": "Toggle what shows; drag the display's corner to resize it like a window",
+      "resizeHint": "Drag to resize"
     },
     "overlay": {
       "title": "Add loot",

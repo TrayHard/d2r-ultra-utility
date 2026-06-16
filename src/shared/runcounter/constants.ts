@@ -21,6 +21,8 @@ export const RC_EVENTS = {
   DISPLAY_VISIBILITY: "rc:display-visibility",
   /** display -> main: the display was closed/hidden from its own UI */
   DISPLAY_CLOSED: "rc:display-closed",
+  /** display -> main: the user drag-resized the window; persist the new size */
+  DISPLAY_RESIZED: "rc:display-resized",
   /** main -> session picker: open it with the current list of targets */
   OPEN_SESSION: "rc:open-session",
   /** session picker -> main: start a session for an existing or newly-named target */

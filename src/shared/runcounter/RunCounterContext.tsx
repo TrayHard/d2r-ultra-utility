@@ -149,6 +149,30 @@ export const RunCounterProvider: React.FC<RunCounterProviderProps> = ({
     });
   }, [data]);
 
+  // Persist the display size when the user drag-resizes it (no re-apply → no loop).
+  useEffect(() => {
+    if (!isTauri()) return;
+    let cancelled = false;
+    let unlisten: (() => void) | null = null;
+    listen<{ width: number; height: number }>(RC_EVENTS.DISPLAY_RESIZED, (event) => {
+      const p = event.payload;
+      if (!p?.width || !p?.height) return;
+      setData((d) => ({
+        ...d,
+        displayConfig: { ...d.displayConfig, width: p.width, height: p.height },
+      }));
+    })
+      .then((fn) => {
+        if (cancelled) fn();
+        else unlisten = fn;
+      })
+      .catch((err) => console.warn("rc display-resized listen failed", err));
+    return () => {
+      cancelled = true;
+      if (unlisten) unlisten();
+    };
+  }, []);
+
   // Only a running run needs a live clock; paused/stopped elapsed is frozen.
   const hasRunningRun =
     !!data.current && data.current.runs.some((r) => r.status === "running");
