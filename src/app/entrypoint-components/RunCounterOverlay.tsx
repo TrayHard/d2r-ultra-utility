@@ -6,6 +6,7 @@ import { mdiClose, mdiTreasureChestOutline } from "@mdi/js";
 import { RC_EVENTS, OpenLootPayload } from "../../shared/runcounter/constants";
 import { emitLootToMain, hideLootOverlay } from "../../shared/runcounter/overlay";
 import { isTauri } from "../../shared/runcounter/hotkeys";
+import { useHelperLanguageSync } from "../../shared/runcounter/useHelperLanguageSync";
 
 /**
  * Lightweight UI rendered in the always-on-top "overlay" window (selected by window
@@ -14,6 +15,7 @@ import { isTauri } from "../../shared/runcounter/hotkeys";
  */
 const RunCounterOverlay: React.FC = () => {
   const { t } = useTranslation();
+  useHelperLanguageSync();
   const inputRef = useRef<HTMLInputElement>(null);
   const [value, setValue] = useState("");
   const [context, setContext] = useState("");

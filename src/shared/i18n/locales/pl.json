@@ -1959,7 +1959,25 @@
       "obsHint": "Panel statystyk zawsze na wierzchu — przypnij go nad grą lub przechwyć w OBS przez „Przechwytywanie okna”",
       "title": "Wyświetlacz",
       "previewHint": "Włączaj/wyłączaj elementy; przeciągnij róg, aby zmienić rozmiar jak w oknie",
-      "resizeHint": "Przeciągnij, aby zmienić rozmiar"
+      "resizeHint": "Przeciągnij, aby zmienić rozmiar",
+      "style": {
+        "title": "Styl tekstu",
+        "bold": "Pogrubienie",
+        "italic": "Kursywa",
+        "elements": {
+          "timer": "Stoper",
+          "statValue": "Wartości",
+          "statLabel": "Etykiety",
+          "runNumber": "Numer biegu",
+          "target": "Cel"
+        },
+        "fonts": {
+          "default": "Domyślna",
+          "sans": "Sans",
+          "mono": "Mono",
+          "diablo": "Diablo"
+        }
+      }
     }
   }
 }

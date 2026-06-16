@@ -1958,7 +1958,25 @@
       "obsHint": "Immer-im-Vordergrund-Statistikpanel — über dem Spiel anheften oder in OBS per Fensteraufnahme erfassen",
       "title": "Anzeige",
       "previewHint": "Elemente ein-/ausblenden; an der Ecke ziehen, um die Größe wie bei einem Fenster zu ändern",
-      "resizeHint": "Zum Ändern der Größe ziehen"
+      "resizeHint": "Zum Ändern der Größe ziehen",
+      "style": {
+        "title": "Textstil",
+        "bold": "Fett",
+        "italic": "Kursiv",
+        "elements": {
+          "timer": "Timer",
+          "statValue": "Werte",
+          "statLabel": "Beschriftungen",
+          "runNumber": "Run-Nummer",
+          "target": "Ziel"
+        },
+        "fonts": {
+          "default": "Standard",
+          "sans": "Sans",
+          "mono": "Mono",
+          "diablo": "Diablo"
+        }
+      }
     }
   }
 }

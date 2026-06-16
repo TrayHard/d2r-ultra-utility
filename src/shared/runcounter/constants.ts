@@ -27,6 +27,8 @@ export const RC_EVENTS = {
   OPEN_SESSION: "rc:open-session",
   /** session picker -> main: start a session for an existing or newly-named target */
   START_SESSION: "rc:start-session",
+  /** main -> helper windows: the app UI language changed */
+  LANGUAGE: "rc:language",
 } as const;
 
 export interface OpenLootPayload {

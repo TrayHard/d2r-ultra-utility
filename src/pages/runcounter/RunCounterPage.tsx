@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Select, Input, Collapse, Popconfirm, Tooltip, Empty } from "antd";
+import { Select, Input, Collapse, Popconfirm, Tooltip, Empty, InputNumber, ColorPicker } from "antd";
 import Icon from "@mdi/react";
 import {
   mdiPlay,
@@ -24,6 +24,8 @@ import { useRunCounter } from "../../shared/runcounter/RunCounterContext";
 import { useGlobalHotkeys } from "../../shared/runcounter/useGlobalHotkeys";
 import { runElapsedMs, formatDuration } from "../../shared/runcounter/engine";
 import { HOTKEY_ACTIONS } from "../../shared/runcounter/constants";
+import { elementCss } from "../../shared/runcounter/displayStyle";
+import { DisplayElement, ElementStyle } from "../../shared/runcounter/types";
 import { formatHotkeyForDisplay, hasModifier, isTauri } from "../../shared/runcounter/hotkeys";
 import { HotkeyAction } from "../../shared/runcounter/types";
 import HotkeyCapture from "./components/HotkeyCapture";
@@ -88,6 +90,9 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
   const isActive = !!currentRun && currentRun.status !== "stopped";
   const isPaused = currentRun?.status === "paused";
   const currentElapsed = currentRun ? runElapsedMs(currentRun, now) : 0;
+  const previewTimerColor = isPaused ? "#facc15" : isActive ? "#4ade80" : "#e5e7eb";
+  const setStyle = (el: DisplayElement, patch: Partial<ElementStyle>) =>
+    setDisplayConfig({ styles: { ...cfg.styles, [el]: { ...cfg.styles[el], ...patch } } });
 
   // --- target management -----------------------------------------------------
   const [editingTarget, setEditingTarget] = useState<null | "add" | "rename">(null);
@@ -457,7 +462,7 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
             key: "display",
             label: t("runCounterPage.display.title"),
             children: (
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-3">
                 <div className={`text-xs ${sub}`}>{t("runCounterPage.display.previewHint")}</div>
                 {/* Live preview — toggle each element with the eye next to it */}
                 <div className="mx-auto w-full max-w-[280px] rounded-xl border border-yellow-500/40 bg-gray-900/90 text-gray-100 p-3 flex flex-col items-center gap-1.5">
@@ -465,62 +470,79 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
                     enabled={cfg.showHeader}
                     onToggle={() => setDisplayConfig({ showHeader: !cfg.showHeader })}
                   >
-                    <span className="flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-green-500" />
-                      <span className="font-semibold">
-                        {activeTarget?.name ?? t("runCounterPage.target.none")}
-                      </span>
+                    <span style={elementCss(cfg.styles.target, "#f3f4f6")}>
+                      {activeTarget?.name ?? t("runCounterPage.target.none")}
                     </span>
                   </PreviewToggle>
 
-                  <div className="font-mono tabular-nums text-3xl font-bold text-yellow-400 leading-none">
+                  <span
+                    className="tabular-nums"
+                    style={elementCss(cfg.styles.timer, previewTimerColor)}
+                  >
                     {formatDuration(currentElapsed)}
-                  </div>
+                  </span>
 
                   <PreviewToggle
                     enabled={cfg.showRunNumber}
                     onToggle={() => setDisplayConfig({ showRunNumber: !cfg.showRunNumber })}
                   >
-                    <span className="font-mono text-sm text-gray-400">
+                    <span className="tabular-nums" style={elementCss(cfg.styles.runNumber, "#9ca3af")}>
                       #{currentRun?.index ?? 1}
                     </span>
                   </PreviewToggle>
 
                   <div className="flex flex-wrap justify-center gap-x-3 gap-y-1 mt-1">
-                    <PreviewToggle
-                      enabled={cfg.showRuns}
-                      onToggle={() => setDisplayConfig({ showRuns: !cfg.showRuns })}
-                    >
-                      <PreviewStat label={t("runCounterPage.stats.runs")} value={`${stats.completedCount}`} />
+                    <PreviewToggle enabled={cfg.showRuns} onToggle={() => setDisplayConfig({ showRuns: !cfg.showRuns })}>
+                      <PreviewStat
+                        label={t("runCounterPage.stats.runs")}
+                        value={`${stats.completedCount}`}
+                        valueStyle={elementCss(cfg.styles.statValue, "#f3f4f6")}
+                        labelStyle={elementCss(cfg.styles.statLabel, "#9ca3af")}
+                      />
                     </PreviewToggle>
-                    <PreviewToggle
-                      enabled={cfg.showAvg}
-                      onToggle={() => setDisplayConfig({ showAvg: !cfg.showAvg })}
-                    >
+                    <PreviewToggle enabled={cfg.showAvg} onToggle={() => setDisplayConfig({ showAvg: !cfg.showAvg })}>
                       <PreviewStat
                         label={t("runCounterPage.stats.avg")}
                         value={stats.completedCount ? formatDuration(stats.avgMs) : "—"}
+                        valueStyle={elementCss(cfg.styles.statValue, "#f3f4f6")}
+                        labelStyle={elementCss(cfg.styles.statLabel, "#9ca3af")}
                       />
                     </PreviewToggle>
-                    <PreviewToggle
-                      enabled={cfg.showBest}
-                      onToggle={() => setDisplayConfig({ showBest: !cfg.showBest })}
-                    >
+                    <PreviewToggle enabled={cfg.showBest} onToggle={() => setDisplayConfig({ showBest: !cfg.showBest })}>
                       <PreviewStat
                         label={t("runCounterPage.stats.best")}
                         value={stats.completedCount ? formatDuration(stats.bestMs) : "—"}
+                        valueStyle={elementCss(cfg.styles.statValue, "#f3f4f6")}
+                        labelStyle={elementCss(cfg.styles.statLabel, "#9ca3af")}
                       />
                     </PreviewToggle>
-                    <PreviewToggle
-                      enabled={cfg.showPerHour}
-                      onToggle={() => setDisplayConfig({ showPerHour: !cfg.showPerHour })}
-                    >
+                    <PreviewToggle enabled={cfg.showPerHour} onToggle={() => setDisplayConfig({ showPerHour: !cfg.showPerHour })}>
                       <PreviewStat
                         label={t("runCounterPage.stats.perHour")}
                         value={stats.completedCount ? stats.runsPerHour.toFixed(1) : "—"}
+                        valueStyle={elementCss(cfg.styles.statValue, "#f3f4f6")}
+                        labelStyle={elementCss(cfg.styles.statLabel, "#9ca3af")}
                       />
                     </PreviewToggle>
                   </div>
+                </div>
+
+                {/* Per-element text style */}
+                <div className={`text-xs font-medium ${heading}`}>
+                  {t("runCounterPage.display.style.title")}
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  {(["target", "timer", "runNumber", "statValue", "statLabel"] as DisplayElement[]).map(
+                    (el) => (
+                      <StyleRow
+                        key={el}
+                        label={t(`runCounterPage.display.style.elements.${el}`)}
+                        value={cfg.styles[el]}
+                        isDarkTheme={isDarkTheme}
+                        onChange={(patch) => setStyle(el, patch)}
+                      />
+                    )
+                  )}
                 </div>
               </div>
             ),
@@ -710,11 +732,95 @@ const PreviewToggle: React.FC<{
   </div>
 );
 
-const PreviewStat: React.FC<{ label: string; value: string }> = ({ label, value }) => (
+const PreviewStat: React.FC<{
+  label: string;
+  value: string;
+  valueStyle: React.CSSProperties;
+  labelStyle: React.CSSProperties;
+}> = ({ label, value, valueStyle, labelStyle }) => (
   <span className="text-center">
-    <span className="block text-[9px] uppercase tracking-wide text-gray-500 leading-none">{label}</span>
-    <span className="block text-xs font-mono tabular-nums text-gray-100">{value}</span>
+    <span className="block uppercase tracking-wide" style={labelStyle}>
+      {label}
+    </span>
+    <span className="block tabular-nums" style={valueStyle}>
+      {value}
+    </span>
   </span>
 );
+
+const STYLE_FONTS = [
+  { value: "", key: "default" },
+  { value: "sans", key: "sans" },
+  { value: "mono", key: "mono" },
+  { value: "diablo", key: "diablo" },
+];
+
+/** A compact per-element text-style editor (bold / italic / size / colour / font). */
+const StyleRow: React.FC<{
+  label: string;
+  value: ElementStyle;
+  isDarkTheme: boolean;
+  onChange: (patch: Partial<ElementStyle>) => void;
+}> = ({ label, value, isDarkTheme, onChange }) => {
+  const { t } = useTranslation();
+  const toggleCls = (active: boolean) =>
+    `w-6 h-6 p-0 rounded border text-xs flex items-center justify-center shrink-0 ${
+      active
+        ? "bg-yellow-600 border-yellow-500 text-black"
+        : isDarkTheme
+          ? "bg-gray-700 border-gray-600 text-gray-200"
+          : "bg-gray-100 border-gray-300 text-gray-700"
+    }`;
+  return (
+    <div className="flex items-center gap-1.5 flex-wrap">
+      <span className={`text-xs w-20 shrink-0 ${isDarkTheme ? "text-gray-300" : "text-gray-700"}`}>
+        {label}
+      </span>
+      <button
+        className={toggleCls(value.bold)}
+        style={{ fontWeight: 700, padding: 0 }}
+        title={t("runCounterPage.display.style.bold")}
+        onClick={() => onChange({ bold: !value.bold })}
+      >
+        B
+      </button>
+      <button
+        className={toggleCls(value.italic)}
+        style={{ fontStyle: "italic", padding: 0 }}
+        title={t("runCounterPage.display.style.italic")}
+        onClick={() => onChange({ italic: !value.italic })}
+      >
+        I
+      </button>
+      <InputNumber
+        size="small"
+        min={8}
+        max={120}
+        value={value.fontSize}
+        className="w-16"
+        onChange={(v) =>
+          v != null && onChange({ fontSize: Math.min(120, Math.max(8, Math.round(Number(v)))) })
+        }
+      />
+      <ColorPicker
+        size="small"
+        value={value.color || undefined}
+        allowClear
+        onClear={() => onChange({ color: "" })}
+        onChangeComplete={(c) => c && onChange({ color: c.toHexString() })}
+      />
+      <Select
+        size="small"
+        className="w-24"
+        value={value.fontFamily}
+        onChange={(v) => onChange({ fontFamily: v })}
+        options={STYLE_FONTS.map((f) => ({
+          value: f.value,
+          label: t(`runCounterPage.display.style.fonts.${f.key}`),
+        }))}
+      />
+    </div>
+  );
+};
 
 export default RunCounterPage;

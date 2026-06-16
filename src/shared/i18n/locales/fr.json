@@ -1958,7 +1958,25 @@
       "obsHint": "Panneau de stats toujours au-dessus — épinglez-le sur le jeu ou capturez-le dans OBS via « Capture de fenêtre »",
       "title": "Affichage",
       "previewHint": "Affichez/masquez les éléments ; tirez le coin pour redimensionner comme une fenêtre",
-      "resizeHint": "Faites glisser pour redimensionner"
+      "resizeHint": "Faites glisser pour redimensionner",
+      "style": {
+        "title": "Style du texte",
+        "bold": "Gras",
+        "italic": "Italique",
+        "elements": {
+          "timer": "Chrono",
+          "statValue": "Valeurs",
+          "statLabel": "Libellés",
+          "runNumber": "Numéro de run",
+          "target": "Cible"
+        },
+        "fonts": {
+          "default": "Défaut",
+          "sans": "Sans",
+          "mono": "Mono",
+          "diablo": "Diablo"
+        }
+      }
     }
   }
 }

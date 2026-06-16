@@ -133,3 +133,25 @@ html.dark .ant-modal .ant-modal-header {
 html.dark .ant-modal .ant-modal-title {
   color: var(--ant-color-text) !important;
 }
+
+/* Popover / Popconfirm (confirmation bubbles) — match the app's dark surface */
+html.dark .ant-popover .ant-popover-inner {
+  background-color: var(--ant-color-bg-container) !important;
+  border: 1px solid var(--ant-color-border) !important;
+}
+
+html.dark .ant-popover .ant-popover-arrow::before,
+html.dark .ant-popover .ant-popover-arrow::after {
+  background-color: var(--ant-color-bg-container) !important;
+}
+
+html.dark .ant-popconfirm .ant-popconfirm-message-title,
+html.dark .ant-popover .ant-popconfirm-message-title {
+  color: var(--ant-color-text) !important;
+}
+
+/* The accent is yellow (#eab308); white text on it is unreadable. Use dark text on
+   yellow primary buttons (keep white on red/dangerous). Applies app-wide. */
+.ant-btn-primary:not(.ant-btn-dangerous) {
+  color: #1f2937 !important;
+}
