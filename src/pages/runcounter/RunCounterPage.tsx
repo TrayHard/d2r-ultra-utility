@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { listen } from "@tauri-apps/api/event";
-import { Select, Input, Collapse, Popconfirm, Tooltip, Empty, Tag } from "antd";
+import { Select, Input, Collapse, Popconfirm, Tooltip, Empty, Tag, InputNumber, Switch } from "antd";
 import Icon from "@mdi/react";
 import {
   mdiPlay,
@@ -59,7 +59,10 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
     openSessionOverlay,
     openDisplay,
     closeDisplay,
+    setDisplayConfig,
   } = rc;
+
+  const cfg = data.displayConfig;
 
   // --- display toggle + history expansion ------------------------------------
   const [displayOpen, setDisplayOpen] = useState(false);
@@ -338,8 +341,10 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
           isDarkTheme={isDarkTheme}
           icon={mdiRestart}
           onClick={openSessionOverlay}
+          className="shrink-0"
         >
           {t("runCounterPage.controls.newSession")}
+          <span className="opacity-60 font-mono ml-1">{actionHotkey("newSession")}</span>
         </Button>
         <Popconfirm
           title={t("runCounterPage.controls.finishConfirm")}
@@ -353,8 +358,10 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
             isDarkTheme={isDarkTheme}
             icon={mdiFlagCheckered}
             disabled={!data.current}
+            className="shrink-0"
           >
             {t("runCounterPage.controls.finishSession")}
+            <span className="opacity-60 font-mono ml-1">{actionHotkey("finishSession")}</span>
           </Button>
         </Popconfirm>
         <Button
@@ -365,6 +372,7 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
           icon={mdiBroadcast}
           onClick={toggleDisplay}
           title={t("runCounterPage.display.obsHint")}
+          className="shrink-0"
         >
           {displayOpen ? t("runCounterPage.display.close") : t("runCounterPage.display.open")}
         </Button>
@@ -532,6 +540,74 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
             ),
           },
           {
+            key: "display",
+            label: t("runCounterPage.display.title"),
+            children: (
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-3 flex-wrap">
+                  <span className={`text-sm ${heading}`}>{t("runCounterPage.display.width")}</span>
+                  <InputNumber
+                    size="small"
+                    min={220}
+                    max={900}
+                    value={cfg.width}
+                    onChange={(v) =>
+                      v != null &&
+                      setDisplayConfig({ width: Math.min(900, Math.max(220, Math.round(Number(v)))) })
+                    }
+                  />
+                  <span className={`text-sm ${heading}`}>{t("runCounterPage.display.height")}</span>
+                  <InputNumber
+                    size="small"
+                    min={140}
+                    max={700}
+                    value={cfg.height}
+                    onChange={(v) =>
+                      v != null &&
+                      setDisplayConfig({ height: Math.min(700, Math.max(140, Math.round(Number(v)))) })
+                    }
+                  />
+                </div>
+                <DisplayToggle
+                  label={t("runCounterPage.display.showHeader")}
+                  checked={cfg.showHeader}
+                  heading={heading}
+                  onChange={(v) => setDisplayConfig({ showHeader: v })}
+                />
+                <DisplayToggle
+                  label={t("runCounterPage.display.showRunNumber")}
+                  checked={cfg.showRunNumber}
+                  heading={heading}
+                  onChange={(v) => setDisplayConfig({ showRunNumber: v })}
+                />
+                <DisplayToggle
+                  label={t("runCounterPage.stats.runs")}
+                  checked={cfg.showRuns}
+                  heading={heading}
+                  onChange={(v) => setDisplayConfig({ showRuns: v })}
+                />
+                <DisplayToggle
+                  label={t("runCounterPage.stats.avg")}
+                  checked={cfg.showAvg}
+                  heading={heading}
+                  onChange={(v) => setDisplayConfig({ showAvg: v })}
+                />
+                <DisplayToggle
+                  label={t("runCounterPage.stats.best")}
+                  checked={cfg.showBest}
+                  heading={heading}
+                  onChange={(v) => setDisplayConfig({ showBest: v })}
+                />
+                <DisplayToggle
+                  label={t("runCounterPage.stats.perHour")}
+                  checked={cfg.showPerHour}
+                  heading={heading}
+                  onChange={(v) => setDisplayConfig({ showPerHour: v })}
+                />
+              </div>
+            ),
+          },
+          {
             key: "history",
             label: `${t("runCounterPage.history.title")} (${data.history.length})`,
             children:
@@ -570,7 +646,7 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
                           </div>
                         </button>
                         {expanded && (
-                          <div className="px-3 pb-2 flex flex-col gap-1">
+                          <div className="px-3 pb-2 flex flex-col gap-1 max-h-48 overflow-y-auto">
                             {s.runs.map((r) => (
                               <div
                                 key={r.id}
@@ -700,6 +776,18 @@ const StatCard: React.FC<StatCardProps> = ({ label, value, isDarkTheme }) => (
     <div className={`text-lg font-semibold font-mono tabular-nums ${isDarkTheme ? "text-gray-100" : "text-gray-800"}`}>
       {value}
     </div>
+  </div>
+);
+
+const DisplayToggle: React.FC<{
+  label: string;
+  checked: boolean;
+  heading: string;
+  onChange: (v: boolean) => void;
+}> = ({ label, checked, heading, onChange }) => (
+  <div className="flex items-center justify-between">
+    <span className={`text-sm ${heading}`}>{label}</span>
+    <Switch size="small" checked={checked} onChange={onChange} />
   </div>
 );
 

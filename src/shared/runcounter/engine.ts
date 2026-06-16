@@ -2,11 +2,23 @@
 // No React, no I/O — every function takes the current data + an explicit `now`
 // (epoch ms) and returns new data, so behaviour is deterministic and reviewable.
 
-import { RunCounterData, RunRecord, RunSession, RunStatus } from "./types";
+import { RunCounterData, RunRecord, RunSession, RunStatus, DisplayConfig } from "./types";
 import { DEFAULT_HOTKEYS } from "./constants";
 
 /** Hard cap on archived sessions kept in localStorage, to avoid hitting the quota. */
 export const MAX_HISTORY = 200;
+
+/** Default configuration for the broadcast/display window. */
+export const DEFAULT_DISPLAY_CONFIG: DisplayConfig = {
+  width: 340,
+  height: 240,
+  showHeader: true,
+  showRunNumber: true,
+  showRuns: true,
+  showAvg: true,
+  showBest: true,
+  showPerHour: true,
+};
 
 export const uid = (): string =>
   `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
@@ -20,6 +32,7 @@ export const defaultData = (): RunCounterData => ({
   history: [],
   hotkeys: { ...DEFAULT_HOTKEYS },
   hotkeysEnabled: true,
+  displayConfig: { ...DEFAULT_DISPLAY_CONFIG },
 });
 
 /** Find the run that currently receives loot / is displayed, or null. */

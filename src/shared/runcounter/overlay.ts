@@ -4,6 +4,7 @@
 
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { emitTo } from "@tauri-apps/api/event";
+import { LogicalSize } from "@tauri-apps/api/dpi";
 import {
   OVERLAY_WINDOW_LABEL,
   DISPLAY_WINDOW_LABEL,
@@ -66,6 +67,20 @@ export const showDisplayWindow = async (): Promise<void> => {
     await win.show();
   } catch (err) {
     console.warn("showDisplayWindow failed", err);
+  }
+};
+
+/** Resize the stats display window (size is edited from the utility, not the window). */
+export const resizeDisplayWindow = async (
+  width: number,
+  height: number
+): Promise<void> => {
+  if (!isTauri()) return;
+  try {
+    const win = await WebviewWindow.getByLabel(DISPLAY_WINDOW_LABEL);
+    await win?.setSize(new LogicalSize(width, height));
+  } catch (err) {
+    console.warn("resizeDisplayWindow failed", err);
   }
 };
 

@@ -1954,7 +1954,12 @@
     "display": {
       "open": "Pantalla",
       "close": "Ocultar pantalla",
-      "obsHint": "Panel de estadísticas siempre visible: fíjalo sobre el juego o captúralo en OBS con «Captura de ventana»"
+      "obsHint": "Panel de estadísticas siempre visible: fíjalo sobre el juego o captúralo en OBS con «Captura de ventana»",
+      "title": "Pantalla",
+      "width": "Ancho",
+      "height": "Alto",
+      "showHeader": "Encabezado de objetivo",
+      "showRunNumber": "Número de run"
     }
   }
 }
