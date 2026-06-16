@@ -45,6 +45,15 @@ html.dark .ant-select-dropdown .ant-select-item-option-active {
   background-color: var(--ant-color-fill) !important;
 }
 
+/* The selected row is also "active" right after opening; without this the active
+   grey bg + selected dark text render as dark-on-dark. Keep it amber + dark text. */
+html.dark
+  .ant-select-dropdown
+  .ant-select-item-option-selected.ant-select-item-option-active {
+  background-color: #fbbf24 !important;
+  color: #111827 !important;
+}
+
 html.dark .ant-select-dropdown .ant-select-item:hover {
   background-color: var(--ant-color-fill-secondary) !important;
 }

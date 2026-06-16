@@ -28,6 +28,13 @@ const RunCounterWorkspaceContent: React.FC<RunCounterWorkspaceProps> = ({
 
   const isDarkTheme = getIsDarkTheme();
 
+  // Keep the global `dark` class in sync so the antd-theme.css overrides apply here too.
+  useEffect(() => {
+    const root = document.documentElement;
+    if (isDarkTheme) root.classList.add("dark");
+    else root.classList.remove("dark");
+  }, [isDarkTheme]);
+
   // Pin the main window to the fixed Run Counter size, regardless of how the
   // previous screen (e.g. advanced loot-filter mode at 1200px) left it.
   useEffect(() => {

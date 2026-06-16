@@ -24,7 +24,7 @@ import { useRunCounter } from "../../shared/runcounter/RunCounterContext";
 import { useGlobalHotkeys } from "../../shared/runcounter/useGlobalHotkeys";
 import { runElapsedMs, formatDuration } from "../../shared/runcounter/engine";
 import { HOTKEY_ACTIONS } from "../../shared/runcounter/constants";
-import { elementCss } from "../../shared/runcounter/displayStyle";
+import { elementCss, FONT_OPTIONS } from "../../shared/runcounter/displayStyle";
 import { DisplayElement, ElementStyle } from "../../shared/runcounter/types";
 import { formatHotkeyForDisplay, hasModifier, isTauri } from "../../shared/runcounter/hotkeys";
 import { HotkeyAction } from "../../shared/runcounter/types";
@@ -775,13 +775,6 @@ const PreviewStat: React.FC<{
   </span>
 );
 
-const STYLE_FONTS = [
-  { value: "", key: "default" },
-  { value: "sans", key: "sans" },
-  { value: "mono", key: "mono" },
-  { value: "diablo", key: "diablo" },
-];
-
 /** A compact per-element text-style editor (bold / italic / size / colour / font). */
 const StyleRow: React.FC<{
   label: string;
@@ -838,12 +831,16 @@ const StyleRow: React.FC<{
       />
       <Select
         size="small"
-        className="w-24"
+        className="w-28"
         value={value.fontFamily}
         onChange={(v) => onChange({ fontFamily: v })}
-        options={STYLE_FONTS.map((f) => ({
+        options={FONT_OPTIONS.map((f) => ({
           value: f.value,
-          label: t(`runCounterPage.display.style.fonts.${f.key}`),
+          label: (
+            <span style={{ fontFamily: f.value || undefined }}>
+              {f.value === "" ? t("runCounterPage.display.style.fonts.default") : f.label}
+            </span>
+          ),
         }))}
       />
     </div>
