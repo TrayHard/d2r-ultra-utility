@@ -1813,7 +1813,7 @@
     "descriptions": {
       "tweaks": "Ustawienia gry: filmy wprowadzające",
       "lootFilters": "Manage loot filters: runes, gems, items",
-      "runCounter": "Track your game runs"
+      "runCounter": "Śledź swoje biegi w grze"
     }
   },
   "tweaksPage": {
@@ -1827,7 +1827,7 @@
     }
   },
   "tweaks": "Tweaks",
-  "runCounter": "Run Counter",
+  "runCounter": "Licznik Biegów",
   "modifiersPage": {
     "tabs": {
       "modifiers": "Statystyki",
@@ -1860,5 +1860,87 @@
   },
   "editor": {
     "resetColor": "Resetuj kolor do domyślnego"
+  },
+  "runCounterPage": {
+    "defaultTarget": "Farma",
+    "status": {
+      "idle": "Bezczynny",
+      "running": "W toku",
+      "paused": "Wstrzymany",
+      "stopped": "Zatrzymany"
+    },
+    "target": {
+      "label": "Cel",
+      "placeholder": "Nazwa celu",
+      "none": "Brak celu",
+      "empty": "Utwórz cel, aby rozpocząć",
+      "add": "Nowy cel",
+      "rename": "Zmień nazwę",
+      "delete": "Usuń",
+      "deleteConfirm": "Usunąć ten cel?"
+    },
+    "controls": {
+      "start": "Start",
+      "stopNext": "Stop i następny",
+      "pause": "Pauza",
+      "resume": "Wznów",
+      "stop": "Stop",
+      "addLoot": "Dodaj łup",
+      "finishSession": "Zakończ sesję",
+      "finishConfirm": "Zarchiwizować tę sesję w historii?"
+    },
+    "stats": {
+      "runs": "Biegi",
+      "avg": "Śr.",
+      "best": "Najlepszy",
+      "last": "Ostatni",
+      "perHour": "Biegi/h",
+      "total": "Sesja"
+    },
+    "loot": {
+      "title": "Łup",
+      "empty": "Nie zapisano jeszcze łupu",
+      "remove": "Usuń"
+    },
+    "runsList": {
+      "title": "Biegi w tej sesji",
+      "run": "Bieg {{n}}",
+      "lootCount": "łup: {{count}}"
+    },
+    "hotkeys": {
+      "title": "Skróty klawiszowe",
+      "press": "Naciśnij klawisze… (Esc, aby anulować)",
+      "reset": "Przywróć domyślne",
+      "failed": "Nie udało się przypisać: {{list}}",
+      "noModifierWarning": "Wskazówka: dodaj modyfikator (Ctrl/Alt), aby klawisz działał także w grze",
+      "caveat": "Działa najlepiej z D2R w trybie okienkowym (nie pełny ekran na wyłączność)",
+      "browserNote": "Globalne skróty działają tylko w aplikacji desktopowej",
+      "actions": {
+        "start": "Rozpocznij bieg",
+        "stopNext": "Stop i następny bieg",
+        "pause": "Pauza / wznów",
+        "stop": "Zatrzymaj bieg",
+        "addLoot": "Dodaj łup"
+      },
+      "duplicateWarning": "Ten skrót jest już przypisany do innej akcji"
+    },
+    "history": {
+      "title": "Historia",
+      "empty": "Brak zakończonych sesji",
+      "runs": "biegi: {{count}}",
+      "clear": "Wyczyść historię",
+      "clearConfirm": "Usunąć całą historię?"
+    },
+    "messages": {
+      "targetAdded": "Dodano cel \"{{name}}\"",
+      "noRun": "Najpierw rozpocznij bieg, aby zapisać łup"
+    },
+    "overlay": {
+      "title": "Dodaj łup",
+      "close": "Zamknij",
+      "placeholder": "Nazwa przedmiotu (Enter, aby dodać)",
+      "noRun": "Brak aktywnego biegu — najpierw go rozpocznij",
+      "hint": "Enter = dodaj · Esc = zamknij"
+    }
   }
 }

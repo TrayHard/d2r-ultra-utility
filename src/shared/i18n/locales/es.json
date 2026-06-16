@@ -1812,7 +1812,7 @@
     "descriptions": {
       "tweaks": "Ajustes del juego: vídeos de introducción",
       "lootFilters": "Manage loot filters: runes, gems, items",
-      "runCounter": "Track your game runs"
+      "runCounter": "Registra tus runs de farmeo"
     }
   },
   "tweaksPage": {
@@ -1826,7 +1826,7 @@
     }
   },
   "tweaks": "Tweaks",
-  "runCounter": "Run Counter",
+  "runCounter": "Contador de runs",
   "modifiersPage": {
     "tabs": {
       "modifiers": "Estadísticas",
@@ -1859,5 +1859,87 @@
   },
   "editor": {
     "resetColor": "Restablecer color predeterminado"
+  },
+  "runCounterPage": {
+    "defaultTarget": "Farmeo",
+    "status": {
+      "idle": "Inactivo",
+      "running": "En curso",
+      "paused": "En pausa",
+      "stopped": "Detenido"
+    },
+    "target": {
+      "label": "Objetivo",
+      "placeholder": "Nombre del objetivo",
+      "none": "Sin objetivo",
+      "empty": "Crea un objetivo para empezar",
+      "add": "Nuevo objetivo",
+      "rename": "Renombrar",
+      "delete": "Eliminar",
+      "deleteConfirm": "¿Eliminar este objetivo?"
+    },
+    "controls": {
+      "start": "Iniciar",
+      "stopNext": "Parar y siguiente",
+      "pause": "Pausar",
+      "resume": "Reanudar",
+      "stop": "Parar",
+      "addLoot": "Añadir botín",
+      "finishSession": "Finalizar sesión",
+      "finishConfirm": "¿Archivar esta sesión en el historial?"
+    },
+    "stats": {
+      "runs": "Runs",
+      "avg": "Media",
+      "best": "Mejor",
+      "last": "Última",
+      "perHour": "Runs/h",
+      "total": "Sesión"
+    },
+    "loot": {
+      "title": "Botín",
+      "empty": "Aún no hay botín registrado",
+      "remove": "Quitar"
+    },
+    "runsList": {
+      "title": "Runs de esta sesión",
+      "run": "Run {{n}}",
+      "lootCount": "{{count}} botín"
+    },
+    "hotkeys": {
+      "title": "Atajos de teclado",
+      "press": "Pulsa las teclas… (Esc para cancelar)",
+      "reset": "Restablecer valores predeterminados",
+      "failed": "No se pudo asignar: {{list}}",
+      "noModifierWarning": "Consejo: añade un modificador (Ctrl/Alt) para que la tecla siga funcionando dentro del juego",
+      "caveat": "Funciona mejor con D2R en modo ventana (no en pantalla completa exclusiva)",
+      "browserNote": "Los atajos globales solo funcionan en la app de escritorio",
+      "actions": {
+        "start": "Iniciar run",
+        "stopNext": "Parar y siguiente run",
+        "pause": "Pausar / reanudar",
+        "stop": "Parar run",
+        "addLoot": "Añadir botín"
+      },
+      "duplicateWarning": "Este atajo ya está asignado a otra acción"
+    },
+    "history": {
+      "title": "Historial",
+      "empty": "Aún no hay sesiones finalizadas",
+      "runs": "{{count}} runs",
+      "clear": "Borrar historial",
+      "clearConfirm": "¿Eliminar todo el historial?"
+    },
+    "messages": {
+      "targetAdded": "Objetivo \"{{name}}\" añadido",
+      "noRun": "Inicia una run primero para registrar el botín"
+    },
+    "overlay": {
+      "title": "Añadir botín",
+      "close": "Cerrar",
+      "placeholder": "Nombre del objeto (Intro para añadir)",
+      "noRun": "No hay ninguna run activa — inicia una primero",
+      "hint": "Intro = añadir · Esc = cerrar"
+    }
   }
 }

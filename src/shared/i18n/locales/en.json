@@ -1817,6 +1817,88 @@
     }
   },
   "runCounter": "Run Counter",
+  "runCounterPage": {
+    "defaultTarget": "Farm",
+    "status": {
+      "idle": "Idle",
+      "running": "Running",
+      "paused": "Paused",
+      "stopped": "Stopped"
+    },
+    "target": {
+      "label": "Target",
+      "placeholder": "Target name",
+      "none": "No target",
+      "empty": "Create a target to start",
+      "add": "New target",
+      "rename": "Rename",
+      "delete": "Delete",
+      "deleteConfirm": "Delete this target?"
+    },
+    "controls": {
+      "start": "Start",
+      "stopNext": "Stop & Next",
+      "pause": "Pause",
+      "resume": "Resume",
+      "stop": "Stop",
+      "addLoot": "Add loot",
+      "finishSession": "Finish session",
+      "finishConfirm": "Archive this session to history?"
+    },
+    "stats": {
+      "runs": "Runs",
+      "avg": "Avg",
+      "best": "Best",
+      "last": "Last",
+      "perHour": "Runs/h",
+      "total": "Session"
+    },
+    "loot": {
+      "title": "Loot",
+      "empty": "No loot recorded yet",
+      "remove": "Remove"
+    },
+    "runsList": {
+      "title": "Runs this session",
+      "run": "Run {{n}}",
+      "lootCount": "{{count}} loot"
+    },
+    "hotkeys": {
+      "title": "Hotkeys",
+      "press": "Press keys… (Esc to cancel)",
+      "reset": "Reset to defaults",
+      "failed": "Couldn't bind: {{list}}",
+      "noModifierWarning": "Tip: add a modifier (Ctrl/Alt) so the key still works in-game",
+      "duplicateWarning": "This shortcut is also bound to another action",
+      "caveat": "Works best with D2R in Windowed mode (not exclusive fullscreen)",
+      "browserNote": "Global hotkeys only work in the desktop app",
+      "actions": {
+        "start": "Start run",
+        "stopNext": "Stop & next run",
+        "pause": "Pause / resume",
+        "stop": "Stop run",
+        "addLoot": "Add loot"
+      }
+    },
+    "history": {
+      "title": "History",
+      "empty": "No finished sessions yet",
+      "runs": "{{count}} runs",
+      "clear": "Clear history",
+      "clearConfirm": "Delete all history?"
+    },
+    "messages": {
+      "targetAdded": "Target \"{{name}}\" added",
+      "noRun": "Start a run first to record loot"
+    },
+    "overlay": {
+      "title": "Add loot",
+      "close": "Close",
+      "placeholder": "Item name (Enter to add)",
+      "noRun": "No active run — start one first",
+      "hint": "Enter = add · Esc = close"
+    }
+  },
   "tweaksPage": {
     "skipIntroVideos": {
       "label": "Skip intro videos"

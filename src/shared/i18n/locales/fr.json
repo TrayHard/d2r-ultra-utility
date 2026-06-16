@@ -1812,7 +1812,7 @@
     "descriptions": {
       "tweaks": "Réglages du jeu : vidéos d'intro",
       "lootFilters": "Manage loot filters: runes, gems, items",
-      "runCounter": "Track your game runs"
+      "runCounter": "Suivez vos runs de jeu"
     }
   },
   "tweaksPage": {
@@ -1826,7 +1826,7 @@
     }
   },
   "tweaks": "Tweaks",
-  "runCounter": "Run Counter",
+  "runCounter": "Compteur de runs",
   "modifiersPage": {
     "tabs": {
       "modifiers": "Statistiques",
@@ -1859,5 +1859,87 @@
   },
   "editor": {
     "resetColor": "Réinitialiser la couleur"
+  },
+  "runCounterPage": {
+    "defaultTarget": "Farm",
+    "status": {
+      "idle": "Inactif",
+      "running": "En cours",
+      "paused": "En pause",
+      "stopped": "Arrêté"
+    },
+    "target": {
+      "label": "Cible",
+      "placeholder": "Nom de la cible",
+      "none": "Aucune cible",
+      "empty": "Créez une cible pour commencer",
+      "add": "Nouvelle cible",
+      "rename": "Renommer",
+      "delete": "Supprimer",
+      "deleteConfirm": "Supprimer cette cible ?"
+    },
+    "controls": {
+      "start": "Démarrer",
+      "stopNext": "Arrêter et suivant",
+      "pause": "Pause",
+      "resume": "Reprendre",
+      "stop": "Arrêter",
+      "addLoot": "Ajouter un loot",
+      "finishSession": "Terminer la session",
+      "finishConfirm": "Archiver cette session dans l'historique ?"
+    },
+    "stats": {
+      "runs": "Runs",
+      "avg": "Moy.",
+      "best": "Meilleur",
+      "last": "Dernier",
+      "perHour": "Runs/h",
+      "total": "Session"
+    },
+    "loot": {
+      "title": "Loot",
+      "empty": "Aucun loot enregistré pour l'instant",
+      "remove": "Retirer"
+    },
+    "runsList": {
+      "title": "Runs de cette session",
+      "run": "Run {{n}}",
+      "lootCount": "{{count}} loot"
+    },
+    "hotkeys": {
+      "title": "Raccourcis",
+      "press": "Appuyez sur des touches… (Esc pour annuler)",
+      "reset": "Réinitialiser par défaut",
+      "failed": "Impossible d'associer : {{list}}",
+      "noModifierWarning": "Astuce : ajoutez un modificateur (Ctrl/Alt) pour que la touche fonctionne aussi en jeu",
+      "caveat": "Fonctionne mieux avec D2R en mode fenêtré (pas en plein écran exclusif)",
+      "browserNote": "Les raccourcis globaux ne fonctionnent que dans l'application de bureau",
+      "actions": {
+        "start": "Démarrer un run",
+        "stopNext": "Arrêter et run suivant",
+        "pause": "Pause / reprise",
+        "stop": "Arrêter le run",
+        "addLoot": "Ajouter un loot"
+      },
+      "duplicateWarning": "Ce raccourci est déjà attribué à une autre action"
+    },
+    "history": {
+      "title": "Historique",
+      "empty": "Aucune session terminée pour l'instant",
+      "runs": "{{count}} runs",
+      "clear": "Effacer l'historique",
+      "clearConfirm": "Supprimer tout l'historique ?"
+    },
+    "messages": {
+      "targetAdded": "Cible « {{name}} » ajoutée",
+      "noRun": "Démarrez d'abord un run pour enregistrer du loot"
+    },
+    "overlay": {
+      "title": "Ajouter un loot",
+      "close": "Fermer",
+      "placeholder": "Nom de l'objet (Entrée pour ajouter)",
+      "noRun": "Aucun run actif — démarrez-en un d'abord",
+      "hint": "Entrée = ajouter · Esc = fermer"
+    }
   }
 }

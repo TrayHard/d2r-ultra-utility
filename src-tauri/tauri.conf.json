@@ -12,6 +12,7 @@
   "app": {
     "windows": [
       {
+        "label": "main",
         "title": "Diablo II Ultra Utility",
         "width": 600,
         "height": 751,
@@ -20,6 +21,20 @@
         "minimizable": true,
         "maximizable": true,
         "closable": true,
+        "center": true
+      },
+      {
+        "label": "overlay",
+        "title": "Run Counter — Add Loot",
+        "width": 460,
+        "height": 300,
+        "visible": false,
+        "alwaysOnTop": true,
+        "decorations": false,
+        "skipTaskbar": true,
+        "transparent": true,
+        "resizable": false,
+        "shadow": false,
         "center": true
       }
     ],

@@ -1812,7 +1812,7 @@
     "descriptions": {
       "tweaks": "Налаштування гри: вступні відео",
       "lootFilters": "Manage loot filters: runes, gems, items",
-      "runCounter": "Track your game runs"
+      "runCounter": "Відстежуйте свої ігрові забіги"
     }
   },
   "tweaksPage": {
@@ -1826,7 +1826,7 @@
     }
   },
   "tweaks": "Tweaks",
-  "runCounter": "Run Counter",
+  "runCounter": "Лічильник забігів",
   "modifiersPage": {
     "tabs": {
       "modifiers": "Стати",
@@ -1859,5 +1859,87 @@
   },
   "editor": {
     "resetColor": "Скинути колір на типовий"
+  },
+  "runCounterPage": {
+    "defaultTarget": "Фарм",
+    "status": {
+      "idle": "Очікування",
+      "running": "Триває",
+      "paused": "Пауза",
+      "stopped": "Зупинено"
+    },
+    "target": {
+      "label": "Ціль",
+      "placeholder": "Назва цілі",
+      "none": "Немає цілі",
+      "empty": "Створіть ціль, щоб почати",
+      "add": "Нова ціль",
+      "rename": "Перейменувати",
+      "delete": "Видалити",
+      "deleteConfirm": "Видалити цю ціль?"
+    },
+    "controls": {
+      "start": "Старт",
+      "stopNext": "Стоп і далі",
+      "pause": "Пауза",
+      "resume": "Продовжити",
+      "stop": "Стоп",
+      "addLoot": "Додати лут",
+      "finishSession": "Завершити сесію",
+      "finishConfirm": "Зберегти цю сесію в історію?"
+    },
+    "stats": {
+      "runs": "Забіги",
+      "avg": "Сер.",
+      "best": "Кращий",
+      "last": "Останній",
+      "perHour": "Забігів/год",
+      "total": "Сесія"
+    },
+    "loot": {
+      "title": "Лут",
+      "empty": "Лут ще не записано",
+      "remove": "Прибрати"
+    },
+    "runsList": {
+      "title": "Забіги цієї сесії",
+      "run": "Забіг {{n}}",
+      "lootCount": "{{count}} луту"
+    },
+    "hotkeys": {
+      "title": "Гарячі клавіші",
+      "press": "Натисніть клавіші… (Esc — скасувати)",
+      "reset": "Скинути до типових",
+      "failed": "Не вдалося призначити: {{list}}",
+      "noModifierWarning": "Порада: додайте модифікатор (Ctrl/Alt), щоб клавіша працювала і в грі",
+      "caveat": "Найкраще працює, коли D2R у віконному режимі (не ексклюзивний повноекранний)",
+      "browserNote": "Глобальні гарячі клавіші працюють лише в десктопному застосунку",
+      "actions": {
+        "start": "Почати забіг",
+        "stopNext": "Стоп і наступний забіг",
+        "pause": "Пауза / продовження",
+        "stop": "Зупинити забіг",
+        "addLoot": "Додати лут"
+      },
+      "duplicateWarning": "Ця комбінація вже призначена іншій дії"
+    },
+    "history": {
+      "title": "Історія",
+      "empty": "Завершених сесій ще немає",
+      "runs": "{{count}} забігів",
+      "clear": "Очистити історію",
+      "clearConfirm": "Видалити всю історію?"
+    },
+    "messages": {
+      "targetAdded": "Ціль \"{{name}}\" додано",
+      "noRun": "Спершу почніть забіг, щоб записати лут"
+    },
+    "overlay": {
+      "title": "Додати лут",
+      "close": "Закрити",
+      "placeholder": "Назва предмета (Enter — додати)",
+      "noRun": "Немає активного забігу — спершу почніть",
+      "hint": "Enter = додати · Esc = закрити"
+    }
   }
 }
