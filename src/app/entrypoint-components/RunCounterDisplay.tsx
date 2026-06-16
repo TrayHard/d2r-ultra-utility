@@ -11,6 +11,7 @@ import {
   runElapsedMs,
   sessionStats,
   formatDuration,
+  DEFAULT_DISPLAY_CONFIG,
 } from "../../shared/runcounter/engine";
 import { RunCounterData } from "../../shared/runcounter/types";
 
@@ -99,11 +100,28 @@ const RunCounterDisplay: React.FC = () => {
   }, [visible, isRunning]);
 
   const stats = sessionStats(data?.current ?? null, now);
+  const cfg = data?.displayConfig ?? DEFAULT_DISPLAY_CONFIG;
   const targetName =
     data?.current?.targetName ??
     data?.targets.find((tg) => tg.id === data?.activeTargetId)?.name ??
     "—";
   const elapsed = currentRun ? runElapsedMs(currentRun, now) : 0;
+
+  const statItems = [
+    cfg.showRuns && { label: t("runCounterPage.stats.runs"), value: `${stats.completedCount}` },
+    cfg.showAvg && {
+      label: t("runCounterPage.stats.avg"),
+      value: stats.completedCount ? formatDuration(stats.avgMs) : "—",
+    },
+    cfg.showBest && {
+      label: t("runCounterPage.stats.best"),
+      value: stats.completedCount ? formatDuration(stats.bestMs) : "—",
+    },
+    cfg.showPerHour && {
+      label: t("runCounterPage.stats.perHour"),
+      value: stats.completedCount ? stats.runsPerHour.toFixed(1) : "—",
+    },
+  ].filter(Boolean) as Array<{ label: string; value: string }>;
 
   const dotColor = !currentRun
     ? "bg-gray-500"
@@ -127,15 +145,16 @@ const RunCounterDisplay: React.FC = () => {
           <Icon path={mdiClose} size={0.7} />
         </button>
 
-        <div className="flex items-center gap-2 pointer-events-none">
-          <span className={`w-2 h-2 rounded-full ${dotColor}`} />
-          <span className="font-semibold truncate">{targetName}</span>
-          {currentRun && <span className="text-xs text-gray-400">#{currentRun.index}</span>}
-        </div>
+        {cfg.showHeader && (
+          <div className="flex items-center gap-2 pointer-events-none">
+            <span className={`w-2 h-2 rounded-full ${dotColor}`} />
+            <span className="font-semibold truncate">{targetName}</span>
+          </div>
+        )}
 
-        <div className="flex-1 flex items-center justify-center pointer-events-none">
+        <div className="flex-1 flex flex-col items-center justify-center pointer-events-none">
           <span
-            className={`font-mono tabular-nums text-4xl font-bold ${
+            className={`font-mono tabular-nums text-4xl font-bold leading-none ${
               currentRun?.status === "paused"
                 ? "text-yellow-400"
                 : isRunning
@@ -145,23 +164,18 @@ const RunCounterDisplay: React.FC = () => {
           >
             {formatDuration(elapsed)}
           </span>
+          {cfg.showRunNumber && currentRun && (
+            <span className="text-sm text-gray-400 font-mono mt-1">#{currentRun.index}</span>
+          )}
         </div>
 
-        <div className="grid grid-cols-4 gap-1 text-center pointer-events-none">
-          <DisplayStat label={t("runCounterPage.stats.runs")} value={`${stats.completedCount}`} />
-          <DisplayStat
-            label={t("runCounterPage.stats.avg")}
-            value={stats.completedCount ? formatDuration(stats.avgMs) : "—"}
-          />
-          <DisplayStat
-            label={t("runCounterPage.stats.best")}
-            value={stats.completedCount ? formatDuration(stats.bestMs) : "—"}
-          />
-          <DisplayStat
-            label={t("runCounterPage.stats.perHour")}
-            value={stats.completedCount ? stats.runsPerHour.toFixed(1) : "—"}
-          />
-        </div>
+        {statItems.length > 0 && (
+          <div className="flex flex-wrap justify-center gap-x-5 gap-y-1 text-center pointer-events-none">
+            {statItems.map((s) => (
+              <DisplayStat key={s.label} label={s.label} value={s.value} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

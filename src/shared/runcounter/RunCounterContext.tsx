@@ -9,7 +9,13 @@ import React, {
 } from "react";
 import { listen, emitTo } from "@tauri-apps/api/event";
 import { STORAGE_KEYS } from "../constants";
-import { RunCounterData, RunRecord, RunTarget, HotkeyAction } from "./types";
+import {
+  RunCounterData,
+  RunRecord,
+  RunTarget,
+  HotkeyAction,
+  DisplayConfig,
+} from "./types";
 import {
   AddLootPayload,
   StartSessionPayload,
@@ -22,10 +28,12 @@ import {
   showLootOverlay,
   showDisplayWindow,
   hideDisplayWindow,
+  resizeDisplayWindow,
   showSessionOverlay,
 } from "./overlay";
 import {
   defaultData,
+  DEFAULT_DISPLAY_CONFIG,
   findCurrentRun,
   reduceAddLoot,
   reduceAddTarget,
@@ -53,6 +61,7 @@ const loadData = (): RunCounterData => {
       ...parsed,
       // ensure every hotkey action has a binding even if the saved blob is older
       hotkeys: { ...DEFAULT_HOTKEYS, ...(parsed.hotkeys ?? {}) },
+      displayConfig: { ...DEFAULT_DISPLAY_CONFIG, ...(parsed.displayConfig ?? {}) },
       targets: parsed.targets ?? [],
       history: parsed.history ?? [],
     };
@@ -96,6 +105,7 @@ interface RunCounterContextValue {
   openSessionOverlay: () => void;
   openDisplay: () => void;
   closeDisplay: () => void;
+  setDisplayConfig: (patch: Partial<DisplayConfig>) => void;
 }
 
 const RunCounterContext = createContext<RunCounterContextValue | null>(null);
@@ -250,6 +260,10 @@ export const RunCounterProvider: React.FC<RunCounterProviderProps> = ({
   }, [data]);
 
   const openDisplay = useCallback(() => {
+    if (isTauri()) {
+      const cfg = dataRef.current.displayConfig;
+      resizeDisplayWindow(cfg.width, cfg.height);
+    }
     showDisplayWindow().then(() => {
       if (!isTauri()) return;
       // Push the current snapshot + visibility so the display is never blank if it
@@ -261,6 +275,13 @@ export const RunCounterProvider: React.FC<RunCounterProviderProps> = ({
         () => {}
       );
     });
+  }, []);
+  const setDisplayConfig = useCallback((patch: Partial<DisplayConfig>) => {
+    setData((d) => ({ ...d, displayConfig: { ...d.displayConfig, ...patch } }));
+    if (isTauri() && (patch.width !== undefined || patch.height !== undefined)) {
+      const next = { ...dataRef.current.displayConfig, ...patch };
+      resizeDisplayWindow(next.width, next.height);
+    }
   }, []);
   const closeDisplay = useCallback(() => {
     if (isTauri())
@@ -321,6 +342,7 @@ export const RunCounterProvider: React.FC<RunCounterProviderProps> = ({
     openSessionOverlay,
     openDisplay,
     closeDisplay,
+    setDisplayConfig,
   };
 
   return (

@@ -1954,7 +1954,12 @@
     "display": {
       "open": "Affichage",
       "close": "Masquer l'affichage",
-      "obsHint": "Panneau de stats toujours au-dessus — épinglez-le sur le jeu ou capturez-le dans OBS via « Capture de fenêtre »"
+      "obsHint": "Panneau de stats toujours au-dessus — épinglez-le sur le jeu ou capturez-le dans OBS via « Capture de fenêtre »",
+      "title": "Affichage",
+      "width": "Largeur",
+      "height": "Hauteur",
+      "showHeader": "En-tête de cible",
+      "showRunNumber": "Numéro de run"
     }
   }
 }

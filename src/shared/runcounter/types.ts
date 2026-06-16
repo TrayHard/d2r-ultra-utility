@@ -44,6 +44,20 @@ export interface RunTarget {
   createdAt: number;
 }
 
+/** Per-user configuration of the always-on-top broadcast/display window. */
+export interface DisplayConfig {
+  width: number;
+  height: number;
+  /** show the top row (status dot + target name) */
+  showHeader: boolean;
+  /** show the run number under the timer */
+  showRunNumber: boolean;
+  showRuns: boolean;
+  showAvg: boolean;
+  showBest: boolean;
+  showPerHour: boolean;
+}
+
 export type HotkeyAction =
   | "start"
   | "stopNext"
@@ -68,4 +82,5 @@ export interface RunCounterData {
   hotkeys: HotkeyConfig;
   /** whether global hotkeys are registered while the Run Counter section is open */
   hotkeysEnabled: boolean;
+  displayConfig: DisplayConfig;
 }
