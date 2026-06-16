@@ -15,6 +15,8 @@ import { DEFAULT_HOTKEYS } from "./constants";
 /** Hard cap on archived sessions kept in localStorage, to avoid hitting the quota. */
 export const MAX_HISTORY = 200;
 
+const MONO = "ui-monospace, SFMono-Regular, Menlo, monospace";
+
 /** Default configuration for the broadcast/display window. */
 export const DEFAULT_DISPLAY_CONFIG: DisplayConfig = {
   width: 340,
@@ -28,10 +30,10 @@ export const DEFAULT_DISPLAY_CONFIG: DisplayConfig = {
   showBest: true,
   showPerHour: true,
   styles: {
-    timer: { bold: true, italic: false, fontSize: 36, color: "", fontFamily: "mono" },
-    statValue: { bold: true, italic: false, fontSize: 14, color: "", fontFamily: "mono" },
+    timer: { bold: true, italic: false, fontSize: 36, color: "", fontFamily: MONO },
+    statValue: { bold: true, italic: false, fontSize: 14, color: "", fontFamily: MONO },
     statLabel: { bold: false, italic: false, fontSize: 10, color: "", fontFamily: "" },
-    runNumber: { bold: false, italic: false, fontSize: 14, color: "", fontFamily: "mono" },
+    runNumber: { bold: false, italic: false, fontSize: 14, color: "", fontFamily: MONO },
     target: { bold: true, italic: false, fontSize: 16, color: "", fontFamily: "" },
   },
 };
