@@ -126,7 +126,10 @@ const RunCounterDisplay: React.FC = () => {
   }, []);
 
   const startResize =
-    (dir: "East" | "South" | "SouthEast") => (e: React.MouseEvent) => {
+    (
+      dir: "North" | "South" | "East" | "West" | "NorthWest" | "SouthWest" | "SouthEast"
+    ) =>
+    (e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
       if (isTauri()) getCurrentWindow().startResizeDragging(dir).catch(() => {});
@@ -168,14 +171,6 @@ const RunCounterDisplay: React.FC = () => {
     },
   ].filter(Boolean) as Array<{ label: string; value: string }>;
 
-  const dotColor = !currentRun
-    ? "bg-gray-500"
-    : currentRun.status === "running"
-      ? "bg-green-500"
-      : currentRun.status === "paused"
-        ? "bg-yellow-500"
-        : "bg-gray-500";
-
   return (
     <div className="relative w-screen h-screen p-2" style={{ background: "transparent" }}>
       <div
@@ -191,8 +186,7 @@ const RunCounterDisplay: React.FC = () => {
         </button>
 
         {cfg.showHeader && (
-          <div className="flex items-center justify-center gap-2 pointer-events-none shrink-0">
-            <span className={`w-2 h-2 rounded-full shrink-0 ${dotColor}`} />
+          <div className="flex items-center justify-center pointer-events-none shrink-0">
             <span className="font-semibold truncate">{targetName}</span>
           </div>
         )}
@@ -209,8 +203,15 @@ const RunCounterDisplay: React.FC = () => {
           >
             {formatDuration(elapsed)}
           </span>
-          {cfg.showRunNumber && currentRun && (
-            <span className="text-sm text-gray-400 font-mono mt-1">#{currentRun.index}</span>
+          {/* Always reserve the run-number line so starting a session doesn't shift the timer. */}
+          {cfg.showRunNumber && (
+            <span
+              className={`text-sm text-gray-400 font-mono mt-1 leading-none ${
+                currentRun ? "" : "invisible"
+              }`}
+            >
+              {currentRun ? `#${currentRun.index}` : " "}
+            </span>
           )}
         </div>
 
@@ -223,25 +224,26 @@ const RunCounterDisplay: React.FC = () => {
         )}
       </div>
 
-      {/* Generous resize zones at the window edges — drag like a normal window. */}
-      <div
-        onMouseDown={startResize("East")}
-        className="absolute top-0 right-0 h-full w-2.5 cursor-ew-resize z-20"
-      />
-      <div
-        onMouseDown={startResize("South")}
-        className="absolute bottom-0 left-0 w-full h-2.5 cursor-ns-resize z-20"
-      />
+      {/* Resize handles — edges (single axis) + corners (diagonal); the SE corner has a
+          visible grip. They sit in the transparent margin so they never block the card. */}
+      <div onMouseDown={startResize("North")} className="absolute top-0 left-4 right-4 h-2 cursor-ns-resize z-20" />
+      <div onMouseDown={startResize("South")} className="absolute bottom-0 left-4 right-4 h-2 cursor-ns-resize z-20" />
+      <div onMouseDown={startResize("West")} className="absolute left-0 top-4 bottom-4 w-2 cursor-ew-resize z-20" />
+      <div onMouseDown={startResize("East")} className="absolute right-0 top-4 bottom-4 w-2 cursor-ew-resize z-20" />
+      <div onMouseDown={startResize("NorthWest")} className="absolute top-0 left-0 w-4 h-4 cursor-nwse-resize z-30" />
+      <div onMouseDown={startResize("SouthWest")} className="absolute bottom-0 left-0 w-4 h-4 cursor-nesw-resize z-30" />
       <div
         onMouseDown={startResize("SouthEast")}
-        className="absolute bottom-0 right-0 w-4 h-4 cursor-nwse-resize z-30 text-gray-500"
+        className="absolute bottom-0 right-0 w-6 h-6 cursor-nwse-resize z-30 text-gray-400 hover:text-yellow-400"
         title={t("runCounterPage.display.resizeHint")}
       >
-        <svg
-          viewBox="0 0 10 10"
-          className="absolute bottom-1 right-1 w-2.5 h-2.5 pointer-events-none"
-        >
-          <path d="M9 3 L3 9 M9 6 L6 9" stroke="currentColor" strokeWidth="1.2" fill="none" />
+        <svg viewBox="0 0 12 12" className="absolute bottom-1 right-1 w-3.5 h-3.5 pointer-events-none">
+          <path
+            d="M11 3 L3 11 M11 6 L6 11 M11 9 L9 11"
+            stroke="currentColor"
+            strokeWidth="1.2"
+            fill="none"
+          />
         </svg>
       </div>
     </div>
