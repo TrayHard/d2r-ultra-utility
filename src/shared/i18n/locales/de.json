@@ -1886,7 +1886,8 @@
       "stop": "Stopp",
       "addLoot": "Beute hinzufügen",
       "finishSession": "Session beenden",
-      "finishConfirm": "Diese Session im Verlauf archivieren?"
+      "finishConfirm": "Diese Session im Verlauf archivieren?",
+      "newSession": "Neue Session"
     },
     "stats": {
       "runs": "Runs",
@@ -1912,14 +1913,15 @@
       "reset": "Auf Standard zurücksetzen",
       "failed": "Nicht belegbar: {{list}}",
       "noModifierWarning": "Tipp: Füge einen Modifier (Ctrl/Alt) hinzu, damit die Taste im Spiel weiter funktioniert",
-      "caveat": "Funktioniert am besten mit D2R im Fenstermodus (nicht im exklusiven Vollbild)",
       "browserNote": "Globale Tastenkürzel funktionieren nur in der Desktop-App",
       "actions": {
         "start": "Run starten",
         "stopNext": "Stopp & nächster Run",
         "pause": "Pause / Fortsetzen",
         "stop": "Run stoppen",
-        "addLoot": "Beute hinzufügen"
+        "addLoot": "Beute hinzufügen",
+        "newSession": "Neue Session",
+        "finishSession": "Session beenden"
       },
       "duplicateWarning": "Dieses Tastenkürzel ist bereits einer anderen Aktion zugewiesen"
     },
@@ -1940,6 +1942,16 @@
       "placeholder": "Item-Name (Enter zum Hinzufügen)",
       "noRun": "Kein aktiver Run – starte zuerst einen",
       "hint": "Enter = hinzufügen · Esc = schließen"
+    },
+    "newSession": {
+      "title": "Neue Session starten",
+      "selectTarget": "Ziel auswählen",
+      "orCreate": "oder ein neues erstellen"
+    },
+    "display": {
+      "open": "Anzeige",
+      "close": "Anzeige ausblenden",
+      "obsHint": "Immer-im-Vordergrund-Statistikpanel — über dem Spiel anheften oder in OBS per Fensteraufnahme erfassen"
     }
   }
 }

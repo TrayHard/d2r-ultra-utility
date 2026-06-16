@@ -18,7 +18,6 @@ const RunCounterOverlay: React.FC = () => {
   const [value, setValue] = useState("");
   const [context, setContext] = useState("");
   const [hasActiveRun, setHasActiveRun] = useState(true);
-  const [recent, setRecent] = useState<string[]>([]);
 
   useEffect(() => {
     if (!isTauri()) return;
@@ -29,7 +28,6 @@ const RunCounterOverlay: React.FC = () => {
       setContext(e.payload?.context ?? "");
       setHasActiveRun(e.payload?.hasActiveRun ?? false);
       setValue("");
-      setRecent([]);
       // Focus after the window has been shown/focused by the main process.
       window.clearTimeout(focusTimer);
       focusTimer = window.setTimeout(() => inputRef.current?.focus(), 60);
@@ -60,9 +58,9 @@ const RunCounterOverlay: React.FC = () => {
     const name = value.trim();
     if (!name || !hasActiveRun) return;
     emitLootToMain(name);
-    setRecent((r) => [name, ...r].slice(0, 6));
     setValue("");
-    inputRef.current?.focus();
+    // Close right away — one hotkey press = one item, no multi-add.
+    hideLootOverlay();
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -89,7 +87,7 @@ const RunCounterOverlay: React.FC = () => {
             {context && <span className="text-xs text-gray-400">{context}</span>}
           </div>
           <button
-            className="text-gray-400 hover:text-white"
+            className="bg-transparent border-0 p-0 text-gray-400 hover:text-white"
             onClick={() => hideLootOverlay()}
             title={t("runCounterPage.overlay.close")}
           >
@@ -113,19 +111,6 @@ const RunCounterOverlay: React.FC = () => {
         )}
 
         <div className="mt-2 text-[11px] text-gray-500">{t("runCounterPage.overlay.hint")}</div>
-
-        {recent.length > 0 && (
-          <ul className="mt-2 flex flex-wrap gap-1">
-            {recent.map((name, i) => (
-              <li
-                key={`${name}-${i}`}
-                className="rounded bg-green-900/40 border border-green-700/40 px-2 py-0.5 text-xs text-green-200"
-              >
-                {name}
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
     </div>
   );

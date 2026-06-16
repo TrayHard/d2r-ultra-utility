@@ -1842,6 +1842,7 @@
       "resume": "Resume",
       "stop": "Stop",
       "addLoot": "Add loot",
+      "newSession": "New session",
       "finishSession": "Finish session",
       "finishConfirm": "Archive this session to history?"
     },
@@ -1870,14 +1871,15 @@
       "failed": "Couldn't bind: {{list}}",
       "noModifierWarning": "Tip: add a modifier (Ctrl/Alt) so the key still works in-game",
       "duplicateWarning": "This shortcut is also bound to another action",
-      "caveat": "Works best with D2R in Windowed mode (not exclusive fullscreen)",
       "browserNote": "Global hotkeys only work in the desktop app",
       "actions": {
         "start": "Start run",
         "stopNext": "Stop & next run",
         "pause": "Pause / resume",
         "stop": "Stop run",
-        "addLoot": "Add loot"
+        "addLoot": "Add loot",
+        "newSession": "New session",
+        "finishSession": "Finish session"
       }
     },
     "history": {
@@ -1890,6 +1892,16 @@
     "messages": {
       "targetAdded": "Target \"{{name}}\" added",
       "noRun": "Start a run first to record loot"
+    },
+    "newSession": {
+      "title": "Start a new session",
+      "selectTarget": "Choose a target",
+      "orCreate": "or create a new one"
+    },
+    "display": {
+      "open": "Display",
+      "close": "Hide display",
+      "obsHint": "Always-on-top stats panel — pin it over the game or capture it in OBS via Window Capture"
     },
     "overlay": {
       "title": "Add loot",

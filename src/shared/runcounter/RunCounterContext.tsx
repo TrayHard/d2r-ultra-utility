@@ -7,12 +7,17 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { listen } from "@tauri-apps/api/event";
+import { listen, emitTo } from "@tauri-apps/api/event";
 import { STORAGE_KEYS } from "../constants";
 import { RunCounterData, RunRecord, RunTarget, HotkeyAction } from "./types";
-import { AddLootPayload, RC_EVENTS, DEFAULT_HOTKEYS } from "./constants";
+import {
+  AddLootPayload,
+  RC_EVENTS,
+  DEFAULT_HOTKEYS,
+  DISPLAY_WINDOW_LABEL,
+} from "./constants";
 import { isTauri } from "./hotkeys";
-import { showLootOverlay } from "./overlay";
+import { showLootOverlay, showDisplayWindow, hideDisplayWindow } from "./overlay";
 import {
   defaultData,
   findCurrentRun,
@@ -79,6 +84,10 @@ interface RunCounterContextValue {
   resetHotkeys: () => void;
   clearHistory: () => void;
   openLootOverlay: () => void;
+  /** Archive the current session, switch to the given/new target, and start a run. */
+  startSession: (target: { id: string } | { name: string }) => void;
+  openDisplay: () => void;
+  closeDisplay: () => void;
 }
 
 const RunCounterContext = createContext<RunCounterContextValue | null>(null);
@@ -104,10 +113,22 @@ export const RunCounterProvider: React.FC<RunCounterProviderProps> = ({
   // Keep a ref so the loot-event listener (registered once) sees fresh data/name.
   const defaultTargetNameRef = useRef(defaultTargetName);
   defaultTargetNameRef.current = defaultTargetName;
+  // Latest data, for callbacks that fire outside render (e.g. re-emit on display open).
+  const dataRef = useRef(data);
+  dataRef.current = data;
 
   // Persist on every change.
   useEffect(() => {
     saveData(data);
+  }, [data]);
+
+  // Broadcast the latest state to the (always-on-top) display window. It listens
+  // even while hidden, so when shown it already has the current snapshot.
+  useEffect(() => {
+    if (!isTauri()) return;
+    emitTo(DISPLAY_WINDOW_LABEL, RC_EVENTS.DISPLAY_STATE, { data }).catch(() => {
+      /* display window may not be ready yet */
+    });
   }, [data]);
 
   // Only a running run needs a live clock; paused/stopped elapsed is frozen.
@@ -162,6 +183,23 @@ export const RunCounterProvider: React.FC<RunCounterProviderProps> = ({
   const finishSession = useCallback(() => {
     setData((d) => reduceFinishSession(d, Date.now()));
   }, []);
+  const startSession = useCallback((target: { id: string } | { name: string }) => {
+    setData((d) => {
+      const now = Date.now();
+      // Always archive the in-progress session first, so "new session" truly starts
+      // fresh even when the chosen target equals the currently active one.
+      const archived = d.current
+        ? d.current.runs.length > 0
+          ? reduceFinishSession(d, now)
+          : { ...d, current: null, currentRunId: null }
+        : d;
+      const withTarget =
+        "id" in target
+          ? reduceSetActiveTarget(archived, now, target.id)
+          : reduceAddTarget(archived, target.name, now);
+      return reduceStart(withTarget, now, defaultTargetNameRef.current);
+    });
+  }, []);
   const removeLoot = useCallback((runId: string, lootId: string) => {
     setData((d) => reduceRemoveLoot(d, runId, lootId));
   }, []);
@@ -203,6 +241,27 @@ export const RunCounterProvider: React.FC<RunCounterProviderProps> = ({
     showLootOverlay({ context, hasActiveRun: !!run });
   }, [data]);
 
+  const openDisplay = useCallback(() => {
+    showDisplayWindow().then(() => {
+      if (!isTauri()) return;
+      // Push the current snapshot + visibility so the display is never blank if it
+      // missed the last broadcast (listener-registration race) or nothing changed.
+      emitTo(DISPLAY_WINDOW_LABEL, RC_EVENTS.DISPLAY_STATE, { data: dataRef.current }).catch(
+        () => {}
+      );
+      emitTo(DISPLAY_WINDOW_LABEL, RC_EVENTS.DISPLAY_VISIBILITY, { visible: true }).catch(
+        () => {}
+      );
+    });
+  }, []);
+  const closeDisplay = useCallback(() => {
+    if (isTauri())
+      emitTo(DISPLAY_WINDOW_LABEL, RC_EVENTS.DISPLAY_VISIBILITY, { visible: false }).catch(
+        () => {}
+      );
+    hideDisplayWindow();
+  }, []);
+
   const value: RunCounterContextValue = {
     data,
     now,
@@ -224,6 +283,9 @@ export const RunCounterProvider: React.FC<RunCounterProviderProps> = ({
     resetHotkeys,
     clearHistory,
     openLootOverlay,
+    startSession,
+    openDisplay,
+    closeDisplay,
   };
 
   return (

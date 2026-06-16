@@ -1886,7 +1886,8 @@
       "stop": "Parar",
       "addLoot": "Añadir botín",
       "finishSession": "Finalizar sesión",
-      "finishConfirm": "¿Archivar esta sesión en el historial?"
+      "finishConfirm": "¿Archivar esta sesión en el historial?",
+      "newSession": "Nueva sesión"
     },
     "stats": {
       "runs": "Runs",
@@ -1912,14 +1913,15 @@
       "reset": "Restablecer valores predeterminados",
       "failed": "No se pudo asignar: {{list}}",
       "noModifierWarning": "Consejo: añade un modificador (Ctrl/Alt) para que la tecla siga funcionando dentro del juego",
-      "caveat": "Funciona mejor con D2R en modo ventana (no en pantalla completa exclusiva)",
       "browserNote": "Los atajos globales solo funcionan en la app de escritorio",
       "actions": {
         "start": "Iniciar run",
         "stopNext": "Parar y siguiente run",
         "pause": "Pausar / reanudar",
         "stop": "Parar run",
-        "addLoot": "Añadir botín"
+        "addLoot": "Añadir botín",
+        "newSession": "Nueva sesión",
+        "finishSession": "Finalizar sesión"
       },
       "duplicateWarning": "Este atajo ya está asignado a otra acción"
     },
@@ -1940,6 +1942,16 @@
       "placeholder": "Nombre del objeto (Intro para añadir)",
       "noRun": "No hay ninguna run activa — inicia una primero",
       "hint": "Intro = añadir · Esc = cerrar"
+    },
+    "newSession": {
+      "title": "Iniciar una nueva sesión",
+      "selectTarget": "Elige un objetivo",
+      "orCreate": "o crea uno nuevo"
+    },
+    "display": {
+      "open": "Pantalla",
+      "close": "Ocultar pantalla",
+      "obsHint": "Panel de estadísticas siempre visible: fíjalo sobre el juego o captúralo en OBS con «Captura de ventana»"
     }
   }
 }

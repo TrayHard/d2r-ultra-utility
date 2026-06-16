@@ -44,7 +44,14 @@ export interface RunTarget {
   createdAt: number;
 }
 
-export type HotkeyAction = "start" | "stopNext" | "pause" | "stop" | "addLoot";
+export type HotkeyAction =
+  | "start"
+  | "stopNext"
+  | "pause"
+  | "stop"
+  | "addLoot"
+  | "newSession"
+  | "finishSession";
 
 export type HotkeyConfig = Record<HotkeyAction, string>;
 

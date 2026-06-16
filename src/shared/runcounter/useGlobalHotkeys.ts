@@ -72,7 +72,9 @@ export const useGlobalHotkeys = ({
         const accelerator = hotkeys[action];
         if (!accelerator) continue;
         if (seen.has(accelerator)) {
-          found.push({ action, accelerator, error: "duplicate" });
+          // Duplicate binding: the OS can't route one accelerator to two actions,
+          // so only the first is registered. The page flags the conflict in red —
+          // this is intentionally NOT reported as a failure.
           continue;
         }
         seen.add(accelerator);

@@ -1887,7 +1887,8 @@
       "stop": "Stop",
       "addLoot": "Dodaj łup",
       "finishSession": "Zakończ sesję",
-      "finishConfirm": "Zarchiwizować tę sesję w historii?"
+      "finishConfirm": "Zarchiwizować tę sesję w historii?",
+      "newSession": "Nowa sesja"
     },
     "stats": {
       "runs": "Biegi",
@@ -1913,14 +1914,15 @@
       "reset": "Przywróć domyślne",
       "failed": "Nie udało się przypisać: {{list}}",
       "noModifierWarning": "Wskazówka: dodaj modyfikator (Ctrl/Alt), aby klawisz działał także w grze",
-      "caveat": "Działa najlepiej z D2R w trybie okienkowym (nie pełny ekran na wyłączność)",
       "browserNote": "Globalne skróty działają tylko w aplikacji desktopowej",
       "actions": {
         "start": "Rozpocznij bieg",
         "stopNext": "Stop i następny bieg",
         "pause": "Pauza / wznów",
         "stop": "Zatrzymaj bieg",
-        "addLoot": "Dodaj łup"
+        "addLoot": "Dodaj łup",
+        "newSession": "Nowa sesja",
+        "finishSession": "Zakończ sesję"
       },
       "duplicateWarning": "Ten skrót jest już przypisany do innej akcji"
     },
@@ -1941,6 +1943,16 @@
       "placeholder": "Nazwa przedmiotu (Enter, aby dodać)",
       "noRun": "Brak aktywnego biegu — najpierw go rozpocznij",
       "hint": "Enter = dodaj · Esc = zamknij"
+    },
+    "newSession": {
+      "title": "Rozpocznij nową sesję",
+      "selectTarget": "Wybierz cel",
+      "orCreate": "lub utwórz nowy"
+    },
+    "display": {
+      "open": "Wyświetlacz",
+      "close": "Ukryj wyświetlacz",
+      "obsHint": "Panel statystyk zawsze na wierzchu — przypnij go nad grą lub przechwyć w OBS przez „Przechwytywanie okna”"
     }
   }
 }

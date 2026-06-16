@@ -36,6 +36,20 @@
         "resizable": false,
         "shadow": false,
         "center": true
+      },
+      {
+        "label": "display",
+        "title": "Run Counter — Display",
+        "width": 340,
+        "height": 240,
+        "visible": false,
+        "alwaysOnTop": true,
+        "decorations": false,
+        "skipTaskbar": true,
+        "transparent": true,
+        "resizable": true,
+        "shadow": false,
+        "center": true
       }
     ],
     "security": {
