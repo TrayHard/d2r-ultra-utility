@@ -56,6 +56,9 @@
     "essences": "Essences and Tokens",
     "poisonPotions": "Poison Potions",
     "firePotions": "Fire Potions",
+    "bodyParts": "Uber Body Parts",
+    "ancientStatues": "Ancients' Statues",
+    "worldstoneShards": "Worldstone Shards",
     "searchPlaceholder": "Search",
     "enableCustomization": "Enable customization",
     "healthPotionsLevels": {
@@ -95,6 +98,25 @@
       "level3": "Essence of Terror",
       "level4": "Essence of Destruction",
       "level5": "Token of Absolution"
+    },
+    "bodyPartsLevels": {
+      "level1": "Diablo's Horn",
+      "level2": "Baal's Eye",
+      "level3": "Mephisto's Brain"
+    },
+    "ancientStatuesLevels": {
+      "level1": "Talic's Anguish",
+      "level2": "Korlic's Pain",
+      "level3": "Madawc's Ire",
+      "level4": "Bul-Kathos' Nightmare",
+      "level5": "Worusk's End"
+    },
+    "worldstoneShardsLevels": {
+      "level1": "Western Worldstone Shard",
+      "level2": "Eastern Worldstone Shard",
+      "level3": "Southern Worldstone Shard",
+      "level4": "Deep Worldstone Shard",
+      "level5": "Northern Worldstone Shard"
     },
     "poisonPotionsLevels": {
       "level1": "Strangling Gas Potion",
@@ -1805,9 +1827,12 @@
       "hide": "Hide"
     }
   },
+  "editor": {
+    "resetColor": "Reset color to default"
+  },
   "modifiersPage": {
     "tabs": {
-      "modifiers": "Modifiers",
+      "modifiers": "Stats",
       "skills": "Skills"
     },
     "groups": {
@@ -1830,6 +1855,8 @@
     "prefix": "Prefix",
     "suffix": "Suffix",
     "selectEntry": "Select an entry to edit",
+    "changedOnly": "Changed only",
+    "noChanged": "No changed entries",
     "wysiwygHint": "Edit the text here — select part (or nothing for the whole line) and pick a color; use ＋ to insert symbols.",
     "rawHint": "Type color codes (ÿc…) and symbols directly."
   }

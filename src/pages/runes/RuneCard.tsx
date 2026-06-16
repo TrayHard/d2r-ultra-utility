@@ -19,7 +19,12 @@ import {
   generateStructuredPreview,
   parseColoredText,
 } from "../../shared/utils/runeUtils.ts";
-import { localeOptions as allLocaleOptions } from "../../shared/constants.ts";
+import {
+  localeOptions as allLocaleOptions,
+  colorCodes,
+} from "../../shared/constants.ts";
+import ColorTextEditor from "../../shared/components/ColorTextEditor.tsx";
+import type { EditorMode } from "../../shared/hooks/useEditorMode";
 
 interface RuneCardProps {
   rune: ERune;
@@ -33,6 +38,7 @@ interface RuneCardProps {
   getD2RColorStyle?: (colorCode: string) => string;
   getFontSize?: (boxSize: number) => string;
   getContainerWidth?: (boxSize: number) => string;
+  editorMode?: EditorMode;
 }
 
 const RuneCard: React.FC<RuneCardProps> = ({
@@ -47,6 +53,7 @@ const RuneCard: React.FC<RuneCardProps> = ({
   getD2RColorStyle,
   getFontSize,
   getContainerWidth,
+  editorMode = "raw",
 }) => {
   const { t } = useTranslation();
   const { getGeneralRuneSettings, getSelectedLocales } = useSettings();
@@ -1101,22 +1108,53 @@ const RuneCard: React.FC<RuneCardProps> = ({
                           {t(`runePage.controls.languageLabels.${langCode}`)} (
                           {langCode})
                         </label>
-                        <div className="flex items-center space-x-2 w-full">
-                          <div className="relative flex-1">
-                            <DebouncedTextarea
+                        {editorMode === "visual" ? (
+                          <div className="w-full">
+                            <ColorTextEditor
                               value={
                                 manualSettings.locales[
                                   langCode as keyof typeof manualSettings.locales
-                                ]
+                                ] ?? ""
                               }
                               onChange={(v) =>
                                 handleLanguageNameChange(langCode, v)
                               }
-                              placeholder={t(
-                                `runePage.controls.placeholders.${langCode}`
-                              )}
-                              rows={3}
-                              className={`
+                              defaultHex="#ffffff"
+                              defaultCode={colorCodes.white}
+                              isDarkTheme={isDarkTheme}
+                              adornment={(() => {
+                                if (!baseline) return null;
+                                const base = getBaseActive();
+                                if (!base) return null;
+                                const baseVal = (base.manualSettings?.locales ||
+                                  {})[langCode];
+                                const curVal =
+                                  manualSettings.locales[
+                                    langCode as keyof typeof manualSettings.locales
+                                  ];
+                                return baseVal !== curVal ? (
+                                  <UnsavedAsterisk size={0.4} />
+                                ) : null;
+                              })()}
+                            />
+                          </div>
+                        ) : (
+                          <div className="flex items-center space-x-2 w-full">
+                            <div className="relative flex-1">
+                              <DebouncedTextarea
+                                value={
+                                  manualSettings.locales[
+                                    langCode as keyof typeof manualSettings.locales
+                                  ]
+                                }
+                                onChange={(v) =>
+                                  handleLanguageNameChange(langCode, v)
+                                }
+                                placeholder={t(
+                                  `runePage.controls.placeholders.${langCode}`
+                                )}
+                                rows={3}
+                                className={`
                                   w-full px-3 py-2 text-sm rounded-lg border transition-all duration-200 resize-vertical
                                   ${
                                     isDarkTheme
@@ -1124,32 +1162,33 @@ const RuneCard: React.FC<RuneCardProps> = ({
                                       : "bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
                                   }
                                 `}
-                            />
-                            {(() => {
-                              if (!baseline) return null;
-                              const base = getBaseActive();
-                              if (!base) return null;
-                              const baseVal = (base.manualSettings?.locales ||
-                                {})[langCode];
-                              const curVal =
-                                manualSettings.locales[
-                                  langCode as keyof typeof manualSettings.locales
-                                ];
-                              return baseVal !== curVal ? (
-                                <span
-                                  className="absolute"
-                                  style={{ right: 6, top: 6 }}
-                                >
-                                  <UnsavedAsterisk size={0.4} />
-                                </span>
-                              ) : null;
-                            })()}
+                              />
+                              {(() => {
+                                if (!baseline) return null;
+                                const base = getBaseActive();
+                                if (!base) return null;
+                                const baseVal = (base.manualSettings?.locales ||
+                                  {})[langCode];
+                                const curVal =
+                                  manualSettings.locales[
+                                    langCode as keyof typeof manualSettings.locales
+                                  ];
+                                return baseVal !== curVal ? (
+                                  <span
+                                    className="absolute"
+                                    style={{ right: 6, top: 6 }}
+                                  >
+                                    <UnsavedAsterisk size={0.4} />
+                                  </span>
+                                ) : null;
+                              })()}
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <SymbolsHint isDarkTheme={isDarkTheme} />
+                              <ColorHint isDarkTheme={isDarkTheme} />
+                            </div>
                           </div>
-                          <div className="flex items-center gap-1">
-                            <SymbolsHint isDarkTheme={isDarkTheme} />
-                            <ColorHint isDarkTheme={isDarkTheme} />
-                          </div>
-                        </div>
+                        )}
                       </div>
                     ))}
                   </div>

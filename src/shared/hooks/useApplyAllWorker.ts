@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import { useLogger } from "../utils/logger";
-import { ensureWritable } from "../utils/fsUtils";
+import { ensureWritable, ensureDirs } from "../utils/fsUtils";
 import {
   GAME_PATHS as COMMON_GAME_PATHS,
   loadSavedSettings,
@@ -10,7 +10,9 @@ import {
   generateFinalPotionName,
   generateFinalGemName,
   generateKeyHighlightData,
+  applyHighlightToModelConfig,
 } from "../utils/commonUtils";
+import shardModels from "../../pages/common/constants/shardModels.json";
 import {
   GAME_PATHS as RUNES_GAME_PATHS,
   generateFinalRuneName,
@@ -186,6 +188,7 @@ export const useApplyAllWorker = (
       const containersPath = `${homeDir}\\${RUNES_GAME_PATHS.LOCALES}\\${RUNES_GAME_PATHS.CONTAINERS_FILE}`;
       const runeHighlightDir = `${homeDir}\\${RUNES_GAME_PATHS.RUNE_HIGHLIGHT}`;
       const keysHighlightDir = `${homeDir}\\${MOD_ROOT}\\hd\\items\\misc\\key`;
+      const shardHighlightDir = `${homeDir}\\${MOD_ROOT}\\hd\\items\\misc\\shard`;
 
       logger.info(
         "Reading source files (aggregate)",
@@ -742,6 +745,75 @@ export const useApplyAllWorker = (
       } catch (e) {
         logger.warn(
           "Unexpected error while applying uber key highlight templates",
+          { error: e instanceof Error ? e.message : String(e) },
+          "applyAllChanges"
+        );
+      }
+
+      // ===== STATUE / SHARD HIGHLIGHT (drop-light glow on the ground) =====
+      // Игра грузит модель упавшего предмета по имени из items.json
+      // (ua1 -> shard/talics_anguish). Эти файлы упакованы в .mpq, поэтому
+      // пишем loose-override (из встроенного базового конфига) + cont-версию.
+      try {
+        const writeModelHighlight = async (
+          fileName: string,
+          isHighlighted: boolean
+        ) => {
+          const targetPath = `${shardHighlightDir}\\${fileName}`;
+          try {
+            let config: any = null;
+            try {
+              config = JSON.parse(await readTextFile(targetPath));
+            } catch {
+              config = (shardModels as any)[fileName] || null;
+            }
+            if (!config) return;
+            const next = applyHighlightToModelConfig(config, isHighlighted);
+            await writeFileWithRetry(targetPath, JSON.stringify(next, null, 2));
+          } catch (e) {
+            logger.warn(
+              "Failed to write statue/shard highlight",
+              {
+                targetPath,
+                error: e instanceof Error ? e.message : String(e),
+              },
+              "applyAllChanges"
+            );
+          }
+        };
+        const highlightModelGroup = async (
+          group: any,
+          pairs: Array<{ asset: string; cont: string }>
+        ) => {
+          if (!group || !Array.isArray(group.levels)) return;
+          try {
+            await ensureDirs([shardHighlightDir]);
+          } catch {
+            /* ignore */
+          }
+          for (let i = 0; i < pairs.length && i < group.levels.length; i++) {
+            const isHighlighted = Boolean(group.levels[i]?.highlight);
+            await writeModelHighlight(pairs[i].asset, isHighlighted);
+            await writeModelHighlight(pairs[i].cont, isHighlighted);
+          }
+        };
+        await highlightModelGroup((settings.common as any).ancientStatues, [
+          { asset: "talics_anguish.json", cont: "cont_ua1.json" },
+          { asset: "korlics_pain.json", cont: "cont_ua2.json" },
+          { asset: "madawcs_ire.json", cont: "cont_ua3.json" },
+          { asset: "bulkathos_nightmare.json", cont: "cont_ua4.json" },
+          { asset: "worusks_end.json", cont: "cont_ua5.json" },
+        ]);
+        await highlightModelGroup((settings.common as any).worldstoneShards, [
+          { asset: "mote_of_anguish.json", cont: "cont_xa1.json" },
+          { asset: "mote_of_pain.json", cont: "cont_xa2.json" },
+          { asset: "mote_of_hatred.json", cont: "cont_xa3.json" },
+          { asset: "mote_of_terror.json", cont: "cont_xa4.json" },
+          { asset: "mote_of_destruction.json", cont: "cont_xa5.json" },
+        ]);
+      } catch (e) {
+        logger.warn(
+          "Unexpected error while applying statue/shard highlight",
           { error: e instanceof Error ? e.message : String(e) },
           "applyAllChanges"
         );

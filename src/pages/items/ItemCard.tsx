@@ -6,10 +6,12 @@ import { Badge, Tooltip } from "antd";
 import Switcher from "../../shared/components/Switcher";
 import { ItemSettings, useSettings } from "../../app/providers/SettingsContext";
 import ColorHint from "../../shared/components/ColorHint";
-import { colorCodeToHex } from "../../shared/constants";
+import { colorCodeToHex, colorCodes } from "../../shared/constants";
 import SymbolsHint from "../../shared/components/SymbolsHint";
 import UnsavedAsterisk from "../../shared/components/UnsavedAsterisk";
 import DebouncedInput from "../../shared/components/DebouncedInput";
+import ColorTextEditor from "../../shared/components/ColorTextEditor.tsx";
+import type { EditorMode } from "../../shared/hooks/useEditorMode";
 import { useUnsavedChanges } from "../../shared/hooks/useUnsavedChanges";
 
 interface BaseItem {
@@ -33,6 +35,7 @@ interface ItemCardProps {
   selectedItem: BaseItem | null;
   className?: string;
   searchQuery?: string;
+  editorMode?: EditorMode;
 }
 
 // Компонент для отображения связанных предметов
@@ -198,6 +201,7 @@ const ItemCard: React.FC<ItemCardProps> = ({
   isDarkTheme,
   selectedItem,
   searchQuery,
+  editorMode = "raw",
 }) => {
   const { t } = useTranslation();
   const { getSelectedLocales, getItemSettings, updateItemSettings } =
@@ -760,55 +764,89 @@ const ItemCard: React.FC<ItemCardProps> = ({
                           <>{langCode}:</>
                         )}
                       </label>
-                      <div className="flex-1 flex items-center space-x-2">
-                        <div className="relative flex-1">
-                          <DebouncedInput
-                            type="text"
-                            value={locales[langCode as keyof typeof locales]}
+                      {editorMode === "visual" ? (
+                        <div
+                          className={`flex-1 ${
+                            !enabled ? "opacity-50 pointer-events-none" : ""
+                          }`}
+                        >
+                          <ColorTextEditor
+                            value={
+                              locales[langCode as keyof typeof locales] ?? ""
+                            }
                             onChange={(v) =>
                               handleLanguageNameChange(langCode, v)
                             }
-                            onFocus={() => setFocusedLocale(langCode)}
-                            onBlur={() => setFocusedLocale(null)}
-                            placeholder={
-                              t(`runePage.controls.placeholders.${langCode}`) ||
-                              `Name in ${langCode}`
-                            }
-                            disabled={!enabled}
-                            className={`
-                              w-full px-3 py-2 text-sm rounded-lg border transition-all duration-200
-                              ${
-                                isDarkTheme
-                                  ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
-                                  : "bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
-                              }
-                              ${!enabled ? "opacity-50 cursor-not-allowed" : ""}
-                            `}
-                          />
-                          {(() => {
-                            if (!selectedItem || !baseline) return null;
-                            const base = (baseline.items as any)?.items?.[
-                              selectedItem.key
-                            ];
-                            if (!base) return null;
-                            const baseVal = (base.locales || {})[langCode];
-                            const curVal =
-                              locales[langCode as keyof typeof locales];
-                            return baseVal !== curVal ? (
-                              <span
-                                className="absolute"
-                                style={{ right: 12, top: 12 }}
-                              >
+                            defaultHex="#ffffff"
+                            defaultCode={colorCodes.white}
+                            isDarkTheme={isDarkTheme}
+                            adornment={(() => {
+                              if (!selectedItem || !baseline) return null;
+                              const base = (baseline.items as any)?.items?.[
+                                selectedItem.key
+                              ];
+                              if (!base) return null;
+                              const baseVal = (base.locales || {})[langCode];
+                              const curVal =
+                                locales[langCode as keyof typeof locales];
+                              return baseVal !== curVal ? (
                                 <UnsavedAsterisk size={0.5} />
-                              </span>
-                            ) : null;
-                          })()}
+                              ) : null;
+                            })()}
+                          />
                         </div>
-                        <div className="flex items-center gap-1">
-                          <SymbolsHint isDarkTheme={isDarkTheme} />
-                          <ColorHint isDarkTheme={isDarkTheme} />
+                      ) : (
+                        <div className="flex-1 flex items-center space-x-2">
+                          <div className="relative flex-1">
+                            <DebouncedInput
+                              type="text"
+                              value={locales[langCode as keyof typeof locales]}
+                              onChange={(v) =>
+                                handleLanguageNameChange(langCode, v)
+                              }
+                              onFocus={() => setFocusedLocale(langCode)}
+                              onBlur={() => setFocusedLocale(null)}
+                              placeholder={
+                                t(
+                                  `runePage.controls.placeholders.${langCode}`
+                                ) || `Name in ${langCode}`
+                              }
+                              disabled={!enabled}
+                              className={`
+                                w-full px-3 py-2 text-sm rounded-lg border transition-all duration-200
+                                ${
+                                  isDarkTheme
+                                    ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-yellow-400 focus:ring-1 focus:ring-yellow-400"
+                                    : "bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500"
+                                }
+                                ${!enabled ? "opacity-50 cursor-not-allowed" : ""}
+                              `}
+                            />
+                            {(() => {
+                              if (!selectedItem || !baseline) return null;
+                              const base = (baseline.items as any)?.items?.[
+                                selectedItem.key
+                              ];
+                              if (!base) return null;
+                              const baseVal = (base.locales || {})[langCode];
+                              const curVal =
+                                locales[langCode as keyof typeof locales];
+                              return baseVal !== curVal ? (
+                                <span
+                                  className="absolute"
+                                  style={{ right: 12, top: 12 }}
+                                >
+                                  <UnsavedAsterisk size={0.5} />
+                                </span>
+                              ) : null;
+                            })()}
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <SymbolsHint isDarkTheme={isDarkTheme} />
+                            <ColorHint isDarkTheme={isDarkTheme} />
+                          </div>
                         </div>
-                      </div>
+                      )}
                     </div>
                   </div>
                 ))}

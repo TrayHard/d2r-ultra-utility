@@ -1,5 +1,8 @@
 import React from "react";
 import { Select } from "antd";
+import { useTranslation } from "react-i18next";
+import Icon from "@mdi/react";
+import { mdiFormatColorMarkerCancel } from "@mdi/js";
 import ColorPallet from "./ColorPallet.tsx";
 import { colorCodes, colorCodeToHex, diabloSymbols } from "../constants";
 import { parseRuns } from "../utils/modifierUtils";
@@ -10,6 +13,7 @@ interface ColorTextEditorProps {
   defaultHex: string; // color shown for uncolored text
   defaultCode: string; // ÿc code used to reset to default mid-line
   isDarkTheme: boolean;
+  adornment?: React.ReactNode; // overlaid at the input's top-right (e.g. unsaved marker)
 }
 
 const DIABLO_FONT = "Diablo, monospace";
@@ -77,7 +81,9 @@ const ColorTextEditor: React.FC<ColorTextEditorProps> = ({
   defaultHex,
   defaultCode,
   isDarkTheme,
+  adornment,
 }) => {
+  const { t } = useTranslation();
   const ref = React.useRef<HTMLDivElement>(null);
 
   // sync external value -> DOM (skip while the user is typing in this editor).
@@ -156,36 +162,67 @@ const ColorTextEditor: React.FC<ColorTextEditorProps> = ({
     serialize();
   };
 
+  // Strip every ÿc color code -> the whole line falls back to the default color.
+  const resetColor = () => {
+    const ed = ref.current;
+    if (!ed) return;
+    const plain = domToRaw(ed, defaultCode).replace(/ÿc./g, "");
+    onChange(plain);
+    ed.innerHTML = runsToHtml(plain, defaultHex);
+  };
+
   return (
     <div className="flex items-start gap-2">
-      <div
-        ref={ref}
-        contentEditable
-        suppressContentEditableWarning
-        onInput={serialize}
-        spellCheck={false}
-        className={`flex-1 min-h-[38px] px-3 py-2 text-sm rounded-lg border focus:ring-2 focus:ring-yellow-500 focus:outline-none ${
-          isDarkTheme
-            ? "bg-gray-700 border-gray-600"
-            : "bg-white border-gray-300"
-        }`}
-        style={{ fontFamily: DIABLO_FONT, whiteSpace: "pre-wrap", wordBreak: "break-word" }}
-      />
-      <div className="flex flex-col gap-1">
+      <div className="relative flex-1">
+        <div
+          ref={ref}
+          contentEditable
+          suppressContentEditableWarning
+          onInput={serialize}
+          spellCheck={false}
+          className={`w-full min-h-[38px] px-3 py-2 pr-7 text-sm rounded-lg border focus:ring-2 focus:ring-yellow-500 focus:outline-none ${
+            isDarkTheme
+              ? "bg-gray-700 border-gray-600"
+              : "bg-white border-gray-300"
+          }`}
+          style={{ fontFamily: DIABLO_FONT, whiteSpace: "pre-wrap", wordBreak: "break-word" }}
+        />
+        {adornment && (
+          <div
+            className="absolute pointer-events-none"
+            style={{ right: 8, top: "50%", transform: "translateY(-50%)" }}
+          >
+            {adornment}
+          </div>
+        )}
+      </div>
+      <div className="flex flex-row items-stretch gap-1" style={{ minHeight: 38 }}>
         <ColorPallet
           isDarkTheme={isDarkTheme}
           value="white"
           onChange={applyColor}
-          size="sm"
+          size="md"
         />
         <Select
           value=""
           onChange={(v) => insertSymbol(String(v))}
           options={symbolOptions}
-          size="small"
-          style={{ width: 56 }}
+          style={{ width: 56, height: 38 }}
           popupMatchSelectWidth={false}
         />
+        <button
+          type="button"
+          onClick={resetColor}
+          title={t("editor.resetColor")}
+          className={`flex items-center justify-center rounded border ${
+            isDarkTheme
+              ? "border-gray-600 bg-gray-700 hover:bg-gray-600 text-gray-200"
+              : "border-gray-300 bg-white hover:bg-gray-100 text-gray-700"
+          }`}
+          style={{ width: 56, height: 38 }}
+        >
+          <Icon path={mdiFormatColorMarkerCancel} size={0.7} />
+        </button>
       </div>
     </div>
   );
