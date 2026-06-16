@@ -831,17 +831,21 @@ const StyleRow: React.FC<{
       />
       <Select
         size="small"
-        className="w-28"
+        className="w-40"
+        showSearch
+        optionFilterProp="label"
         value={value.fontFamily}
         onChange={(v) => onChange({ fontFamily: v })}
         options={FONT_OPTIONS.map((f) => ({
           value: f.value,
-          label: (
-            <span style={{ fontFamily: f.value || undefined }}>
-              {f.value === "" ? t("runCounterPage.display.style.fonts.default") : f.label}
-            </span>
-          ),
+          label: f.value === "" ? t("runCounterPage.display.style.fonts.default") : f.label,
         }))}
+        optionRender={(opt) => (
+          <span style={{ fontFamily: (opt.value as string) || undefined }}>{opt.label}</span>
+        )}
+        labelRender={(item) => (
+          <span style={{ fontFamily: (item.value as string) || undefined }}>{item.label}</span>
+        )}
       />
     </div>
   );

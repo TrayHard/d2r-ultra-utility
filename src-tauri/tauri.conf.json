@@ -26,6 +26,7 @@
       {
         "label": "overlay",
         "title": "Run Counter — Add Loot",
+        "maximizable": false,
         "width": 460,
         "height": 300,
         "visible": false,
@@ -40,6 +41,7 @@
       {
         "label": "display",
         "title": "Run Counter — Display",
+        "maximizable": false,
         "width": 340,
         "height": 240,
         "minWidth": 200,
@@ -56,6 +58,7 @@
       {
         "label": "session",
         "title": "Run Counter — New Session",
+        "maximizable": false,
         "width": 480,
         "height": 340,
         "visible": false,
