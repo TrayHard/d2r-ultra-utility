@@ -1235,6 +1235,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         default: `${RAW_BASE}/d2r-profile-Default.json`,
         blizzless: `${RAW_BASE}/recommendedProfiles/d2r-profile-Blizzless.json`,
         minimalistic: `${RAW_BASE}/recommendedProfiles/d2r-profile-Minimalistic.json`,
+        minimalisticColored: `${RAW_BASE}/recommendedProfiles/d2r-profile-Minimalistic-Colored.json`,
       } as const;
 
       const fetchJson = async (url: string): Promise<RawProfile | null> => {
@@ -1248,10 +1249,16 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         }
       };
 
-      const [remoteDefault, remoteBlizzless, remoteMinimalistic] = await Promise.all([
+      const [
+        remoteDefault,
+        remoteBlizzless,
+        remoteMinimalistic,
+        remoteMinimalisticColored,
+      ] = await Promise.all([
         fetchJson(urls.default),
         fetchJson(urls.blizzless),
         fetchJson(urls.minimalistic),
+        fetchJson(urls.minimalisticColored),
       ]);
 
       const byNameRemote: Record<string, Profile> = {};
@@ -1263,6 +1270,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
       pushRemote(remoteDefault, 0, { isDefault: true, fallbackName: "Default" });
       pushRemote(remoteBlizzless, 1, {});
       pushRemote(remoteMinimalistic, 2, {});
+      pushRemote(remoteMinimalisticColored, 3, {});
 
       setImmutableRemoteByName(byNameRemote);
       logger.info("Подтянуты удалённые версии immutable профилей", {
