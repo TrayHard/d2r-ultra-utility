@@ -1946,7 +1946,10 @@
     "newSession": {
       "title": "Neue Session starten",
       "selectTarget": "Ziel auswählen",
-      "orCreate": "oder ein neues erstellen"
+      "orCreate": "oder ein neues erstellen",
+      "create": "Erstellen & starten",
+      "hint": "Enter = erstellen · Esc = schließen",
+      "empty": "Noch keine Ziele"
     },
     "display": {
       "open": "Anzeige",

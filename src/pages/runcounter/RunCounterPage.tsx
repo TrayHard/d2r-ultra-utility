@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { listen } from "@tauri-apps/api/event";
-import { Select, Input, Collapse, Popconfirm, Tooltip, Empty, Tag, Modal } from "antd";
+import { Select, Input, Collapse, Popconfirm, Tooltip, Empty, Tag } from "antd";
 import Icon from "@mdi/react";
 import {
   mdiPlay,
@@ -24,7 +24,6 @@ import { useRunCounter } from "../../shared/runcounter/RunCounterContext";
 import { useGlobalHotkeys } from "../../shared/runcounter/useGlobalHotkeys";
 import { runElapsedMs, formatDuration } from "../../shared/runcounter/engine";
 import { HOTKEY_ACTIONS, RC_EVENTS } from "../../shared/runcounter/constants";
-import { focusMainWindow } from "../../shared/runcounter/overlay";
 import { formatHotkeyForDisplay, hasModifier, isTauri } from "../../shared/runcounter/hotkeys";
 import { HotkeyAction } from "../../shared/runcounter/types";
 import HotkeyCapture from "./components/HotkeyCapture";
@@ -57,37 +56,14 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
     resetHotkeys,
     clearHistory,
     openLootOverlay,
-    startSession,
+    openSessionOverlay,
     openDisplay,
     closeDisplay,
   } = rc;
 
-  // --- new-session modal + display toggle + history expansion ----------------
-  const [newSessionOpen, setNewSessionOpen] = useState(false);
-  const [newSessionTargetId, setNewSessionTargetId] = useState<string | undefined>(undefined);
-  const [newSessionNewName, setNewSessionNewName] = useState("");
+  // --- display toggle + history expansion ------------------------------------
   const [displayOpen, setDisplayOpen] = useState(false);
   const [expandedSessionId, setExpandedSessionId] = useState<string | null>(null);
-
-  const openNewSession = () => {
-    setNewSessionTargetId(activeTarget?.id);
-    setNewSessionNewName("");
-    setNewSessionOpen(true);
-  };
-
-  // The new-session hotkey can fire while the window is minimized — bring it forward.
-  const handleNewSessionHotkey = () => {
-    focusMainWindow();
-    openNewSession();
-  };
-
-  const confirmNewSession = () => {
-    const name = newSessionNewName.trim();
-    if (name) startSession({ name });
-    else if (newSessionTargetId) startSession({ id: newSessionTargetId });
-    else return;
-    setNewSessionOpen(false);
-  };
 
   const toggleDisplay = () => {
     if (displayOpen) {
@@ -126,7 +102,7 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
       pause: togglePause,
       stop,
       addLoot: openLootOverlay,
-      newSession: handleNewSessionHotkey,
+      newSession: openSessionOverlay,
       finishSession,
     },
   });
@@ -361,7 +337,7 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
           variant="secondary"
           isDarkTheme={isDarkTheme}
           icon={mdiRestart}
-          onClick={openNewSession}
+          onClick={openSessionOverlay}
         >
           {t("runCounterPage.controls.newSession")}
         </Button>
@@ -647,48 +623,6 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
           },
         ]}
       />
-
-      {/* New session modal */}
-      <Modal
-        title={t("runCounterPage.newSession.title")}
-        open={newSessionOpen}
-        onOk={confirmNewSession}
-        onCancel={() => setNewSessionOpen(false)}
-        okText={t("runCounterPage.controls.start")}
-        cancelText={t("common.cancel")}
-        okButtonProps={{ disabled: !newSessionNewName.trim() && !newSessionTargetId }}
-        width={380}
-      >
-        <div className="flex flex-col gap-3">
-          <div>
-            <div className={`text-xs mb-1 ${sub}`}>
-              {t("runCounterPage.newSession.selectTarget")}
-            </div>
-            <Select
-              className="w-full"
-              value={newSessionTargetId}
-              placeholder={t("runCounterPage.target.none")}
-              onChange={(id) => {
-                setNewSessionTargetId(id);
-                setNewSessionNewName("");
-              }}
-              options={data.targets.map((tg) => ({ value: tg.id, label: tg.name }))}
-              allowClear
-            />
-          </div>
-          <div>
-            <div className={`text-xs mb-1 ${sub}`}>
-              {t("runCounterPage.newSession.orCreate")}
-            </div>
-            <Input
-              value={newSessionNewName}
-              placeholder={t("runCounterPage.target.placeholder")}
-              onChange={(e) => setNewSessionNewName(e.target.value)}
-              onPressEnter={confirmNewSession}
-            />
-          </div>
-        </div>
-      </Modal>
     </div>
   );
 };

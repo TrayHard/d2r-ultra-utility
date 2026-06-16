@@ -7,9 +7,12 @@ import { emitTo } from "@tauri-apps/api/event";
 import {
   OVERLAY_WINDOW_LABEL,
   DISPLAY_WINDOW_LABEL,
+  SESSION_WINDOW_LABEL,
   RC_EVENTS,
   OpenLootPayload,
   AddLootPayload,
+  OpenSessionPayload,
+  StartSessionPayload,
 } from "./constants";
 import { isTauri } from "./hotkeys";
 
@@ -77,16 +80,38 @@ export const hideDisplayWindow = async (): Promise<void> => {
   }
 };
 
-/** Bring the main window to the front (used when a global hotkey must show UI). */
-export const focusMainWindow = async (): Promise<void> => {
+/** Main window: reveal the always-on-top "new session" target picker over the game. */
+export const showSessionOverlay = async (payload: OpenSessionPayload): Promise<void> => {
   if (!isTauri()) return;
   try {
-    const win = await WebviewWindow.getByLabel(MAIN_WINDOW_LABEL);
+    const win = await WebviewWindow.getByLabel(SESSION_WINDOW_LABEL);
     if (!win) return;
-    await win.unminimize();
+    await win.setAlwaysOnTop(true);
     await win.show();
     await win.setFocus();
+    await emitTo(SESSION_WINDOW_LABEL, RC_EVENTS.OPEN_SESSION, payload);
   } catch (err) {
-    console.warn("focusMainWindow failed", err);
+    console.warn("showSessionOverlay failed", err);
+  }
+};
+
+/** Hide the session picker window. */
+export const hideSessionOverlay = async (): Promise<void> => {
+  if (!isTauri()) return;
+  try {
+    const win = await WebviewWindow.getByLabel(SESSION_WINDOW_LABEL);
+    await win?.hide();
+  } catch (err) {
+    console.warn("hideSessionOverlay failed", err);
+  }
+};
+
+/** Session picker -> main: start a session for an existing or newly-named target. */
+export const emitStartSession = async (target: StartSessionPayload): Promise<void> => {
+  if (!isTauri()) return;
+  try {
+    await emitTo(MAIN_WINDOW_LABEL, RC_EVENTS.START_SESSION, target);
+  } catch (err) {
+    console.warn("emitStartSession failed", err);
   }
 };

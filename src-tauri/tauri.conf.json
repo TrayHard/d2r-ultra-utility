@@ -50,6 +50,20 @@
         "resizable": true,
         "shadow": false,
         "center": true
+      },
+      {
+        "label": "session",
+        "title": "Run Counter — New Session",
+        "width": 480,
+        "height": 340,
+        "visible": false,
+        "alwaysOnTop": true,
+        "decorations": false,
+        "skipTaskbar": true,
+        "transparent": true,
+        "resizable": false,
+        "shadow": false,
+        "center": true
       }
     ],
     "security": {

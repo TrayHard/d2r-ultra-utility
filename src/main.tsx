@@ -4,9 +4,11 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import App from "./app/entrypoint-components/App.tsx";
 import RunCounterOverlay from "./app/entrypoint-components/RunCounterOverlay.tsx";
 import RunCounterDisplay from "./app/entrypoint-components/RunCounterDisplay.tsx";
+import RunCounterSessionOverlay from "./app/entrypoint-components/RunCounterSessionOverlay.tsx";
 import {
   OVERLAY_WINDOW_LABEL,
   DISPLAY_WINDOW_LABEL,
+  SESSION_WINDOW_LABEL,
 } from "./shared/runcounter/constants.ts";
 import "./app/entrypoint-components/App.css";
 import "./shared/assets/fonts.css";
@@ -22,8 +24,9 @@ try {
 
 const isOverlay = windowLabel === OVERLAY_WINDOW_LABEL;
 const isDisplay = windowLabel === DISPLAY_WINDOW_LABEL;
+const isSession = windowLabel === SESSION_WINDOW_LABEL;
 
-if (isOverlay || isDisplay) {
+if (isOverlay || isDisplay || isSession) {
   // These windows are transparent; override the opaque :root background from App.css.
   document.documentElement.style.background = "transparent";
   document.body.style.background = "transparent";
@@ -33,6 +36,8 @@ const rootUI = isOverlay ? (
   <RunCounterOverlay />
 ) : isDisplay ? (
   <RunCounterDisplay />
+) : isSession ? (
+  <RunCounterSessionOverlay />
 ) : (
   <App />
 );

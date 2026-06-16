@@ -1946,7 +1946,10 @@
     "newSession": {
       "title": "Démarrer une nouvelle session",
       "selectTarget": "Choisir une cible",
-      "orCreate": "ou en créer une nouvelle"
+      "orCreate": "ou en créer une nouvelle",
+      "create": "Créer et démarrer",
+      "hint": "Entrée = créer · Esc = fermer",
+      "empty": "Aucune cible pour l'instant"
     },
     "display": {
       "open": "Affichage",

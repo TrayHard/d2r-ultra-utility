@@ -6,6 +6,9 @@ export const OVERLAY_WINDOW_LABEL = "overlay";
 /** Label of the always-on-top broadcast/stats display window (for OBS / the player). */
 export const DISPLAY_WINDOW_LABEL = "display";
 
+/** Label of the always-on-top "start a new session" target-picker window. */
+export const SESSION_WINDOW_LABEL = "session";
+
 /** Tauri event names used to talk between the main window and the helper windows. */
 export const RC_EVENTS = {
   /** main -> overlay: show & focus the loot input, with context payload */
@@ -18,6 +21,10 @@ export const RC_EVENTS = {
   DISPLAY_VISIBILITY: "rc:display-visibility",
   /** display -> main: the display was closed/hidden from its own UI */
   DISPLAY_CLOSED: "rc:display-closed",
+  /** main -> session picker: open it with the current list of targets */
+  OPEN_SESSION: "rc:open-session",
+  /** session picker -> main: start a session for an existing or newly-named target */
+  START_SESSION: "rc:start-session",
 } as const;
 
 export interface OpenLootPayload {
@@ -29,6 +36,16 @@ export interface OpenLootPayload {
 
 export interface AddLootPayload {
   name: string;
+}
+
+export interface OpenSessionPayload {
+  targets: import("./types").RunTarget[];
+  activeTargetId: string | null;
+}
+
+export interface StartSessionPayload {
+  id?: string;
+  name?: string;
 }
 
 /**
