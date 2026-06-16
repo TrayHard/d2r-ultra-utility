@@ -56,7 +56,7 @@ const DisplayToggleButton: React.FC = () => {
     <Tooltip title={t("runCounterPage.display.obsHint")}>
       <button
         onClick={toggle}
-        className={`flex items-center justify-center w-9 h-9 rounded-lg border transition-colors ${
+        className={`flex items-center justify-center w-9 h-9 p-0 rounded-lg border transition-colors ${
           open
             ? "bg-cyan-600 border-cyan-500 text-white hover:bg-cyan-700"
             : "bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600"
