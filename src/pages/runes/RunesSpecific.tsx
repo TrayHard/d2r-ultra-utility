@@ -22,6 +22,8 @@ import highlightedBg from "../../shared/assets/runes/highlighted.png";
 import unhighlightedBg from "../../shared/assets/runes/unhighlighted.png";
 import { useUnsavedChanges } from "../../shared/hooks/useUnsavedChanges";
 import UnsavedAsterisk from "../../shared/components/UnsavedAsterisk";
+import EditorModeToggle from "../../shared/components/EditorModeToggle";
+import { useEditorMode } from "../../shared/hooks/useEditorMode";
 import { colorNameToHex } from "../../shared/constants.ts";
 
 interface RunesSpecificProps {
@@ -39,6 +41,7 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
   updateRuneSettings,
 }) => {
   const { t } = useTranslation();
+  const [editorMode, setEditorMode] = useEditorMode("runes");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortType, setSortType] = useState<SortType>("level");
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
@@ -247,7 +250,14 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
     const runeSettings = getRuneSettings(rune);
 
     return (
-      <div className="flex-1">
+      <div className="flex-1 min-h-0 overflow-y-auto">
+        <div className="flex justify-end px-4 py-2">
+          <EditorModeToggle
+            mode={editorMode}
+            onChange={setEditorMode}
+            isDarkTheme={isDarkTheme}
+          />
+        </div>
         <RuneCard
           rune={rune}
           isDarkTheme={isDarkTheme}
@@ -260,6 +270,7 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
           getD2RColorStyle={getD2RColorStyle}
           getFontSize={getFontSize}
           getContainerWidth={getContainerWidth}
+          editorMode={editorMode}
         />
       </div>
     );

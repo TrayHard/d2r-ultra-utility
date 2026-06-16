@@ -374,3 +374,46 @@ export const generateKeyHighlightData = (
     };
   }
 };
+
+// Generic "drop light" entity — the same horadric-light glow the uber keys use,
+// placed at the item's origin. Item-agnostic, so it can be injected into any
+// dropped-item UnitDefinition (statues, shards, …) to highlight it on the ground.
+const DROPLIGHT_ENTITY = {
+  type: "Entity",
+  name: "droplight",
+  id: 9999996974,
+  components: [
+    {
+      type: "TransformDefinitionComponent",
+      name: "component_transform1",
+      position: { x: 0.0, y: 0.0, z: 0.0 },
+      orientation: { x: 0.0, y: 0.0, z: 0.0, w: 1.0 },
+      scale: { x: 1.0, y: 1.0, z: 1.0 },
+      inheritOnlyPosition: false,
+    },
+    {
+      type: "VfxDefinitionComponent",
+      name: "entity_vfx_gousemyideaandshareyourfilthymods",
+      filename:
+        "data/hd/vfx/particles/overlays/object/horadric_light/fx_horadric_light.particles",
+      hardKillOnDestroy: false,
+    },
+  ],
+};
+
+// Add/remove the drop-light glow on an existing dropped-item model config
+// (UnitDefinition JSON read from the game's hd/items/misc tree). Idempotent: it
+// always strips any existing droplight first, then re-adds it when highlighted.
+export const applyHighlightToModelConfig = (
+  config: any,
+  isHighlighted: boolean,
+): any => {
+  const c =
+    config && typeof config === "object"
+      ? JSON.parse(JSON.stringify(config))
+      : { type: "UnitDefinition", entities: [] };
+  if (!Array.isArray(c.entities)) c.entities = [];
+  c.entities = c.entities.filter((e: any) => e?.name !== "droplight");
+  if (isHighlighted) c.entities.push(JSON.parse(JSON.stringify(DROPLIGHT_ENTITY)));
+  return c;
+};

@@ -8,6 +8,8 @@ import Button from "../../shared/components/Button";
 import ItemsFilters from "./ItemsFilters";
 import ItemsList from "./ItemsList";
 import ItemCard from "./ItemCard";
+import EditorModeToggle from "../../shared/components/EditorModeToggle";
+import { useEditorMode } from "../../shared/hooks/useEditorMode";
 import TriStateSwitch, {
   TriState,
 } from "../../shared/components/TriStateSwitch";
@@ -57,6 +59,7 @@ type SortOrder = "asc" | "desc";
 
 const ItemsTab: React.FC<ItemsTabProps> = ({ isDarkTheme }) => {
   const { t } = useTranslation();
+  const [editorMode, setEditorMode] = useEditorMode("items");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortType, setSortType] = useState<SortType>("type");
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
@@ -531,6 +534,14 @@ const ItemsTab: React.FC<ItemsTabProps> = ({ isDarkTheme }) => {
         onToggleUnsavedOnly={toggleUnsavedOnly}
       />
 
+      <div className="flex justify-end px-4 py-2">
+        <EditorModeToggle
+          mode={editorMode}
+          onChange={setEditorMode}
+          isDarkTheme={isDarkTheme}
+        />
+      </div>
+
       <div className="grid grid-cols-[20rem_1fr]">
         <ItemsList
           isDarkTheme={isDarkTheme}
@@ -555,6 +566,7 @@ const ItemsTab: React.FC<ItemsTabProps> = ({ isDarkTheme }) => {
           isDarkTheme={isDarkTheme}
           selectedItem={selectedItem}
           searchQuery={searchQuery}
+          editorMode={editorMode}
         />
       </div>
 

@@ -107,6 +107,28 @@
     },
     "tooltips": {
       "highlightOnGround": "Resaltar en el suelo"
+    },
+    "bodyParts": "Partes de cuerpo úber",
+    "ancientStatues": "Estatuas ancestrales",
+    "worldstoneShards": "Esquirlas de la Piedra del Mundo",
+    "bodyPartsLevels": {
+      "level1": "Cuerno de Diablo",
+      "level2": "Ojo de Baal",
+      "level3": "Cerebro de Mefisto"
+    },
+    "ancientStatuesLevels": {
+      "level1": "Angustia de Talic",
+      "level2": "Dolor de Korlic",
+      "level3": "Ira de Madawc",
+      "level4": "Pesadilla de Bul-Kathos",
+      "level5": "Fin de Worusk"
+    },
+    "worldstoneShardsLevels": {
+      "level1": "Esquirla de la Piedra del Mundo occidental",
+      "level2": "Esquirla de la Piedra del Mundo oriental",
+      "level3": "Esquirla de la Piedra del Mundo meridional",
+      "level4": "Esquirla de la Piedra del Mundo de las profundidades",
+      "level5": "Esquirla de la Piedra del Mundo septentrional"
     }
   },
   "gemsPage": {
@@ -1807,7 +1829,7 @@
   "runCounter": "Run Counter",
   "modifiersPage": {
     "tabs": {
-      "modifiers": "Modificadores",
+      "modifiers": "Estadísticas",
       "skills": "Habilidades"
     },
     "groups": {
@@ -1831,6 +1853,11 @@
     "suffix": "Sufijo",
     "selectEntry": "Selecciona una entrada para editar",
     "wysiwygHint": "Edita el texto aquí — selecciona una parte (o nada para toda la línea) y elige un color; ＋ inserta símbolos.",
-    "rawHint": "Escribe códigos de color (ÿc…) y símbolos directamente."
+    "rawHint": "Escribe códigos de color (ÿc…) y símbolos directamente.",
+    "changedOnly": "Solo cambiados",
+    "noChanged": "Sin entradas cambiadas"
+  },
+  "editor": {
+    "resetColor": "Restablecer color predeterminado"
   }
 }

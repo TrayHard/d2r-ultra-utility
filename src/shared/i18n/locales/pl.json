@@ -107,6 +107,28 @@
     },
     "tooltips": {
       "highlightOnGround": "Podświetl na ziemi"
+    },
+    "bodyParts": "Części ciał uberów",
+    "ancientStatues": "Posągi Pradawnych",
+    "worldstoneShards": "Odłamki Kamienia Świata",
+    "bodyPartsLevels": {
+      "level1": "Róg Diablo",
+      "level2": "Oko Baala",
+      "level3": "Mózg Mefista"
+    },
+    "ancientStatuesLevels": {
+      "level1": "Cierpienie Talika",
+      "level2": "Ból Korlika",
+      "level3": "Gniew Madoka",
+      "level4": "Koszmar Bul-Kathosa",
+      "level5": "Koniec Woruska"
+    },
+    "worldstoneShardsLevels": {
+      "level1": "Zachodni Odłamek Kamienia Świata",
+      "level2": "Wschodni Odłamek Kamienia Świata",
+      "level3": "Południowy Odłamek Kamienia Świata",
+      "level4": "Głęboki Odłamek Kamienia Świata",
+      "level5": "Północny Odłamek Kamienia Świata"
     }
   },
   "gemsPage": {
@@ -1808,7 +1830,7 @@
   "runCounter": "Run Counter",
   "modifiersPage": {
     "tabs": {
-      "modifiers": "Modyfikatory",
+      "modifiers": "Statystyki",
       "skills": "Umiejętności"
     },
     "groups": {
@@ -1832,6 +1854,11 @@
     "suffix": "Sufiks",
     "selectEntry": "Wybierz wpis do edycji",
     "wysiwygHint": "Edytuj tekst tutaj — zaznacz fragment (lub nic dla całej linii) i wybierz kolor; ＋ wstawia symbole.",
-    "rawHint": "Wpisuj kody kolorów (ÿc…) i symbole bezpośrednio."
+    "rawHint": "Wpisuj kody kolorów (ÿc…) i symbole bezpośrednio.",
+    "changedOnly": "Tylko zmienione",
+    "noChanged": "Brak zmienionych"
+  },
+  "editor": {
+    "resetColor": "Resetuj kolor do domyślnego"
   }
 }

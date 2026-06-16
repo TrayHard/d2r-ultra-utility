@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSettings } from "../../app/providers/SettingsContext";
 import MultipleLeveledLocales from "../../shared/components/MultipleLeveledLocales";
+import EditorModeToggle from "../../shared/components/EditorModeToggle";
 import { useUnsavedChanges } from "../../shared/hooks/useUnsavedChanges";
+import { useEditorMode } from "../../shared/hooks/useEditorMode";
 
 interface GemsTabProps {
   isDarkTheme: boolean;
@@ -18,6 +20,7 @@ const GemsTab: React.FC<GemsTabProps> = ({ isDarkTheme }) => {
   } = useSettings();
   const selectedLocales = getSelectedLocales();
   useUnsavedChanges();
+  const [editorMode, setEditorMode] = useEditorMode("gems");
 
   // Локальные состояния для коллапсов
   const [collapseStates, setCollapseStates] = useState({
@@ -165,6 +168,7 @@ const GemsTab: React.FC<GemsTabProps> = ({ isDarkTheme }) => {
         settings={gemSettings}
         selectedLocales={selectedLocales}
         isDarkTheme={isDarkTheme}
+        editorMode={editorMode}
         imagePaths={gemSettings.levels.map((_: any, index: number) =>
           getGemImagePath(itemType, index)
         )}
@@ -187,6 +191,13 @@ const GemsTab: React.FC<GemsTabProps> = ({ isDarkTheme }) => {
 
   return (
     <div className="p-8 max-w-4xl mx-auto">
+      <div className="flex justify-end mb-4">
+        <EditorModeToggle
+          mode={editorMode}
+          onChange={setEditorMode}
+          isDarkTheme={isDarkTheme}
+        />
+      </div>
       <div className="space-y-6">
         {/* Черепа */}
         {renderGemBlock("skulls", skulls)}
