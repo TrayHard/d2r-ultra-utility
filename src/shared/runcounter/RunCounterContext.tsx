@@ -12,12 +12,18 @@ import { STORAGE_KEYS } from "../constants";
 import { RunCounterData, RunRecord, RunTarget, HotkeyAction } from "./types";
 import {
   AddLootPayload,
+  StartSessionPayload,
   RC_EVENTS,
   DEFAULT_HOTKEYS,
   DISPLAY_WINDOW_LABEL,
 } from "./constants";
 import { isTauri } from "./hotkeys";
-import { showLootOverlay, showDisplayWindow, hideDisplayWindow } from "./overlay";
+import {
+  showLootOverlay,
+  showDisplayWindow,
+  hideDisplayWindow,
+  showSessionOverlay,
+} from "./overlay";
 import {
   defaultData,
   findCurrentRun,
@@ -86,6 +92,8 @@ interface RunCounterContextValue {
   openLootOverlay: () => void;
   /** Archive the current session, switch to the given/new target, and start a run. */
   startSession: (target: { id: string } | { name: string }) => void;
+  /** Show the always-on-top target picker (over the game) to start a new session. */
+  openSessionOverlay: () => void;
   openDisplay: () => void;
   closeDisplay: () => void;
 }
@@ -262,6 +270,32 @@ export const RunCounterProvider: React.FC<RunCounterProviderProps> = ({
     hideDisplayWindow();
   }, []);
 
+  const openSessionOverlay = useCallback(() => {
+    const d = dataRef.current;
+    showSessionOverlay({ targets: d.targets, activeTargetId: d.activeTargetId });
+  }, []);
+
+  // Session picker (over the game) -> start a session for the chosen/new target.
+  useEffect(() => {
+    if (!isTauri()) return;
+    let cancelled = false;
+    let unlisten: (() => void) | null = null;
+    listen<StartSessionPayload>(RC_EVENTS.START_SESSION, (event) => {
+      const p = event.payload;
+      if (p?.id) startSession({ id: p.id });
+      else if (p?.name) startSession({ name: p.name });
+    })
+      .then((fn) => {
+        if (cancelled) fn();
+        else unlisten = fn;
+      })
+      .catch((err) => console.warn("rc start-session listen failed", err));
+    return () => {
+      cancelled = true;
+      if (unlisten) unlisten();
+    };
+  }, [startSession]);
+
   const value: RunCounterContextValue = {
     data,
     now,
@@ -284,6 +318,7 @@ export const RunCounterProvider: React.FC<RunCounterProviderProps> = ({
     clearHistory,
     openLootOverlay,
     startSession,
+    openSessionOverlay,
     openDisplay,
     closeDisplay,
   };

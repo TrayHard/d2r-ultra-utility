@@ -1896,7 +1896,10 @@
     "newSession": {
       "title": "Start a new session",
       "selectTarget": "Choose a target",
-      "orCreate": "or create a new one"
+      "orCreate": "or create a new one",
+      "create": "Create & start",
+      "hint": "Enter = create · Esc = close",
+      "empty": "No targets yet"
     },
     "display": {
       "open": "Display",

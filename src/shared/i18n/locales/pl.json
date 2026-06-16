@@ -1947,7 +1947,10 @@
     "newSession": {
       "title": "Rozpocznij nową sesję",
       "selectTarget": "Wybierz cel",
-      "orCreate": "lub utwórz nowy"
+      "orCreate": "lub utwórz nowy",
+      "create": "Utwórz i rozpocznij",
+      "hint": "Enter = utwórz · Esc = zamknij",
+      "empty": "Brak celów"
     },
     "display": {
       "open": "Wyświetlacz",
