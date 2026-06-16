@@ -1876,7 +1876,8 @@
       "add": "Neues Ziel",
       "rename": "Umbenennen",
       "delete": "Löschen",
-      "deleteConfirm": "Dieses Ziel löschen?"
+      "deleteConfirm": "Dieses Ziel löschen?",
+      "lockedHint": "Beende die Session, um das Ziel zu wechseln"
     },
     "controls": {
       "start": "Start",

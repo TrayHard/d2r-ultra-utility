@@ -1,6 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { listen } from "@tauri-apps/api/event";
 import { Select, Input, Collapse, Popconfirm, Tooltip, Empty } from "antd";
 import Icon from "@mdi/react";
 import {
@@ -16,7 +15,6 @@ import {
   mdiCheck,
   mdiRestart,
   mdiFlagCheckered,
-  mdiBroadcast,
   mdiEye,
   mdiEyeOff,
 } from "@mdi/js";
@@ -25,7 +23,7 @@ import { useGlobalMessage } from "../../shared/components/Message/MessageProvide
 import { useRunCounter } from "../../shared/runcounter/RunCounterContext";
 import { useGlobalHotkeys } from "../../shared/runcounter/useGlobalHotkeys";
 import { runElapsedMs, formatDuration } from "../../shared/runcounter/engine";
-import { HOTKEY_ACTIONS, RC_EVENTS } from "../../shared/runcounter/constants";
+import { HOTKEY_ACTIONS } from "../../shared/runcounter/constants";
 import { formatHotkeyForDisplay, hasModifier, isTauri } from "../../shared/runcounter/hotkeys";
 import { HotkeyAction } from "../../shared/runcounter/types";
 import HotkeyCapture from "./components/HotkeyCapture";
@@ -49,7 +47,6 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
     togglePause,
     stop,
     finishSession,
-    removeLoot,
     addTarget,
     renameTarget,
     deleteTarget,
@@ -59,43 +56,15 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
     clearHistory,
     openLootOverlay,
     openSessionOverlay,
-    openDisplay,
-    closeDisplay,
     setDisplayConfig,
   } = rc;
 
   const cfg = data.displayConfig;
+  // While a session is in progress the target is locked — you can't switch/edit it
+  // (that would silently finalize the running session). Finish it or start a new one.
+  const sessionLocked = !!data.current;
 
-  // --- display toggle + history expansion ------------------------------------
-  const [displayOpen, setDisplayOpen] = useState(false);
   const [expandedSessionId, setExpandedSessionId] = useState<string | null>(null);
-
-  const toggleDisplay = () => {
-    if (displayOpen) {
-      closeDisplay();
-      setDisplayOpen(false);
-    } else {
-      openDisplay();
-      setDisplayOpen(true);
-    }
-  };
-
-  // Keep the toggle in sync when the display is closed from its own window (X / Alt+F4).
-  useEffect(() => {
-    if (!isTauri()) return;
-    let cancelled = false;
-    let unlisten: (() => void) | null = null;
-    listen(RC_EVENTS.DISPLAY_CLOSED, () => setDisplayOpen(false))
-      .then((fn) => {
-        if (cancelled) fn();
-        else unlisten = fn;
-      })
-      .catch(() => {});
-    return () => {
-      cancelled = true;
-      if (unlisten) unlisten();
-    };
-  }, []);
 
   // Register global hotkeys while this page is mounted.
   const failures = useGlobalHotkeys({
@@ -213,14 +182,24 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
               <Select
                 className="flex-1"
                 size="small"
+                showSearch
+                optionFilterProp="label"
                 value={activeTarget?.id}
                 placeholder={t("runCounterPage.target.none")}
                 onChange={(id) => setActiveTarget(id)}
                 options={data.targets.map((tg) => ({ value: tg.id, label: tg.name }))}
                 notFoundContent={t("runCounterPage.target.empty")}
+                disabled={sessionLocked}
               />
               <Tooltip title={t("runCounterPage.target.add")}>
-                <Button size="sm" variant="secondary" isDarkTheme={isDarkTheme} icon={mdiPlus} onClick={beginAdd} />
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  isDarkTheme={isDarkTheme}
+                  icon={mdiPlus}
+                  disabled={sessionLocked}
+                  onClick={beginAdd}
+                />
               </Tooltip>
               <Tooltip title={t("runCounterPage.target.rename")}>
                 <Button
@@ -228,7 +207,7 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
                   variant="secondary"
                   isDarkTheme={isDarkTheme}
                   icon={mdiPencil}
-                  disabled={!activeTarget}
+                  disabled={sessionLocked || !activeTarget}
                   onClick={beginRename}
                 />
               </Tooltip>
@@ -236,19 +215,22 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
                 title={t("runCounterPage.target.deleteConfirm")}
                 onConfirm={() => activeTarget && deleteTarget(activeTarget.id)}
                 okText={t("runCounterPage.target.delete")}
-                disabled={!activeTarget}
+                disabled={sessionLocked || !activeTarget}
               >
                 <Button
                   size="sm"
                   variant="danger"
                   isDarkTheme={isDarkTheme}
                   icon={mdiDelete}
-                  disabled={!activeTarget}
+                  disabled={sessionLocked || !activeTarget}
                 />
               </Popconfirm>
             </>
           )}
         </div>
+        {sessionLocked && (
+          <div className={`text-xs mt-1.5 ${sub}`}>{t("runCounterPage.target.lockedHint")}</div>
+        )}
       </div>
 
       {/* Timer */}
@@ -318,8 +300,8 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
         />
       </div>
 
-      {/* Session + broadcast actions */}
-      <div className="flex flex-wrap items-center gap-2">
+      {/* Session actions */}
+      <div className="flex flex-wrap items-center justify-center gap-2">
         <ControlButton
           label={t("runCounterPage.controls.newSession")}
           hotkey={actionHotkey("newSession")}
@@ -345,16 +327,6 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
             className="shrink-0"
           />
         </Popconfirm>
-        <Tooltip title={t("runCounterPage.display.obsHint")}>
-          <ControlButton
-            label={displayOpen ? t("runCounterPage.display.close") : t("runCounterPage.display.open")}
-            icon={mdiBroadcast}
-            variant={displayOpen ? "info" : "secondary"}
-            isDarkTheme={isDarkTheme}
-            onClick={toggleDisplay}
-            className="shrink-0"
-          />
-        </Tooltip>
       </div>
 
       {failures.length > 0 && (
@@ -388,43 +360,6 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
         />
         <StatCard label={t("runCounterPage.stats.total")} value={formatDuration(stats.totalActiveMs)} isDarkTheme={isDarkTheme} />
       </div>
-
-      {/* Current run loot */}
-      {currentRun && (
-        <div className={`rounded-lg border p-3 ${cardBg}`}>
-          <div className="flex items-center justify-between mb-2">
-            <span className={`text-sm font-medium ${heading}`}>
-              {t("runCounterPage.loot.title")} · #{currentRun.index}
-            </span>
-            <span className={`text-xs ${sub}`}>
-              {formatDuration(runElapsedMs(currentRun, now))}
-            </span>
-          </div>
-          {currentRun.loot.length === 0 ? (
-            <div className={`text-xs ${sub}`}>{t("runCounterPage.loot.empty")}</div>
-          ) : (
-            <ul className="flex flex-col gap-1">
-              {currentRun.loot.map((l) => (
-                <li
-                  key={l.id}
-                  className={`flex items-center justify-between rounded px-2 py-1 text-sm ${
-                    isDarkTheme ? "bg-gray-700/60 text-gray-200" : "bg-gray-100 text-gray-800"
-                  }`}
-                >
-                  <span className="truncate">{l.name}</span>
-                  <button
-                    className={`ml-2 shrink-0 bg-transparent border-0 p-0 ${sub} hover:text-red-500`}
-                    onClick={() => removeLoot(currentRun.id, l.id)}
-                    title={t("runCounterPage.loot.remove")}
-                  >
-                    <Icon path={mdiClose} size={0.6} />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      )}
 
       {/* Runs this session */}
       {runs.length > 0 && (

@@ -1876,7 +1876,8 @@
       "add": "Nouvelle cible",
       "rename": "Renommer",
       "delete": "Supprimer",
-      "deleteConfirm": "Supprimer cette cible ?"
+      "deleteConfirm": "Supprimer cette cible ?",
+      "lockedHint": "Terminez la session pour changer de cible"
     },
     "controls": {
       "start": "Démarrer",

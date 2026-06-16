@@ -1876,7 +1876,8 @@
       "add": "Nuevo objetivo",
       "rename": "Renombrar",
       "delete": "Eliminar",
-      "deleteConfirm": "¿Eliminar este objetivo?"
+      "deleteConfirm": "¿Eliminar este objetivo?",
+      "lockedHint": "Finaliza la sesión para cambiar de objetivo"
     },
     "controls": {
       "start": "Iniciar",
