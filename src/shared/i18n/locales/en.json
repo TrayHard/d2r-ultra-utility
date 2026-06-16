@@ -1909,6 +1909,8 @@
       "title": "Display",
       "previewHint": "Toggle what shows; drag the display's corner to resize it like a window",
       "resizeHint": "Drag to resize",
+      "background": "Background",
+      "border": "Border",
       "style": {
         "title": "Text style",
         "bold": "Bold",

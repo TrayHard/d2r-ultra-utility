@@ -465,7 +465,10 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
               <div className="flex flex-col gap-3">
                 <div className={`text-xs ${sub}`}>{t("runCounterPage.display.previewHint")}</div>
                 {/* Live preview — toggle each element with the eye next to it */}
-                <div className="mx-auto w-full max-w-[280px] rounded-xl border border-yellow-500/40 bg-gray-900/90 text-gray-100 p-3 flex flex-col items-center gap-1.5">
+                <div
+                  className="mx-auto w-full max-w-[280px] rounded-xl border text-gray-100 p-3 flex flex-col items-center gap-1.5"
+                  style={{ backgroundColor: cfg.bgColor, borderColor: cfg.borderColor }}
+                >
                   <PreviewToggle
                     enabled={cfg.showHeader}
                     onToggle={() => setDisplayConfig({ showHeader: !cfg.showHeader })}
@@ -524,6 +527,30 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
                         labelStyle={elementCss(cfg.styles.statLabel, "#9ca3af")}
                       />
                     </PreviewToggle>
+                  </div>
+                </div>
+
+                {/* Panel colours */}
+                <div className="flex items-center gap-4 flex-wrap">
+                  <div className="flex items-center gap-1.5">
+                    <span className={`text-xs ${sub}`}>
+                      {t("runCounterPage.display.background")}
+                    </span>
+                    <ColorPicker
+                      size="small"
+                      value={cfg.bgColor}
+                      onChangeComplete={(c) => c && setDisplayConfig({ bgColor: c.toRgbString() })}
+                    />
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <span className={`text-xs ${sub}`}>
+                      {t("runCounterPage.display.border")}
+                    </span>
+                    <ColorPicker
+                      size="small"
+                      value={cfg.borderColor}
+                      onChangeComplete={(c) => c && setDisplayConfig({ borderColor: c.toRgbString() })}
+                    />
                   </div>
                 </div>
 

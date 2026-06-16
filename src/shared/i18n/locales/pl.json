@@ -1977,7 +1977,9 @@
           "mono": "Mono",
           "diablo": "Diablo"
         }
-      }
+      },
+      "background": "Tło",
+      "border": "Obramowanie"
     }
   }
 }

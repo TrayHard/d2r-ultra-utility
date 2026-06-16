@@ -19,6 +19,8 @@ export const MAX_HISTORY = 200;
 export const DEFAULT_DISPLAY_CONFIG: DisplayConfig = {
   width: 340,
   height: 240,
+  bgColor: "rgba(17, 24, 39, 0.9)",
+  borderColor: "rgba(234, 179, 8, 0.4)",
   showHeader: true,
   showRunNumber: true,
   showRuns: true,
