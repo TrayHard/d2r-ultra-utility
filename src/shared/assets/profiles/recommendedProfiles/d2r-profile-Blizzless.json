@@ -1,7 +1,7 @@
 {
   "id": "1755790041879",
   "name": "Blizzless",
-  "version": "1.5",
+  "version": "1.6",
   "settings": {
     "runes": {
       "el": {
@@ -12621,5 +12621,5 @@
     }
   },
   "createdAt": "2025-08-21T15:27:21.879Z",
-  "modifiedAt": "2025-10-04T03:20:00.600Z"
+  "modifiedAt": "2026-06-16T11:19:34.000Z"
 }
