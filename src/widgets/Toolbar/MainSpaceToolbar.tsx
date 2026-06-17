@@ -12,6 +12,10 @@ interface ToolbarProps {
   isDarkTheme: boolean;
   onThemeChange: () => void;
   onBackClick?: () => void;
+  /** Section title, shown centered in the bar (Loot Filters / Tweaks / Run Counter). */
+  title?: string;
+  /** Optional extra control rendered in the right group (e.g. the display toggle). */
+  rightExtra?: React.ReactNode;
 }
 
 const MainSpaceToolbar: React.FC<ToolbarProps> = ({
@@ -20,15 +24,26 @@ const MainSpaceToolbar: React.FC<ToolbarProps> = ({
   isDarkTheme,
   onThemeChange,
   onBackClick,
+  title,
+  rightExtra,
 }) => {
   const { t } = useTranslation();
 
   return (
     <div
-      className={`shadow-lg border-b px-3 py-1 elevation-4 h-9 ${
+      className={`relative shadow-lg border-b px-3 py-1 elevation-4 h-9 ${
         isDarkTheme ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
       }`}
     >
+      {title && (
+        <span
+          className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 diablo-font text-lg font-bold whitespace-nowrap pointer-events-none ${
+            isDarkTheme ? "text-white" : "text-gray-900"
+          }`}
+        >
+          {title}
+        </span>
+      )}
       <div className="flex justify-between items-center h-full">
         <div className="flex items-center space-x-4">
           {/* Back Button */}
@@ -65,6 +80,7 @@ const MainSpaceToolbar: React.FC<ToolbarProps> = ({
         </div>
 
         <div className="flex items-center space-x-4">
+          {rightExtra}
           {/* Theme Toggle */}
           <Tooltip
             title={isDarkTheme ? t("common.lightTheme") : t("common.darkTheme")}

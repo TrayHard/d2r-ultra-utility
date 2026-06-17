@@ -5,22 +5,28 @@ import Icon from "@mdi/react";
 import { mdiBroadcast } from "@mdi/js";
 import { useRunCounter } from "../../../shared/runcounter/RunCounterContext";
 
-/** Icon-only toggle for the always-on-top stats display window, sat next to the title. */
-const DisplayToggleButton: React.FC = () => {
+interface Props {
+  isDarkTheme: boolean;
+}
+
+/** Icon-only toggle for the always-on-top stats display window, styled for the top bar. */
+const DisplayToggleButton: React.FC<Props> = ({ isDarkTheme }) => {
   const { t } = useTranslation();
   const { displayOpen, toggleDisplay } = useRunCounter();
 
+  const cls = displayOpen
+    ? "bg-cyan-600 hover:bg-cyan-700 text-white"
+    : isDarkTheme
+      ? "bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white"
+      : "bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-900";
+
   return (
-    <Tooltip title={t("runCounterPage.display.obsHint")}>
+    <Tooltip title={t("runCounterPage.display.obsHint")} placement="bottom">
       <button
         onClick={toggleDisplay}
-        className={`flex items-center justify-center w-9 h-9 p-0 rounded-lg border transition-colors ${
-          displayOpen
-            ? "bg-cyan-600 border-cyan-500 text-white hover:bg-cyan-700"
-            : "bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600"
-        }`}
+        className={`p-1 rounded-full transition-all duration-200 text-sm hover:scale-110 ${cls}`}
       >
-        <Icon path={mdiBroadcast} size={0.85} />
+        <Icon path={mdiBroadcast} size={0.7} />
       </button>
     </Tooltip>
   );
