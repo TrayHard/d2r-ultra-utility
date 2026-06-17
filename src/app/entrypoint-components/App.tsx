@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { useLogger } from "../../shared/utils/logger";
+import { safeGetItem } from "../../shared/utils/safeStorage";
 import ProgressBar from "../../shared/components/ProgressBar.tsx";
 import CustomTitleBar from "../../widgets/CustomTitleBar.tsx";
 import StartupLanguageSwitch from "../../widgets/Toolbar/StartupLanguageSwitch.tsx";
@@ -82,9 +83,10 @@ type AppState =
 function App() {
   const logger = useLogger("App");
   const [appState, setAppState] = useState<AppState>("loading");
-  const isDebugMode = Number(
-    localStorage.getItem(STORAGE_KEYS.DEBUG_MODE) || 0
-  );
+  // safeGetItem: storage access can throw (blocked/disabled WebView2 storage); this read
+  // runs in the component body during the very first render, where an uncaught throw would
+  // blank the whole window.
+  const isDebugMode = Number(safeGetItem(STORAGE_KEYS.DEBUG_MODE) || 0);
   const { t } = useTranslation();
 
   // Тестовое логирование при инициализации

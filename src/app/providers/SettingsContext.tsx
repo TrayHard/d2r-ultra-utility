@@ -13,6 +13,7 @@ import i18n from "../../shared/i18n";
 import { STORAGE_KEYS } from "../../shared/constants";
 import { logger } from "../../shared/utils/logger";
 import { saveTextViaDialog } from "../../shared/utils/saveFile";
+import { safeParse } from "../../shared/utils/safeStorage";
 // Загружаем профили из ассетов (eager, чтобы были доступны синхронно)
 // Новый формат: recommendedProfiles + корневой d2r-profile-Default.json
 // Для обратной совместимости поддерживаем старые пути (baseProfiles)
@@ -1414,11 +1415,17 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     if (savedSettings) {
       try {
         const parsedSettings = JSON.parse(savedSettings);
+        // runes может отсутствовать в старом/частичном/импортированном сохранении —
+        // берём дефолт, иначе Object.entries(undefined) бросит и потеряет ВСЕ настройки.
+        const runesSource =
+          parsedSettings?.runes && typeof parsedSettings.runes === "object"
+            ? parsedSettings.runes
+            : createDefaultSettings().runes;
         // Мигрируем настройки рун и добавляем common и gems если их нет
         const migratedSettings = {
           ...parsedSettings,
           runes: Object.fromEntries(
-            Object.entries(parsedSettings.runes).map(([key, value]) => [
+            Object.entries(runesSource).map(([key, value]) => [
               key,
               migrateRuneSettings(value),
             ])
@@ -1445,31 +1452,36 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     let hadProfiles = false;
     if (savedProfiles) {
       try {
-        const parsedProfiles = JSON.parse(savedProfiles);
-        // Мигрируем настройки рун в загруженных профилях и добавляем common и gems если их нет
-        const migratedProfiles = parsedProfiles.map((profile: Profile) => ({
+        // safeParse + Array-guard: битый/несовместимый JSON не должен ронять загрузку.
+        const parsedProfiles = safeParse<Profile[]>(savedProfiles, []);
+        const profilesList = Array.isArray(parsedProfiles) ? parsedProfiles : [];
+        // Мигрируем настройки рун в загруженных профилях и добавляем common и gems если их нет.
+        // profile.settings(.runes) может отсутствовать в старом/импортированном профиле.
+        const migratedProfiles = profilesList.map((profile: Profile) => ({
           ...profile,
             settings: {
             ...profile.settings,
             runes: Object.fromEntries(
-              Object.entries(profile.settings.runes).map(([key, value]) => [
-                key,
-                migrateRuneSettings(value),
-              ])
-            ),
-            common: profile.settings.common
+              Object.entries(
+                profile.settings?.runes &&
+                  typeof profile.settings.runes === "object"
+                  ? profile.settings.runes
+                  : createDefaultSettings().runes
+              ).map(([key, value]) => [key, migrateRuneSettings(value)])
+            ) as Record<ERune, RuneSettings>,
+            common: profile.settings?.common
               ? cleanSettings(profile.settings.common)
               : getDefaultCommonSettings(),
-            gems: profile.settings.gems
+            gems: profile.settings?.gems
               ? profile.settings.gems
               : getDefaultGemSettings(),
-            items: profile.settings.items
+            items: profile.settings?.items
               ? migrateItemsSettings(profile.settings.items)
               : getDefaultItemsSettings(),
               // Tweaks не храним в профилях вообще
               tweaks: getDefaultTweaksSettings(),
             modifiers: migrateModifiersSettings(
-              (profile.settings as any).modifiers
+              (profile.settings as any)?.modifiers
             ),
           },
         }));

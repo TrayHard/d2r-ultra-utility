@@ -5,6 +5,7 @@ import App from "./app/entrypoint-components/App.tsx";
 import RunCounterOverlay from "./app/entrypoint-components/RunCounterOverlay.tsx";
 import RunCounterDisplay from "./app/entrypoint-components/RunCounterDisplay.tsx";
 import RunCounterSessionOverlay from "./app/entrypoint-components/RunCounterSessionOverlay.tsx";
+import RootErrorBoundary from "./shared/components/RootErrorBoundary.tsx";
 import {
   OVERLAY_WINDOW_LABEL,
   DISPLAY_WINDOW_LABEL,
@@ -12,6 +13,8 @@ import {
 } from "./shared/runcounter/constants.ts";
 import "./app/entrypoint-components/App.css";
 import "./shared/assets/fonts.css";
+// NOTE: import-time code (this i18n init, and anything it triggers) runs BEFORE createRoot,
+// so RootErrorBoundary below cannot catch throws from here — keep module-eval code throw-safe.
 import "./shared/i18n";
 
 // Both windows load this same bundle; the window label decides which UI to render.
@@ -43,5 +46,7 @@ const rootUI = isOverlay ? (
 );
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <React.StrictMode>{rootUI}</React.StrictMode>
+  <React.StrictMode>
+    <RootErrorBoundary>{rootUI}</RootErrorBoundary>
+  </React.StrictMode>
 );
