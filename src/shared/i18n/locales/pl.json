@@ -1985,7 +1985,7 @@
       "border": "Obramowanie",
       "exportSettings": "Eksport",
       "importSettings": "Import",
-      "dropHint": "jako JSON — lub przeciągnij plik",
+      "dropHint": "Ustawienia wyświetlacza jako plik JSON — lub przeciągnij tu plik, aby zaimportować",
       "imported": "Zaimportowano ustawienia wyświetlacza",
       "importError": "Nie udało się odczytać pliku",
       "dropOverlay": "Upuść plik JSON z ustawieniami"
