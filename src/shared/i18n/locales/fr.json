@@ -1906,7 +1906,9 @@
     "runsList": {
       "title": "Runs de cette session",
       "run": "Run {{n}}",
-      "lootCount": "{{count}} loot"
+      "lootCount": "{{count}} loot",
+      "delete": "Supprimer le run",
+      "deleteConfirm": "Supprimer ce run ?"
     },
     "hotkeys": {
       "title": "Raccourcis",
@@ -1922,7 +1924,8 @@
         "stop": "Arrêter le run",
         "addLoot": "Ajouter un loot",
         "newSession": "Nouvelle session",
-        "finishSession": "Terminer la session"
+        "finishSession": "Terminer la session",
+        "toggleDisplay": "Affichage on/off"
       },
       "duplicateWarning": "Ce raccourci est déjà attribué à une autre action"
     },

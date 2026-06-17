@@ -49,6 +49,9 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
     togglePause,
     stop,
     finishSession,
+    addLootToRun,
+    removeLoot,
+    deleteRun,
     addTarget,
     renameTarget,
     deleteTarget,
@@ -58,6 +61,7 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
     clearHistory,
     openLootOverlay,
     openSessionOverlay,
+    toggleDisplay,
     setDisplayConfig,
   } = rc;
 
@@ -67,6 +71,16 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
   const sessionLocked = !!data.current;
 
   const [expandedSessionId, setExpandedSessionId] = useState<string | null>(null);
+  // Inline "add loot to a past run" editor: which run is open + its draft text.
+  const [lootRunId, setLootRunId] = useState<string | null>(null);
+  const [lootInput, setLootInput] = useState("");
+
+  const submitRunLoot = (runId: string) => {
+    const name = lootInput.trim();
+    if (!name) return;
+    addLootToRun(runId, name);
+    setLootInput("");
+  };
 
   // Register global hotkeys while this page is mounted.
   const failures = useGlobalHotkeys({
@@ -80,6 +94,7 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
       addLoot: openLootOverlay,
       newSession: openSessionOverlay,
       finishSession,
+      toggleDisplay,
     },
   });
 
@@ -388,22 +403,79 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
                       : "bg-gray-100"
                 }`}
               >
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-2">
                   <span className={heading}>{t("runCounterPage.runsList.run", { n: r.index })}</span>
-                  <span className="font-mono tabular-nums">{formatDuration(runElapsedMs(r, now))}</span>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className="font-mono tabular-nums">{formatDuration(runElapsedMs(r, now))}</span>
+                    <button
+                      className={`bg-transparent border-0 p-0 ${sub} hover:text-yellow-500`}
+                      title={t("runCounterPage.controls.addLoot")}
+                      onClick={() => {
+                        setLootRunId(lootRunId === r.id ? null : r.id);
+                        setLootInput("");
+                      }}
+                    >
+                      <Icon path={mdiTreasureChestOutline} size={0.6} />
+                    </button>
+                    <Popconfirm
+                      title={t("runCounterPage.runsList.deleteConfirm")}
+                      okText={t("runCounterPage.runsList.delete")}
+                      onConfirm={() => deleteRun(r.id)}
+                    >
+                      <button
+                        className={`bg-transparent border-0 p-0 ${sub} hover:text-red-500`}
+                        title={t("runCounterPage.runsList.delete")}
+                      >
+                        <Icon path={mdiDelete} size={0.6} />
+                      </button>
+                    </Popconfirm>
+                  </div>
                 </div>
                 {r.loot.length > 0 && (
                   <div className="flex flex-wrap gap-1 mt-1">
                     {r.loot.map((l) => (
                       <span
                         key={l.id}
-                        className={`rounded px-1.5 py-0.5 text-xs ${
+                        className={`flex items-center gap-1 rounded px-1.5 py-0.5 text-xs ${
                           isDarkTheme ? "bg-gray-600/50 text-gray-200" : "bg-gray-200 text-gray-700"
                         }`}
                       >
                         {l.name}
+                        <button
+                          className="bg-transparent border-0 p-0 opacity-60 hover:opacity-100 hover:text-red-500"
+                          title={t("runCounterPage.loot.remove")}
+                          onClick={() => removeLoot(r.id, l.id)}
+                        >
+                          <Icon path={mdiClose} size={0.5} />
+                        </button>
                       </span>
                     ))}
+                  </div>
+                )}
+                {lootRunId === r.id && (
+                  <div className="mt-1.5 flex items-center gap-1.5">
+                    <Input
+                      autoFocus
+                      size="small"
+                      value={lootInput}
+                      placeholder={t("runCounterPage.overlay.placeholder")}
+                      onChange={(e) => setLootInput(e.target.value)}
+                      onPressEnter={() => submitRunLoot(r.id)}
+                    />
+                    <Button
+                      size="sm"
+                      variant="success"
+                      isDarkTheme={isDarkTheme}
+                      icon={mdiCheck}
+                      onClick={() => submitRunLoot(r.id)}
+                    />
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      isDarkTheme={isDarkTheme}
+                      icon={mdiClose}
+                      onClick={() => setLootRunId(null)}
+                    />
                   </div>
                 )}
               </li>

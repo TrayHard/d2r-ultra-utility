@@ -1906,7 +1906,9 @@
     "runsList": {
       "title": "Runs de esta sesión",
       "run": "Run {{n}}",
-      "lootCount": "{{count}} botín"
+      "lootCount": "{{count}} botín",
+      "delete": "Eliminar run",
+      "deleteConfirm": "¿Eliminar esta run?"
     },
     "hotkeys": {
       "title": "Atajos de teclado",
@@ -1922,7 +1924,8 @@
         "stop": "Parar run",
         "addLoot": "Añadir botín",
         "newSession": "Nueva sesión",
-        "finishSession": "Finalizar sesión"
+        "finishSession": "Finalizar sesión",
+        "toggleDisplay": "Pantalla on/off"
       },
       "duplicateWarning": "Este atajo ya está asignado a otra acción"
     },

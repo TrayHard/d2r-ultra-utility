@@ -1863,7 +1863,9 @@
     "runsList": {
       "title": "Runs this session",
       "run": "Run {{n}}",
-      "lootCount": "{{count}} loot"
+      "lootCount": "{{count}} loot",
+      "delete": "Delete run",
+      "deleteConfirm": "Delete this run?"
     },
     "hotkeys": {
       "title": "Hotkeys",
@@ -1880,7 +1882,8 @@
         "stop": "Stop run",
         "addLoot": "Add loot",
         "newSession": "New session",
-        "finishSession": "Finish session"
+        "finishSession": "Finish session",
+        "toggleDisplay": "Display on/off"
       }
     },
     "history": {

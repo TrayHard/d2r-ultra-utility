@@ -68,6 +68,7 @@ export const DEFAULT_HOTKEYS: HotkeyConfig = {
   addLoot: "Ctrl+Alt+L",
   newSession: "Ctrl+Alt+N",
   finishSession: "Ctrl+Alt+E",
+  toggleDisplay: "Ctrl+Alt+D",
 };
 
 /** Fixed display order of the hotkey actions in the UI. */
@@ -79,6 +80,7 @@ export const HOTKEY_ACTIONS: HotkeyAction[] = [
   "addLoot",
   "newSession",
   "finishSession",
+  "toggleDisplay",
 ];
 
 export interface DisplayStatePayload {

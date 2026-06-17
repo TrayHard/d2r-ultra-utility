@@ -1906,7 +1906,9 @@
     "runsList": {
       "title": "Забеги за сессию",
       "run": "Забег {{n}}",
-      "lootCount": "дропа: {{count}}"
+      "lootCount": "дропа: {{count}}",
+      "delete": "Удалить забег",
+      "deleteConfirm": "Удалить этот забег?"
     },
     "hotkeys": {
       "title": "Горячие клавиши",
@@ -1922,7 +1924,8 @@
         "stop": "Остановить забег",
         "addLoot": "Добавить дроп",
         "newSession": "Новая сессия",
-        "finishSession": "Завершить сессию"
+        "finishSession": "Завершить сессию",
+        "toggleDisplay": "Дисплей вкл/выкл"
       },
       "duplicateWarning": "Эта комбинация уже назначена другому действию"
     },
