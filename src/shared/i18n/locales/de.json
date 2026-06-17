@@ -1943,9 +1943,11 @@
     "overlay": {
       "title": "Beute hinzufügen",
       "close": "Schließen",
-      "placeholder": "Item-Name (Enter zum Hinzufügen)",
+      "placeholder": "Eigener Text (Enter zum Hinzufügen)",
       "noRun": "Kein aktiver Run – starte zuerst einen",
-      "hint": "Enter = hinzufügen · Esc = schließen"
+      "hint": "Enter = hinzufügen · Esc = schließen",
+      "searchPlaceholder": "Items, Runen suchen…",
+      "or": "oder"
     },
     "newSession": {
       "title": "Neue Session starten",

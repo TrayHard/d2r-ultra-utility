@@ -1943,9 +1943,11 @@
     "overlay": {
       "title": "Añadir botín",
       "close": "Cerrar",
-      "placeholder": "Nombre del objeto (Intro para añadir)",
+      "placeholder": "Texto personalizado (Enter para añadir)",
       "noRun": "No hay ninguna run activa — inicia una primero",
-      "hint": "Intro = añadir · Esc = cerrar"
+      "hint": "Intro = añadir · Esc = cerrar",
+      "searchPlaceholder": "Buscar objetos, runas…",
+      "or": "o"
     },
     "newSession": {
       "title": "Iniciar una nueva sesión",

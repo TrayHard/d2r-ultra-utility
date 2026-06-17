@@ -1945,9 +1945,11 @@
     "overlay": {
       "title": "Add loot",
       "close": "Close",
-      "placeholder": "Item name (Enter to add)",
+      "placeholder": "Custom text (Enter to add)",
       "noRun": "No active run — start one first",
-      "hint": "Enter = add · Esc = close"
+      "hint": "Enter = add · Esc = close",
+      "searchPlaceholder": "Search items, runes…",
+      "or": "or"
     }
   },
   "tweaksPage": {
