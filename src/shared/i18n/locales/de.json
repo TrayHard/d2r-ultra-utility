@@ -1981,7 +1981,16 @@
         }
       },
       "background": "Hintergrund",
-      "border": "Rahmen"
+      "border": "Rahmen",
+      "exportSettings": "Export",
+      "importSettings": "Import",
+      "dropHint": "als JSON — oder Datei hierher ziehen",
+      "imported": "Anzeigeeinstellungen importiert",
+      "importError": "Datei konnte nicht gelesen werden",
+      "dropOverlay": "Anzeige-Einstellungs-JSON ablegen"
+    },
+    "export": {
+      "title": "Sitzungsdaten exportieren"
     }
   }
 }

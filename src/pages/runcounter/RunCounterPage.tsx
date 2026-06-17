@@ -1,5 +1,7 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
+import { readTextFile as tauriReadTextFile } from "@tauri-apps/plugin-fs";
 import { Select, Input, Collapse, Popconfirm, Tooltip, Empty, InputNumber, ColorPicker } from "antd";
 import Icon from "@mdi/react";
 import {
@@ -25,6 +27,13 @@ import { useGlobalHotkeys } from "../../shared/runcounter/useGlobalHotkeys";
 import { runElapsedMs, formatDuration } from "../../shared/runcounter/engine";
 import { HOTKEY_ACTIONS } from "../../shared/runcounter/constants";
 import { elementCss, FONT_OPTIONS } from "../../shared/runcounter/displayStyle";
+import {
+  exportSessionsCsv,
+  exportSessionsXlsx,
+  exportDisplayConfig,
+  hasExportableData,
+  looksLikeDisplayConfig,
+} from "../../shared/runcounter/export";
 import { DisplayElement, ElementStyle } from "../../shared/runcounter/types";
 import { formatHotkeyForDisplay, hasModifier, isTauri } from "../../shared/runcounter/hotkeys";
 import { HotkeyAction } from "../../shared/runcounter/types";
@@ -63,6 +72,7 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
     openSessionOverlay,
     toggleDisplay,
     setDisplayConfig,
+    importDisplayConfig,
   } = rc;
 
   const cfg = data.displayConfig;
@@ -74,6 +84,7 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
   // Inline "add loot to a past run" editor: which run is open + its draft text.
   const [lootRunId, setLootRunId] = useState<string | null>(null);
   const [lootInput, setLootInput] = useState("");
+  const [isDragOver, setIsDragOver] = useState(false);
 
   const submitRunLoot = (runId: string) => {
     const name = lootInput.trim();
@@ -81,6 +92,74 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
     addLootToRun(runId, name);
     setLootInput("");
   };
+
+  const importDisplayFile = async (parse: () => Promise<unknown>) => {
+    try {
+      const parsed = await parse();
+      if (!looksLikeDisplayConfig(parsed)) {
+        sendMessage(t("runCounterPage.display.importError"), { type: "warning" });
+        return;
+      }
+      importDisplayConfig(parsed);
+      sendMessage(t("runCounterPage.display.imported"), { type: "success" });
+    } catch (err) {
+      console.error("display config import failed", err);
+      sendMessage(t("runCounterPage.display.importError"), { type: "error" });
+    }
+  };
+
+  const handleImportDisplay = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".json";
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) importDisplayFile(() => file.text().then(JSON.parse));
+    };
+    input.click();
+  };
+
+  // Drag & drop a display-settings JSON anywhere in the Run Counter (Tauri OS file drop).
+  const importDisplayFileRef = useRef(importDisplayFile);
+  importDisplayFileRef.current = importDisplayFile;
+  useEffect(() => {
+    if (!isTauri()) return;
+    let cancelled = false;
+    let unlisten: (() => void) | null = null;
+    let importing = false;
+    getCurrentWebviewWindow()
+      .onDragDropEvent(async (e) => {
+        const type = e.payload.type;
+        if (type === "enter" || type === "over") return setIsDragOver(true);
+        if (type === "leave") return setIsDragOver(false);
+        if (type !== "drop") return;
+        setIsDragOver(false);
+        if (importing) return;
+        importing = true;
+        try {
+          const paths: string[] = (e.payload as { paths?: string[] }).paths ?? [];
+          const jsonPath = paths.find((p) => p.toLowerCase().endsWith(".json"));
+          if (jsonPath) {
+            await importDisplayFileRef.current(() =>
+              tauriReadTextFile(jsonPath).then(JSON.parse)
+            );
+          }
+        } finally {
+          setTimeout(() => {
+            importing = false;
+          }, 100);
+        }
+      })
+      .then((fn) => {
+        if (cancelled) fn();
+        else unlisten = fn;
+      })
+      .catch((err) => console.warn("rc display dnd listen failed", err));
+    return () => {
+      cancelled = true;
+      if (unlisten) unlisten();
+    };
+  }, []);
 
   // Register global hotkeys while this page is mounted.
   const failures = useGlobalHotkeys({
@@ -166,6 +245,21 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
 
   return (
     <div className="px-4 pb-10 max-w-[560px] mx-auto flex flex-col gap-4">
+      {isDragOver && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm"
+          style={{ backgroundColor: isDarkTheme ? "rgba(17,24,39,0.85)" : "rgba(243,244,246,0.85)" }}
+        >
+          <div
+            className={`border-2 border-dashed rounded-xl p-10 text-center ${
+              isDarkTheme ? "border-cyan-400 bg-cyan-900/20 text-cyan-200" : "border-cyan-500 bg-cyan-50 text-cyan-700"
+            }`}
+          >
+            <div className="text-4xl mb-2">📥</div>
+            <div className="text-lg font-semibold">{t("runCounterPage.display.dropOverlay")}</div>
+          </div>
+        </div>
+      )}
       {/* Target selector */}
       <div className={`rounded-lg border p-3 ${cardBg}`}>
         <div className="flex items-center gap-2">
@@ -643,17 +737,39 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
                     )
                   )}
                 </div>
+
+                {/* Export / import display settings as JSON (drag & drop a file works too) */}
+                <div className="flex items-center gap-2 flex-wrap pt-1">
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    isDarkTheme={isDarkTheme}
+                    onClick={() => exportDisplayConfig(cfg)}
+                  >
+                    {t("runCounterPage.display.exportSettings")}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    isDarkTheme={isDarkTheme}
+                    onClick={handleImportDisplay}
+                  >
+                    {t("runCounterPage.display.importSettings")}
+                  </Button>
+                  <span className={`text-xs ${sub}`}>{t("runCounterPage.display.dropHint")}</span>
+                </div>
               </div>
             ),
           },
           {
             key: "history",
             label: `${t("runCounterPage.history.title")} (${data.history.length})`,
-            children:
-              data.history.length === 0 ? (
-                <Empty description={t("runCounterPage.history.empty")} image={Empty.PRESENTED_IMAGE_SIMPLE} />
-              ) : (
-                <div className="flex flex-col gap-2">
+            children: (
+              <div className="flex flex-col gap-2">
+                {data.history.length === 0 ? (
+                  <Empty description={t("runCounterPage.history.empty")} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                ) : (
+                  <>
                   {data.history.map((s) => {
                     const completed = s.runs.filter((r) => r.status === "stopped");
                     const total = s.runs.reduce((a, r) => a + runElapsedMs(r, s.endedAt ?? now), 0);
@@ -733,8 +849,31 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
                       {t("runCounterPage.history.clear")}
                     </Button>
                   </Popconfirm>
-                </div>
-              ),
+                  </>
+                )}
+                {hasExportableData(data) && (
+                  <div className="flex items-center gap-2 flex-wrap pt-1">
+                    <span className={`text-xs ${sub}`}>{t("runCounterPage.export.title")}</span>
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      isDarkTheme={isDarkTheme}
+                      onClick={() => exportSessionsCsv(data)}
+                    >
+                      CSV
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      isDarkTheme={isDarkTheme}
+                      onClick={() => exportSessionsXlsx(data)}
+                    >
+                      XLSX
+                    </Button>
+                  </div>
+                )}
+              </div>
+            ),
           },
         ]}
       />

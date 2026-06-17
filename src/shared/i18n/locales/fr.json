@@ -1981,7 +1981,16 @@
         }
       },
       "background": "Fond",
-      "border": "Bordure"
+      "border": "Bordure",
+      "exportSettings": "Exporter",
+      "importSettings": "Importer",
+      "dropHint": "en JSON — ou glissez-déposez un fichier",
+      "imported": "Paramètres d'affichage importés",
+      "importError": "Impossible de lire ce fichier",
+      "dropOverlay": "Déposez un JSON de paramètres d'affichage"
+    },
+    "export": {
+      "title": "Exporter les données de session"
     }
   }
 }
