@@ -64,18 +64,10 @@ const TweaksWorkspaceContent: React.FC<TweaksWorkspaceProps> = ({
                 isDarkTheme={isDarkTheme}
                 onThemeChange={toggleTheme}
                 onBackClick={onBackClick}
+                title={t("tweaks")}
               />
 
-              <div className="flex-1 overflow-auto">
-                <div className="max-w-[600px] px-4 py-8 mx-auto">
-                  <h1
-                    className={`text-4xl font-bold text-center diablo-font ${
-                      isDarkTheme ? "text-white" : "text-gray-900"
-                    }`}
-                  >
-                    {t("tweaks")}
-                  </h1>
-                </div>
+              <div className="flex-1 overflow-auto pt-4">
                 <TweaksPage isDarkTheme={isDarkTheme} />
               </div>
             </>

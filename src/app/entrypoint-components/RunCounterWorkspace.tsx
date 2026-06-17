@@ -81,21 +81,11 @@ const RunCounterWorkspaceContent: React.FC<RunCounterWorkspaceProps> = ({
                   isDarkTheme={isDarkTheme}
                   onThemeChange={toggleTheme}
                   onBackClick={onBackClick}
+                  title={t("runCounter")}
+                  rightExtra={<DisplayToggleButton isDarkTheme={isDarkTheme} />}
                 />
 
-                <div className="flex-1 overflow-auto">
-                  <div className="relative max-w-[600px] px-4 py-6 mx-auto flex items-center justify-center">
-                    <h1
-                      className={`text-4xl font-bold text-center diablo-font ${
-                        isDarkTheme ? "text-white" : "text-gray-900"
-                      }`}
-                    >
-                      {t("runCounter")}
-                    </h1>
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                      <DisplayToggleButton />
-                    </div>
-                  </div>
+                <div className="flex-1 overflow-auto pt-4">
                   <RunCounterPage isDarkTheme={isDarkTheme} />
                 </div>
               </>
