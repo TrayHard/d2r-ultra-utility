@@ -36,13 +36,17 @@ const MainSpaceToolbar: React.FC<ToolbarProps> = ({
       }`}
     >
       {title && (
-        <span
-          className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 diablo-font text-lg font-bold whitespace-nowrap pointer-events-none ${
-            isDarkTheme ? "text-white" : "text-gray-900"
-          }`}
-        >
-          {title}
-        </span>
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-none">
+          <span
+            className={`diablo-font text-lg font-bold whitespace-nowrap ${
+              isDarkTheme ? "text-white" : "text-gray-900"
+            }`}
+          >
+            {title}
+          </span>
+          {/* Display toggle sits right next to the title (re-enable clicks). */}
+          {rightExtra && <span className="pointer-events-auto">{rightExtra}</span>}
+        </div>
       )}
       <div className="flex justify-between items-center h-full">
         <div className="flex items-center space-x-4">
@@ -80,7 +84,8 @@ const MainSpaceToolbar: React.FC<ToolbarProps> = ({
         </div>
 
         <div className="flex items-center space-x-4">
-          {rightExtra}
+          {/* rightExtra normally sits beside the centered title; fall back here if no title. */}
+          {!title && rightExtra}
           {/* Theme Toggle */}
           <Tooltip
             title={isDarkTheme ? t("common.lightTheme") : t("common.darkTheme")}
