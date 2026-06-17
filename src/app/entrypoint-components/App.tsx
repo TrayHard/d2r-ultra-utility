@@ -12,6 +12,7 @@ import PathSelector from "../../widgets/Toolbar/PathSelector.tsx";
 import WorkSpace from "./WorkSpace.tsx";
 import MainMenuWindow, { AppSection } from "./MainMenuWindow.tsx";
 import TweaksWorkspace from "./TweaksWorkspace.tsx";
+import RunCounterWorkspace from "./RunCounterWorkspace.tsx";
 import "./App.css";
 
 interface SearchProgress {
@@ -376,22 +377,13 @@ function App() {
     );
   }
 
-  // Run Counter (placeholder)
+  // Run Counter
   if (appState === "runcounter" && savedPath && homeDirectory) {
     return (
       <div className="h-screen flex flex-col bg-gradient-to-br from-gray-900 to-black">
         <CustomTitleBar />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold text-yellow-400 mb-4">Run Counter</h1>
-            <p className="text-gray-400 text-xl">Coming Soon...</p>
-            <button
-              onClick={handleBackToMainMenu}
-              className="mt-8 px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors"
-            >
-              ← Назад в меню
-            </button>
-          </div>
+        <div className="flex-1 min-h-0">
+          <RunCounterWorkspace onBackClick={handleBackToMainMenu} onChangeClick={handleChangePath} />
         </div>
       </div>
     );

@@ -1812,7 +1812,7 @@
     "descriptions": {
       "tweaks": "Réglages du jeu : vidéos d'intro",
       "lootFilters": "Manage loot filters: runes, gems, items",
-      "runCounter": "Track your game runs"
+      "runCounter": "Suivez vos runs de jeu"
     }
   },
   "tweaksPage": {
@@ -1826,7 +1826,7 @@
     }
   },
   "tweaks": "Tweaks",
-  "runCounter": "Run Counter",
+  "runCounter": "Compteur de runs",
   "modifiersPage": {
     "tabs": {
       "modifiers": "Statistiques",
@@ -1859,5 +1859,138 @@
   },
   "editor": {
     "resetColor": "Réinitialiser la couleur"
+  },
+  "runCounterPage": {
+    "defaultTarget": "Farm",
+    "status": {
+      "idle": "Inactif",
+      "running": "En cours",
+      "paused": "En pause",
+      "stopped": "Arrêté"
+    },
+    "target": {
+      "label": "Cible",
+      "placeholder": "Nom de la cible",
+      "none": "Aucune cible",
+      "empty": "Créez une cible pour commencer",
+      "add": "Nouvelle cible",
+      "rename": "Renommer",
+      "delete": "Supprimer",
+      "deleteConfirm": "Supprimer cette cible ?",
+      "lockedHint": "Terminez la session pour changer de cible"
+    },
+    "controls": {
+      "start": "Démarrer",
+      "stopNext": "Arrêter et suivant",
+      "pause": "Pause",
+      "resume": "Reprendre",
+      "stop": "Arrêter",
+      "addLoot": "Ajouter un loot",
+      "finishSession": "Terminer la session",
+      "finishConfirm": "Archiver cette session dans l'historique ?",
+      "newSession": "Nouvelle session"
+    },
+    "stats": {
+      "runs": "Runs",
+      "avg": "Moy.",
+      "best": "Meilleur",
+      "last": "Dernier",
+      "perHour": "Runs/h",
+      "total": "Session"
+    },
+    "loot": {
+      "title": "Loot",
+      "empty": "Aucun loot enregistré pour l'instant",
+      "remove": "Retirer"
+    },
+    "runsList": {
+      "title": "Runs de cette session",
+      "run": "Run {{n}}",
+      "lootCount": "{{count}} loot",
+      "delete": "Supprimer le run",
+      "deleteConfirm": "Supprimer ce run ?"
+    },
+    "hotkeys": {
+      "title": "Raccourcis",
+      "press": "Appuyez sur des touches… (Esc pour annuler)",
+      "reset": "Réinitialiser par défaut",
+      "failed": "Impossible d'associer : {{list}}",
+      "noModifierWarning": "Astuce : ajoutez un modificateur (Ctrl/Alt) pour que la touche fonctionne aussi en jeu",
+      "browserNote": "Les raccourcis globaux ne fonctionnent que dans l'application de bureau",
+      "actions": {
+        "start": "Démarrer un run",
+        "stopNext": "Arrêter et run suivant",
+        "pause": "Pause / reprise",
+        "stop": "Arrêter le run",
+        "addLoot": "Ajouter un loot",
+        "newSession": "Nouvelle session",
+        "finishSession": "Terminer la session",
+        "toggleDisplay": "Affichage on/off"
+      },
+      "duplicateWarning": "Ce raccourci est déjà attribué à une autre action"
+    },
+    "history": {
+      "title": "Historique",
+      "empty": "Aucune session terminée pour l'instant",
+      "runs": "{{count}} runs",
+      "clear": "Effacer l'historique",
+      "clearConfirm": "Supprimer tout l'historique ?"
+    },
+    "messages": {
+      "targetAdded": "Cible « {{name}} » ajoutée",
+      "noRun": "Démarrez d'abord un run pour enregistrer du loot"
+    },
+    "overlay": {
+      "title": "Ajouter un loot",
+      "close": "Fermer",
+      "placeholder": "Nom de l'objet (Entrée pour ajouter)",
+      "noRun": "Aucun run actif — démarrez-en un d'abord",
+      "hint": "Entrée = ajouter · Esc = fermer"
+    },
+    "newSession": {
+      "title": "Démarrer une nouvelle session",
+      "selectTarget": "Choisir une cible",
+      "orCreate": "ou en créer une nouvelle",
+      "create": "Créer et démarrer",
+      "hint": "Entrée = créer · Esc = fermer",
+      "empty": "Aucune cible pour l'instant"
+    },
+    "display": {
+      "open": "Affichage",
+      "close": "Masquer l'affichage",
+      "obsHint": "Panneau de stats toujours au-dessus — épinglez-le sur le jeu ou capturez-le dans OBS via « Capture de fenêtre »",
+      "title": "Affichage",
+      "previewHint": "Affichez/masquez les éléments ; tirez le coin pour redimensionner comme une fenêtre",
+      "resizeHint": "Faites glisser pour redimensionner",
+      "style": {
+        "title": "Style du texte",
+        "bold": "Gras",
+        "italic": "Italique",
+        "elements": {
+          "timer": "Chrono",
+          "statValue": "Valeurs",
+          "statLabel": "Libellés",
+          "runNumber": "Numéro de run",
+          "target": "Cible"
+        },
+        "fonts": {
+          "default": "Défaut",
+          "sans": "Sans",
+          "mono": "Mono",
+          "diablo": "Diablo"
+        }
+      },
+      "background": "Fond",
+      "border": "Bordure",
+      "exportSettings": "Exporter",
+      "importSettings": "Importer",
+      "dropHint": "Paramètres d'affichage en fichier JSON — ou glissez-en un ici pour importer",
+      "imported": "Paramètres d'affichage importés",
+      "importError": "Impossible de lire ce fichier",
+      "dropOverlay": "Déposez un JSON de paramètres d'affichage"
+    },
+    "export": {
+      "title": "Exporter les données de session"
+    }
   }
 }

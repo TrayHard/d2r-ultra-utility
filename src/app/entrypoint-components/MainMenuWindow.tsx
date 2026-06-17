@@ -81,10 +81,9 @@ const MainMenuWindowInner: React.FC<MainMenuWindowProps> = ({
       title: t("runCounter", "Run Counter"),
       description: t(
         "mainMenu.descriptions.runCounter",
-        "Счетчик забегов (скоро)"
+        "Track your game runs"
       ),
       icon: "📊",
-      disabled: true,
     },
   ];
 
