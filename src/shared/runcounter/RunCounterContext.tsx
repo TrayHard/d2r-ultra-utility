@@ -114,6 +114,8 @@ interface RunCounterContextValue {
   displayOpen: boolean;
   toggleDisplay: () => void;
   setDisplayConfig: (patch: Partial<DisplayConfig>) => void;
+  /** Replace the display config from an imported/parsed object (merged onto defaults). */
+  importDisplayConfig: (raw: unknown) => void;
 }
 
 const RunCounterContext = createContext<RunCounterContextValue | null>(null);
@@ -354,6 +356,15 @@ export const RunCounterProvider: React.FC<RunCounterProviderProps> = ({
       resizeDisplayWindow(next.width, next.height);
     }
   }, []);
+  const importDisplayConfig = useCallback((raw: unknown) => {
+    const cfg = withDisplayDefaults(
+      (raw && typeof raw === "object" ? raw : {}) as Partial<DisplayConfig>
+    );
+    cfg.width = Math.min(900, Math.max(200, Number(cfg.width) || 340));
+    cfg.height = Math.min(700, Math.max(120, Number(cfg.height) || 240));
+    setData((d) => ({ ...d, displayConfig: cfg }));
+    if (isTauri()) resizeDisplayWindow(cfg.width, cfg.height);
+  }, []);
   const closeDisplay = useCallback(() => {
     if (isTauri())
       emitTo(DISPLAY_WINDOW_LABEL, RC_EVENTS.DISPLAY_VISIBILITY, { visible: false }).catch(
@@ -425,6 +436,7 @@ export const RunCounterProvider: React.FC<RunCounterProviderProps> = ({
     displayOpen,
     toggleDisplay,
     setDisplayConfig,
+    importDisplayConfig,
   };
 
   return (

@@ -1982,7 +1982,16 @@
         }
       },
       "background": "Tło",
-      "border": "Obramowanie"
+      "border": "Obramowanie",
+      "exportSettings": "Eksport",
+      "importSettings": "Import",
+      "dropHint": "jako JSON — lub przeciągnij plik",
+      "imported": "Zaimportowano ustawienia wyświetlacza",
+      "importError": "Nie udało się odczytać pliku",
+      "dropOverlay": "Upuść plik JSON z ustawieniami"
+    },
+    "export": {
+      "title": "Eksportuj dane sesji"
     }
   }
 }

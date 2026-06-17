@@ -30,7 +30,8 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-i18next": "^15.5.3",
-    "react-window": "^1.8.11"
+    "react-window": "^1.8.11",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2",

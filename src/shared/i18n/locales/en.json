@@ -1905,6 +1905,9 @@
       "hint": "Enter = create · Esc = close",
       "empty": "No targets yet"
     },
+    "export": {
+      "title": "Export session data"
+    },
     "display": {
       "open": "Display",
       "close": "Hide display",
@@ -1914,6 +1917,12 @@
       "resizeHint": "Drag to resize",
       "background": "Background",
       "border": "Border",
+      "exportSettings": "Export",
+      "importSettings": "Import",
+      "dropHint": "as JSON — or drag & drop a file",
+      "imported": "Display settings imported",
+      "importError": "Couldn't read that file",
+      "dropOverlay": "Drop a display-settings JSON",
       "style": {
         "title": "Text style",
         "bold": "Bold",

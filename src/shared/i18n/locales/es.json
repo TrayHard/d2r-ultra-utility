@@ -1981,7 +1981,16 @@
         }
       },
       "background": "Fondo",
-      "border": "Borde"
+      "border": "Borde",
+      "exportSettings": "Exportar",
+      "importSettings": "Importar",
+      "dropHint": "como JSON — o arrastra un archivo",
+      "imported": "Ajustes de pantalla importados",
+      "importError": "No se pudo leer el archivo",
+      "dropOverlay": "Suelta un JSON de ajustes de pantalla"
+    },
+    "export": {
+      "title": "Exportar datos de sesiones"
     }
   }
 }
