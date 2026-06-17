@@ -157,6 +157,32 @@ async fn open_file_dialog() -> Result<String, String> {
     }
 }
 
+// Show a native "Save as" dialog and write the given bytes to the chosen path.
+// Returns true if saved, false if the user cancelled. (WebView2 silently ignores
+// browser <a download> data-URIs, so file export must go through Rust.)
+#[tauri::command]
+async fn save_file_dialog(
+    name: String,
+    filter: String,
+    exts: Vec<String>,
+    data: Vec<u8>,
+) -> Result<bool, String> {
+    let ext_refs: Vec<&str> = exts.iter().map(|s| s.as_str()).collect();
+    let file = FileDialog::new()
+        .set_file_name(&name)
+        .add_filter(&filter, &ext_refs)
+        .set_title("Save file")
+        .save_file();
+
+    match file {
+        Some(path) => {
+            fs::write(&path, &data).map_err(|e| format!("write error: {}", e))?;
+            Ok(true)
+        }
+        None => Ok(false),
+    }
+}
+
 async fn search_in_directory(
     dir: &Path,
     filename: &str,
@@ -278,6 +304,7 @@ pub fn run() {
             search_file,
             set_selected_file,
             open_file_dialog,
+            save_file_dialog,
             ensure_writable,
             ensure_dir
         ])

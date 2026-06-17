@@ -1984,7 +1984,7 @@
       "border": "Rahmen",
       "exportSettings": "Export",
       "importSettings": "Import",
-      "dropHint": "als JSON — oder Datei hierher ziehen",
+      "dropHint": "Anzeigeeinstellungen als JSON-Datei — oder zum Importieren eine Datei hierher ziehen",
       "imported": "Anzeigeeinstellungen importiert",
       "importError": "Datei konnte nicht gelesen werden",
       "dropOverlay": "Anzeige-Einstellungs-JSON ablegen"

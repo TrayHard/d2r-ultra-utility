@@ -1919,7 +1919,7 @@
       "border": "Border",
       "exportSettings": "Export",
       "importSettings": "Import",
-      "dropHint": "as JSON — or drag & drop a file",
+      "dropHint": "Display settings as a JSON file — or drag & drop one here to import",
       "imported": "Display settings imported",
       "importError": "Couldn't read that file",
       "dropOverlay": "Drop a display-settings JSON",

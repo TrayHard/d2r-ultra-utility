@@ -1984,7 +1984,7 @@
       "border": "Borde",
       "exportSettings": "Exportar",
       "importSettings": "Importar",
-      "dropHint": "como JSON — o arrastra un archivo",
+      "dropHint": "Ajustes de pantalla como archivo JSON — o arrastra uno aquí para importar",
       "imported": "Ajustes de pantalla importados",
       "importError": "No se pudo leer el archivo",
       "dropOverlay": "Suelta un JSON de ajustes de pantalla"
