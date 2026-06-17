@@ -1943,9 +1943,11 @@
     "overlay": {
       "title": "Додати лут",
       "close": "Закрити",
-      "placeholder": "Назва предмета (Enter — додати)",
+      "placeholder": "Власний текст (Enter — додати)",
       "noRun": "Немає активного забігу — спершу почніть",
-      "hint": "Enter = додати · Esc = закрити"
+      "hint": "Enter = додати · Esc = закрити",
+      "searchPlaceholder": "Пошук предметів, рун…",
+      "or": "або"
     },
     "newSession": {
       "title": "Почати нову сесію",

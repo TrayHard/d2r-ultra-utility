@@ -1943,9 +1943,11 @@
     "overlay": {
       "title": "Ajouter un loot",
       "close": "Fermer",
-      "placeholder": "Nom de l'objet (Entrée pour ajouter)",
+      "placeholder": "Texte libre (Entrée pour ajouter)",
       "noRun": "Aucun run actif — démarrez-en un d'abord",
-      "hint": "Entrée = ajouter · Esc = fermer"
+      "hint": "Entrée = ajouter · Esc = fermer",
+      "searchPlaceholder": "Rechercher objets, runes…",
+      "or": "ou"
     },
     "newSession": {
       "title": "Démarrer une nouvelle session",

@@ -1944,9 +1944,11 @@
     "overlay": {
       "title": "Dodaj łup",
       "close": "Zamknij",
-      "placeholder": "Nazwa przedmiotu (Enter, aby dodać)",
+      "placeholder": "Własny tekst (Enter, aby dodać)",
       "noRun": "Brak aktywnego biegu — najpierw go rozpocznij",
-      "hint": "Enter = dodaj · Esc = zamknij"
+      "hint": "Enter = dodaj · Esc = zamknij",
+      "searchPlaceholder": "Szukaj przedmiotów, run…",
+      "or": "lub"
     },
     "newSession": {
       "title": "Rozpocznij nową sesję",
