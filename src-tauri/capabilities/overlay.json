@@ -1,0 +1,18 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "overlay-cap",
+  "description": "Capability for the Run Counter helper windows (loot overlay, stats display, session picker)",
+  "windows": ["overlay", "display", "session"],
+  "permissions": [
+    "core:default",
+    "core:webview:default",
+    "core:window:default",
+    "core:event:default",
+    "core:window:allow-show",
+    "core:window:allow-hide",
+    "core:window:allow-set-focus",
+    "core:window:allow-set-always-on-top",
+    "core:window:allow-start-dragging",
+    "core:window:allow-start-resize-dragging"
+  ]
+}

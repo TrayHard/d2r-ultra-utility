@@ -827,15 +827,8 @@ const BasicMainSpace: React.FC<BasicMainSpaceProps> = ({ isDarkTheme }) => {
             </div>
           </div>
         )}
-        <div className={`max-w-[600px] px-4 py-8`}>
-          <h1
-            className={`text-4xl font-bold text-center diablo-font ${isDarkTheme ? "text-white" : "text-gray-900"
-              }`}
-          >
-            {t("basicMainSpace.title")}
-          </h1>
-
-          <div className="mt-4 text-center flex items-center justify-center gap-2">
+        <div className={`max-w-[600px] px-4 py-4`}>
+          <div className="text-center flex items-center justify-center gap-2">
             <button
               onClick={() => setIsHelpModalOpen(true)}
               className={`px-4 py-2 rounded text-sm font-medium transition-colors ${isDarkTheme

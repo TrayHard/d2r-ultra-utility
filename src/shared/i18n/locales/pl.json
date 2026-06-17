@@ -1813,7 +1813,7 @@
     "descriptions": {
       "tweaks": "Ustawienia gry: filmy wprowadzające",
       "lootFilters": "Manage loot filters: runes, gems, items",
-      "runCounter": "Track your game runs"
+      "runCounter": "Śledź swoje biegi w grze"
     }
   },
   "tweaksPage": {
@@ -1827,7 +1827,7 @@
     }
   },
   "tweaks": "Tweaks",
-  "runCounter": "Run Counter",
+  "runCounter": "Licznik Biegów",
   "modifiersPage": {
     "tabs": {
       "modifiers": "Statystyki",
@@ -1860,5 +1860,138 @@
   },
   "editor": {
     "resetColor": "Resetuj kolor do domyślnego"
+  },
+  "runCounterPage": {
+    "defaultTarget": "Farma",
+    "status": {
+      "idle": "Bezczynny",
+      "running": "W toku",
+      "paused": "Wstrzymany",
+      "stopped": "Zatrzymany"
+    },
+    "target": {
+      "label": "Cel",
+      "placeholder": "Nazwa celu",
+      "none": "Brak celu",
+      "empty": "Utwórz cel, aby rozpocząć",
+      "add": "Nowy cel",
+      "rename": "Zmień nazwę",
+      "delete": "Usuń",
+      "deleteConfirm": "Usunąć ten cel?",
+      "lockedHint": "Zakończ sesję, aby zmienić cel"
+    },
+    "controls": {
+      "start": "Start",
+      "stopNext": "Stop i następny",
+      "pause": "Pauza",
+      "resume": "Wznów",
+      "stop": "Stop",
+      "addLoot": "Dodaj łup",
+      "finishSession": "Zakończ sesję",
+      "finishConfirm": "Zarchiwizować tę sesję w historii?",
+      "newSession": "Nowa sesja"
+    },
+    "stats": {
+      "runs": "Biegi",
+      "avg": "Śr.",
+      "best": "Najlepszy",
+      "last": "Ostatni",
+      "perHour": "Biegi/h",
+      "total": "Sesja"
+    },
+    "loot": {
+      "title": "Łup",
+      "empty": "Nie zapisano jeszcze łupu",
+      "remove": "Usuń"
+    },
+    "runsList": {
+      "title": "Biegi w tej sesji",
+      "run": "Bieg {{n}}",
+      "lootCount": "łup: {{count}}",
+      "delete": "Usuń bieg",
+      "deleteConfirm": "Usunąć ten bieg?"
+    },
+    "hotkeys": {
+      "title": "Skróty klawiszowe",
+      "press": "Naciśnij klawisze… (Esc, aby anulować)",
+      "reset": "Przywróć domyślne",
+      "failed": "Nie udało się przypisać: {{list}}",
+      "noModifierWarning": "Wskazówka: dodaj modyfikator (Ctrl/Alt), aby klawisz działał także w grze",
+      "browserNote": "Globalne skróty działają tylko w aplikacji desktopowej",
+      "actions": {
+        "start": "Rozpocznij bieg",
+        "stopNext": "Stop i następny bieg",
+        "pause": "Pauza / wznów",
+        "stop": "Zatrzymaj bieg",
+        "addLoot": "Dodaj łup",
+        "newSession": "Nowa sesja",
+        "finishSession": "Zakończ sesję",
+        "toggleDisplay": "Wyświetlacz wł/wył"
+      },
+      "duplicateWarning": "Ten skrót jest już przypisany do innej akcji"
+    },
+    "history": {
+      "title": "Historia",
+      "empty": "Brak zakończonych sesji",
+      "runs": "biegi: {{count}}",
+      "clear": "Wyczyść historię",
+      "clearConfirm": "Usunąć całą historię?"
+    },
+    "messages": {
+      "targetAdded": "Dodano cel \"{{name}}\"",
+      "noRun": "Najpierw rozpocznij bieg, aby zapisać łup"
+    },
+    "overlay": {
+      "title": "Dodaj łup",
+      "close": "Zamknij",
+      "placeholder": "Nazwa przedmiotu (Enter, aby dodać)",
+      "noRun": "Brak aktywnego biegu — najpierw go rozpocznij",
+      "hint": "Enter = dodaj · Esc = zamknij"
+    },
+    "newSession": {
+      "title": "Rozpocznij nową sesję",
+      "selectTarget": "Wybierz cel",
+      "orCreate": "lub utwórz nowy",
+      "create": "Utwórz i rozpocznij",
+      "hint": "Enter = utwórz · Esc = zamknij",
+      "empty": "Brak celów"
+    },
+    "display": {
+      "open": "Wyświetlacz",
+      "close": "Ukryj wyświetlacz",
+      "obsHint": "Panel statystyk zawsze na wierzchu — przypnij go nad grą lub przechwyć w OBS przez „Przechwytywanie okna”",
+      "title": "Wyświetlacz",
+      "previewHint": "Włączaj/wyłączaj elementy; przeciągnij róg, aby zmienić rozmiar jak w oknie",
+      "resizeHint": "Przeciągnij, aby zmienić rozmiar",
+      "style": {
+        "title": "Styl tekstu",
+        "bold": "Pogrubienie",
+        "italic": "Kursywa",
+        "elements": {
+          "timer": "Stoper",
+          "statValue": "Wartości",
+          "statLabel": "Etykiety",
+          "runNumber": "Numer biegu",
+          "target": "Cel"
+        },
+        "fonts": {
+          "default": "Domyślna",
+          "sans": "Sans",
+          "mono": "Mono",
+          "diablo": "Diablo"
+        }
+      },
+      "background": "Tło",
+      "border": "Obramowanie",
+      "exportSettings": "Eksport",
+      "importSettings": "Import",
+      "dropHint": "Ustawienia wyświetlacza jako plik JSON — lub przeciągnij tu plik, aby zaimportować",
+      "imported": "Zaimportowano ustawienia wyświetlacza",
+      "importError": "Nie udało się odczytać pliku",
+      "dropOverlay": "Upuść plik JSON z ustawieniami"
+    },
+    "export": {
+      "title": "Eksportuj dane sesji"
+    }
   }
 }

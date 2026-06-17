@@ -161,6 +161,7 @@ const WorkSpaceContent: React.FC<WorkSpaceProps> = ({ onChangeClick, onBackClick
                 isDarkTheme={isDarkTheme}
                 onThemeChange={toggleTheme}
                 onBackClick={onBackClick ? handleBackClick : undefined}
+                title={t("basicMainSpace.title")}
               />
 
               {/* Mode toggle row (centered, одинаковый в обоих режимах) */}

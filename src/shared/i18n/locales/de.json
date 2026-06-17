@@ -1813,7 +1813,7 @@
     "descriptions": {
       "tweaks": "Spiel-Tweaks: Introvideos",
       "lootFilters": "Manage loot filters: runes, gems, items",
-      "runCounter": "Track your game runs"
+      "runCounter": "Verfolge deine Runs"
     }
   },
   "tweaksPage": {
@@ -1826,7 +1826,7 @@
       "hide": "Ausblenden"
     }
   },
-  "runCounter": "Run Counter",
+  "runCounter": "Run-Zähler",
   "modifiersPage": {
     "tabs": {
       "modifiers": "Werte",
@@ -1859,5 +1859,138 @@
   },
   "editor": {
     "resetColor": "Farbe auf Standard zurücksetzen"
+  },
+  "runCounterPage": {
+    "defaultTarget": "Farmen",
+    "status": {
+      "idle": "Bereit",
+      "running": "Läuft",
+      "paused": "Pausiert",
+      "stopped": "Gestoppt"
+    },
+    "target": {
+      "label": "Ziel",
+      "placeholder": "Zielname",
+      "none": "Kein Ziel",
+      "empty": "Erstelle ein Ziel zum Starten",
+      "add": "Neues Ziel",
+      "rename": "Umbenennen",
+      "delete": "Löschen",
+      "deleteConfirm": "Dieses Ziel löschen?",
+      "lockedHint": "Beende die Session, um das Ziel zu wechseln"
+    },
+    "controls": {
+      "start": "Start",
+      "stopNext": "Stopp & Weiter",
+      "pause": "Pause",
+      "resume": "Fortsetzen",
+      "stop": "Stopp",
+      "addLoot": "Beute hinzufügen",
+      "finishSession": "Session beenden",
+      "finishConfirm": "Diese Session im Verlauf archivieren?",
+      "newSession": "Neue Session"
+    },
+    "stats": {
+      "runs": "Runs",
+      "avg": "Ø",
+      "best": "Beste",
+      "last": "Letzte",
+      "perHour": "Runs/h",
+      "total": "Session"
+    },
+    "loot": {
+      "title": "Beute",
+      "empty": "Noch keine Beute erfasst",
+      "remove": "Entfernen"
+    },
+    "runsList": {
+      "title": "Runs dieser Session",
+      "run": "Run {{n}}",
+      "lootCount": "{{count}} Beute",
+      "delete": "Run löschen",
+      "deleteConfirm": "Diesen Run löschen?"
+    },
+    "hotkeys": {
+      "title": "Tastenkürzel",
+      "press": "Tasten drücken … (Esc zum Abbrechen)",
+      "reset": "Auf Standard zurücksetzen",
+      "failed": "Nicht belegbar: {{list}}",
+      "noModifierWarning": "Tipp: Füge einen Modifier (Ctrl/Alt) hinzu, damit die Taste im Spiel weiter funktioniert",
+      "browserNote": "Globale Tastenkürzel funktionieren nur in der Desktop-App",
+      "actions": {
+        "start": "Run starten",
+        "stopNext": "Stopp & nächster Run",
+        "pause": "Pause / Fortsetzen",
+        "stop": "Run stoppen",
+        "addLoot": "Beute hinzufügen",
+        "newSession": "Neue Session",
+        "finishSession": "Session beenden",
+        "toggleDisplay": "Anzeige an/aus"
+      },
+      "duplicateWarning": "Dieses Tastenkürzel ist bereits einer anderen Aktion zugewiesen"
+    },
+    "history": {
+      "title": "Verlauf",
+      "empty": "Noch keine beendeten Sessions",
+      "runs": "{{count}} Runs",
+      "clear": "Verlauf löschen",
+      "clearConfirm": "Gesamten Verlauf löschen?"
+    },
+    "messages": {
+      "targetAdded": "Ziel \"{{name}}\" hinzugefügt",
+      "noRun": "Starte zuerst einen Run, um Beute zu erfassen"
+    },
+    "overlay": {
+      "title": "Beute hinzufügen",
+      "close": "Schließen",
+      "placeholder": "Item-Name (Enter zum Hinzufügen)",
+      "noRun": "Kein aktiver Run – starte zuerst einen",
+      "hint": "Enter = hinzufügen · Esc = schließen"
+    },
+    "newSession": {
+      "title": "Neue Session starten",
+      "selectTarget": "Ziel auswählen",
+      "orCreate": "oder ein neues erstellen",
+      "create": "Erstellen & starten",
+      "hint": "Enter = erstellen · Esc = schließen",
+      "empty": "Noch keine Ziele"
+    },
+    "display": {
+      "open": "Anzeige",
+      "close": "Anzeige ausblenden",
+      "obsHint": "Immer-im-Vordergrund-Statistikpanel — über dem Spiel anheften oder in OBS per Fensteraufnahme erfassen",
+      "title": "Anzeige",
+      "previewHint": "Elemente ein-/ausblenden; an der Ecke ziehen, um die Größe wie bei einem Fenster zu ändern",
+      "resizeHint": "Zum Ändern der Größe ziehen",
+      "style": {
+        "title": "Textstil",
+        "bold": "Fett",
+        "italic": "Kursiv",
+        "elements": {
+          "timer": "Timer",
+          "statValue": "Werte",
+          "statLabel": "Beschriftungen",
+          "runNumber": "Run-Nummer",
+          "target": "Ziel"
+        },
+        "fonts": {
+          "default": "Standard",
+          "sans": "Sans",
+          "mono": "Mono",
+          "diablo": "Diablo"
+        }
+      },
+      "background": "Hintergrund",
+      "border": "Rahmen",
+      "exportSettings": "Export",
+      "importSettings": "Import",
+      "dropHint": "Anzeigeeinstellungen als JSON-Datei — oder zum Importieren eine Datei hierher ziehen",
+      "imported": "Anzeigeeinstellungen importiert",
+      "importError": "Datei konnte nicht gelesen werden",
+      "dropOverlay": "Anzeige-Einstellungs-JSON ablegen"
+    },
+    "export": {
+      "title": "Sitzungsdaten exportieren"
+    }
   }
 }
