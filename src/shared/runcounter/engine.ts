@@ -264,6 +264,41 @@ export const reduceRemoveLoot = (
   };
 };
 
+/** Append loot to a specific run (e.g. one you forgot earlier in the session). */
+export const reduceAddLootToRun = (
+  d: RunCounterData,
+  now: number,
+  runId: string,
+  name: string
+): RunCounterData => {
+  const trimmed = name.trim();
+  if (!trimmed || !d.current) return d;
+  const entry = { id: uid(), name: trimmed, at: now };
+  return {
+    ...d,
+    current: {
+      ...d.current,
+      runs: d.current.runs.map((r) =>
+        r.id === runId ? { ...r, loot: [...r.loot, entry] } : r
+      ),
+    },
+  };
+};
+
+/** Delete a run from the current session (renumbering the rest; drops an empty session). */
+export const reduceDeleteRun = (d: RunCounterData, runId: string): RunCounterData => {
+  if (!d.current) return d;
+  const remaining = d.current.runs
+    .filter((r) => r.id !== runId)
+    .map((r, i) => ({ ...r, index: i + 1 }));
+  if (remaining.length === 0) {
+    return { ...d, current: null, currentRunId: null };
+  }
+  const currentRunId =
+    d.currentRunId === runId ? remaining[remaining.length - 1].id : d.currentRunId;
+  return { ...d, current: { ...d.current, runs: remaining }, currentRunId };
+};
+
 /** Create a target and make it the active one (archiving any in-progress session). */
 export const reduceAddTarget = (
   d: RunCounterData,

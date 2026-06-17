@@ -1906,7 +1906,9 @@
     "runsList": {
       "title": "Забіги цієї сесії",
       "run": "Забіг {{n}}",
-      "lootCount": "{{count}} луту"
+      "lootCount": "{{count}} луту",
+      "delete": "Видалити забіг",
+      "deleteConfirm": "Видалити цей забіг?"
     },
     "hotkeys": {
       "title": "Гарячі клавіші",
@@ -1922,7 +1924,8 @@
         "stop": "Зупинити забіг",
         "addLoot": "Додати лут",
         "newSession": "Нова сесія",
-        "finishSession": "Завершити сесію"
+        "finishSession": "Завершити сесію",
+        "toggleDisplay": "Дисплей увімк/вимк"
       },
       "duplicateWarning": "Ця комбінація вже призначена іншій дії"
     },

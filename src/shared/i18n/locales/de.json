@@ -1906,7 +1906,9 @@
     "runsList": {
       "title": "Runs dieser Session",
       "run": "Run {{n}}",
-      "lootCount": "{{count}} Beute"
+      "lootCount": "{{count}} Beute",
+      "delete": "Run löschen",
+      "deleteConfirm": "Diesen Run löschen?"
     },
     "hotkeys": {
       "title": "Tastenkürzel",
@@ -1922,7 +1924,8 @@
         "stop": "Run stoppen",
         "addLoot": "Beute hinzufügen",
         "newSession": "Neue Session",
-        "finishSession": "Session beenden"
+        "finishSession": "Session beenden",
+        "toggleDisplay": "Anzeige an/aus"
       },
       "duplicateWarning": "Dieses Tastenkürzel ist bereits einer anderen Aktion zugewiesen"
     },

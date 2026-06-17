@@ -88,7 +88,8 @@ export type HotkeyAction =
   | "stop"
   | "addLoot"
   | "newSession"
-  | "finishSession";
+  | "finishSession"
+  | "toggleDisplay";
 
 export type HotkeyConfig = Record<HotkeyAction, string>;
 

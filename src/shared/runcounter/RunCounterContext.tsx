@@ -39,7 +39,9 @@ import {
   withDisplayDefaults,
   findCurrentRun,
   reduceAddLoot,
+  reduceAddLootToRun,
   reduceAddTarget,
+  reduceDeleteRun,
   reduceDeleteTarget,
   reduceFinishSession,
   reduceRemoveLoot,
@@ -93,7 +95,9 @@ interface RunCounterContextValue {
   stop: () => void;
   finishSession: () => void;
   addLoot: (name: string) => void;
+  addLootToRun: (runId: string, name: string) => void;
   removeLoot: (runId: string, lootId: string) => void;
+  deleteRun: (runId: string) => void;
   addTarget: (name: string) => void;
   renameTarget: (id: string, name: string) => void;
   deleteTarget: (id: string) => void;
@@ -102,12 +106,13 @@ interface RunCounterContextValue {
   resetHotkeys: () => void;
   clearHistory: () => void;
   openLootOverlay: () => void;
-  /** Archive the current session, switch to the given/new target, and start a run. */
-  startSession: (target: { id: string } | { name: string }) => void;
+  /** Archive the current session and switch to the given/new target — does NOT start a
+   *  run; the user presses Start when ready. */
+  prepareSession: (target: { id: string } | { name: string }) => void;
   /** Show the always-on-top target picker (over the game) to start a new session. */
   openSessionOverlay: () => void;
-  openDisplay: () => void;
-  closeDisplay: () => void;
+  displayOpen: boolean;
+  toggleDisplay: () => void;
   setDisplayConfig: (patch: Partial<DisplayConfig>) => void;
 }
 
@@ -130,6 +135,7 @@ export const RunCounterProvider: React.FC<RunCounterProviderProps> = ({
 }) => {
   const [data, setData] = useState<RunCounterData>(() => loadData());
   const [now, setNow] = useState<number>(() => Date.now());
+  const [displayOpen, setDisplayOpen] = useState(false);
 
   // Keep a ref so the loot-event listener (registered once) sees fresh data/name.
   const defaultTargetNameRef = useRef(defaultTargetName);
@@ -170,6 +176,23 @@ export const RunCounterProvider: React.FC<RunCounterProviderProps> = ({
         else unlisten = fn;
       })
       .catch((err) => console.warn("rc display-resized listen failed", err));
+    return () => {
+      cancelled = true;
+      if (unlisten) unlisten();
+    };
+  }, []);
+
+  // Keep displayOpen in sync when the display is closed from its own window (X / Alt+F4).
+  useEffect(() => {
+    if (!isTauri()) return;
+    let cancelled = false;
+    let unlisten: (() => void) | null = null;
+    listen(RC_EVENTS.DISPLAY_CLOSED, () => setDisplayOpen(false))
+      .then((fn) => {
+        if (cancelled) fn();
+        else unlisten = fn;
+      })
+      .catch(() => {});
     return () => {
       cancelled = true;
       if (unlisten) unlisten();
@@ -245,25 +268,29 @@ export const RunCounterProvider: React.FC<RunCounterProviderProps> = ({
   const finishSession = useCallback(() => {
     setData((d) => reduceFinishSession(d, Date.now()));
   }, []);
-  const startSession = useCallback((target: { id: string } | { name: string }) => {
+  const prepareSession = useCallback((target: { id: string } | { name: string }) => {
     setData((d) => {
       const now = Date.now();
-      // Always archive the in-progress session first, so "new session" truly starts
-      // fresh even when the chosen target equals the currently active one.
+      // Archive the in-progress session and switch to the chosen/new target — but do
+      // NOT start a run; the user presses Start when ready.
       const archived = d.current
         ? d.current.runs.length > 0
           ? reduceFinishSession(d, now)
           : { ...d, current: null, currentRunId: null }
         : d;
-      const withTarget =
-        "id" in target
-          ? reduceSetActiveTarget(archived, now, target.id)
-          : reduceAddTarget(archived, target.name, now);
-      return reduceStart(withTarget, now, defaultTargetNameRef.current);
+      return "id" in target
+        ? reduceSetActiveTarget(archived, now, target.id)
+        : reduceAddTarget(archived, target.name, now);
     });
+  }, []);
+  const addLootToRun = useCallback((runId: string, name: string) => {
+    setData((d) => reduceAddLootToRun(d, Date.now(), runId, name));
   }, []);
   const removeLoot = useCallback((runId: string, lootId: string) => {
     setData((d) => reduceRemoveLoot(d, runId, lootId));
+  }, []);
+  const deleteRun = useCallback((runId: string) => {
+    setData((d) => reduceDeleteRun(d, runId));
   }, []);
   const addTarget = useCallback((name: string) => {
     setData((d) => reduceAddTarget(d, name, Date.now()));
@@ -334,6 +361,15 @@ export const RunCounterProvider: React.FC<RunCounterProviderProps> = ({
       );
     hideDisplayWindow();
   }, []);
+  const toggleDisplay = useCallback(() => {
+    if (displayOpen) {
+      closeDisplay();
+      setDisplayOpen(false);
+    } else {
+      openDisplay();
+      setDisplayOpen(true);
+    }
+  }, [displayOpen, openDisplay, closeDisplay]);
 
   const openSessionOverlay = useCallback(() => {
     const d = dataRef.current;
@@ -347,8 +383,8 @@ export const RunCounterProvider: React.FC<RunCounterProviderProps> = ({
     let unlisten: (() => void) | null = null;
     listen<StartSessionPayload>(RC_EVENTS.START_SESSION, (event) => {
       const p = event.payload;
-      if (p?.id) startSession({ id: p.id });
-      else if (p?.name) startSession({ name: p.name });
+      if (p?.id) prepareSession({ id: p.id });
+      else if (p?.name) prepareSession({ name: p.name });
     })
       .then((fn) => {
         if (cancelled) fn();
@@ -359,7 +395,7 @@ export const RunCounterProvider: React.FC<RunCounterProviderProps> = ({
       cancelled = true;
       if (unlisten) unlisten();
     };
-  }, [startSession]);
+  }, [prepareSession]);
 
   const value: RunCounterContextValue = {
     data,
@@ -373,7 +409,9 @@ export const RunCounterProvider: React.FC<RunCounterProviderProps> = ({
     stop,
     finishSession,
     addLoot,
+    addLootToRun,
     removeLoot,
+    deleteRun,
     addTarget,
     renameTarget,
     deleteTarget,
@@ -382,10 +420,10 @@ export const RunCounterProvider: React.FC<RunCounterProviderProps> = ({
     resetHotkeys,
     clearHistory,
     openLootOverlay,
-    startSession,
+    prepareSession,
     openSessionOverlay,
-    openDisplay,
-    closeDisplay,
+    displayOpen,
+    toggleDisplay,
     setDisplayConfig,
   };
 

@@ -1907,7 +1907,9 @@
     "runsList": {
       "title": "Biegi w tej sesji",
       "run": "Bieg {{n}}",
-      "lootCount": "łup: {{count}}"
+      "lootCount": "łup: {{count}}",
+      "delete": "Usuń bieg",
+      "deleteConfirm": "Usunąć ten bieg?"
     },
     "hotkeys": {
       "title": "Skróty klawiszowe",
@@ -1923,7 +1925,8 @@
         "stop": "Zatrzymaj bieg",
         "addLoot": "Dodaj łup",
         "newSession": "Nowa sesja",
-        "finishSession": "Zakończ sesję"
+        "finishSession": "Zakończ sesję",
+        "toggleDisplay": "Wyświetlacz wł/wył"
       },
       "duplicateWarning": "Ten skrót jest już przypisany do innej akcji"
     },
