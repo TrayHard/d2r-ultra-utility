@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { logger } from "../../shared/utils/logger";
+import { saveTextViaDialog } from "../../shared/utils/saveFile";
 import Button from "../../shared/components/Button";
 // Removed debug mode toggle and related settings usage
 
@@ -25,21 +26,17 @@ const LogExporter: React.FC<LogExporterProps> = ({ isDarkTheme }) => {
     };
   }, [updateStats]);
 
-  const exportLogsAsText = () => {
+  const exportLogsAsText = async () => {
     setIsExporting(true);
     try {
       const logsText = logger.exportLogsAsText();
-      const dataUri =
-        "data:text/plain;charset=utf-8," + encodeURIComponent(logsText);
       const exportFileDefaultName = `d2r-debug-logs-${new Date()
         .toISOString()
         .slice(0, 19)
         .replace(/:/g, "-")}.txt`;
 
-      const linkElement = document.createElement("a");
-      linkElement.setAttribute("href", dataUri);
-      linkElement.setAttribute("download", exportFileDefaultName);
-      linkElement.click();
+      // WebView2 ignores <a download>, so save through the native Rust dialog.
+      await saveTextViaDialog(exportFileDefaultName, "Text", "txt", logsText);
 
       logger.info(
         "Logs exported as text",

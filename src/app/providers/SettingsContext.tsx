@@ -12,6 +12,7 @@ import {
 import i18n from "../../shared/i18n";
 import { STORAGE_KEYS } from "../../shared/constants";
 import { logger } from "../../shared/utils/logger";
+import { saveTextViaDialog } from "../../shared/utils/saveFile";
 // Загружаем профили из ассетов (eager, чтобы были доступны синхронно)
 // Новый формат: recommendedProfiles + корневой d2r-profile-Default.json
 // Для обратной совместимости поддерживаем старые пути (baseProfiles)
@@ -2350,16 +2351,13 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
         immutableProfiles.find((p) => p.id === profileId);
       if (profile) {
         const cleanProfile = prepareForExport(profile);
-        const dataStr = JSON.stringify(cleanProfile, null, 2);
-        const dataUri =
-          "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
-
-        const exportFileDefaultName = `d2r-profile-${profile.name}.json`;
-
-        const linkElement = document.createElement("a");
-        linkElement.setAttribute("href", dataUri);
-        linkElement.setAttribute("download", exportFileDefaultName);
-        linkElement.click();
+        // WebView2 ignores <a download>, so save through the native Rust dialog.
+        saveTextViaDialog(
+          `d2r-profile-${profile.name}.json`,
+          "JSON",
+          "json",
+          JSON.stringify(cleanProfile, null, 2)
+        );
       }
     },
     [profiles, immutableProfiles]
