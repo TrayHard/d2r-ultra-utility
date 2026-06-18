@@ -137,7 +137,7 @@ const Message: React.FC<MessageProps> = ({
             </div>
           )}
           <div
-            className={`text-sm leading-relaxed ${
+            className={`text-sm leading-relaxed whitespace-pre-line ${
               isDarkTheme ? "text-gray-300" : "text-gray-700"
             }`}
           >

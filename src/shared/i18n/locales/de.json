@@ -1914,7 +1914,8 @@
       "title": "Tastenkürzel",
       "press": "Tasten drücken … (Esc zum Abbrechen)",
       "reset": "Auf Standard zurücksetzen",
-      "failed": "Nicht belegbar: {{list}}",
+      "failedTitle": "Tastenkürzel konnten nicht registriert werden",
+      "failedLine": "{{label}} ({{accelerator}}): {{error}}",
       "noModifierWarning": "Tipp: Füge einen Modifier (Ctrl/Alt) hinzu, damit die Taste im Spiel weiter funktioniert",
       "browserNote": "Globale Tastenkürzel funktionieren nur in der Desktop-App",
       "actions": {

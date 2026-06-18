@@ -1914,7 +1914,8 @@
       "title": "Atajos de teclado",
       "press": "Pulsa las teclas… (Esc para cancelar)",
       "reset": "Restablecer valores predeterminados",
-      "failed": "No se pudo asignar: {{list}}",
+      "failedTitle": "No se pudieron registrar los atajos",
+      "failedLine": "{{label}} ({{accelerator}}): {{error}}",
       "noModifierWarning": "Consejo: añade un modificador (Ctrl/Alt) para que la tecla siga funcionando dentro del juego",
       "browserNote": "Los atajos globales solo funcionan en la app de escritorio",
       "actions": {
