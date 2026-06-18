@@ -1914,7 +1914,8 @@
       "title": "Raccourcis",
       "press": "Appuyez sur des touches… (Esc pour annuler)",
       "reset": "Réinitialiser par défaut",
-      "failed": "Impossible d'associer : {{list}}",
+      "failedTitle": "Impossible d'enregistrer les raccourcis",
+      "failedLine": "{{label}} ({{accelerator}}) : {{error}}",
       "noModifierWarning": "Astuce : ajoutez un modificateur (Ctrl/Alt) pour que la touche fonctionne aussi en jeu",
       "browserNote": "Les raccourcis globaux ne fonctionnent que dans l'application de bureau",
       "actions": {

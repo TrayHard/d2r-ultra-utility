@@ -1915,7 +1915,8 @@
       "title": "Skróty klawiszowe",
       "press": "Naciśnij klawisze… (Esc, aby anulować)",
       "reset": "Przywróć domyślne",
-      "failed": "Nie udało się przypisać: {{list}}",
+      "failedTitle": "Nie udało się zarejestrować skrótów",
+      "failedLine": "{{label}} ({{accelerator}}): {{error}}",
       "noModifierWarning": "Wskazówka: dodaj modyfikator (Ctrl/Alt), aby klawisz działał także w grze",
       "browserNote": "Globalne skróty działają tylko w aplikacji desktopowej",
       "actions": {

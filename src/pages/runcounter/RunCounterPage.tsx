@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { readTextFile as tauriReadTextFile } from "@tauri-apps/plugin-fs";
@@ -223,13 +223,32 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
   };
 
   // --- hotkey failure feedback ------------------------------------------------
-  const failureLabel = useMemo(
-    () =>
-      failures
-        .map((f) => `${t(`runCounterPage.hotkeys.actions.${f.action}`)} (${f.accelerator})`)
-        .join(", "),
-    [failures, t]
-  );
+  // Surface registration failures as a single error toast that includes the raw
+  // err.message from Tauri (typical Windows reasons: "HotKey already registered"
+  // = someone else owns the accelerator; "Access is denied" = a higher-IL process
+  // is blocking us). Dedup by the signature so the toast fires only when the set
+  // actually changes — re-renders alone don't re-trigger it.
+  const failuresSignature = failures
+    .map((f) => `${f.action}|${f.accelerator}|${f.error}`)
+    .join("\n");
+  useEffect(() => {
+    if (failures.length === 0) return;
+    const lines = failures
+      .map((f) =>
+        t("runCounterPage.hotkeys.failedLine", {
+          label: t(`runCounterPage.hotkeys.actions.${f.action}`),
+          accelerator: f.accelerator,
+          error: f.error || "unknown error",
+        })
+      )
+      .join("\n");
+    sendMessage(lines, {
+      type: "error",
+      title: t("runCounterPage.hotkeys.failedTitle"),
+      duration: 12,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [failuresSignature]);
 
   const actionHotkey = (action: HotkeyAction) =>
     formatHotkeyForDisplay(data.hotkeys[action]);
@@ -442,12 +461,6 @@ const RunCounterPage: React.FC<RunCounterPageProps> = ({ isDarkTheme }) => {
           />
         </Popconfirm>
       </div>
-
-      {failures.length > 0 && (
-        <div className="text-xs text-red-500">
-          {t("runCounterPage.hotkeys.failed", { list: failureLabel })}
-        </div>
-      )}
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-2">

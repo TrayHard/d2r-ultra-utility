@@ -4,7 +4,7 @@ use std::env;
 use std::fs;
 use std::path::Path;
 use std::process::Command;
-use tauri::{AppHandle, Emitter};
+use tauri::{AppHandle, Emitter, Manager};
 use tokio::time::{sleep, Duration};
 
 #[tauri::command]
@@ -286,7 +286,25 @@ fn is_system_directory(dir_name: &str) -> bool {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    tauri::Builder::default()
+    let mut builder = tauri::Builder::default();
+
+    // single-instance MUST be the first plugin: it decides "is this the first
+    // process?" before the webview spins up. If a second instance is launched,
+    // its callback fires in the EXISTING process — we just unminimize/focus the
+    // main window so the user sees the running app instead of spawning a zombie
+    // that would fight over global hotkeys.
+    #[cfg(desktop)]
+    {
+        builder = builder.plugin(tauri_plugin_single_instance::init(|app, _argv, _cwd| {
+            if let Some(window) = app.get_webview_window("main") {
+                let _ = window.unminimize();
+                let _ = window.show();
+                let _ = window.set_focus();
+            }
+        }));
+    }
+
+    builder
         .setup(|app| {
             #[cfg(desktop)]
             {
