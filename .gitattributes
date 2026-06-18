@@ -1,0 +1,5 @@
+# Cargo and lock files are rewritten by tooling (cargo, yarn) with LF
+# regardless of core.autocrlf, so pin them to LF to avoid spurious
+# "modified" status on Windows checkouts.
+*.toml  text eol=lf
+*.lock  text eol=lf
