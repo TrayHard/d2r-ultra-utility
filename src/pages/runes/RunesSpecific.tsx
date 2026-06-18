@@ -280,13 +280,13 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
     <div className="flex h-full">
       {/* Левая панель - список рун */}
       <div
-        className={`w-96 flex-shrink-0 border-r ${
+        className={`w-96 flex-shrink-0 border-r flex flex-col min-h-0 ${
           isDarkTheme ? "border-gray-700" : "border-gray-200"
         }`}
       >
         {/* Навигационный блок */}
         <div
-          className={`py-4 px-2 border-b ${
+          className={`py-4 px-2 border-b flex-shrink-0 ${
             isDarkTheme ? "border-gray-700" : "border-gray-200"
           }`}
         >
@@ -423,7 +423,7 @@ const RunesSpecific: React.FC<RunesSpecificProps> = ({
         </div>
 
         {/* Список рун */}
-        <div className="overflow-y-auto max-h-[calc(100vh-280px)]">
+        <div className="flex-1 min-h-0 overflow-y-auto">
           {filteredAndSortedRunes.length === 0 ? (
             <div className="text-center py-12">
               <p
