@@ -315,6 +315,19 @@ pub fn run() {
             }
             Ok(())
         })
+        .on_window_event(|window, event| {
+            // tauri.conf.json declares helper windows (`overlay`, `display`,
+            // `session`) with `visible: false`. They are created at startup but
+            // hidden. Tauri 2 keeps the process alive while ANY window exists, so
+            // closing `main` would leave the three hidden helpers around and the
+            // exe would linger in Task Manager. Force a full app exit when the
+            // user closes the main window.
+            if window.label() == "main" {
+                if let tauri::WindowEvent::CloseRequested { .. } = event {
+                    window.app_handle().exit(0);
+                }
+            }
+        })
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_fs::init())
         .invoke_handler(tauri::generate_handler![
