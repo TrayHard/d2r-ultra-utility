@@ -1,7 +1,7 @@
 {
   "id": "profile-1781609088814",
   "name": "Minimalistic Colored",
-  "version": "1.0",
+  "version": "1.1",
   "settings": {
     "runes": {
       "el": {
@@ -13676,11 +13676,300 @@
       }
     },
     "modifiers": {
-      "modifiers": {},
+      "modifiers": {
+        "ModStr4v": {
+          "mode": "wysiwyg",
+          "locales": {
+            "enUS": "ÿcO%+d%% Faster Cast Rate",
+            "ruRU": "ÿcO%+d%% к скорости колдовства",
+            "zhTW": "",
+            "deDE": "",
+            "esES": "",
+            "frFR": "",
+            "itIT": "",
+            "koKR": "",
+            "plPL": "",
+            "esMX": "",
+            "jaJP": "",
+            "ptBR": "",
+            "zhCN": ""
+          }
+        },
+        "ModStr4s": {
+          "mode": "wysiwyg",
+          "locales": {
+            "enUS": "ÿc0%+d%% Faster Run/Walk",
+            "ruRU": "ÿc0%+d%% к скорости ходьбы и бега",
+            "zhTW": "",
+            "deDE": "",
+            "esES": "",
+            "frFR": "",
+            "itIT": "",
+            "koKR": "",
+            "plPL": "",
+            "esMX": "",
+            "jaJP": "",
+            "ptBR": "",
+            "zhCN": ""
+          }
+        },
+        "ModStr4p": {
+          "mode": "wysiwyg",
+          "locales": {
+            "enUS": "ÿc0%+d%% Faster Hit Recovery",
+            "ruRU": "ÿc0%+d%% к ускоренному восстановлению после удара",
+            "zhTW": "",
+            "deDE": "",
+            "esES": "",
+            "frFR": "",
+            "itIT": "",
+            "koKR": "",
+            "plPL": "",
+            "esMX": "",
+            "jaJP": "",
+            "ptBR": "",
+            "zhCN": ""
+          }
+        },
+        "strModAllResistances": {
+          "mode": "wysiwyg",
+          "locales": {
+            "enUS": "ÿc7All Resistances %+d",
+            "ruRU": "",
+            "zhTW": "",
+            "deDE": "",
+            "esES": "",
+            "frFR": "",
+            "itIT": "",
+            "koKR": "",
+            "plPL": "",
+            "esMX": "",
+            "jaJP": "",
+            "ptBR": "",
+            "zhCN": ""
+          }
+        },
+        "ModStr1k": {
+          "mode": "wysiwyg",
+          "locales": {
+            "enUS": "ÿcUCold Resist %+d%%",
+            "ruRU": "",
+            "zhTW": "",
+            "deDE": "",
+            "esES": "",
+            "frFR": "",
+            "itIT": "",
+            "koKR": "",
+            "plPL": "",
+            "esMX": "",
+            "jaJP": "",
+            "ptBR": "",
+            "zhCN": ""
+          }
+        },
+        "ModStr1j": {
+          "mode": "wysiwyg",
+          "locales": {
+            "enUS": "ÿc1Fire Resist %+d%%",
+            "ruRU": "",
+            "zhTW": "",
+            "deDE": "",
+            "esES": "",
+            "frFR": "",
+            "itIT": "",
+            "koKR": "",
+            "plPL": "",
+            "esMX": "",
+            "jaJP": "",
+            "ptBR": "",
+            "zhCN": ""
+          }
+        },
+        "ModStr1l": {
+          "mode": "wysiwyg",
+          "locales": {
+            "enUS": "ÿc9Lightning Resist %+d%%",
+            "ruRU": "",
+            "zhTW": "",
+            "deDE": "",
+            "esES": "",
+            "frFR": "",
+            "itIT": "",
+            "koKR": "",
+            "plPL": "",
+            "esMX": "",
+            "jaJP": "",
+            "ptBR": "",
+            "zhCN": ""
+          }
+        },
+        "ModStr1m": {
+          "mode": "wysiwyg",
+          "locales": {
+            "enUS": "ÿcMMagic Resist %+d%%",
+            "ruRU": "",
+            "zhTW": "",
+            "deDE": "",
+            "esES": "",
+            "frFR": "",
+            "itIT": "",
+            "koKR": "",
+            "plPL": "",
+            "esMX": "",
+            "jaJP": "",
+            "ptBR": "",
+            "zhCN": ""
+          }
+        },
+        "ModStr1n": {
+          "mode": "wysiwyg",
+          "locales": {
+            "enUS": "ÿc2Poison Resist %+d%%",
+            "ruRU": "",
+            "zhTW": "",
+            "deDE": "",
+            "esES": "",
+            "frFR": "",
+            "itIT": "",
+            "koKR": "",
+            "plPL": "",
+            "esMX": "",
+            "jaJP": "",
+            "ptBR": "",
+            "zhCN": ""
+          }
+        },
+        "ModStr5z": {
+          "mode": "wysiwyg",
+          "locales": {
+            "enUS": "ÿc7Cannot Be Frozen",
+            "ruRU": "",
+            "zhTW": "",
+            "deDE": "",
+            "esES": "",
+            "frFR": "",
+            "itIT": "",
+            "koKR": "",
+            "plPL": "",
+            "esMX": "",
+            "jaJP": "",
+            "ptBR": "",
+            "zhCN": ""
+          }
+        },
+        "ModStr1x": {
+          "mode": "wysiwyg",
+          "locales": {
+            "enUS": "ÿcN%d%% Better Chance of Getting Magic Items",
+            "ruRU": "",
+            "zhTW": "",
+            "deDE": "",
+            "esES": "",
+            "frFR": "",
+            "itIT": "",
+            "koKR": "",
+            "plPL": "",
+            "esMX": "",
+            "jaJP": "",
+            "ptBR": "",
+            "zhCN": ""
+          }
+        },
+        "ModStr4m": {
+          "mode": "wysiwyg",
+          "locales": {
+            "enUS": "ÿcT%+d%% Increased Attack Speed",
+            "ruRU": "",
+            "zhTW": "",
+            "deDE": "",
+            "esES": "",
+            "frFR": "",
+            "itIT": "",
+            "koKR": "",
+            "plPL": "",
+            "esMX": "",
+            "jaJP": "",
+            "ptBR": "",
+            "zhCN": ""
+          }
+        },
+        "ModStr3m": {
+          "mode": "wysiwyg",
+          "locales": {
+            "enUS": "ÿcT%+d%% Chance of Open Wounds",
+            "ruRU": "",
+            "zhTW": "",
+            "deDE": "",
+            "esES": "",
+            "frFR": "",
+            "itIT": "",
+            "koKR": "",
+            "plPL": "",
+            "esMX": "",
+            "jaJP": "",
+            "ptBR": "",
+            "zhCN": ""
+          }
+        },
+        "ModStr5c": {
+          "mode": "wysiwyg",
+          "locales": {
+            "enUS": "ÿcT%+d%% Chance of Crushing Blow",
+            "ruRU": "",
+            "zhTW": "",
+            "deDE": "",
+            "esES": "",
+            "frFR": "",
+            "itIT": "",
+            "koKR": "",
+            "plPL": "",
+            "esMX": "",
+            "jaJP": "",
+            "ptBR": "",
+            "zhCN": ""
+          }
+        },
+        "ModStr5q": {
+          "mode": "wysiwyg",
+          "locales": {
+            "enUS": "ÿcT%+d%% Deadly Strike",
+            "ruRU": "",
+            "zhTW": "",
+            "deDE": "",
+            "esES": "",
+            "frFR": "",
+            "itIT": "",
+            "koKR": "",
+            "plPL": "",
+            "esMX": "",
+            "jaJP": "",
+            "ptBR": "",
+            "zhCN": ""
+          }
+        },
+        "Modstr2v": {
+          "mode": "wysiwyg",
+          "locales": {
+            "enUS": "ÿc3%+d%% Enhanced Defense",
+            "ruRU": "ÿc3%+d%% к защите",
+            "zhTW": "",
+            "deDE": "",
+            "esES": "",
+            "frFR": "",
+            "itIT": "",
+            "koKR": "",
+            "plPL": "",
+            "esMX": "",
+            "jaJP": "",
+            "ptBR": "",
+            "zhCN": ""
+          }
+        }
+      },
       "skills": {}
     }
   },
   "createdAt": "2026-06-16T11:24:48.814Z",
-  "modifiedAt": "2026-06-16T11:25:00.318Z",
+  "modifiedAt": "2026-06-20T02:31:17.512Z",
   "isImmutable": true
 }
