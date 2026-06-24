@@ -106,19 +106,6 @@ const CharacterPanel: React.FC<CharacterPanelProps> = ({ character, isDarkTheme 
           />
         </Card>
       </div>
-
-      <Card size="small" title={t("saveEditor.containers.personalStash")}>
-        <ItemGrid
-          slots={profile.stash ?? []}
-          items={items}
-          cols={CONTAINER_DIMS.stash.cols}
-          rows={CONTAINER_DIMS.stash.rows}
-          describe={describeItem}
-          actionsFor={itemActions}
-          busy={busy}
-          isDarkTheme={isDarkTheme}
-        />
-      </Card>
     </div>
   );
 };

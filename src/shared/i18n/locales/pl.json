@@ -2048,7 +2048,9 @@
       "runes": "Runes",
       "materials": "Materials",
       "gold": "Gold",
-      "readOnly": "Read-only"
+      "readOnly": "Read-only",
+      "personal": "Personal",
+      "shared": "Shared"
     },
     "item": {
       "ilvl": "ilvl",
