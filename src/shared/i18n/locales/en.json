@@ -1823,6 +1823,19 @@
     "unsaved": "Unsaved",
     "warnings": "Parser warnings",
     "restoreConfirm": "Restore this file from its .bak backup? Unsaved changes will be lost.",
+    "scanning": "Scanning saves…",
+    "list": {
+      "characters": "Characters",
+      "stashes": "Shared stashes",
+      "rescan": "Rescan",
+      "openOther": "Open file…",
+      "none": "Nothing found"
+    },
+    "scan": {
+      "notFoundTitle": "Saves folder not found",
+      "notFoundDesc": "Could not find the mod's saves folder. Use \"Open file…\" to load a save manually.",
+      "loadWarnings": "Some saves could not be loaded"
+    },
     "beta": {
       "title": "Save Editor is BETA",
       "description": "Editing save files can corrupt them. A .bak backup is created next to each file on first save, but back up your saves yourself too. Close Diablo II before saving."

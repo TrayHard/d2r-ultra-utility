@@ -101,7 +101,12 @@ export const localeOptions = [
 
 export const localeCodes = localeOptions.map((option) => option.value);
 
-export const MOD_ROOT = "mods\\Blizzless\\Blizzless.mpq\\data";
+// Name of the mod folder (single source of truth). Used both for the in-game
+// mod data path (MOD_ROOT) and for locating the player's saves under
+// `Saved Games\Diablo II Resurrected\mods\<MOD_NAME>\`.
+export const MOD_NAME = "Blizzless";
+
+export const MOD_ROOT = `mods\\${MOD_NAME}\\${MOD_NAME}.mpq\\data`;
 
 // Набор специальных символов шрифта Diablo для быстрого копирования
 export const diabloSymbols: string[] = [

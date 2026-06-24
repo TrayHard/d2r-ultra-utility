@@ -9,6 +9,20 @@ import { readFile, writeFile, exists } from "@tauri-apps/plugin-fs";
 
 const NO_FILE_SELECTED = "No file selected";
 
+export interface SavesListing {
+  /** Resolved saves directory (…\Saved Games\Diablo II Resurrected\mods\<mod>). */
+  dir: string;
+  /** Whether that directory exists. */
+  exists: boolean;
+  /** Full paths of all .d2s / .d2i files found in it. */
+  files: string[];
+}
+
+/** List all save files in the given mod's save folder (via the Rust backend). */
+export async function listSaves(modName: string): Promise<SavesListing> {
+  return invoke<SavesListing>("list_saves", { modName });
+}
+
 /** Open a native dialog to pick a .d2s / .d2i file. Returns null if cancelled. */
 export async function pickSaveFile(title: string): Promise<string | null> {
   try {

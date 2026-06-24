@@ -4,6 +4,7 @@ import { Alert, Button, Empty, Popconfirm, Space, Spin, Tag } from "antd";
 import { useSaveEditor } from "../../shared/saveeditor/SaveEditorContext";
 import CharacterPanel from "./components/CharacterPanel";
 import SharedStashPanel from "./components/SharedStashPanel";
+import SaveList from "./components/SaveList";
 
 interface SaveEditorPageProps {
   isDarkTheme: boolean;
@@ -12,24 +13,28 @@ interface SaveEditorPageProps {
 const SaveEditorPage: React.FC<SaveEditorPageProps> = ({ isDarkTheme }) => {
   const { t } = useTranslation();
   const {
-    character,
-    stash,
+    scanned,
+    scanDir,
+    scanExists,
+    loadWarnings,
+    activeChar,
+    activeStash,
     loading,
     busy,
     error,
-    dirtyChar,
-    dirtyStash,
-    openCharacter,
-    openStash,
-    saveCharacter,
-    saveStash,
-    restoreCharacter,
-    restoreStash,
+    saveActiveChar,
+    saveActiveStash,
+    restoreActiveChar,
+    restoreActiveStash,
+    isDirty,
     clearError,
   } = useSaveEditor();
 
+  const charDirty = isDirty(activeChar?.path);
+  const stashDirty = isDirty(activeStash?.path);
+
   return (
-    <div className="px-4 pb-8 flex flex-col gap-3 max-w-[1180px] mx-auto w-full">
+    <div className="px-4 pb-8 flex flex-col gap-3 w-full">
       <Alert
         type="warning"
         showIcon
@@ -37,81 +42,97 @@ const SaveEditorPage: React.FC<SaveEditorPageProps> = ({ isDarkTheme }) => {
         description={t("saveEditor.beta.description")}
       />
 
+      {/* Action toolbar (operates on the active files) */}
       <div className="flex flex-wrap items-center gap-2">
-        <Space wrap>
-          <Button onClick={openCharacter} loading={loading}>
-            {t("saveEditor.toolbar.openCharacter")}
-          </Button>
-          <Button onClick={openStash} loading={loading}>
-            {t("saveEditor.toolbar.openStash")}
-          </Button>
-        </Space>
-        <div className="flex-1" />
         <Space wrap>
           <Button
             type="primary"
-            disabled={!character || !dirtyChar || busy}
+            disabled={!activeChar || !charDirty || busy}
             loading={busy}
-            onClick={saveCharacter}
+            onClick={saveActiveChar}
           >
             {t("saveEditor.toolbar.saveCharacter")}
           </Button>
           <Button
             type="primary"
-            disabled={!stash || !dirtyStash || busy}
+            disabled={!activeStash || !stashDirty || busy}
             loading={busy}
-            onClick={saveStash}
+            onClick={saveActiveStash}
           >
             {t("saveEditor.toolbar.saveStash")}
           </Button>
           <Popconfirm
             title={t("saveEditor.restoreConfirm")}
-            onConfirm={restoreCharacter}
-            disabled={!character || busy}
+            onConfirm={restoreActiveChar}
+            disabled={!activeChar || busy}
           >
-            <Button danger disabled={!character || busy}>
+            <Button danger disabled={!activeChar || busy}>
               {t("saveEditor.toolbar.restoreCharacter")}
             </Button>
           </Popconfirm>
           <Popconfirm
             title={t("saveEditor.restoreConfirm")}
-            onConfirm={restoreStash}
-            disabled={!stash || busy}
+            onConfirm={restoreActiveStash}
+            disabled={!activeStash || busy}
           >
-            <Button danger disabled={!stash || busy}>
+            <Button danger disabled={!activeStash || busy}>
               {t("saveEditor.toolbar.restoreStash")}
             </Button>
           </Popconfirm>
         </Space>
       </div>
 
+      {scanDir && (
+        <div className="text-xs opacity-60 font-mono break-all">{scanDir}</div>
+      )}
+
+      {scanned && !scanExists && (
+        <Alert
+          type="info"
+          showIcon
+          message={t("saveEditor.scan.notFoundTitle")}
+          description={t("saveEditor.scan.notFoundDesc")}
+        />
+      )}
+
       {error && (
         <Alert type="error" showIcon closable onClose={clearError} message={error} />
       )}
 
-      <Spin spinning={busy} tip={t("saveEditor.busy")}>
-        <div className="flex flex-col lg:flex-row gap-4 items-start">
+      {loadWarnings.length > 0 && (
+        <Alert
+          type="warning"
+          showIcon
+          message={t("saveEditor.scan.loadWarnings")}
+          description={loadWarnings.join("\n")}
+        />
+      )}
+
+      <Spin spinning={loading || busy} tip={loading ? t("saveEditor.scanning") : t("saveEditor.busy")}>
+        <div className="flex flex-col lg:flex-row gap-4 items-start min-h-[200px]">
+          <SaveList isDarkTheme={isDarkTheme} />
+
           {/* Character column */}
           <div className="flex-1 min-w-0 w-full">
             <div className="flex items-center gap-2 mb-2">
               <h2 className="text-base font-semibold">
                 {t("saveEditor.character.title")}
               </h2>
-              {character && <Tag>{character.fileName}</Tag>}
-              {dirtyChar && <Tag color="orange">{t("saveEditor.unsaved")}</Tag>}
+              {activeChar && <Tag>{activeChar.fileName}</Tag>}
+              {charDirty && <Tag color="orange">{t("saveEditor.unsaved")}</Tag>}
             </div>
-            {character ? (
-              <CharacterPanel character={character} isDarkTheme={isDarkTheme} />
+            {activeChar ? (
+              <CharacterPanel character={activeChar} isDarkTheme={isDarkTheme} />
             ) : (
               <Empty description={t("saveEditor.empty.character")} />
             )}
-            {character?.result.warnings?.length ? (
+            {activeChar?.result.warnings?.length ? (
               <Alert
                 className="mt-2"
                 type="info"
                 showIcon
                 message={t("saveEditor.warnings")}
-                description={character.result.warnings.join("\n")}
+                description={activeChar.result.warnings.join("\n")}
               />
             ) : null}
           </div>
@@ -122,21 +143,21 @@ const SaveEditorPage: React.FC<SaveEditorPageProps> = ({ isDarkTheme }) => {
               <h2 className="text-base font-semibold">
                 {t("saveEditor.stash.title")}
               </h2>
-              {stash && <Tag>{stash.fileName}</Tag>}
-              {dirtyStash && <Tag color="orange">{t("saveEditor.unsaved")}</Tag>}
+              {activeStash && <Tag>{activeStash.fileName}</Tag>}
+              {stashDirty && <Tag color="orange">{t("saveEditor.unsaved")}</Tag>}
             </div>
-            {stash ? (
-              <SharedStashPanel stash={stash} isDarkTheme={isDarkTheme} />
+            {activeStash ? (
+              <SharedStashPanel stash={activeStash} isDarkTheme={isDarkTheme} />
             ) : (
               <Empty description={t("saveEditor.empty.stash")} />
             )}
-            {stash?.result.warnings?.length ? (
+            {activeStash?.result.warnings?.length ? (
               <Alert
                 className="mt-2"
                 type="info"
                 showIcon
                 message={t("saveEditor.warnings")}
-                description={stash.result.warnings.join("\n")}
+                description={activeStash.result.warnings.join("\n")}
               />
             ) : null}
           </div>

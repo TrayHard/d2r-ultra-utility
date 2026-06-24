@@ -2076,6 +2076,19 @@
       "rightHandSwap": "Right hand (swap)",
       "leftHandSwap": "Left hand (swap)"
     },
-    "restoreConfirm": "Restore this file from its .bak backup? Unsaved changes will be lost."
+    "restoreConfirm": "Restore this file from its .bak backup? Unsaved changes will be lost.",
+    "scanning": "Scanning saves…",
+    "list": {
+      "characters": "Characters",
+      "stashes": "Shared stashes",
+      "rescan": "Rescan",
+      "openOther": "Open file…",
+      "none": "Nothing found"
+    },
+    "scan": {
+      "notFoundTitle": "Saves folder not found",
+      "notFoundDesc": "Could not find the mod's saves folder. Use \"Open file…\" to load a save manually.",
+      "loadWarnings": "Some saves could not be loaded"
+    }
   }
 }
