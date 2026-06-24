@@ -1,10 +1,11 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, Button, Empty, Popconfirm, Space, Spin, Tag } from "antd";
+import { Alert, Empty, Popconfirm, Spin, Tag } from "antd";
 import { useSaveEditor } from "../../shared/saveeditor/SaveEditorContext";
 import CharacterPanel from "./components/CharacterPanel";
 import StashPanel from "./components/StashPanel";
 import SaveList from "./components/SaveList";
+import GameButton from "./components/GameButton";
 
 interface SaveEditorPageProps {
   isDarkTheme: boolean;
@@ -44,42 +45,36 @@ const SaveEditorPage: React.FC<SaveEditorPageProps> = ({ isDarkTheme }) => {
 
       {/* Action toolbar (operates on the active files) */}
       <div className="flex flex-wrap items-center gap-2">
-        <Space wrap>
-          <Button
-            type="primary"
-            disabled={!activeChar || !charDirty || busy}
-            loading={busy}
-            onClick={saveActiveChar}
-          >
-            {t("saveEditor.toolbar.saveCharacter")}
-          </Button>
-          <Button
-            type="primary"
-            disabled={!activeStash || !stashDirty || busy}
-            loading={busy}
-            onClick={saveActiveStash}
-          >
-            {t("saveEditor.toolbar.saveStash")}
-          </Button>
-          <Popconfirm
-            title={t("saveEditor.restoreConfirm")}
-            onConfirm={restoreActiveChar}
-            disabled={!activeChar || busy}
-          >
-            <Button danger disabled={!activeChar || busy}>
-              {t("saveEditor.toolbar.restoreCharacter")}
-            </Button>
-          </Popconfirm>
-          <Popconfirm
-            title={t("saveEditor.restoreConfirm")}
-            onConfirm={restoreActiveStash}
-            disabled={!activeStash || busy}
-          >
-            <Button danger disabled={!activeStash || busy}>
-              {t("saveEditor.toolbar.restoreStash")}
-            </Button>
-          </Popconfirm>
-        </Space>
+        <GameButton
+          disabled={!activeChar || !charDirty || busy}
+          onClick={saveActiveChar}
+        >
+          {t("saveEditor.toolbar.saveCharacter")}
+        </GameButton>
+        <GameButton
+          disabled={!activeStash || !stashDirty || busy}
+          onClick={saveActiveStash}
+        >
+          {t("saveEditor.toolbar.saveStash")}
+        </GameButton>
+        <Popconfirm
+          title={t("saveEditor.restoreConfirm")}
+          onConfirm={restoreActiveChar}
+          disabled={!activeChar || busy}
+        >
+          <GameButton danger disabled={!activeChar || busy}>
+            {t("saveEditor.toolbar.restoreCharacter")}
+          </GameButton>
+        </Popconfirm>
+        <Popconfirm
+          title={t("saveEditor.restoreConfirm")}
+          onConfirm={restoreActiveStash}
+          disabled={!activeStash || busy}
+        >
+          <GameButton danger disabled={!activeStash || busy}>
+            {t("saveEditor.toolbar.restoreStash")}
+          </GameButton>
+        </Popconfirm>
       </div>
 
       {scanDir && (

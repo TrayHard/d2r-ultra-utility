@@ -1,8 +1,9 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Button, Tag } from "antd";
+import { Tag } from "antd";
 import { useSaveEditor } from "../../../shared/saveeditor/SaveEditorContext";
 import { CLASS_NAMES } from "../../../shared/saveeditor/constants";
+import GameButton from "./GameButton";
 
 interface SaveListProps {
   isDarkTheme: boolean;
@@ -32,12 +33,12 @@ const SaveList: React.FC<SaveListProps> = ({ isDarkTheme }) => {
   return (
     <div className="flex flex-col gap-3 w-60 shrink-0">
       <div className="flex gap-2">
-        <Button size="small" onClick={rescan} loading={loading} disabled={busy}>
+        <GameButton size="sm" onClick={rescan} disabled={busy || loading}>
           {t("saveEditor.list.rescan")}
-        </Button>
-        <Button size="small" onClick={openExtra} disabled={busy}>
+        </GameButton>
+        <GameButton size="sm" onClick={openExtra} disabled={busy}>
           {t("saveEditor.list.openOther")}
-        </Button>
+        </GameButton>
       </div>
 
       <div>
