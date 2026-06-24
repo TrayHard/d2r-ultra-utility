@@ -52,6 +52,16 @@ export async function writeSaveBytes(
   await writeFileWithRetry(path, bytes);
 }
 
+/** Restore a file from its `.bak` backup. Throws if no backup exists. */
+export async function restoreFromBackup(path: string): Promise<void> {
+  const bak = `${path}.bak`;
+  if (!(await exists(bak))) {
+    throw new Error("No .bak backup found next to this file.");
+  }
+  const bytes = await readFile(bak);
+  await writeFileWithRetry(path, bytes);
+}
+
 async function writeFileWithRetry(
   path: string,
   bytes: Uint8Array,

@@ -1822,6 +1822,7 @@
     "busy": "Working…",
     "unsaved": "Unsaved",
     "warnings": "Parser warnings",
+    "restoreConfirm": "Restore this file from its .bak backup? Unsaved changes will be lost.",
     "beta": {
       "title": "Save Editor is BETA",
       "description": "Editing save files can corrupt them. A .bak backup is created next to each file on first save, but back up your saves yourself too. Close Diablo II before saving."
@@ -1830,7 +1831,9 @@
       "openCharacter": "Open character…",
       "openStash": "Open shared stash…",
       "saveCharacter": "Save character",
-      "saveStash": "Save shared stash"
+      "saveStash": "Save shared stash",
+      "restoreCharacter": "Restore character",
+      "restoreStash": "Restore stash"
     },
     "empty": {
       "character": "No character loaded",
