@@ -1823,6 +1823,12 @@
       "label": "Tous les indicateurs de niveau d'objet",
       "show": "Afficher",
       "hide": "Masquer"
+    },
+    "npcHeadIcons": {
+      "label": "Icônes au-dessus des PNJ"
+    },
+    "quickDifficultySelector": {
+      "label": "Sélecteur rapide de difficulté"
     }
   },
   "tweaks": "Tweaks",

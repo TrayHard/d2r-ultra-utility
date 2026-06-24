@@ -1824,6 +1824,12 @@
       "label": "Alle Item-Level-Anzeigen",
       "show": "Anzeigen",
       "hide": "Ausblenden"
+    },
+    "npcHeadIcons": {
+      "label": "Symbole über NPC-Köpfen"
+    },
+    "quickDifficultySelector": {
+      "label": "Schnelle Schwierigkeitsauswahl"
     }
   },
   "runCounter": "Run-Zähler",

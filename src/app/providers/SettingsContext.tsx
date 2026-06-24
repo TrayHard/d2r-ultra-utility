@@ -185,6 +185,8 @@ export interface ItemsSettings {
 // Настройки tweaks (игровые настройки)
 export interface TweaksSettings {
   skipIntroVideos: boolean;
+  npcHeadIcons: boolean;
+  quickDifficultySelector: boolean;
 }
 
 // Раскраска одной записи (модификатора или скилла) — свой текст по каждой
@@ -745,6 +747,8 @@ const getDefaultItemsSettings = (): ItemsSettings => ({
 
 const getDefaultTweaksSettings = (): TweaksSettings => ({
   skipIntroVideos: false,
+  npcHeadIcons: false,
+  quickDifficultySelector: false,
 });
 
 // Дефолт раскраски одной записи (пустой текст = без изменений)
