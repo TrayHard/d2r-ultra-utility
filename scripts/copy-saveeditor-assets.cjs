@@ -57,7 +57,40 @@ function copyPaperdoll() {
   return n;
 }
 
+// Curated UI panel art (frames, buttons, arrows, tabs) → public/.../panel/<flat>
+function copyPanels() {
+  const map = [
+    ["panel/inventory/background.png", "inventory_bg.png"],
+    ["panel/inventory/button_01.png", "btn_normal.png"],
+    ["panel/inventory/button_02.png", "btn_hover.png"],
+    ["panel/inventory/button_03.png", "btn_pressed.png"],
+    ["panel/inventory/button_04.png", "btn_disabled.png"],
+    ["panel/stash/stashpanel_bg_personal.png", "stash_bg.png"],
+    ["panel/stash/stash_leftarrow_01.png", "arrow_left.png"],
+    ["panel/stash/stash_leftarrow_02.png", "arrow_left_hover.png"],
+    ["panel/stash/stash_leftarrow_03.png", "arrow_left_pressed.png"],
+    ["panel/stash/stash_rightarrow_01.png", "arrow_right.png"],
+    ["panel/stash/stash_rightarrow_02.png", "arrow_right_hover.png"],
+    ["panel/stash/stash_rightarrow_03.png", "arrow_right_pressed.png"],
+    ["panel/stash/additionalstash/additionalstash_tabs.png", "stash_tabs.png"],
+  ];
+  const dst = path.join(DST, "panel");
+  fs.mkdirSync(dst, { recursive: true });
+  let n = 0;
+  for (const [src, out] of map) {
+    const sp = path.join(SRC, src);
+    if (fs.existsSync(sp)) {
+      fs.copyFileSync(sp, path.join(dst, out));
+      n++;
+    } else {
+      console.warn("  missing:", src);
+    }
+  }
+  return n;
+}
+
 fs.mkdirSync(DST, { recursive: true });
 console.log("item sprites copied:", copyItems());
 console.log("paperdoll slots copied:", copyPaperdoll());
+console.log("panel art copied:", copyPanels());
 console.log("destination:", DST);

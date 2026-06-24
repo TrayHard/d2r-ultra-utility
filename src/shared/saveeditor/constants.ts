@@ -6,9 +6,12 @@
 // look off.
 import type { CharContainer } from "./types";
 
+// Column counts MUST match what the d2r-saver parser uses to compute slot =
+// row*cols+col, or items overlap. inventory=10, cube=3, belt=4, personal stash =
+// gd.info.stash.columns (Blizzless = 16). Shared-stash normal pages are also 16.
 export const CONTAINER_DIMS: Record<CharContainer, { cols: number; rows: number }> = {
   inventory: { cols: 10, rows: 4 },
-  stash: { cols: 10, rows: 10 },
+  stash: { cols: 16, rows: 13 },
   cube: { cols: 3, rows: 4 },
   belt: { cols: 4, rows: 4 },
 };
