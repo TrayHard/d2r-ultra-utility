@@ -97,12 +97,8 @@ const ItemTile: React.FC<ItemTileProps> = ({
         style={{
           width: fill ? "100%" : width * cell,
           height: fill ? "100%" : height * cell,
-          // Subtle quality-coloured ring so rarity reads at a glance.
-          boxShadow: `inset 0 0 0 1px ${color}66`,
         }}
-        className={`relative flex items-center justify-center cursor-pointer select-none overflow-hidden rounded-sm ${
-          isDarkTheme ? "hover:bg-yellow-400/10" : "hover:bg-yellow-500/15"
-        }`}
+        className={`group relative flex items-center justify-center cursor-pointer select-none overflow-hidden rounded-sm transition-colors hover:bg-yellow-400/15`}
       >
         {showImg ? (
           <img

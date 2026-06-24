@@ -9,7 +9,7 @@ import {
   CLASS_NAMES,
 } from "../../../shared/saveeditor/constants";
 import ItemGrid from "./ItemGrid";
-import PaperDoll from "./PaperDoll";
+import InventoryPanel from "./InventoryPanel";
 import { type ItemAction } from "./ItemTile";
 
 interface CharacterPanelProps {
@@ -70,27 +70,15 @@ const CharacterPanel: React.FC<CharacterPanelProps> = ({ character, isDarkTheme 
         </div>
       </Card>
 
-      <Card size="small" title={t("saveEditor.character.equipped")}>
-        <PaperDoll
+      <div className="flex justify-center">
+        <InventoryPanel
           items={items}
           bodyItems={profile.items}
+          inventorySlots={profile.inventory ?? []}
           actionsFor={itemActions}
           isDarkTheme={isDarkTheme}
         />
-      </Card>
-
-      <Card size="small" title={t("saveEditor.containers.inventory")}>
-        <ItemGrid
-          slots={profile.inventory ?? []}
-          items={items}
-          cols={CONTAINER_DIMS.inventory.cols}
-          rows={CONTAINER_DIMS.inventory.rows}
-          describe={describeItem}
-          actionsFor={itemActions}
-          busy={busy}
-          isDarkTheme={isDarkTheme}
-        />
-      </Card>
+      </div>
 
       <div className="flex flex-wrap gap-4">
         <Card size="small" title={t("saveEditor.containers.belt")}>
