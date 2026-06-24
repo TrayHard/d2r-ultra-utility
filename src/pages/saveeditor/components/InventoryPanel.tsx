@@ -35,6 +35,8 @@ interface InventoryPanelProps {
   inventorySlots: (number | string | undefined)[];
   actionsFor: (item: BinaryParsedItem) => ItemAction[];
   isDarkTheme: boolean;
+  /** Gold carried in inventory (shown in the bottom-centre gold box). */
+  gold?: number;
   width?: number;
 }
 
@@ -44,6 +46,7 @@ const InventoryPanel: React.FC<InventoryPanelProps> = ({
   inventorySlots,
   actionsFor,
   isDarkTheme,
+  gold,
   width = 440,
 }) => {
   const { describeItem, busy } = useSaveEditor();
@@ -134,6 +137,25 @@ const InventoryPanel: React.FC<InventoryPanelProps> = ({
           </div>
         );
       })}
+
+      {/* Gold (bottom-centre box) */}
+      <div
+        className="absolute flex items-center justify-center"
+        style={{
+          left: 0.33 * W,
+          top: 0.886 * H,
+          width: 0.34 * W,
+          height: 0.04 * H,
+          fontFamily: '"Diablo", serif',
+          color: "#d9c27a",
+          fontSize: Math.max(11, 0.022 * H),
+          textShadow: "0 1px 2px #000",
+          letterSpacing: 1,
+        }}
+        title="Gold"
+      >
+        {(gold ?? 0).toLocaleString()}
+      </div>
 
       {/* Weapon-set toggle (I / II) */}
       <button

@@ -64,7 +64,13 @@ const SaveEditorWorkspaceContent: React.FC<SaveEditorWorkspaceProps> = ({
     >
       <MessageProvider isDarkTheme={isDarkTheme} position="top">
         <SaveEditorProvider>
-          <div className={`h-full flex flex-col pt-9 ${isDarkTheme ? "bg-gray-900" : "bg-gray-100"}`}>
+          <div
+            className="h-full flex flex-col pt-9"
+            style={{
+              background:
+                "radial-gradient(ellipse at 50% 25%, #17120c 0%, #0b0907 55%, #050403 100%)",
+            }}
+          >
             {showSettings ? (
               <AppSettingsPage
                 isDarkTheme={isDarkTheme}

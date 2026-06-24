@@ -77,6 +77,7 @@ const CharacterPanel: React.FC<CharacterPanelProps> = ({ character, isDarkTheme 
           inventorySlots={profile.inventory ?? []}
           actionsFor={itemActions}
           isDarkTheme={isDarkTheme}
+          gold={profile.gold}
         />
       </div>
 
