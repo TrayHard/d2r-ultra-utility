@@ -30,7 +30,6 @@ const ItemTile: React.FC<ItemTileProps> = ({
   dto,
   actions,
   busy,
-  isDarkTheme,
   cell = CELL_PX,
   fill = false,
 }) => {
