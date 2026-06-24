@@ -1886,6 +1886,23 @@
       "ethereal": "Ethereal",
       "sockets": "Sockets"
     },
+    "tabs": {
+      "inventory": "Inventory",
+      "character": "Character",
+      "mercenary": "Mercenary"
+    },
+    "stats": {
+      "life": "Life",
+      "mana": "Mana",
+      "stamina": "Stamina",
+      "statPoints": "Stat points",
+      "skillPoints": "Skill points"
+    },
+    "merc": {
+      "title": "Mercenary",
+      "none": "No mercenary hired",
+      "hired": "Hired"
+    },
     "actions": {
       "toStash": "→ Shared stash",
       "toInventory": "→ Inventory",

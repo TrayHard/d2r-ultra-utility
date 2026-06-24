@@ -26,7 +26,7 @@
     "@tauri-apps/plugin-updater": "^2",
     "@types/react-window": "^1.8.8",
     "antd": "^5.22.2",
-    "d2r-saver": "git+https://github.com/TrayHard/d2r-saver.git#f1ce3be4255e377328735c0389c3805ca4fa710f",
+    "d2r-saver": "git+https://github.com/TrayHard/d2r-saver.git#db94127e174c07375b5ceaed9047d0d0ba81e204",
     "i18next": "^25.2.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
