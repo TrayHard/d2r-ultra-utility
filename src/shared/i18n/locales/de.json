@@ -1813,7 +1813,8 @@
     "descriptions": {
       "tweaks": "Spiel-Tweaks: Introvideos",
       "lootFilters": "Manage loot filters: runes, gems, items",
-      "runCounter": "Verfolge deine Runs"
+      "runCounter": "Verfolge deine Runs",
+      "saveEditor": "Edit characters and shared stash"
     }
   },
   "tweaksPage": {
@@ -1998,6 +1999,79 @@
     },
     "export": {
       "title": "Sitzungsdaten exportieren"
+    }
+  },
+  "saveEditor": {
+    "title": "Save Editor",
+    "busy": "Working…",
+    "unsaved": "Unsaved",
+    "warnings": "Parser warnings",
+    "beta": {
+      "title": "Save Editor is BETA",
+      "description": "Editing save files can corrupt them. A .bak backup is created next to each file on first save, but back up your saves yourself too. Close Diablo II before saving."
+    },
+    "toolbar": {
+      "openCharacter": "Open character…",
+      "openStash": "Open shared stash…",
+      "saveCharacter": "Save character",
+      "saveStash": "Save shared stash"
+    },
+    "empty": {
+      "character": "No character loaded",
+      "stash": "No shared stash loaded"
+    },
+    "character": {
+      "title": "Character",
+      "summary": "Summary",
+      "equipped": "Equipped",
+      "level": "Level",
+      "strength": "Strength",
+      "dexterity": "Dexterity",
+      "vitality": "Vitality",
+      "energy": "Energy",
+      "gold": "Gold",
+      "goldStash": "Gold (stash)"
+    },
+    "containers": {
+      "inventory": "Inventory",
+      "belt": "Belt",
+      "cube": "Horadric Cube",
+      "personalStash": "Personal stash"
+    },
+    "stash": {
+      "title": "Shared stash",
+      "page": "Page",
+      "gems": "Gems",
+      "runes": "Runes",
+      "materials": "Materials",
+      "gold": "Gold",
+      "readOnly": "Read-only"
+    },
+    "item": {
+      "ilvl": "ilvl",
+      "ethereal": "Ethereal",
+      "sockets": "Sockets"
+    },
+    "actions": {
+      "toStash": "→ Shared stash",
+      "toInventory": "→ Inventory",
+      "toPersonalStash": "→ Personal stash",
+      "toCube": "→ Cube",
+      "delete": "Delete"
+    },
+    "body": {
+      "head": "Helm",
+      "neck": "Amulet",
+      "torso": "Armor",
+      "rightHand": "Right hand",
+      "leftHand": "Left hand",
+      "gloves": "Gloves",
+      "belt": "Belt",
+      "boots": "Boots",
+      "rightRing": "Right ring",
+      "leftRing": "Left ring",
+      "rightHandSwap": "Right hand (swap)",
+      "leftHandSwap": "Left hand (swap)"
     }
   }
 }

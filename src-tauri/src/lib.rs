@@ -183,6 +183,35 @@ async fn save_file_dialog(
     }
 }
 
+// Native "Open file" dialog with a caller-supplied filter (open_file_dialog above
+// is hard-wired to .exe). Used by the Save Editor to pick .d2s / .d2i files.
+// Returns the chosen path, or the "No file selected" error on cancel.
+#[tauri::command]
+async fn pick_file(
+    title: String,
+    filter: String,
+    exts: Vec<String>,
+) -> Result<String, String> {
+    let ext_refs: Vec<&str> = exts.iter().map(|s| s.as_str()).collect();
+    let mut dialog = FileDialog::new().set_title(if title.is_empty() {
+        "Select file"
+    } else {
+        &title
+    });
+    if !ext_refs.is_empty() {
+        dialog = dialog.add_filter(&filter, &ext_refs);
+    }
+    dialog = dialog.add_filter("All files", &["*"]);
+
+    match dialog.pick_file() {
+        Some(path) => path
+            .to_str()
+            .map(|s| s.to_string())
+            .ok_or_else(|| "Invalid file path".to_string()),
+        None => Err("No file selected".to_string()),
+    }
+}
+
 async fn search_in_directory(
     dir: &Path,
     filename: &str,
@@ -336,6 +365,7 @@ pub fn run() {
             set_selected_file,
             open_file_dialog,
             save_file_dialog,
+            pick_file,
             ensure_writable,
             ensure_dir
         ])

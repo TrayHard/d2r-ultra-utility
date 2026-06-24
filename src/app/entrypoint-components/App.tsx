@@ -14,6 +14,7 @@ import WorkSpace from "./WorkSpace.tsx";
 import MainMenuWindow, { AppSection } from "./MainMenuWindow.tsx";
 import TweaksWorkspace from "./TweaksWorkspace.tsx";
 import RunCounterWorkspace from "./RunCounterWorkspace.tsx";
+import SaveEditorWorkspace from "./SaveEditorWorkspace.tsx";
 import "./App.css";
 
 interface SearchProgress {
@@ -78,7 +79,8 @@ type AppState =
   | "main-menu"
   | "lootfilters"
   | "tweaks"
-  | "runcounter";
+  | "runcounter"
+  | "saveeditor";
 
 function App() {
   const logger = useLogger("App");
@@ -386,6 +388,18 @@ function App() {
         <CustomTitleBar />
         <div className="flex-1 min-h-0">
           <RunCounterWorkspace onBackClick={handleBackToMainMenu} onChangeClick={handleChangePath} />
+        </div>
+      </div>
+    );
+  }
+
+  // Save Editor
+  if (appState === "saveeditor" && savedPath && homeDirectory) {
+    return (
+      <div className="h-screen flex flex-col bg-gradient-to-br from-gray-900 to-black">
+        <CustomTitleBar />
+        <div className="flex-1 min-h-0">
+          <SaveEditorWorkspace onBackClick={handleBackToMainMenu} onChangeClick={handleChangePath} />
         </div>
       </div>
     );
