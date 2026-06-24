@@ -66,16 +66,17 @@ const ItemGrid: React.FC<ItemGridProps> = ({
 
   return (
     <div
-      className={`relative rounded ${isDarkTheme ? "bg-gray-900/60" : "bg-gray-300/60"}`}
+      className="relative rounded-sm"
       style={{
         width: gridW,
         height: gridH,
-        backgroundImage: `linear-gradient(to right, ${
-          isDarkTheme ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.08)"
-        } 1px, transparent 1px), linear-gradient(to bottom, ${
-          isDarkTheme ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.08)"
-        } 1px, transparent 1px)`,
+        // D2-style cells: near-black wells with thin warm gold-brown borders.
+        backgroundColor: "rgba(8,8,10,0.85)",
+        backgroundImage:
+          "linear-gradient(to right, rgba(150,120,60,0.35) 1px, transparent 1px), linear-gradient(to bottom, rgba(150,120,60,0.35) 1px, transparent 1px)",
         backgroundSize: `${cell}px ${cell}px`,
+        boxShadow: "inset 0 0 6px rgba(0,0,0,0.8)",
+        border: "1px solid rgba(120,95,45,0.45)",
       }}
     >
       {placed.map(({ slot, item, dto, x, y }) => (

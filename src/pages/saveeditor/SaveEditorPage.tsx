@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Alert, Button, Empty, Popconfirm, Space, Spin, Tag } from "antd";
 import { useSaveEditor } from "../../shared/saveeditor/SaveEditorContext";
 import CharacterPanel from "./components/CharacterPanel";
-import SharedStashPanel from "./components/SharedStashPanel";
+import StashPanel from "./components/StashPanel";
 import SaveList from "./components/SaveList";
 
 interface SaveEditorPageProps {
@@ -137,23 +137,21 @@ const SaveEditorPage: React.FC<SaveEditorPageProps> = ({ isDarkTheme }) => {
             ) : null}
           </div>
 
-          {/* Shared stash column */}
-          <div className="flex-1 min-w-0 w-full">
+          {/* Stash column (Personal / Shared / Materials) */}
+          <div className="flex-shrink-0">
             <div className="flex items-center gap-2 mb-2">
               <h2 className="text-base font-semibold">
                 {t("saveEditor.stash.title")}
               </h2>
               {activeStash && <Tag>{activeStash.fileName}</Tag>}
-              {stashDirty && <Tag color="orange">{t("saveEditor.unsaved")}</Tag>}
+              {(charDirty || stashDirty) && (
+                <Tag color="orange">{t("saveEditor.unsaved")}</Tag>
+              )}
             </div>
-            {activeStash ? (
-              <SharedStashPanel stash={activeStash} isDarkTheme={isDarkTheme} />
-            ) : (
-              <Empty description={t("saveEditor.empty.stash")} />
-            )}
+            <StashPanel isDarkTheme={isDarkTheme} />
             {activeStash?.result.warnings?.length ? (
               <Alert
-                className="mt-2"
+                className="mt-2 max-w-[440px]"
                 type="info"
                 showIcon
                 message={t("saveEditor.warnings")}

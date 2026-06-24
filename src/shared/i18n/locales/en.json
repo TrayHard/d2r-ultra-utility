@@ -1871,7 +1871,9 @@
       "personalStash": "Personal stash"
     },
     "stash": {
-      "title": "Shared stash",
+      "title": "Stash",
+      "personal": "Personal",
+      "shared": "Shared",
       "page": "Page",
       "gems": "Gems",
       "runes": "Runes",
