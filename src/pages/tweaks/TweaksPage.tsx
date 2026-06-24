@@ -1,9 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import Switcher from "../../shared/components/Switcher.tsx";
 import Button from "../../shared/components/Button.tsx";
 import { useTranslation } from "react-i18next";
 import { useTweaksWorker } from "../../shared/hooks/useTweaksWorker.ts";
-import { TweaksSettings } from "../../app/providers/SettingsContext.tsx";
+import {
+  TweaksSettings,
+  useSettings,
+} from "../../app/providers/SettingsContext.tsx";
 import { useGlobalMessage } from "../../shared/components/Message/MessageProvider.tsx";
 
 interface TweaksPageProps {
@@ -13,46 +16,53 @@ interface TweaksPageProps {
 const TweaksPage: React.FC<TweaksPageProps> = ({ isDarkTheme }) => {
   const { t } = useTranslation();
   const { sendMessage } = useGlobalMessage();
+  const { getTweaksSettings, updateTweaksSettings } = useSettings();
 
-  const initialTweaks: TweaksSettings = {
-    skipIntroVideos: false,
-  };
+  // Source of truth for the UI is SettingsContext (persisted to localStorage),
+  // so the switchers render the correct state on first paint instead of
+  // flashing false while readFromFiles awaits stat() calls.
+  const tweaks = getTweaksSettings();
+  const tweaksRef = useRef<TweaksSettings>(tweaks);
+  tweaksRef.current = tweaks;
 
-  // Текущее состояние tweaks + ref (нужно, чтобы applyChanges всегда видел актуальные значения)
-  const currentTweaksRef = useRef<TweaksSettings>(initialTweaks);
-  const [currentTweaks, setCurrentTweaks] = useState<TweaksSettings>(initialTweaks);
+  const { readFromFiles, applyChanges, setAllItemLevels, isLoading } =
+    useTweaksWorker(
+      (newSettings: Partial<TweaksSettings>) => {
+        // readFromFiles result feeds straight into the context store.
+        updateTweaksSettings(newSettings);
+      },
+      (message, opts) => sendMessage(message, opts),
+      t,
+      () => tweaksRef.current
+    );
 
-  // Хук для работы с файлами игры
-  const { readFromFiles, applyChanges, setAllItemLevels, isLoading } = useTweaksWorker(
-    (newSettings: Partial<TweaksSettings>) => {
-      const merged: TweaksSettings = {
-        ...currentTweaksRef.current,
-        ...newSettings,
-      };
-      currentTweaksRef.current = merged;
-      setCurrentTweaks(merged);
-    },
-    // Показываем все сообщения: успех при применении и любые ошибки
-    (message, opts) => sendMessage(message, opts),
-    t,
-    () => currentTweaksRef.current
-  );
-
-  // Автоматически читаем настройки из файлов при монтировании
   useEffect(() => {
     readFromFiles().catch(() => {
-      // Игнорируем ошибки при автоматической загрузке
+      // Silent on auto-load failure — sendMessage already fired inside the
+      // hook if the disk read genuinely failed.
     });
   }, []);
 
   const updateTweaksAndApply = async (patch: Partial<TweaksSettings>) => {
-    const next: TweaksSettings = {
-      ...currentTweaksRef.current,
-      ...patch,
-    };
-    currentTweaksRef.current = next;
-    setCurrentTweaks(next);
-    await applyChanges();
+    // Roll back ONLY the keys this call touched. applyChanges() is chained,
+    // so a sibling click may have already mutated other keys between our
+    // snapshot and our potential rollback — restoring a full snapshot here
+    // would clobber that sibling's state.
+    const rollback: Partial<TweaksSettings> = {};
+    for (const k of Object.keys(patch) as (keyof TweaksSettings)[]) {
+      (rollback as Record<string, unknown>)[k] = tweaksRef.current[k];
+    }
+    // Optimistic UI: flip the switch immediately, then attempt the on-disk
+    // change. If applyChanges rejects we put just our keys back so the UI
+    // doesn't lie about disk reality for what THIS call attempted.
+    updateTweaksSettings(patch);
+    tweaksRef.current = { ...tweaksRef.current, ...patch };
+    try {
+      await applyChanges();
+    } catch {
+      updateTweaksSettings(rollback);
+      tweaksRef.current = { ...tweaksRef.current, ...rollback };
+    }
   };
 
   return (
@@ -70,8 +80,51 @@ const TweaksPage: React.FC<TweaksPageProps> = ({ isDarkTheme }) => {
             </label>
           </div>
           <Switcher
-            checked={currentTweaks.skipIntroVideos}
-            onChange={(checked) => updateTweaksAndApply({ skipIntroVideos: checked })}
+            checked={tweaks.skipIntroVideos}
+            onChange={(checked) =>
+              updateTweaksAndApply({ skipIntroVideos: checked })
+            }
+            isDarkTheme={isDarkTheme}
+            disabled={isLoading}
+          />
+        </div>
+
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <label
+              className={`text-sm font-medium ${
+                isDarkTheme ? "text-gray-300" : "text-gray-700"
+              }`}
+            >
+              {t("tweaksPage.npcHeadIcons.label") || "Иконки над NPC"}
+            </label>
+          </div>
+          <Switcher
+            checked={tweaks.npcHeadIcons}
+            onChange={(checked) =>
+              updateTweaksAndApply({ npcHeadIcons: checked })
+            }
+            isDarkTheme={isDarkTheme}
+            disabled={isLoading}
+          />
+        </div>
+
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <label
+              className={`text-sm font-medium ${
+                isDarkTheme ? "text-gray-300" : "text-gray-700"
+              }`}
+            >
+              {t("tweaksPage.quickDifficultySelector.label") ||
+                "Быстрый выбор сложности"}
+            </label>
+          </div>
+          <Switcher
+            checked={tweaks.quickDifficultySelector}
+            onChange={(checked) =>
+              updateTweaksAndApply({ quickDifficultySelector: checked })
+            }
             isDarkTheme={isDarkTheme}
             disabled={isLoading}
           />

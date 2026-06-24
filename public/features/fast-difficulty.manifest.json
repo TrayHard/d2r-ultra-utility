@@ -1,0 +1,16 @@
+{
+  "feature": "fast-difficulty",
+  "sourceDir": "Быстрый выбор сложности",
+  "files": [
+    {
+      "relPath": "global/ui/layouts/mainmenupanelhd.json",
+      "bytes": 18477,
+      "gzippedBytes": 1936
+    },
+    {
+      "relPath": "global/ui/layouts/npcdialogpanelhd.json",
+      "bytes": 1707,
+      "gzippedBytes": 646
+    }
+  ]
+}

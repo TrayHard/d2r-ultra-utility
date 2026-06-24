@@ -1955,6 +1955,12 @@
     "skipIntroVideos": {
       "label": "Skip intro videos"
     },
+    "npcHeadIcons": {
+      "label": "Icons above NPC heads"
+    },
+    "quickDifficultySelector": {
+      "label": "Quick difficulty selector"
+    },
     "allItemLevels": {
       "label": "All item lvl indicators",
       "show": "Show",
