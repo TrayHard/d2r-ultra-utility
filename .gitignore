@@ -29,3 +29,6 @@ dist-ssr
 src-tauri/target/
 nogit/
 dev.bat
+
+# Save Editor game sprites (copied from nogit/графика, never commit)
+public/saveeditor-assets/

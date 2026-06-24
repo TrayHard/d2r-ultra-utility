@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Popover, Button } from "antd";
 import { useTranslation } from "react-i18next";
 import type { BinaryParsedItem, TradeItemDTO } from "d2r-saver";
 import { QUALITY_COLORS, CELL_PX } from "../../../shared/saveeditor/constants";
+import { useSaveEditor } from "../../../shared/saveeditor/SaveEditorContext";
 
 export interface ItemAction {
   key: string;
@@ -21,7 +22,7 @@ interface ItemTileProps {
   cell?: number;
 }
 
-/** A single inventory item rendered as a quality-coloured tile with a details popover. */
+/** A single inventory item: HD sprite on a quality-tinted cell, with a details popover. */
 const ItemTile: React.FC<ItemTileProps> = ({
   item,
   dto,
@@ -31,11 +32,16 @@ const ItemTile: React.FC<ItemTileProps> = ({
   cell = CELL_PX,
 }) => {
   const { t } = useTranslation();
+  const { iconUrl } = useSaveEditor();
+  const [imgError, setImgError] = useState(false);
+
   const width = dto?.width ?? 1;
   const height = dto?.height ?? 1;
   const quality = dto?.quality ?? item.quality ?? 2;
   const color = QUALITY_COLORS[quality] ?? "#ffffff";
   const name = dto?.displayName || item.base;
+  const url = iconUrl(item);
+  const showImg = !!url && !imgError;
 
   const content = (
     <div style={{ maxWidth: 280 }}>
@@ -88,14 +94,30 @@ const ItemTile: React.FC<ItemTileProps> = ({
         style={{
           width: width * cell,
           height: height * cell,
-          borderColor: color,
-          color,
+          // Subtle quality-coloured ring so rarity reads at a glance.
+          boxShadow: `inset 0 0 0 1px ${color}66`,
         }}
-        className={`flex items-center justify-center text-center cursor-pointer select-none overflow-hidden border-2 rounded-sm px-0.5 text-[9px] leading-tight ${
-          isDarkTheme ? "bg-gray-800/80 hover:bg-gray-700" : "bg-white/80 hover:bg-gray-100"
+        className={`relative flex items-center justify-center cursor-pointer select-none overflow-hidden rounded-sm ${
+          isDarkTheme ? "hover:bg-yellow-400/10" : "hover:bg-yellow-500/15"
         }`}
       >
-        <span className="line-clamp-3 break-words">{name}</span>
+        {showImg ? (
+          <img
+            src={url as string}
+            alt={name}
+            draggable={false}
+            onError={() => setImgError(true)}
+            className="max-w-full max-h-full object-contain"
+            style={{ pointerEvents: "none" }}
+          />
+        ) : (
+          <span
+            className="line-clamp-3 break-words text-center px-0.5 text-[9px] leading-tight"
+            style={{ color }}
+          >
+            {name}
+          </span>
+        )}
       </div>
     </Popover>
   );
