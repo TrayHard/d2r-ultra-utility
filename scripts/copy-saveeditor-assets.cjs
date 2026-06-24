@@ -61,6 +61,7 @@ function copyPaperdoll() {
 function copyPanels() {
   const map = [
     ["panel/inventory/background.png", "inventory_bg.png"],
+    ["panel/character_sheet/character_background.png", "character_bg.png"],
     ["panel/inventory/button_01.png", "btn_normal.png"],
     ["panel/inventory/button_02.png", "btn_hover.png"],
     ["panel/inventory/button_03.png", "btn_pressed.png"],

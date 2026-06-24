@@ -1,16 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Card } from "antd";
 import type { BinaryParsedItem } from "d2r-saver";
 import { useSaveEditor } from "../../../shared/saveeditor/SaveEditorContext";
 import type { LoadedCharacter } from "../../../shared/saveeditor/types";
-import {
-  CONTAINER_DIMS,
-  CLASS_NAMES,
-} from "../../../shared/saveeditor/constants";
+import { CONTAINER_DIMS } from "../../../shared/saveeditor/constants";
 import ItemGrid from "./ItemGrid";
 import InventoryPanel from "./InventoryPanel";
+import CharacterStatsPanel from "./CharacterStatsPanel";
+import MercPanel from "./MercPanel";
 import { type ItemAction } from "./ItemTile";
+
+type TabKey = "inventory" | "character" | "mercenary";
 
 interface CharacterPanelProps {
   character: LoadedCharacter;
@@ -22,6 +23,7 @@ const CharacterPanel: React.FC<CharacterPanelProps> = ({ character, isDarkTheme 
   const { describeItem, moveCharItemToStash, deleteCharItem, busy, activeStash } =
     useSaveEditor();
   const { profile, items } = character.result;
+  const [tab, setTab] = useState<TabKey>("inventory");
 
   const itemActions = (item: BinaryParsedItem): ItemAction[] => {
     const actions: ItemAction[] = [];
@@ -41,72 +43,90 @@ const CharacterPanel: React.FC<CharacterPanelProps> = ({ character, isDarkTheme 
     return actions;
   };
 
-  const stat = (label: string, value: number | undefined) => (
-    <div className="flex justify-between gap-4 text-sm">
-      <span className="opacity-70">{label}</span>
-      <span className="font-mono">{value ?? 0}</span>
-    </div>
-  );
+  const tabs: Array<{ key: TabKey; label: string }> = [
+    { key: "inventory", label: t("saveEditor.tabs.inventory") },
+    { key: "character", label: t("saveEditor.tabs.character") },
+    { key: "mercenary", label: t("saveEditor.tabs.mercenary") },
+  ];
 
   return (
-    <div className="flex flex-col gap-4">
-      <Card size="small" title={t("saveEditor.character.summary")}>
-        <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1 mb-3">
-          <div className="text-lg font-semibold">{profile.name || "—"}</div>
-          <div className="opacity-80">
-            {CLASS_NAMES[profile.class] ?? profile.class}
-          </div>
-          <div className="opacity-80">
-            {t("saveEditor.character.level")} {profile.level}
-          </div>
-        </div>
-        <div className="grid grid-cols-2 gap-x-8 gap-y-1">
-          {stat(t("saveEditor.character.strength"), profile.stats?.str)}
-          {stat(t("saveEditor.character.dexterity"), profile.stats?.dex)}
-          {stat(t("saveEditor.character.vitality"), profile.stats?.vit)}
-          {stat(t("saveEditor.character.energy"), profile.stats?.int)}
-          {stat(t("saveEditor.character.gold"), profile.gold)}
-          {stat(t("saveEditor.character.goldStash"), profile.goldStash)}
-        </div>
-      </Card>
+    <div className="flex flex-col items-center gap-2">
+      {/* Tabs */}
+      <div className="flex gap-1 self-start">
+        {tabs.map((tb) => {
+          const active = tb.key === tab;
+          return (
+            <button
+              key={tb.key}
+              type="button"
+              onClick={() => setTab(tb.key)}
+              className="px-4 py-1 text-xs font-semibold tracking-wide uppercase rounded-t"
+              style={{
+                fontFamily: '"Diablo", serif',
+                color: active ? "#f5d77a" : "#9a8a66",
+                background: active
+                  ? "linear-gradient(180deg, rgba(60,50,28,0.95), rgba(25,20,12,0.95))"
+                  : "linear-gradient(180deg, rgba(30,28,24,0.9), rgba(14,12,10,0.9))",
+                border: "1px solid rgba(150,120,60,0.5)",
+                borderBottom: active ? "1px solid transparent" : "1px solid rgba(150,120,60,0.5)",
+                textShadow: "0 1px 2px #000",
+              }}
+            >
+              {tb.label}
+            </button>
+          );
+        })}
+      </div>
 
-      <div className="flex justify-center">
-        <InventoryPanel
+      {tab === "inventory" && (
+        <div className="flex flex-col items-center gap-4">
+          <InventoryPanel
+            items={items}
+            bodyItems={profile.items}
+            inventorySlots={profile.inventory ?? []}
+            actionsFor={itemActions}
+            isDarkTheme={isDarkTheme}
+            gold={profile.gold}
+          />
+          <div className="flex flex-wrap gap-4 justify-center">
+            <Card size="small" title={t("saveEditor.containers.belt")}>
+              <ItemGrid
+                slots={profile.belt ?? []}
+                items={items}
+                cols={CONTAINER_DIMS.belt.cols}
+                rows={CONTAINER_DIMS.belt.rows}
+                describe={describeItem}
+                actionsFor={itemActions}
+                busy={busy}
+                isDarkTheme={isDarkTheme}
+              />
+            </Card>
+            <Card size="small" title={t("saveEditor.containers.cube")}>
+              <ItemGrid
+                slots={profile.cube ?? []}
+                items={items}
+                cols={CONTAINER_DIMS.cube.cols}
+                rows={CONTAINER_DIMS.cube.rows}
+                describe={describeItem}
+                actionsFor={itemActions}
+                busy={busy}
+                isDarkTheme={isDarkTheme}
+              />
+            </Card>
+          </div>
+        </div>
+      )}
+
+      {tab === "character" && <CharacterStatsPanel profile={profile} />}
+
+      {tab === "mercenary" && (
+        <MercPanel
+          profile={profile}
           items={items}
-          bodyItems={profile.items}
-          inventorySlots={profile.inventory ?? []}
-          actionsFor={itemActions}
           isDarkTheme={isDarkTheme}
-          gold={profile.gold}
+          actionsFor={itemActions}
         />
-      </div>
-
-      <div className="flex flex-wrap gap-4">
-        <Card size="small" title={t("saveEditor.containers.belt")}>
-          <ItemGrid
-            slots={profile.belt ?? []}
-            items={items}
-            cols={CONTAINER_DIMS.belt.cols}
-            rows={CONTAINER_DIMS.belt.rows}
-            describe={describeItem}
-            actionsFor={itemActions}
-            busy={busy}
-            isDarkTheme={isDarkTheme}
-          />
-        </Card>
-        <Card size="small" title={t("saveEditor.containers.cube")}>
-          <ItemGrid
-            slots={profile.cube ?? []}
-            items={items}
-            cols={CONTAINER_DIMS.cube.cols}
-            rows={CONTAINER_DIMS.cube.rows}
-            describe={describeItem}
-            actionsFor={itemActions}
-            busy={busy}
-            isDarkTheme={isDarkTheme}
-          />
-        </Card>
-      </div>
+      )}
     </div>
   );
 };

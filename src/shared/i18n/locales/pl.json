@@ -2091,6 +2091,23 @@
       "notFoundTitle": "Saves folder not found",
       "notFoundDesc": "Could not find the mod's saves folder. Use \"Open file…\" to load a save manually.",
       "loadWarnings": "Some saves could not be loaded"
+    },
+    "tabs": {
+      "inventory": "Inventory",
+      "character": "Character",
+      "mercenary": "Mercenary"
+    },
+    "stats": {
+      "life": "Life",
+      "mana": "Mana",
+      "stamina": "Stamina",
+      "statPoints": "Stat points",
+      "skillPoints": "Skill points"
+    },
+    "merc": {
+      "title": "Mercenary",
+      "none": "No mercenary hired",
+      "hired": "Hired"
     }
   }
 }
