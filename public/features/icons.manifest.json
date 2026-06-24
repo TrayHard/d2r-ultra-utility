@@ -1,0 +1,446 @@
+{
+  "feature": "icons",
+  "sourceDir": "Иконки над головами",
+  "files": [
+    {
+      "relPath": "hd/character/npc/akara.json",
+      "bytes": 11291,
+      "gzippedBytes": 1610
+    },
+    {
+      "relPath": "hd/character/npc/alkor.json",
+      "bytes": 9296,
+      "gzippedBytes": 1403
+    },
+    {
+      "relPath": "hd/character/npc/asheara.json",
+      "bytes": 8947,
+      "gzippedBytes": 1380
+    },
+    {
+      "relPath": "hd/character/npc/atma.json",
+      "bytes": 9788,
+      "gzippedBytes": 1502
+    },
+    {
+      "relPath": "hd/character/npc/cain1.json",
+      "bytes": 9708,
+      "gzippedBytes": 1443
+    },
+    {
+      "relPath": "hd/character/npc/cain2.json",
+      "bytes": 11338,
+      "gzippedBytes": 1620
+    },
+    {
+      "relPath": "hd/character/npc/cain3.json",
+      "bytes": 10017,
+      "gzippedBytes": 1412
+    },
+    {
+      "relPath": "hd/character/npc/cain4.json",
+      "bytes": 10017,
+      "gzippedBytes": 1413
+    },
+    {
+      "relPath": "hd/character/npc/cain5.json",
+      "bytes": 11337,
+      "gzippedBytes": 1621
+    },
+    {
+      "relPath": "hd/character/npc/cain6.json",
+      "bytes": 10015,
+      "gzippedBytes": 1408
+    },
+    {
+      "relPath": "hd/character/npc/charsi.json",
+      "bytes": 11369,
+      "gzippedBytes": 1619
+    },
+    {
+      "relPath": "hd/character/npc/darkwanderer.json",
+      "bytes": 4005,
+      "gzippedBytes": 1067
+    },
+    {
+      "relPath": "hd/character/npc/darkwanderer2.json",
+      "bytes": 8734,
+      "gzippedBytes": 1307
+    },
+    {
+      "relPath": "hd/character/npc/drehya.json",
+      "bytes": 9331,
+      "gzippedBytes": 1416
+    },
+    {
+      "relPath": "hd/character/npc/drognan.json",
+      "bytes": 11319,
+      "gzippedBytes": 1527
+    },
+    {
+      "relPath": "hd/character/npc/elzix.json",
+      "bytes": 11018,
+      "gzippedBytes": 1659
+    },
+    {
+      "relPath": "hd/character/npc/fara.json",
+      "bytes": 11936,
+      "gzippedBytes": 1709
+    },
+    {
+      "relPath": "hd/character/npc/gheed.json",
+      "bytes": 10447,
+      "gzippedBytes": 1560
+    },
+    {
+      "relPath": "hd/character/npc/greiz.json",
+      "bytes": 11021,
+      "gzippedBytes": 1652
+    },
+    {
+      "relPath": "hd/character/npc/halbu.json",
+      "bytes": 10424,
+      "gzippedBytes": 1540
+    },
+    {
+      "relPath": "hd/character/npc/hratli.json",
+      "bytes": 12689,
+      "gzippedBytes": 1727
+    },
+    {
+      "relPath": "hd/character/npc/jamella.json",
+      "bytes": 11028,
+      "gzippedBytes": 1559
+    },
+    {
+      "relPath": "hd/character/npc/jerhyn.json",
+      "bytes": 10152,
+      "gzippedBytes": 1535
+    },
+    {
+      "relPath": "hd/character/npc/kashya.json",
+      "bytes": 13038,
+      "gzippedBytes": 1899
+    },
+    {
+      "relPath": "hd/character/npc/larzuk.json",
+      "bytes": 12507,
+      "gzippedBytes": 1641
+    },
+    {
+      "relPath": "hd/character/npc/lysander.json",
+      "bytes": 10617,
+      "gzippedBytes": 1558
+    },
+    {
+      "relPath": "hd/character/npc/malah.json",
+      "bytes": 6711,
+      "gzippedBytes": 1340
+    },
+    {
+      "relPath": "hd/character/npc/meshif1.json",
+      "bytes": 11372,
+      "gzippedBytes": 1696
+    },
+    {
+      "relPath": "hd/character/npc/meshif2.json",
+      "bytes": 12108,
+      "gzippedBytes": 1746
+    },
+    {
+      "relPath": "hd/character/npc/nihlathak.json",
+      "bytes": 8511,
+      "gzippedBytes": 1364
+    },
+    {
+      "relPath": "hd/character/npc/ormus.json",
+      "bytes": 9278,
+      "gzippedBytes": 1395
+    },
+    {
+      "relPath": "hd/character/npc/qual-kehk.json",
+      "bytes": 10075,
+      "gzippedBytes": 1541
+    },
+    {
+      "relPath": "hd/character/npc/warriv1.json",
+      "bytes": 8983,
+      "gzippedBytes": 1386
+    },
+    {
+      "relPath": "hd/character/npc/warriv2.json",
+      "bytes": 10567,
+      "gzippedBytes": 1560
+    },
+    {
+      "relPath": "hd/nickname/particles/akara.particles",
+      "bytes": 26978,
+      "gzippedBytes": 4120
+    },
+    {
+      "relPath": "hd/nickname/particles/alkor.particles",
+      "bytes": 26978,
+      "gzippedBytes": 4120
+    },
+    {
+      "relPath": "hd/nickname/particles/asheara.particles",
+      "bytes": 26978,
+      "gzippedBytes": 4117
+    },
+    {
+      "relPath": "hd/nickname/particles/atma.particles",
+      "bytes": 26978,
+      "gzippedBytes": 4120
+    },
+    {
+      "relPath": "hd/nickname/particles/boss.particles",
+      "bytes": 26978,
+      "gzippedBytes": 4120
+    },
+    {
+      "relPath": "hd/nickname/particles/cain.particles",
+      "bytes": 26978,
+      "gzippedBytes": 4120
+    },
+    {
+      "relPath": "hd/nickname/particles/charsi.particles",
+      "bytes": 26978,
+      "gzippedBytes": 4119
+    },
+    {
+      "relPath": "hd/nickname/particles/drehya.particles",
+      "bytes": 26978,
+      "gzippedBytes": 4120
+    },
+    {
+      "relPath": "hd/nickname/particles/drognan.particles",
+      "bytes": 26978,
+      "gzippedBytes": 4117
+    },
+    {
+      "relPath": "hd/nickname/particles/elzix.particles",
+      "bytes": 26978,
+      "gzippedBytes": 4120
+    },
+    {
+      "relPath": "hd/nickname/particles/fara.particles",
+      "bytes": 26978,
+      "gzippedBytes": 4120
+    },
+    {
+      "relPath": "hd/nickname/particles/gheed.particles",
+      "bytes": 26978,
+      "gzippedBytes": 4120
+    },
+    {
+      "relPath": "hd/nickname/particles/greiz.particles",
+      "bytes": 26978,
+      "gzippedBytes": 4120
+    },
+    {
+      "relPath": "hd/nickname/particles/halbu.particles",
+      "bytes": 26978,
+      "gzippedBytes": 4120
+    },
+    {
+      "relPath": "hd/nickname/particles/hratli.particles",
+      "bytes": 26978,
+      "gzippedBytes": 4119
+    },
+    {
+      "relPath": "hd/nickname/particles/jamella.particles",
+      "bytes": 26978,
+      "gzippedBytes": 4118
+    },
+    {
+      "relPath": "hd/nickname/particles/jerhyn.particles",
+      "bytes": 26978,
+      "gzippedBytes": 4120
+    },
+    {
+      "relPath": "hd/nickname/particles/kashya.particles",
+      "bytes": 26978,
+      "gzippedBytes": 4120
+    },
+    {
+      "relPath": "hd/nickname/particles/larzuk.particles",
+      "bytes": 26978,
+      "gzippedBytes": 4120
+    },
+    {
+      "relPath": "hd/nickname/particles/lysander.particles",
+      "bytes": 26978,
+      "gzippedBytes": 4118
+    },
+    {
+      "relPath": "hd/nickname/particles/malah.particles",
+      "bytes": 26978,
+      "gzippedBytes": 4120
+    },
+    {
+      "relPath": "hd/nickname/particles/meshif.particles",
+      "bytes": 26978,
+      "gzippedBytes": 4120
+    },
+    {
+      "relPath": "hd/nickname/particles/nihlathak.particles",
+      "bytes": 26978,
+      "gzippedBytes": 4118
+    },
+    {
+      "relPath": "hd/nickname/particles/ormus.particles",
+      "bytes": 26978,
+      "gzippedBytes": 4120
+    },
+    {
+      "relPath": "hd/nickname/particles/qual-kehk.particles",
+      "bytes": 26978,
+      "gzippedBytes": 4120
+    },
+    {
+      "relPath": "hd/nickname/particles/super.particles",
+      "bytes": 26978,
+      "gzippedBytes": 4120
+    },
+    {
+      "relPath": "hd/nickname/particles/warriv.particles",
+      "bytes": 26978,
+      "gzippedBytes": 4117
+    },
+    {
+      "relPath": "hd/nickname/textures/graphic/monster_boss000glow.texture",
+      "bytes": 4194348,
+      "gzippedBytes": 27347
+    },
+    {
+      "relPath": "hd/nickname/textures/graphic/monster_super00glow.texture",
+      "bytes": 4194348,
+      "gzippedBytes": 23201
+    },
+    {
+      "relPath": "hd/nickname/textures/graphic/npcname_akara00glow.texture",
+      "bytes": 4194348,
+      "gzippedBytes": 17120
+    },
+    {
+      "relPath": "hd/nickname/textures/graphic/npcname_alkor00glow.texture",
+      "bytes": 4194348,
+      "gzippedBytes": 28622
+    },
+    {
+      "relPath": "hd/nickname/textures/graphic/npcname_ashearaglow.texture",
+      "bytes": 4194348,
+      "gzippedBytes": 32884
+    },
+    {
+      "relPath": "hd/nickname/textures/graphic/npcname_atma000glow.texture",
+      "bytes": 4194348,
+      "gzippedBytes": 16086
+    },
+    {
+      "relPath": "hd/nickname/textures/graphic/npcname_cain000glow.texture",
+      "bytes": 4194348,
+      "gzippedBytes": 40282
+    },
+    {
+      "relPath": "hd/nickname/textures/graphic/npcname_charsi0glow.texture",
+      "bytes": 4194348,
+      "gzippedBytes": 19880
+    },
+    {
+      "relPath": "hd/nickname/textures/graphic/npcname_drehya0glow.texture",
+      "bytes": 4194348,
+      "gzippedBytes": 28233
+    },
+    {
+      "relPath": "hd/nickname/textures/graphic/npcname_drognanglow.texture",
+      "bytes": 4194348,
+      "gzippedBytes": 25572
+    },
+    {
+      "relPath": "hd/nickname/textures/graphic/npcname_elzix00glow.texture",
+      "bytes": 4194348,
+      "gzippedBytes": 27345
+    },
+    {
+      "relPath": "hd/nickname/textures/graphic/npcname_fara000glow.texture",
+      "bytes": 4194348,
+      "gzippedBytes": 19692
+    },
+    {
+      "relPath": "hd/nickname/textures/graphic/npcname_gheed00glow.texture",
+      "bytes": 4194348,
+      "gzippedBytes": 27318
+    },
+    {
+      "relPath": "hd/nickname/textures/graphic/npcname_greiz00glow.texture",
+      "bytes": 4194348,
+      "gzippedBytes": 29740
+    },
+    {
+      "relPath": "hd/nickname/textures/graphic/npcname_halbu00glow.texture",
+      "bytes": 4194348,
+      "gzippedBytes": 17639
+    },
+    {
+      "relPath": "hd/nickname/textures/graphic/npcname_hratli0glow.texture",
+      "bytes": 4194348,
+      "gzippedBytes": 17494
+    },
+    {
+      "relPath": "hd/nickname/textures/graphic/npcname_jamellaglow.texture",
+      "bytes": 4194348,
+      "gzippedBytes": 30324
+    },
+    {
+      "relPath": "hd/nickname/textures/graphic/npcname_jerhyn0glow.texture",
+      "bytes": 4194348,
+      "gzippedBytes": 24685
+    },
+    {
+      "relPath": "hd/nickname/textures/graphic/npcname_kashya0glow.texture",
+      "bytes": 4194348,
+      "gzippedBytes": 30717
+    },
+    {
+      "relPath": "hd/nickname/textures/graphic/npcname_larzuk0glow.texture",
+      "bytes": 4194348,
+      "gzippedBytes": 19117
+    },
+    {
+      "relPath": "hd/nickname/textures/graphic/npcname_lysandeglow.texture",
+      "bytes": 4194348,
+      "gzippedBytes": 39333
+    },
+    {
+      "relPath": "hd/nickname/textures/graphic/npcname_malah00glow.texture",
+      "bytes": 4194348,
+      "gzippedBytes": 14749
+    },
+    {
+      "relPath": "hd/nickname/textures/graphic/npcname_meshif0glow.texture",
+      "bytes": 4194348,
+      "gzippedBytes": 30713
+    },
+    {
+      "relPath": "hd/nickname/textures/graphic/npcname_nihlathglow.texture",
+      "bytes": 4194348,
+      "gzippedBytes": 29082
+    },
+    {
+      "relPath": "hd/nickname/textures/graphic/npcname_ormus00glow.texture",
+      "bytes": 4194348,
+      "gzippedBytes": 18479
+    },
+    {
+      "relPath": "hd/nickname/textures/graphic/npcname_qualkekglow.texture",
+      "bytes": 4194348,
+      "gzippedBytes": 36332
+    },
+    {
+      "relPath": "hd/nickname/textures/graphic/npcname_warriv0glow.texture",
+      "bytes": 4194348,
+      "gzippedBytes": 33897
+    }
+  ]
+}

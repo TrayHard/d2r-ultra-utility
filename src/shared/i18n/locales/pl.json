@@ -1824,6 +1824,12 @@
       "label": "Wszystkie wskaźniki poziomu przedmiotu",
       "show": "Pokaż",
       "hide": "Ukryj"
+    },
+    "npcHeadIcons": {
+      "label": "Ikony nad głowami NPC"
+    },
+    "quickDifficultySelector": {
+      "label": "Szybki wybór poziomu trudności"
     }
   },
   "tweaks": "Tweaks",

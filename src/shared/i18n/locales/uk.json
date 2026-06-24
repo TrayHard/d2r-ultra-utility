@@ -1823,6 +1823,12 @@
       "label": "Усі індикатори рівня предметів",
       "show": "Показати",
       "hide": "Приховати"
+    },
+    "npcHeadIcons": {
+      "label": "Іконки над головами NPC"
+    },
+    "quickDifficultySelector": {
+      "label": "Швидкий вибір складності"
     }
   },
   "tweaks": "Tweaks",
