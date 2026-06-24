@@ -2,6 +2,7 @@ import React, {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -12,12 +13,14 @@ import type {
   TradeItemDTO,
   InsertD2STarget,
 } from "d2r-saver";
+import { MOD_NAME } from "../constants";
 import { getSaver } from "./gameData";
 import {
   pickSaveFile,
   readSaveBytes,
   writeSaveBytes,
   restoreFromBackup,
+  listSaves,
   baseName,
 } from "./fileIO";
 import type { LoadedCharacter, LoadedStash } from "./types";
@@ -28,21 +31,33 @@ const STASH_COLUMNS = 16;
 type AnyItems = Record<number | string, BinaryParsedItem>;
 
 interface SaveEditorContextValue {
-  character: LoadedCharacter | null;
-  stash: LoadedStash | null;
+  /** Whether the initial auto-scan has run. */
+  scanned: boolean;
+  /** Resolved saves directory (for display / "not found" messaging). */
+  scanDir: string | null;
+  /** Whether that directory exists on disk. */
+  scanExists: boolean;
+  /** Per-file load failures from the scan. */
+  loadWarnings: string[];
+
+  characters: LoadedCharacter[];
+  stashes: LoadedStash[];
+  activeChar: LoadedCharacter | null;
+  activeStash: LoadedStash | null;
+
   loading: boolean;
   busy: boolean;
   error: string | null;
-  dirtyChar: boolean;
-  dirtyStash: boolean;
 
-  openCharacter: () => Promise<void>;
-  openStash: () => Promise<void>;
+  rescan: () => Promise<void>;
+  selectChar: (path: string) => void;
+  selectStash: (path: string) => void;
+  openExtra: () => Promise<void>;
 
-  saveCharacter: () => Promise<void>;
-  saveStash: () => Promise<void>;
-  restoreCharacter: () => Promise<void>;
-  restoreStash: () => Promise<void>;
+  saveActiveChar: () => Promise<void>;
+  saveActiveStash: () => Promise<void>;
+  restoreActiveChar: () => Promise<void>;
+  restoreActiveStash: () => Promise<void>;
 
   deleteCharItem: (itemId: number) => Promise<void>;
   deleteStashItem: (pageIndex: number, slot: number) => Promise<void>;
@@ -53,8 +68,8 @@ interface SaveEditorContextValue {
     target: InsertD2STarget
   ) => Promise<void>;
 
-  /** Build a display DTO for an item, or null if it can't be serialized. */
   describeItem: (item: BinaryParsedItem, allItems: AnyItems) => TradeItemDTO | null;
+  isDirty: (path: string | null | undefined) => boolean;
   clearError: () => void;
 }
 
@@ -70,20 +85,25 @@ export const SaveEditorProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const saverRef = useRef<D2RSaver | null>(null);
-  const [character, setCharacter] = useState<LoadedCharacter | null>(null);
-  const [stash, setStash] = useState<LoadedStash | null>(null);
+  const [scanned, setScanned] = useState(false);
+  const [scanDir, setScanDir] = useState<string | null>(null);
+  const [scanExists, setScanExists] = useState(false);
+  const [loadWarnings, setLoadWarnings] = useState<string[]>([]);
+
+  const [characters, setCharacters] = useState<LoadedCharacter[]>([]);
+  const [stashes, setStashes] = useState<LoadedStash[]>([]);
+  const [activeCharPath, setActiveCharPath] = useState<string | null>(null);
+  const [activeStashPath, setActiveStashPath] = useState<string | null>(null);
+
   const [loading, setLoading] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [dirtyChar, setDirtyChar] = useState(false);
-  const [dirtyStash, setDirtyStash] = useState(false);
+  const [dirtyPaths, setDirtyPaths] = useState<Set<string>>(new Set());
 
   const clearError = useCallback(() => setError(null), []);
 
   const ensureSaver = useCallback(async (): Promise<D2RSaver> => {
-    if (!saverRef.current) {
-      saverRef.current = await getSaver();
-    }
+    if (!saverRef.current) saverRef.current = await getSaver();
     return saverRef.current;
   }, []);
 
@@ -107,181 +127,280 @@ export const SaveEditorProvider: React.FC<{ children: React.ReactNode }> = ({
     []
   );
 
-  const openCharacter = useCallback(async () => {
-    setError(null);
-    const path = await pickSaveFile("Select a character save (.d2s)");
-    if (!path) return;
+  const markDirty = useCallback((path: string) => {
+    setDirtyPaths((prev) => {
+      const next = new Set(prev);
+      next.add(path);
+      return next;
+    });
+  }, []);
+
+  const clearDirty = useCallback((path: string) => {
+    setDirtyPaths((prev) => {
+      if (!prev.has(path)) return prev;
+      const next = new Set(prev);
+      next.delete(path);
+      return next;
+    });
+  }, []);
+
+  const isDirty = useCallback(
+    (path: string | null | undefined) => (path ? dirtyPaths.has(path) : false),
+    [dirtyPaths]
+  );
+
+  // ── Scan ──────────────────────────────────────────────────────────
+
+  const rescan = useCallback(async () => {
     setLoading(true);
+    setError(null);
     try {
       const saver = await ensureSaver();
-      const bytes = await readSaveBytes(path);
-      setCharacter(readCharacter(path, bytes, saver));
-      setDirtyChar(false);
+      const listing = await listSaves(MOD_NAME);
+      setScanDir(listing.dir);
+      setScanExists(listing.exists);
+
+      const chars: LoadedCharacter[] = [];
+      const stsh: LoadedStash[] = [];
+      const warns: string[] = [];
+
+      for (const file of listing.files) {
+        try {
+          const bytes = await readSaveBytes(file);
+          if (/\.d2s$/i.test(file)) {
+            chars.push(readCharacter(file, bytes, saver));
+          } else if (/\.d2i$/i.test(file)) {
+            stsh.push(readStash(file, bytes, saver));
+          }
+        } catch (e) {
+          warns.push(`${baseName(file)}: ${errMsg(e)}`);
+        }
+      }
+
+      setCharacters(chars);
+      setStashes(stsh);
+      setLoadWarnings(warns);
+      setDirtyPaths(new Set());
+      setActiveCharPath((prev) =>
+        prev && chars.some((c) => c.path === prev) ? prev : chars[0]?.path ?? null
+      );
+      setActiveStashPath((prev) =>
+        prev && stsh.some((s) => s.path === prev) ? prev : stsh[0]?.path ?? null
+      );
+      setScanned(true);
     } catch (e) {
-      setError(`Failed to load character: ${errMsg(e)}`);
+      setError(`Failed to scan saves: ${errMsg(e)}`);
+      setScanned(true);
     } finally {
       setLoading(false);
     }
-  }, [ensureSaver, readCharacter]);
+  }, [ensureSaver, readCharacter, readStash]);
 
-  const openStash = useCallback(async () => {
+  // Auto-scan once on mount.
+  useEffect(() => {
+    void rescan();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const activeChar = useMemo(
+    () => characters.find((c) => c.path === activeCharPath) ?? null,
+    [characters, activeCharPath]
+  );
+  const activeStash = useMemo(
+    () => stashes.find((s) => s.path === activeStashPath) ?? null,
+    [stashes, activeStashPath]
+  );
+
+  const selectChar = useCallback((path: string) => setActiveCharPath(path), []);
+  const selectStash = useCallback((path: string) => setActiveStashPath(path), []);
+
+  const openExtra = useCallback(async () => {
     setError(null);
-    const path = await pickSaveFile("Select a shared stash (.d2i)");
+    const path = await pickSaveFile("Open a save file (.d2s / .d2i)");
     if (!path) return;
-    setLoading(true);
+    setBusy(true);
     try {
       const saver = await ensureSaver();
       const bytes = await readSaveBytes(path);
-      setStash(readStash(path, bytes, saver));
-      setDirtyStash(false);
+      if (/\.d2i$/i.test(path)) {
+        const loaded = readStash(path, bytes, saver);
+        setStashes((prev) => [...prev.filter((s) => s.path !== path), loaded]);
+        setActiveStashPath(path);
+      } else {
+        const loaded = readCharacter(path, bytes, saver);
+        setCharacters((prev) => [...prev.filter((c) => c.path !== path), loaded]);
+        setActiveCharPath(path);
+      }
     } catch (e) {
-      setError(`Failed to load shared stash: ${errMsg(e)}`);
+      setError(`Failed to open file: ${errMsg(e)}`);
     } finally {
-      setLoading(false);
+      setBusy(false);
     }
-  }, [ensureSaver, readStash]);
+  }, [ensureSaver, readCharacter, readStash]);
 
-  const saveCharacter = useCallback(async () => {
-    if (!character) return;
+  // ── Persist active file bytes back to disk ────────────────────────
+
+  const saveActiveChar = useCallback(async () => {
+    if (!activeChar) return;
     setBusy(true);
     setError(null);
     try {
-      await writeSaveBytes(character.path, character.bytes);
-      setDirtyChar(false);
+      await writeSaveBytes(activeChar.path, activeChar.bytes);
+      clearDirty(activeChar.path);
     } catch (e) {
       setError(`Failed to save character: ${errMsg(e)}`);
     } finally {
       setBusy(false);
     }
-  }, [character]);
+  }, [activeChar, clearDirty]);
 
-  const saveStash = useCallback(async () => {
-    if (!stash) return;
+  const saveActiveStash = useCallback(async () => {
+    if (!activeStash) return;
     setBusy(true);
     setError(null);
     try {
-      await writeSaveBytes(stash.path, stash.bytes);
-      setDirtyStash(false);
+      await writeSaveBytes(activeStash.path, activeStash.bytes);
+      clearDirty(activeStash.path);
     } catch (e) {
       setError(`Failed to save shared stash: ${errMsg(e)}`);
     } finally {
       setBusy(false);
     }
-  }, [stash]);
+  }, [activeStash, clearDirty]);
 
-  const restoreCharacter = useCallback(async () => {
-    if (!character) return;
+  const restoreActiveChar = useCallback(async () => {
+    if (!activeChar) return;
     setBusy(true);
     setError(null);
     try {
       const saver = await ensureSaver();
-      await restoreFromBackup(character.path);
-      const bytes = await readSaveBytes(character.path);
-      setCharacter(readCharacter(character.path, bytes, saver));
-      setDirtyChar(false);
+      await restoreFromBackup(activeChar.path);
+      const bytes = await readSaveBytes(activeChar.path);
+      const reloaded = readCharacter(activeChar.path, bytes, saver);
+      setCharacters((prev) =>
+        prev.map((c) => (c.path === reloaded.path ? reloaded : c))
+      );
+      clearDirty(activeChar.path);
     } catch (e) {
       setError(`Restore failed: ${errMsg(e)}`);
     } finally {
       setBusy(false);
     }
-  }, [character, ensureSaver, readCharacter]);
+  }, [activeChar, ensureSaver, readCharacter, clearDirty]);
 
-  const restoreStash = useCallback(async () => {
-    if (!stash) return;
+  const restoreActiveStash = useCallback(async () => {
+    if (!activeStash) return;
     setBusy(true);
     setError(null);
     try {
       const saver = await ensureSaver();
-      await restoreFromBackup(stash.path);
-      const bytes = await readSaveBytes(stash.path);
-      setStash(readStash(stash.path, bytes, saver));
-      setDirtyStash(false);
+      await restoreFromBackup(activeStash.path);
+      const bytes = await readSaveBytes(activeStash.path);
+      const reloaded = readStash(activeStash.path, bytes, saver);
+      setStashes((prev) =>
+        prev.map((s) => (s.path === reloaded.path ? reloaded : s))
+      );
+      clearDirty(activeStash.path);
     } catch (e) {
       setError(`Restore failed: ${errMsg(e)}`);
     } finally {
       setBusy(false);
     }
-  }, [stash, ensureSaver, readStash]);
+  }, [activeStash, ensureSaver, readStash, clearDirty]);
 
-  // ── Item operations ──────────────────────────────────────────────
-  // Every op runs the (tested) lib extract/insert which returns a fresh, valid
-  // buffer; we then re-parse it to refresh the display and mark the file dirty.
+  // ── Item operations ───────────────────────────────────────────────
+  // Each op runs the lib's (tested) extract/insert which returns a fresh valid
+  // buffer; we re-parse it, swap the entry in its list, and mark its path dirty.
+
+  const replaceChar = useCallback(
+    (path: string, bytes: Uint8Array, saver: D2RSaver) => {
+      const reloaded = readCharacter(path, bytes, saver);
+      setCharacters((prev) => prev.map((c) => (c.path === path ? reloaded : c)));
+      markDirty(path);
+    },
+    [readCharacter, markDirty]
+  );
+
+  const replaceStash = useCallback(
+    (path: string, bytes: Uint8Array, saver: D2RSaver) => {
+      const reloaded = readStash(path, bytes, saver);
+      setStashes((prev) => prev.map((s) => (s.path === path ? reloaded : s)));
+      markDirty(path);
+    },
+    [readStash, markDirty]
+  );
 
   const deleteCharItem = useCallback(
     async (itemId: number) => {
-      if (!character) return;
+      if (!activeChar) return;
       setBusy(true);
       setError(null);
       try {
         const saver = await ensureSaver();
-        const { newBuffer } = saver.extractItemD2S(character.bytes, itemId);
-        setCharacter(readCharacter(character.path, newBuffer, saver));
-        setDirtyChar(true);
+        const { newBuffer } = saver.extractItemD2S(activeChar.bytes, itemId);
+        replaceChar(activeChar.path, newBuffer, saver);
       } catch (e) {
         setError(`Delete failed: ${errMsg(e)}`);
       } finally {
         setBusy(false);
       }
     },
-    [character, ensureSaver, readCharacter]
+    [activeChar, ensureSaver, replaceChar]
   );
 
   const deleteStashItem = useCallback(
     async (pageIndex: number, slot: number) => {
-      if (!stash) return;
+      if (!activeStash) return;
       setBusy(true);
       setError(null);
       try {
         const saver = await ensureSaver();
         const x = slot % STASH_COLUMNS;
         const y = Math.floor(slot / STASH_COLUMNS);
-        const { newBuffer } = saver.extractItemD2I(stash.bytes, pageIndex, x, y);
-        setStash(readStash(stash.path, newBuffer, saver));
-        setDirtyStash(true);
+        const { newBuffer } = saver.extractItemD2I(activeStash.bytes, pageIndex, x, y);
+        replaceStash(activeStash.path, newBuffer, saver);
       } catch (e) {
         setError(`Delete failed: ${errMsg(e)}`);
       } finally {
         setBusy(false);
       }
     },
-    [stash, ensureSaver, readStash]
+    [activeStash, ensureSaver, replaceStash]
   );
 
   const moveCharItemToStash = useCallback(
     async (itemId: number) => {
-      if (!character) return;
-      if (!stash) {
-        setError("Load a shared stash first to move items into it.");
+      if (!activeChar) return;
+      if (!activeStash) {
+        setError("No shared stash loaded to move items into.");
         return;
       }
       setBusy(true);
       setError(null);
       try {
         const saver = await ensureSaver();
-        const extracted = saver.extractItemD2S(character.bytes, itemId);
+        const extracted = saver.extractItemD2S(activeChar.bytes, itemId);
         const inserted = saver.insertItemD2I(
-          stash.bytes,
+          activeStash.bytes,
           extracted.extractedItem,
           extracted.extractedAllItems
         );
-        setCharacter(readCharacter(character.path, extracted.newBuffer, saver));
-        setStash(readStash(stash.path, inserted.newBuffer, saver));
-        setDirtyChar(true);
-        setDirtyStash(true);
+        replaceChar(activeChar.path, extracted.newBuffer, saver);
+        replaceStash(activeStash.path, inserted.newBuffer, saver);
       } catch (e) {
         setError(`Move to stash failed: ${errMsg(e)}`);
       } finally {
         setBusy(false);
       }
     },
-    [character, stash, ensureSaver, readCharacter, readStash]
+    [activeChar, activeStash, ensureSaver, replaceChar, replaceStash]
   );
 
   const moveStashItemToChar = useCallback(
     async (pageIndex: number, slot: number, target: InsertD2STarget) => {
-      if (!stash) return;
-      if (!character) {
-        setError("Load a character first to move items into it.");
+      if (!activeStash) return;
+      if (!activeChar) {
+        setError("No character loaded to move items into.");
         return;
       }
       setBusy(true);
@@ -290,24 +409,22 @@ export const SaveEditorProvider: React.FC<{ children: React.ReactNode }> = ({
         const saver = await ensureSaver();
         const x = slot % STASH_COLUMNS;
         const y = Math.floor(slot / STASH_COLUMNS);
-        const extracted = saver.extractItemD2I(stash.bytes, pageIndex, x, y);
+        const extracted = saver.extractItemD2I(activeStash.bytes, pageIndex, x, y);
         const inserted = saver.insertItemD2S(
-          character.bytes,
+          activeChar.bytes,
           extracted.extractedItem,
           extracted.extractedAllItems,
           target
         );
-        setStash(readStash(stash.path, extracted.newBuffer, saver));
-        setCharacter(readCharacter(character.path, inserted.newBuffer, saver));
-        setDirtyStash(true);
-        setDirtyChar(true);
+        replaceStash(activeStash.path, extracted.newBuffer, saver);
+        replaceChar(activeChar.path, inserted.newBuffer, saver);
       } catch (e) {
         setError(`Move to character failed: ${errMsg(e)}`);
       } finally {
         setBusy(false);
       }
     },
-    [stash, character, ensureSaver, readStash, readCharacter]
+    [activeStash, activeChar, ensureSaver, replaceStash, replaceChar]
   );
 
   const describeItem = useCallback(
@@ -325,45 +442,59 @@ export const SaveEditorProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const value = useMemo<SaveEditorContextValue>(
     () => ({
-      character,
-      stash,
+      scanned,
+      scanDir,
+      scanExists,
+      loadWarnings,
+      characters,
+      stashes,
+      activeChar,
+      activeStash,
       loading,
       busy,
       error,
-      dirtyChar,
-      dirtyStash,
-      openCharacter,
-      openStash,
-      saveCharacter,
-      saveStash,
-      restoreCharacter,
-      restoreStash,
+      rescan,
+      selectChar,
+      selectStash,
+      openExtra,
+      saveActiveChar,
+      saveActiveStash,
+      restoreActiveChar,
+      restoreActiveStash,
       deleteCharItem,
       deleteStashItem,
       moveCharItemToStash,
       moveStashItemToChar,
       describeItem,
+      isDirty,
       clearError,
     }),
     [
-      character,
-      stash,
+      scanned,
+      scanDir,
+      scanExists,
+      loadWarnings,
+      characters,
+      stashes,
+      activeChar,
+      activeStash,
       loading,
       busy,
       error,
-      dirtyChar,
-      dirtyStash,
-      openCharacter,
-      openStash,
-      saveCharacter,
-      saveStash,
-      restoreCharacter,
-      restoreStash,
+      rescan,
+      selectChar,
+      selectStash,
+      openExtra,
+      saveActiveChar,
+      saveActiveStash,
+      restoreActiveChar,
+      restoreActiveStash,
       deleteCharItem,
       deleteStashItem,
       moveCharItemToStash,
       moveStashItemToChar,
       describeItem,
+      isDirty,
       clearError,
     ]
   );

@@ -212,6 +212,65 @@ async fn pick_file(
     }
 }
 
+#[derive(serde::Serialize)]
+struct SavesListing {
+    dir: String,
+    exists: bool,
+    files: Vec<String>,
+}
+
+// List all .d2s / .d2i saves under the mod's save folder:
+//   %USERPROFILE%\Saved Games\Diablo II Resurrected\mods\<mod_name>\
+// Returns the resolved directory plus the file list (empty if the folder is
+// missing — `exists` lets the UI explain that instead of erroring).
+#[tauri::command]
+fn list_saves(mod_name: String) -> Result<SavesListing, String> {
+    let home = env::var("USERPROFILE")
+        .or_else(|_| env::var("HOME"))
+        .map_err(|_| "Could not resolve the user home directory".to_string())?;
+
+    let dir = Path::new(&home)
+        .join("Saved Games")
+        .join("Diablo II Resurrected")
+        .join("mods")
+        .join(&mod_name);
+    let dir_str = dir.to_string_lossy().to_string();
+
+    if !dir.exists() {
+        return Ok(SavesListing {
+            dir: dir_str,
+            exists: false,
+            files: Vec::new(),
+        });
+    }
+
+    let mut files = Vec::new();
+    if let Ok(entries) = fs::read_dir(&dir) {
+        for entry in entries.flatten() {
+            let path = entry.path();
+            if !path.is_file() {
+                continue;
+            }
+            let ext = path
+                .extension()
+                .and_then(|e| e.to_str())
+                .map(|e| e.to_lowercase());
+            if matches!(ext.as_deref(), Some("d2s") | Some("d2i")) {
+                if let Some(s) = path.to_str() {
+                    files.push(s.to_string());
+                }
+            }
+        }
+    }
+    files.sort();
+
+    Ok(SavesListing {
+        dir: dir_str,
+        exists: true,
+        files,
+    })
+}
+
 async fn search_in_directory(
     dir: &Path,
     filename: &str,
@@ -366,6 +425,7 @@ pub fn run() {
             open_file_dialog,
             save_file_dialog,
             pick_file,
+            list_saves,
             ensure_writable,
             ensure_dir
         ])

@@ -29,6 +29,18 @@ export const BODY_SLOTS: { key: string; labelKey: string }[] = [
   { key: "larm2", labelKey: "saveEditor.body.leftHandSwap" },
 ];
 
+/** Character class code → display name. */
+export const CLASS_NAMES: Record<string, string> = {
+  ama: "Amazon",
+  sor: "Sorceress",
+  nec: "Necromancer",
+  pal: "Paladin",
+  bar: "Barbarian",
+  dru: "Druid",
+  ass: "Assassin",
+  war: "Warlock",
+};
+
 /** Item quality (1-9, per TradeItemDTO) → display color. */
 export const QUALITY_COLORS: Record<number, string> = {
   1: "#9b9b9b", // low quality

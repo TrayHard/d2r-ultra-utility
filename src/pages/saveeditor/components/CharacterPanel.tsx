@@ -4,20 +4,13 @@ import { Card } from "antd";
 import type { BinaryParsedItem } from "d2r-saver";
 import { useSaveEditor } from "../../../shared/saveeditor/SaveEditorContext";
 import type { LoadedCharacter } from "../../../shared/saveeditor/types";
-import { BODY_SLOTS, CONTAINER_DIMS } from "../../../shared/saveeditor/constants";
+import {
+  BODY_SLOTS,
+  CONTAINER_DIMS,
+  CLASS_NAMES,
+} from "../../../shared/saveeditor/constants";
 import ItemGrid from "./ItemGrid";
 import ItemTile, { type ItemAction } from "./ItemTile";
-
-const CLASS_NAMES: Record<string, string> = {
-  ama: "Amazon",
-  sor: "Sorceress",
-  nec: "Necromancer",
-  pal: "Paladin",
-  bar: "Barbarian",
-  dru: "Druid",
-  ass: "Assassin",
-  war: "Warlock",
-};
 
 interface CharacterPanelProps {
   character: LoadedCharacter;
@@ -26,13 +19,13 @@ interface CharacterPanelProps {
 
 const CharacterPanel: React.FC<CharacterPanelProps> = ({ character, isDarkTheme }) => {
   const { t } = useTranslation();
-  const { describeItem, moveCharItemToStash, deleteCharItem, busy, stash } =
+  const { describeItem, moveCharItemToStash, deleteCharItem, busy, activeStash } =
     useSaveEditor();
   const { profile, items } = character.result;
 
   const itemActions = (item: BinaryParsedItem): ItemAction[] => {
     const actions: ItemAction[] = [];
-    if (stash) {
+    if (activeStash) {
       actions.push({
         key: "toStash",
         label: t("saveEditor.actions.toStash"),

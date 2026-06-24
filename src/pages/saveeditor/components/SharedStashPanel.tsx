@@ -19,7 +19,7 @@ const SharedStashPanel: React.FC<SharedStashPanelProps> = ({ stash, isDarkTheme 
     moveStashItemToChar,
     deleteStashItem,
     busy,
-    character,
+    activeChar,
   } = useSaveEditor();
   const { pages, items } = stash.result;
 
@@ -46,7 +46,7 @@ const SharedStashPanel: React.FC<SharedStashPanelProps> = ({ stash, isDarkTheme 
         const actionsFor = (_item: BinaryParsedItem, slot: number): ItemAction[] => {
           if (!editable) return [];
           const actions: ItemAction[] = [];
-          if (character) {
+          if (activeChar) {
             actions.push(
               {
                 key: "toInv",
