@@ -17,6 +17,7 @@ import {
   pickSaveFile,
   readSaveBytes,
   writeSaveBytes,
+  restoreFromBackup,
   baseName,
 } from "./fileIO";
 import type { LoadedCharacter, LoadedStash } from "./types";
@@ -40,6 +41,8 @@ interface SaveEditorContextValue {
 
   saveCharacter: () => Promise<void>;
   saveStash: () => Promise<void>;
+  restoreCharacter: () => Promise<void>;
+  restoreStash: () => Promise<void>;
 
   deleteCharItem: (itemId: number) => Promise<void>;
   deleteStashItem: (pageIndex: number, slot: number) => Promise<void>;
@@ -165,6 +168,40 @@ export const SaveEditorProvider: React.FC<{ children: React.ReactNode }> = ({
       setBusy(false);
     }
   }, [stash]);
+
+  const restoreCharacter = useCallback(async () => {
+    if (!character) return;
+    setBusy(true);
+    setError(null);
+    try {
+      const saver = await ensureSaver();
+      await restoreFromBackup(character.path);
+      const bytes = await readSaveBytes(character.path);
+      setCharacter(readCharacter(character.path, bytes, saver));
+      setDirtyChar(false);
+    } catch (e) {
+      setError(`Restore failed: ${errMsg(e)}`);
+    } finally {
+      setBusy(false);
+    }
+  }, [character, ensureSaver, readCharacter]);
+
+  const restoreStash = useCallback(async () => {
+    if (!stash) return;
+    setBusy(true);
+    setError(null);
+    try {
+      const saver = await ensureSaver();
+      await restoreFromBackup(stash.path);
+      const bytes = await readSaveBytes(stash.path);
+      setStash(readStash(stash.path, bytes, saver));
+      setDirtyStash(false);
+    } catch (e) {
+      setError(`Restore failed: ${errMsg(e)}`);
+    } finally {
+      setBusy(false);
+    }
+  }, [stash, ensureSaver, readStash]);
 
   // ── Item operations ──────────────────────────────────────────────
   // Every op runs the (tested) lib extract/insert which returns a fresh, valid
@@ -299,6 +336,8 @@ export const SaveEditorProvider: React.FC<{ children: React.ReactNode }> = ({
       openStash,
       saveCharacter,
       saveStash,
+      restoreCharacter,
+      restoreStash,
       deleteCharItem,
       deleteStashItem,
       moveCharItemToStash,
@@ -318,6 +357,8 @@ export const SaveEditorProvider: React.FC<{ children: React.ReactNode }> = ({
       openStash,
       saveCharacter,
       saveStash,
+      restoreCharacter,
+      restoreStash,
       deleteCharItem,
       deleteStashItem,
       moveCharItemToStash,

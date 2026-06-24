@@ -2014,7 +2014,9 @@
       "openCharacter": "Open character…",
       "openStash": "Open shared stash…",
       "saveCharacter": "Save character",
-      "saveStash": "Save shared stash"
+      "saveStash": "Save shared stash",
+      "restoreCharacter": "Restore character",
+      "restoreStash": "Restore stash"
     },
     "empty": {
       "character": "No character loaded",
@@ -2072,6 +2074,7 @@
       "leftRing": "Left ring",
       "rightHandSwap": "Right hand (swap)",
       "leftHandSwap": "Left hand (swap)"
-    }
+    },
+    "restoreConfirm": "Restore this file from its .bak backup? Unsaved changes will be lost."
   }
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, Button, Empty, Space, Spin, Tag } from "antd";
+import { Alert, Button, Empty, Popconfirm, Space, Spin, Tag } from "antd";
 import { useSaveEditor } from "../../shared/saveeditor/SaveEditorContext";
 import CharacterPanel from "./components/CharacterPanel";
 import SharedStashPanel from "./components/SharedStashPanel";
@@ -23,6 +23,8 @@ const SaveEditorPage: React.FC<SaveEditorPageProps> = ({ isDarkTheme }) => {
     openStash,
     saveCharacter,
     saveStash,
+    restoreCharacter,
+    restoreStash,
     clearError,
   } = useSaveEditor();
 
@@ -62,6 +64,24 @@ const SaveEditorPage: React.FC<SaveEditorPageProps> = ({ isDarkTheme }) => {
           >
             {t("saveEditor.toolbar.saveStash")}
           </Button>
+          <Popconfirm
+            title={t("saveEditor.restoreConfirm")}
+            onConfirm={restoreCharacter}
+            disabled={!character || busy}
+          >
+            <Button danger disabled={!character || busy}>
+              {t("saveEditor.toolbar.restoreCharacter")}
+            </Button>
+          </Popconfirm>
+          <Popconfirm
+            title={t("saveEditor.restoreConfirm")}
+            onConfirm={restoreStash}
+            disabled={!stash || busy}
+          >
+            <Button danger disabled={!stash || busy}>
+              {t("saveEditor.toolbar.restoreStash")}
+            </Button>
+          </Popconfirm>
         </Space>
       </div>
 
