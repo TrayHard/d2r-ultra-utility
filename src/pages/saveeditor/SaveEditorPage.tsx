@@ -36,13 +36,6 @@ const SaveEditorPage: React.FC<SaveEditorPageProps> = ({ isDarkTheme }) => {
 
   return (
     <div className="px-4 pb-8 flex flex-col gap-3 w-full">
-      <Alert
-        type="warning"
-        showIcon
-        message={t("saveEditor.beta.title")}
-        description={t("saveEditor.beta.description")}
-      />
-
       {/* Action toolbar (operates on the active files) */}
       <div className="flex flex-wrap items-center gap-2">
         <GameButton

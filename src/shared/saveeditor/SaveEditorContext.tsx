@@ -14,7 +14,7 @@ import type {
   InsertD2STarget,
 } from "d2r-saver";
 import { MOD_NAME } from "../constants";
-import { getGameData, spriteUrl, type IconInfo } from "./gameData";
+import { getGameData, type IconInfo } from "./gameData";
 import {
   pickSaveFile,
   readSaveBytes,
@@ -447,11 +447,23 @@ export const SaveEditorProvider: React.FC<{ children: React.ReactNode }> = ({
     []
   );
 
-  const iconUrl = useCallback(
-    (item: BinaryParsedItem): string | null =>
-      spriteUrl(iconIndexRef.current, item.base),
-    []
-  );
+  const iconUrl = useCallback((item: BinaryParsedItem): string | null => {
+    const base = iconIndexRef.current[item.base];
+    if (!base) return null;
+    // Prefer the unique/set-specific HD icon when the saver resolves one
+    // (now that those sprites are bundled); fall back to the base graphic.
+    let hd = base.hd;
+    const saver = saverRef.current;
+    if (saver) {
+      try {
+        const p = saver.getItemIconPath(item);
+        if (p) hd = p;
+      } catch {
+        /* keep base */
+      }
+    }
+    return `/saveeditor-assets/items/${base.cat}/${hd}.png`;
+  }, []);
 
   const value = useMemo<SaveEditorContextValue>(
     () => ({

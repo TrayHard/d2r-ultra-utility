@@ -6,14 +6,17 @@ import ItemTile, { type ItemAction } from "./ItemTile";
 
 type AnyItems = Record<number | string, BinaryParsedItem>;
 
-const NATIVE_W = 1162;
+// Expanded Blizzless stash panels are 1687x1507 with a baked 16x13 grid.
+const NATIVE_W = 1687;
 const NATIVE_H = 1507;
 const BG = "/saveeditor-assets/panel/stash_bg.png";
+const BG_SHARED = "/saveeditor-assets/panel/stash_bg_shared.png";
 const ARROW_L = "/saveeditor-assets/panel/arrow_left.png";
 const ARROW_R = "/saveeditor-assets/panel/arrow_right.png";
 
-// Inner grid area of the stash frame, as fractions of the panel background.
-const INNER = { x: 0.066, y: 0.118, w: 0.868, h: 0.662 };
+// Baked grid rect (fractions of the expanded panel background) + the top gold bar.
+const GRID = { x: 0.027, y: 0.122, w: 0.946, h: 0.83, cols: 16, rows: 13 };
+const GOLDBAR = { x: 0.06, y: 0.028, w: 0.88, h: 0.05 };
 
 type TabKey = "personal" | "shared" | "materials";
 
@@ -22,7 +25,7 @@ interface StashPanelProps {
   width?: number;
 }
 
-const StashPanel: React.FC<StashPanelProps> = ({ isDarkTheme, width = 440 }) => {
+const StashPanel: React.FC<StashPanelProps> = ({ isDarkTheme, width = 520 }) => {
   const { t } = useTranslation();
   const {
     activeChar,
@@ -40,12 +43,7 @@ const StashPanel: React.FC<StashPanelProps> = ({ isDarkTheme, width = 440 }) => 
 
   const W = width;
   const H = (width * NATIVE_H) / NATIVE_W;
-  const innerX = INNER.x * W;
-  const innerY = INNER.y * H;
-  const innerW = INNER.w * W;
-  const innerH = INNER.h * H;
 
-  // Shared-stash normal pages (pageType 0) and extended/material pages.
   const normalPages = useMemo(
     () => (activeStash?.result.pages ?? []).filter((p) => p.pageType === 0),
     [activeStash]
@@ -55,17 +53,16 @@ const StashPanel: React.FC<StashPanelProps> = ({ isDarkTheme, width = 440 }) => 
     [activeStash]
   );
 
-  // Resolve the grid + item dict + per-item actions for the active tab.
-  let cols = 16;
-  let rows = 13;
   let slots: (number | string | undefined)[] = [];
   let items: AnyItems = {};
-  let actionsFor: (item: BinaryParsedItem, slot: number) => ItemAction[] = () => [];
+  let gold = 0;
   let empty = "";
+  let actionsFor: (item: BinaryParsedItem, slot: number) => ItemAction[] = () => [];
 
   if (tab === "personal") {
     items = (activeChar?.result.items ?? {}) as AnyItems;
     slots = activeChar?.result.profile.stash ?? [];
+    gold = activeChar?.result.profile.goldStash ?? 0;
     empty = activeChar ? "" : t("saveEditor.empty.character");
     actionsFor = (item) => {
       const a: ItemAction[] = [];
@@ -84,9 +81,10 @@ const StashPanel: React.FC<StashPanelProps> = ({ isDarkTheme, width = 440 }) => 
       return a;
     };
   } else if (tab === "shared") {
-    const p = normalPages[Math.min(page, normalPages.length - 1)];
+    const p = normalPages[Math.min(page, Math.max(0, normalPages.length - 1))];
     items = (activeStash?.result.items ?? {}) as AnyItems;
     slots = p?.stash ?? [];
+    gold = p?.gold ?? 0;
     empty = activeStash ? "" : t("saveEditor.empty.stash");
     actionsFor = (_item, slot) => {
       if (!p) return [];
@@ -114,17 +112,17 @@ const StashPanel: React.FC<StashPanelProps> = ({ isDarkTheme, width = 440 }) => 
       return a;
     };
   } else {
-    // Materials: flow all extended-page items into the grid (read-only).
     items = (activeStash?.result.items ?? {}) as AnyItems;
     const flat: (number | string | undefined)[] = [];
     for (const mp of matPages) for (const id of mp.stash) if (id != null) flat.push(id);
     slots = flat;
-    cols = 16;
     empty = activeStash ? "" : t("saveEditor.empty.stash");
   }
 
-  const cellW = innerW / cols;
-  const cellH = innerH / rows;
+  const innerX = GRID.x * W;
+  const innerY = GRID.y * H;
+  const cellW = (GRID.w * W) / GRID.cols;
+  const cellH = (GRID.h * H) / GRID.rows;
 
   const placed: React.ReactNode[] = [];
   for (let slot = 0; slot < slots.length; slot++) {
@@ -135,15 +133,15 @@ const StashPanel: React.FC<StashPanelProps> = ({ isDarkTheme, width = 440 }) => 
     const dto = describeItem(item, items);
     const w = dto?.width ?? 1;
     const h = dto?.height ?? 1;
-    const col = slot % cols;
-    const row = Math.floor(slot / cols);
+    const col = slot % GRID.cols;
+    const row = Math.floor(slot / GRID.cols);
     placed.push(
       <div
         key={slot}
         className="absolute"
         style={{
-          left: col * cellW,
-          top: row * cellH,
+          left: innerX + col * cellW,
+          top: innerY + row * cellH,
           width: w * cellW,
           height: h * cellH,
           padding: 1,
@@ -167,6 +165,8 @@ const StashPanel: React.FC<StashPanelProps> = ({ isDarkTheme, width = 440 }) => 
     { key: "materials", label: t("saveEditor.stash.materials") },
   ];
 
+  const bg = tab === "shared" ? BG_SHARED : BG;
+
   return (
     <div className="flex flex-col items-center gap-2" style={{ width: W }}>
       {/* Tabs */}
@@ -181,8 +181,9 @@ const StashPanel: React.FC<StashPanelProps> = ({ isDarkTheme, width = 440 }) => 
                 setTab(tb.key);
                 setPage(0);
               }}
-              className="px-3 py-1 text-xs font-semibold tracking-wide uppercase rounded-t"
+              className="px-4 py-1 text-xs font-semibold tracking-wide uppercase rounded-t"
               style={{
+                fontFamily: '"Diablo", serif',
                 color: active ? "#f5d77a" : "#9a8a66",
                 background: active
                   ? "linear-gradient(180deg, rgba(60,50,28,0.95), rgba(25,20,12,0.95))"
@@ -198,33 +199,36 @@ const StashPanel: React.FC<StashPanelProps> = ({ isDarkTheme, width = 440 }) => 
         })}
       </div>
 
-      {/* Framed panel */}
+      {/* Framed panel with baked grid */}
       <div
         className="relative select-none"
-        style={{ width: W, height: H, backgroundImage: `url(${BG})`, backgroundSize: "100% 100%" }}
+        style={{ width: W, height: H, backgroundImage: `url(${bg})`, backgroundSize: "100% 100%" }}
       >
-        {/* Opaque inner grid covering the (mismatched) baked grid */}
+        {/* Stash gold (top bar) */}
         <div
-          className="absolute"
+          className="absolute flex items-center justify-center"
           style={{
-            left: innerX,
-            top: innerY,
-            width: innerW,
-            height: innerH,
-            backgroundColor: "rgba(6,6,8,0.92)",
-            backgroundImage:
-              "linear-gradient(to right, rgba(150,120,60,0.30) 1px, transparent 1px), linear-gradient(to bottom, rgba(150,120,60,0.30) 1px, transparent 1px)",
-            backgroundSize: `${cellW}px ${cellH}px`,
-            boxShadow: "inset 0 0 10px rgba(0,0,0,0.9)",
+            left: GOLDBAR.x * W,
+            top: GOLDBAR.y * H,
+            width: GOLDBAR.w * W,
+            height: GOLDBAR.h * H,
+            fontFamily: '"Diablo", serif',
+            color: "#d9c27a",
+            fontSize: Math.max(11, 0.024 * H),
+            textShadow: "0 1px 2px #000",
+            letterSpacing: 1,
           }}
         >
-          {placed}
-          {empty && (
-            <div className="absolute inset-0 flex items-center justify-center text-xs opacity-50">
-              {empty}
-            </div>
-          )}
+          {gold > 0 ? gold.toLocaleString() : ""}
         </div>
+
+        {placed}
+
+        {empty && (
+          <div className="absolute inset-0 flex items-center justify-center text-sm opacity-50">
+            {empty}
+          </div>
+        )}
       </div>
 
       {/* Shared-stash page navigation */}
@@ -239,7 +243,8 @@ const StashPanel: React.FC<StashPanelProps> = ({ isDarkTheme, width = 440 }) => 
             <img src={ARROW_L} alt="prev" className="w-7 h-7" draggable={false} />
           </button>
           <span className="text-xs text-yellow-200/80">
-            {t("saveEditor.stash.page")} {Math.min(page, normalPages.length - 1) + 1} / {normalPages.length}
+            {t("saveEditor.stash.page")}{" "}
+            {Math.min(page, normalPages.length - 1) + 1} / {normalPages.length}
           </span>
           <button
             type="button"
