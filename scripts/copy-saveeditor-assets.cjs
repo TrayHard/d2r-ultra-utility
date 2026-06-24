@@ -1,0 +1,63 @@
+/* Copy Save Editor graphics from the local (gitignored) nogit/графика dump into
+   public/saveeditor-assets/ so Vite serves them in dev and bundles them into the
+   MSI on build. The destination is gitignored too — these are extracted game
+   sprites and must NOT be committed. Re-run after refreshing the graphics dump:
+     node scripts/copy-saveeditor-assets.cjs
+*/
+const fs = require("fs");
+const path = require("path");
+
+const ROOT = path.resolve(__dirname, "..");
+const SRC = path.join(ROOT, "nogit", "графика");
+const DST = path.join(ROOT, "public", "saveeditor-assets");
+
+if (!fs.existsSync(SRC)) {
+  console.error(`Source graphics not found: ${SRC}`);
+  process.exit(1);
+}
+
+// Item sprites: items/<topcat>/<subcat>/<name>.png  (skip .lowend variants)
+function copyItems() {
+  const srcItems = path.join(SRC, "items");
+  const dstItems = path.join(DST, "items");
+  let n = 0;
+  const walk = (dir, rel) => {
+    for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+      const p = path.join(dir, e.name);
+      const r = rel ? `${rel}/${e.name}` : e.name;
+      if (e.isDirectory()) walk(p, r);
+      else if (e.name.endsWith(".png") && !e.name.endsWith(".lowend.png")) {
+        const out = path.join(dstItems, r);
+        fs.mkdirSync(path.dirname(out), { recursive: true });
+        fs.copyFileSync(p, out);
+        n++;
+      }
+    }
+  };
+  walk(srcItems, "");
+  return n;
+}
+
+// Paperdoll empty-slot backgrounds: panel/inventory/inventory_paperdoll_*.png
+function copyPaperdoll() {
+  const src = path.join(SRC, "panel", "inventory");
+  const dst = path.join(DST, "paperdoll");
+  fs.mkdirSync(dst, { recursive: true });
+  let n = 0;
+  for (const e of fs.readdirSync(src)) {
+    if (
+      e.startsWith("inventory_paperdoll_") &&
+      e.endsWith(".png") &&
+      !e.includes(".lowend")
+    ) {
+      fs.copyFileSync(path.join(src, e), path.join(dst, e));
+      n++;
+    }
+  }
+  return n;
+}
+
+fs.mkdirSync(DST, { recursive: true });
+console.log("item sprites copied:", copyItems());
+console.log("paperdoll slots copied:", copyPaperdoll());
+console.log("destination:", DST);

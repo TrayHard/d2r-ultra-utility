@@ -14,7 +14,7 @@ import type {
   InsertD2STarget,
 } from "d2r-saver";
 import { MOD_NAME } from "../constants";
-import { getSaver } from "./gameData";
+import { getGameData, spriteUrl, type IconInfo } from "./gameData";
 import {
   pickSaveFile,
   readSaveBytes,
@@ -69,6 +69,8 @@ interface SaveEditorContextValue {
   ) => Promise<void>;
 
   describeItem: (item: BinaryParsedItem, allItems: AnyItems) => TradeItemDTO | null;
+  /** Public URL of an item's HD sprite, or null if not available. */
+  iconUrl: (item: BinaryParsedItem) => string | null;
   isDirty: (path: string | null | undefined) => boolean;
   clearError: () => void;
 }
@@ -85,6 +87,7 @@ export const SaveEditorProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const saverRef = useRef<D2RSaver | null>(null);
+  const iconIndexRef = useRef<Record<string, IconInfo>>({});
   const [scanned, setScanned] = useState(false);
   const [scanDir, setScanDir] = useState<string | null>(null);
   const [scanExists, setScanExists] = useState(false);
@@ -103,7 +106,11 @@ export const SaveEditorProvider: React.FC<{ children: React.ReactNode }> = ({
   const clearError = useCallback(() => setError(null), []);
 
   const ensureSaver = useCallback(async (): Promise<D2RSaver> => {
-    if (!saverRef.current) saverRef.current = await getSaver();
+    if (!saverRef.current) {
+      const bundle = await getGameData();
+      saverRef.current = bundle.saver;
+      iconIndexRef.current = bundle.iconIndex;
+    }
     return saverRef.current;
   }, []);
 
@@ -440,6 +447,12 @@ export const SaveEditorProvider: React.FC<{ children: React.ReactNode }> = ({
     []
   );
 
+  const iconUrl = useCallback(
+    (item: BinaryParsedItem): string | null =>
+      spriteUrl(iconIndexRef.current, item.base),
+    []
+  );
+
   const value = useMemo<SaveEditorContextValue>(
     () => ({
       scanned,
@@ -466,6 +479,7 @@ export const SaveEditorProvider: React.FC<{ children: React.ReactNode }> = ({
       moveCharItemToStash,
       moveStashItemToChar,
       describeItem,
+      iconUrl,
       isDirty,
       clearError,
     }),
@@ -494,6 +508,7 @@ export const SaveEditorProvider: React.FC<{ children: React.ReactNode }> = ({
       moveCharItemToStash,
       moveStashItemToChar,
       describeItem,
+      iconUrl,
       isDirty,
       clearError,
     ]
