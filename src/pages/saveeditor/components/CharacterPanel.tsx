@@ -5,12 +5,12 @@ import type { BinaryParsedItem } from "d2r-saver";
 import { useSaveEditor } from "../../../shared/saveeditor/SaveEditorContext";
 import type { LoadedCharacter } from "../../../shared/saveeditor/types";
 import {
-  BODY_SLOTS,
   CONTAINER_DIMS,
   CLASS_NAMES,
 } from "../../../shared/saveeditor/constants";
 import ItemGrid from "./ItemGrid";
-import ItemTile, { type ItemAction } from "./ItemTile";
+import PaperDoll from "./PaperDoll";
+import { type ItemAction } from "./ItemTile";
 
 interface CharacterPanelProps {
   character: LoadedCharacter;
@@ -71,34 +71,12 @@ const CharacterPanel: React.FC<CharacterPanelProps> = ({ character, isDarkTheme 
       </Card>
 
       <Card size="small" title={t("saveEditor.character.equipped")}>
-        <div className="flex flex-wrap gap-2">
-          {BODY_SLOTS.map((slot) => {
-            const id = profile.items?.[slot.key];
-            const item = id != null ? items[id as number] : undefined;
-            return (
-              <div key={slot.key} className="flex flex-col items-center gap-1 w-16">
-                <div className="text-[10px] opacity-60 text-center h-6 leading-tight">
-                  {t(slot.labelKey)}
-                </div>
-                {item ? (
-                  <ItemTile
-                    item={item}
-                    dto={describeItem(item, items)}
-                    actions={itemActions(item)}
-                    busy={busy}
-                    isDarkTheme={isDarkTheme}
-                  />
-                ) : (
-                  <div
-                    className={`w-[30px] h-[30px] rounded-sm border border-dashed ${
-                      isDarkTheme ? "border-gray-700" : "border-gray-400"
-                    }`}
-                  />
-                )}
-              </div>
-            );
-          })}
-        </div>
+        <PaperDoll
+          items={items}
+          bodyItems={profile.items}
+          actionsFor={itemActions}
+          isDarkTheme={isDarkTheme}
+        />
       </Card>
 
       <Card size="small" title={t("saveEditor.containers.inventory")}>

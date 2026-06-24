@@ -20,6 +20,8 @@ interface ItemTileProps {
   isDarkTheme: boolean;
   /** Override cell size (defaults to CELL_PX). */
   cell?: number;
+  /** Fill the parent box instead of sizing to the item's grid footprint (paperdoll slots). */
+  fill?: boolean;
 }
 
 /** A single inventory item: HD sprite on a quality-tinted cell, with a details popover. */
@@ -30,6 +32,7 @@ const ItemTile: React.FC<ItemTileProps> = ({
   busy,
   isDarkTheme,
   cell = CELL_PX,
+  fill = false,
 }) => {
   const { t } = useTranslation();
   const { iconUrl } = useSaveEditor();
@@ -92,8 +95,8 @@ const ItemTile: React.FC<ItemTileProps> = ({
         role="button"
         title={name}
         style={{
-          width: width * cell,
-          height: height * cell,
+          width: fill ? "100%" : width * cell,
+          height: fill ? "100%" : height * cell,
           // Subtle quality-coloured ring so rarity reads at a glance.
           boxShadow: `inset 0 0 0 1px ${color}66`,
         }}
