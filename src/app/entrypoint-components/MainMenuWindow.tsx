@@ -4,7 +4,7 @@ import { SettingsProvider, useSettings } from "../providers/SettingsContext";
 import MainSpaceToolbar from "../../widgets/Toolbar/MainSpaceToolbar";
 import AppSettingsPage from "../../pages/settings/AppSettingsPage";
 
-export type AppSection = "lootfilters" | "tweaks" | "runcounter";
+export type AppSection = "lootfilters" | "tweaks" | "runcounter" | "saveeditor";
 
 interface MainMenuWindowProps {
   onSectionSelect: (section: AppSection) => void;
@@ -84,6 +84,15 @@ const MainMenuWindowInner: React.FC<MainMenuWindowProps> = ({
         "Track your game runs"
       ),
       icon: "📊",
+    },
+    {
+      id: "saveeditor",
+      title: t("saveEditor.title", "Save Editor"),
+      description: t(
+        "mainMenu.descriptions.saveEditor",
+        "Edit characters and shared stash"
+      ),
+      icon: "🎒",
     },
   ];
 

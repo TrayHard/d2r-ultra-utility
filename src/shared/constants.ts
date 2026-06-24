@@ -209,6 +209,7 @@ export const STORAGE_KEYS = {
   SETTINGS: "d2r-settings",
   TWEAKS: "d2r-tweaks",
   RUNCOUNTER: "d2r-runcounter",
+  SAVEEDITOR: "d2r-saveeditor",
   PROFILES: "d2r-profiles",
   ACTIVE_PROFILE: "d2r-active-profile",
   LEGACY_LANGUAGE: "language",
