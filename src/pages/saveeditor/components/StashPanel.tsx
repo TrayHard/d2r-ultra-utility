@@ -23,8 +23,8 @@ const ARROW_R = "/saveeditor-assets/panel/arrow_right.png";
 
 // Baked grid rect (fractions of the expanded panel background) + the top gold bar.
 const GRID = { x: 0.027, y: 0.122, w: 0.946, h: 0.83, cols: 16, rows: 13 };
-// Gold sits in the recessed inset box at the top-centre of the expanded panel.
-const GOLDBAR = { x: 0.405, y: 0.044, w: 0.19, h: 0.05 };
+// Gold sits at the top-left of the panel (coin + amount), like the in-game stash.
+const GOLDBAR = { x: 0.045, y: 0.02, w: 0.32, h: 0.05 };
 
 /** Which stash this panel instance renders. Each is shown independently now. */
 export type StashMode = "personal" | "shared" | "materials";
@@ -176,12 +176,18 @@ const StashPanel: React.FC<StashPanelProps> = ({ isDarkTheme, mode, width = 520 
     const h = dto?.height ?? 1;
     const col = slot % GRID.cols;
     const row = Math.floor(slot / GRID.cols);
+    // Char items are addressed by itemId, which presets share — so only gear
+    // (numeric id) is draggable from the personal stash. Shared-stash items are
+    // addressed by slot position, so they're always safe to drag.
+    const draggable = typeof id === "number";
     const drag =
       mode === "personal"
-        ? {
-            dragId: `char-${item.itemId}`,
-            dragData: { src: "char" as const, itemId: item.itemId, w, h },
-          }
+        ? draggable
+          ? {
+              dragId: `char-${item.itemId}`,
+              dragData: { src: "char" as const, itemId: item.itemId, w, h },
+            }
+          : {}
         : mode === "shared" && sharedPage
         ? {
             dragId: `shared-${sharedPage.index}-${slot}`,
@@ -246,41 +252,37 @@ const StashPanel: React.FC<StashPanelProps> = ({ isDarkTheme, mode, width = 520 
             idPrefix={`stash-${mode}`}
           />
         )}
-        {/* Stash gold (top bar). Always shown — including 0 — when this stash holds gold. */}
+        {/* Stash gold (top-left): coin (edit) + amount. Always shown (incl. 0). */}
         {hasGold && (
           <div
-            className="absolute flex items-center justify-center"
+            className="absolute flex items-center"
             style={{
               left: GOLDBAR.x * W,
               top: GOLDBAR.y * H,
-              width: GOLDBAR.w * W,
               height: GOLDBAR.h * H,
-              fontFamily: '"Diablo", serif',
-              color: "#d9c27a",
-              fontSize: Math.max(11, 0.024 * H),
-              textShadow: "0 1px 2px #000",
-              letterSpacing: 1,
+              gap: 0.01 * W,
             }}
           >
-            {gold.toLocaleString()}
-          </div>
-        )}
-
-        {goldEdit && (
-          <div
-            className="absolute"
-            style={{
-              left: (GOLDBAR.x + GOLDBAR.w + 0.012) * W,
-              top: (GOLDBAR.y - 0.004) * H,
-            }}
-          >
-            <GoldEditControl
-              value={goldEdit.value}
-              max={goldEdit.max}
-              disabled={goldEdit.disabled}
-              onChange={goldEdit.onChange}
-              size={Math.max(20, 0.055 * H)}
-            />
+            {goldEdit && (
+              <GoldEditControl
+                value={goldEdit.value}
+                max={goldEdit.max}
+                disabled={goldEdit.disabled}
+                onChange={goldEdit.onChange}
+                size={Math.max(14, 0.032 * H)}
+              />
+            )}
+            <span
+              style={{
+                fontFamily: '"Diablo", serif',
+                color: "#d9c27a",
+                fontSize: Math.max(11, 0.028 * H),
+                textShadow: "0 1px 2px #000",
+                letterSpacing: 1,
+              }}
+            >
+              {gold.toLocaleString()}
+            </span>
           </div>
         )}
 

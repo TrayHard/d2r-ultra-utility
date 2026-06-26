@@ -10,8 +10,8 @@ export type PanelKey =
   | "shared"
   | "materials";
 
-const TAB_OFF = "/saveeditor-assets/panel/stash_tab_01.png";
-const TAB_ON = "/saveeditor-assets/panel/stash_tab_03.png";
+const TAB_OFF = "/saveeditor-assets/panel/tabnew_off.png";
+const TAB_ON = "/saveeditor-assets/panel/tabnew_on.png";
 
 // Order groups the shared-stash (.d2i) panels first, then the character (.d2s) panels.
 const PANELS: Array<{ key: PanelKey; labelKey: string }> = [
@@ -43,18 +43,19 @@ const PanelToggleBar: React.FC<PanelToggleBarProps> = ({ visible, onToggle }) =>
             aria-pressed={on}
             className="relative flex items-center justify-center select-none transition-[filter] hover:brightness-125"
             style={{
-              minWidth: 96,
-              height: 28,
-              padding: "0 14px",
+              minWidth: 100,
+              height: 30,
+              padding: "0 14px 4px",
               backgroundImage: `url(${on ? TAB_ON : TAB_OFF})`,
               backgroundSize: "100% 100%",
+              backgroundRepeat: "no-repeat",
               fontFamily: '"Diablo", serif',
               fontSize: 12,
               letterSpacing: 0.5,
               textTransform: "uppercase",
-              color: on ? "#f5d77a" : "#9a8a66",
+              color: on ? "#f5d77a" : "#8a7c5e",
               textShadow: "0 1px 2px #000",
-              filter: on ? "none" : "saturate(0.5) brightness(0.85)",
+              filter: on ? "none" : "brightness(0.92)",
             }}
           >
             {t(labelKey)}
