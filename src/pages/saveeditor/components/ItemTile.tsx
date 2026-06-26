@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import { Popover, Button } from "antd";
 import { useTranslation } from "react-i18next";
 import type { BinaryParsedItem, TradeItemDTO } from "d2r-saver";
+import { useDraggable } from "@dnd-kit/core";
+import { CSS } from "@dnd-kit/utilities";
 import { QUALITY_COLORS, CELL_PX } from "../../../shared/saveeditor/constants";
 import { useSaveEditor } from "../../../shared/saveeditor/SaveEditorContext";
+import type { DragData } from "./dnd";
 
 export interface ItemAction {
   key: string;
@@ -22,6 +25,9 @@ interface ItemTileProps {
   cell?: number;
   /** Fill the parent box instead of sizing to the item's grid footprint (paperdoll slots). */
   fill?: boolean;
+  /** When set, the tile becomes draggable with this id + payload. */
+  dragId?: string;
+  dragData?: DragData;
 }
 
 /** A single inventory item: HD sprite on a quality-tinted cell, with a details popover. */
@@ -32,10 +38,17 @@ const ItemTile: React.FC<ItemTileProps> = ({
   busy,
   cell = CELL_PX,
   fill = false,
+  dragId,
+  dragData,
 }) => {
   const { t } = useTranslation();
   const { iconUrl } = useSaveEditor();
   const [imgError, setImgError] = useState(false);
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    id: dragId ?? `nd-${item.itemId}`,
+    data: dragData,
+    disabled: !dragId,
+  });
 
   const width = dto?.width ?? 1;
   const height = dto?.height ?? 1;
@@ -91,13 +104,20 @@ const ItemTile: React.FC<ItemTileProps> = ({
   return (
     <Popover content={content} trigger="click" placement="rightTop">
       <div
-        role="button"
+        ref={setNodeRef}
         title={name}
+        {...listeners}
+        {...attributes}
         style={{
           width: fill ? "100%" : width * cell,
           height: fill ? "100%" : height * cell,
+          transform: transform ? CSS.Translate.toString(transform) : undefined,
+          opacity: isDragging ? 0.4 : undefined,
+          zIndex: isDragging ? 50 : undefined,
+          cursor: dragId ? "grab" : "pointer",
+          touchAction: dragId ? "none" : undefined,
         }}
-        className={`group relative flex items-center justify-center cursor-pointer select-none overflow-hidden rounded-sm transition-colors hover:bg-yellow-400/15`}
+        className={`group relative flex items-center justify-center select-none overflow-hidden rounded-sm transition-all hover:bg-yellow-400/20 hover:[box-shadow:inset_0_0_0_2px_rgba(245,215,122,0.6)]`}
       >
         {showImg ? (
           <img

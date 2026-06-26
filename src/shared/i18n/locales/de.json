@@ -2032,7 +2032,12 @@
       "vitality": "Vitality",
       "energy": "Energy",
       "gold": "Gold",
-      "goldStash": "Gold (stash)"
+      "goldStash": "Gold (stash)",
+      "defense": "Defense",
+      "damage": "Damage",
+      "attackRating": "Attack Rating",
+      "experience": "Experience",
+      "statPointsRemaining": "Stat Points Remaining"
     },
     "containers": {
       "inventory": "Inventory",
@@ -2106,7 +2111,33 @@
     "merc": {
       "title": "Mercenary",
       "none": "No mercenary hired",
-      "hired": "Hired"
+      "hired": "Hired",
+      "computed": "Computed",
+      "types": {
+        "rogue": "Rogue Scout",
+        "desert": "Desert Mercenary",
+        "eastern": "Eastern Sorceror",
+        "barbarian": "Barbarian",
+        "unknown": "Mercenary"
+      }
+    },
+    "gold": {
+      "edit": "Gold bearbeiten",
+      "apply": "Übernehmen",
+      "cancel": "Abbrechen",
+      "max": "Max"
+    },
+    "resist": {
+      "fire": "Fire Resistance",
+      "cold": "Cold Resistance",
+      "lightning": "Lightning Resistance",
+      "poison": "Poison Resistance"
+    },
+    "difficulty": {
+      "label": "Difficulty",
+      "normal": "Normal",
+      "nightmare": "Nightmare",
+      "hell": "Hell"
     }
   }
 }

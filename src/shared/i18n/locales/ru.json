@@ -2032,7 +2032,12 @@
       "vitality": "Vitality",
       "energy": "Energy",
       "gold": "Gold",
-      "goldStash": "Gold (stash)"
+      "goldStash": "Gold (stash)",
+      "defense": "Защита",
+      "damage": "Урон",
+      "attackRating": "Атака",
+      "experience": "Опыт",
+      "statPointsRemaining": "очков характеристик осталось"
     },
     "containers": {
       "inventory": "Inventory",
@@ -2106,7 +2111,33 @@
     "merc": {
       "title": "Mercenary",
       "none": "No mercenary hired",
-      "hired": "Hired"
+      "hired": "Hired",
+      "computed": "Расчётное",
+      "types": {
+        "rogue": "Разведчица",
+        "desert": "Наёмник пустыни",
+        "eastern": "Восточный маг",
+        "barbarian": "Варвар",
+        "unknown": "Наёмник"
+      }
+    },
+    "gold": {
+      "edit": "Изменить золото",
+      "apply": "Применить",
+      "cancel": "Отмена",
+      "max": "Макс"
+    },
+    "resist": {
+      "fire": "Сопротивление огню",
+      "cold": "Сопротивление холоду",
+      "lightning": "Сопротивление молнии",
+      "poison": "Сопротивление яду"
+    },
+    "difficulty": {
+      "label": "Сложность",
+      "normal": "Нормальный",
+      "nightmare": "Кошмар",
+      "hell": "Ад"
     }
   }
 }

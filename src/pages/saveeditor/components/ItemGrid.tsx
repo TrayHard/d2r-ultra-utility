@@ -1,6 +1,8 @@
 import React from "react";
 import type { BinaryParsedItem, TradeItemDTO } from "d2r-saver";
 import ItemTile, { type ItemAction } from "./ItemTile";
+import CellGrid from "./CellGrid";
+import type { DropData } from "./dnd";
 import { CELL_PX } from "../../../shared/saveeditor/constants";
 
 type AnyItems = Record<number | string, BinaryParsedItem>;
@@ -16,6 +18,8 @@ interface ItemGridProps {
   busy: boolean;
   isDarkTheme: boolean;
   cell?: number;
+  /** When set, the grid accepts drops into its cells (drag-and-drop target). */
+  dropDst?: DropData["dst"];
 }
 
 /**
@@ -37,6 +41,7 @@ const ItemGrid: React.FC<ItemGridProps> = ({
   busy,
   isDarkTheme,
   cell = CELL_PX,
+  dropDst,
 }) => {
   const placed: Array<{
     slot: number;
@@ -79,6 +84,18 @@ const ItemGrid: React.FC<ItemGridProps> = ({
         border: "1px solid rgba(120,95,45,0.45)",
       }}
     >
+      {dropDst && (
+        <CellGrid
+          left={0}
+          top={0}
+          cellW={cell}
+          cellH={cell}
+          cols={cols}
+          rows={actualRows}
+          dst={dropDst}
+          idPrefix={dropDst}
+        />
+      )}
       {placed.map(({ slot, item, dto, x, y }) => (
         <div
           key={slot}
@@ -92,6 +109,8 @@ const ItemGrid: React.FC<ItemGridProps> = ({
             busy={busy}
             isDarkTheme={isDarkTheme}
             cell={cell}
+            dragId={`char-${item.itemId}`}
+            dragData={{ src: "char", itemId: item.itemId, w: dto?.width ?? 1, h: dto?.height ?? 1 }}
           />
         </div>
       ))}

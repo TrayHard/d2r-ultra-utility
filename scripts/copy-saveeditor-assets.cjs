@@ -77,6 +77,35 @@ function copyPanels() {
     ["panel/stash/stash_rightarrow_02.png", "arrow_right_hover.png"],
     ["panel/stash/stash_rightarrow_03.png", "arrow_right_pressed.png"],
     ["panel/stash/additionalstash/additionalstash_tabs.png", "stash_tabs.png"],
+    // Gold-edit button (4 states: normal / hover / pressed / disabled).
+    ["panel/goldbutton_01.png", "goldbutton_01.png"],
+    ["panel/goldbutton_02.png", "goldbutton_02.png"],
+    ["panel/goldbutton_03.png", "goldbutton_03.png"],
+    ["panel/goldbutton_04.png", "goldbutton_04.png"],
+    // Real stash-tab art states (Personal/Shared/Materials switcher).
+    ["panel/stash/stash_tabs_01.png", "stash_tab_01.png"],
+    ["panel/stash/stash_tabs_02.png", "stash_tab_02.png"],
+    ["panel/stash/stash_tabs_03.png", "stash_tab_03.png"],
+    ["panel/stash/stash_tabs_04.png", "stash_tab_04.png"],
+    // Resistance element icons (letter preserved: f/i/l/p — map to element at use-site).
+    ["panel/character_sheet/f_elementicon.png", "elementicon_f.png"],
+    ["panel/character_sheet/i_elementicon.png", "elementicon_i.png"],
+    ["panel/character_sheet/l_elementicon.png", "elementicon_l.png"],
+    ["panel/character_sheet/p_elementicon.png", "elementicon_p.png"],
+    // Experience bar fill (character + merc panels).
+    ["panel/character_sheet/expbarfill.png", "expbarfill.png"],
+    // Mercenary panel background (paperdoll frame) + slot art.
+    ["panel/hireling/hirelingpanel.png", "merc_bg.png"],
+    ["panel/hireling/hireablepanel/hireables_paperdoll.png", "merc_paperdoll.png"],
+    // Character class portrait icons (used as the first cell of each save-list row).
+    ["hireables/amazonicon.png", "class_ama.png"],
+    ["hireables/sorceressicon.png", "class_sor.png"],
+    ["hireables/necromancericon.png", "class_nec.png"],
+    ["hireables/paladinicon.png", "class_pal.png"],
+    ["hireables/barbarianicon.png", "class_bar.png"],
+    ["hireables/druidicon.png", "class_dru.png"],
+    ["hireables/assassinicon.png", "class_ass.png"],
+    ["hireables/warlockicon.png", "class_war.png"],
   ];
   const dst = path.join(DST, "panel");
   fs.mkdirSync(dst, { recursive: true });
