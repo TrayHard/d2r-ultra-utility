@@ -1862,7 +1862,24 @@
       "vitality": "Vitality",
       "energy": "Energy",
       "gold": "Gold",
-      "goldStash": "Gold (stash)"
+      "goldStash": "Gold (stash)",
+      "defense": "Defense",
+      "damage": "Damage",
+      "attackRating": "Attack Rating",
+      "experience": "Experience",
+      "statPointsRemaining": "Stat Points Remaining"
+    },
+    "resist": {
+      "fire": "Fire Resistance",
+      "cold": "Cold Resistance",
+      "lightning": "Lightning Resistance",
+      "poison": "Poison Resistance"
+    },
+    "difficulty": {
+      "label": "Difficulty",
+      "normal": "Normal",
+      "nightmare": "Nightmare",
+      "hell": "Hell"
     },
     "containers": {
       "inventory": "Inventory",
@@ -1901,7 +1918,21 @@
     "merc": {
       "title": "Mercenary",
       "none": "No mercenary hired",
-      "hired": "Hired"
+      "hired": "Hired",
+      "computed": "Computed",
+      "types": {
+        "rogue": "Rogue Scout",
+        "desert": "Desert Mercenary",
+        "eastern": "Eastern Sorceror",
+        "barbarian": "Barbarian",
+        "unknown": "Mercenary"
+      }
+    },
+    "gold": {
+      "edit": "Edit gold",
+      "apply": "Apply",
+      "cancel": "Cancel",
+      "max": "Max"
     },
     "actions": {
       "toStash": "→ Shared stash",

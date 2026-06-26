@@ -3,29 +3,41 @@ import { useTranslation } from "react-i18next";
 import type { BinaryParsedItem } from "d2r-saver";
 import { useSaveEditor } from "../../../shared/saveeditor/SaveEditorContext";
 import ItemTile, { type ItemAction } from "./ItemTile";
+import GoldEditControl from "./GoldEditControl";
+import CellGrid from "./CellGrid";
+import type { DropData } from "./dnd";
 
 type AnyItems = Record<number | string, BinaryParsedItem>;
+
+/** Game gold cap for a stash page (per Blizzless / vanilla shared-stash cap). */
+const STASH_GOLD_CAP = 2_500_000;
 
 // Expanded Blizzless stash panels are 1687x1507 with a baked 16x13 grid.
 const NATIVE_W = 1687;
 const NATIVE_H = 1507;
 const BG = "/saveeditor-assets/panel/stash_bg.png";
 const BG_SHARED = "/saveeditor-assets/panel/stash_bg_shared.png";
+const BG_MATERIALS = "/saveeditor-assets/panel/stash_bg_materials.png";
 const ARROW_L = "/saveeditor-assets/panel/arrow_left.png";
 const ARROW_R = "/saveeditor-assets/panel/arrow_right.png";
 
 // Baked grid rect (fractions of the expanded panel background) + the top gold bar.
 const GRID = { x: 0.027, y: 0.122, w: 0.946, h: 0.83, cols: 16, rows: 13 };
-const GOLDBAR = { x: 0.06, y: 0.028, w: 0.88, h: 0.05 };
+// Gold sits in the recessed inset box at the top-centre of the expanded panel.
+const GOLDBAR = { x: 0.405, y: 0.044, w: 0.19, h: 0.05 };
 
-type TabKey = "personal" | "shared" | "materials";
+/** Which stash this panel instance renders. Each is shown independently now. */
+export type StashMode = "personal" | "shared" | "materials";
 
 interface StashPanelProps {
   isDarkTheme: boolean;
+  mode: StashMode;
   width?: number;
 }
 
-const StashPanel: React.FC<StashPanelProps> = ({ isDarkTheme, width = 520 }) => {
+/** One stash panel (Personal / Shared / Materials). Rendered standalone so several
+ *  panels can be visible at once (driven by the page-level toggle bar). */
+const StashPanel: React.FC<StashPanelProps> = ({ isDarkTheme, mode, width = 520 }) => {
   const { t } = useTranslation();
   const {
     activeChar,
@@ -36,9 +48,10 @@ const StashPanel: React.FC<StashPanelProps> = ({ isDarkTheme, width = 520 }) => 
     deleteCharItem,
     moveStashItemToChar,
     deleteStashItem,
+    setCharGold,
+    setSharedGold,
   } = useSaveEditor();
 
-  const [tab, setTab] = useState<TabKey>("personal");
   const [page, setPage] = useState(0);
 
   const W = width;
@@ -53,16 +66,35 @@ const StashPanel: React.FC<StashPanelProps> = ({ isDarkTheme, width = 520 }) => 
     [activeStash]
   );
 
+  // The shared-stash page currently in view (used for items + its gold).
+  const sharedPage =
+    normalPages[Math.min(page, Math.max(0, normalPages.length - 1))];
+
   let slots: (number | string | undefined)[] = [];
   let items: AnyItems = {};
   let gold = 0;
+  let hasGold = false;
   let empty = "";
   let actionsFor: (item: BinaryParsedItem, slot: number) => ItemAction[] = () => [];
+  // Gold-edit config for this panel (null when this stash has no editable gold).
+  let goldEdit: {
+    value: number;
+    max: number;
+    disabled: boolean;
+    onChange: (v: number) => void;
+  } | null = null;
 
-  if (tab === "personal") {
+  if (mode === "personal") {
     items = (activeChar?.result.items ?? {}) as AnyItems;
     slots = activeChar?.result.profile.stash ?? [];
     gold = activeChar?.result.profile.goldStash ?? 0;
+    hasGold = true;
+    goldEdit = {
+      value: gold,
+      max: STASH_GOLD_CAP,
+      disabled: !activeChar || busy,
+      onChange: (v) => setCharGold("goldbank", v),
+    };
     empty = activeChar ? "" : t("saveEditor.empty.character");
     actionsFor = (item) => {
       const a: ItemAction[] = [];
@@ -80,11 +112,20 @@ const StashPanel: React.FC<StashPanelProps> = ({ isDarkTheme, width = 520 }) => 
       });
       return a;
     };
-  } else if (tab === "shared") {
-    const p = normalPages[Math.min(page, Math.max(0, normalPages.length - 1))];
+  } else if (mode === "shared") {
+    const p = sharedPage;
     items = (activeStash?.result.items ?? {}) as AnyItems;
     slots = p?.stash ?? [];
     gold = p?.gold ?? 0;
+    hasGold = true;
+    if (p) {
+      goldEdit = {
+        value: gold,
+        max: STASH_GOLD_CAP,
+        disabled: busy,
+        onChange: (v) => setSharedGold(p.offset, v),
+      };
+    }
     empty = activeStash ? "" : t("saveEditor.empty.stash");
     actionsFor = (_item, slot) => {
       if (!p) return [];
@@ -135,6 +176,18 @@ const StashPanel: React.FC<StashPanelProps> = ({ isDarkTheme, width = 520 }) => 
     const h = dto?.height ?? 1;
     const col = slot % GRID.cols;
     const row = Math.floor(slot / GRID.cols);
+    const drag =
+      mode === "personal"
+        ? {
+            dragId: `char-${item.itemId}`,
+            dragData: { src: "char" as const, itemId: item.itemId, w, h },
+          }
+        : mode === "shared" && sharedPage
+        ? {
+            dragId: `shared-${sharedPage.index}-${slot}`,
+            dragData: { src: "shared" as const, pageIndex: sharedPage.index, slot, w, h },
+          }
+        : {};
     placed.push(
       <div
         key={slot}
@@ -154,73 +207,82 @@ const StashPanel: React.FC<StashPanelProps> = ({ isDarkTheme, width = 520 }) => 
           busy={busy}
           isDarkTheme={isDarkTheme}
           fill
+          {...drag}
         />
       </div>
     );
   }
 
-  const tabs: Array<{ key: TabKey; label: string }> = [
-    { key: "personal", label: t("saveEditor.stash.personal") },
-    { key: "shared", label: t("saveEditor.stash.shared") },
-    { key: "materials", label: t("saveEditor.stash.materials") },
-  ];
+  const bg = mode === "shared" ? BG_SHARED : mode === "materials" ? BG_MATERIALS : BG;
 
-  const bg = tab === "shared" ? BG_SHARED : BG;
+  // This panel is a drop target for char→stash / stash→char moves (not materials).
+  const dropDst: DropData["dst"] | null =
+    mode === "personal" ? "stash" : mode === "shared" ? "shared" : null;
+  const dropPageIndex = mode === "shared" ? sharedPage?.index : undefined;
 
   return (
     <div className="flex flex-col items-center gap-2" style={{ width: W }}>
-      {/* Tabs */}
-      <div className="flex gap-1">
-        {tabs.map((tb) => {
-          const active = tb.key === tab;
-          return (
-            <button
-              key={tb.key}
-              type="button"
-              onClick={() => {
-                setTab(tb.key);
-                setPage(0);
-              }}
-              className="px-4 py-1 text-xs font-semibold tracking-wide uppercase rounded-t"
-              style={{
-                fontFamily: '"Diablo", serif',
-                color: active ? "#f5d77a" : "#9a8a66",
-                background: active
-                  ? "linear-gradient(180deg, rgba(60,50,28,0.95), rgba(25,20,12,0.95))"
-                  : "linear-gradient(180deg, rgba(30,28,24,0.9), rgba(14,12,10,0.9))",
-                border: "1px solid rgba(150,120,60,0.5)",
-                borderBottom: active ? "1px solid transparent" : "1px solid rgba(150,120,60,0.5)",
-                textShadow: "0 1px 2px #000",
-              }}
-            >
-              {tb.label}
-            </button>
-          );
-        })}
-      </div>
-
       {/* Framed panel with baked grid */}
       <div
         className="relative select-none"
-        style={{ width: W, height: H, backgroundImage: `url(${bg})`, backgroundSize: "100% 100%" }}
+        style={{
+          width: W,
+          height: H,
+          backgroundImage: `url(${bg})`,
+          backgroundSize: "100% 100%",
+        }}
       >
-        {/* Stash gold (top bar) */}
-        <div
-          className="absolute flex items-center justify-center"
-          style={{
-            left: GOLDBAR.x * W,
-            top: GOLDBAR.y * H,
-            width: GOLDBAR.w * W,
-            height: GOLDBAR.h * H,
-            fontFamily: '"Diablo", serif',
-            color: "#d9c27a",
-            fontSize: Math.max(11, 0.024 * H),
-            textShadow: "0 1px 2px #000",
-            letterSpacing: 1,
-          }}
-        >
-          {gold > 0 ? gold.toLocaleString() : ""}
-        </div>
+        {/* Drop cells (behind items) */}
+        {dropDst && (
+          <CellGrid
+            left={innerX}
+            top={innerY}
+            cellW={cellW}
+            cellH={cellH}
+            cols={GRID.cols}
+            rows={GRID.rows}
+            dst={dropDst}
+            pageIndex={dropPageIndex}
+            idPrefix={`stash-${mode}`}
+          />
+        )}
+        {/* Stash gold (top bar). Always shown — including 0 — when this stash holds gold. */}
+        {hasGold && (
+          <div
+            className="absolute flex items-center justify-center"
+            style={{
+              left: GOLDBAR.x * W,
+              top: GOLDBAR.y * H,
+              width: GOLDBAR.w * W,
+              height: GOLDBAR.h * H,
+              fontFamily: '"Diablo", serif',
+              color: "#d9c27a",
+              fontSize: Math.max(11, 0.024 * H),
+              textShadow: "0 1px 2px #000",
+              letterSpacing: 1,
+            }}
+          >
+            {gold.toLocaleString()}
+          </div>
+        )}
+
+        {goldEdit && (
+          <div
+            className="absolute"
+            style={{
+              left: (GOLDBAR.x + GOLDBAR.w + 0.012) * W,
+              top: (GOLDBAR.y - 0.004) * H,
+            }}
+          >
+            <GoldEditControl
+              value={goldEdit.value}
+              max={goldEdit.max}
+              disabled={goldEdit.disabled}
+              onChange={goldEdit.onChange}
+              size={Math.max(20, 0.055 * H)}
+            />
+          </div>
+        )}
 
         {placed}
 
@@ -232,7 +294,7 @@ const StashPanel: React.FC<StashPanelProps> = ({ isDarkTheme, width = 520 }) => 
       </div>
 
       {/* Shared-stash page navigation */}
-      {tab === "shared" && normalPages.length > 1 && (
+      {mode === "shared" && normalPages.length > 1 && (
         <div className="flex items-center gap-3">
           <button
             type="button"

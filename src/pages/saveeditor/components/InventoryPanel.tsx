@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { BinaryParsedItem } from "d2r-saver";
 import { useSaveEditor } from "../../../shared/saveeditor/SaveEditorContext";
 import ItemTile, { type ItemAction } from "./ItemTile";
+import GoldEditControl from "./GoldEditControl";
+import CellGrid from "./CellGrid";
 
 type AnyItems = Record<number | string, BinaryParsedItem>;
 
@@ -49,8 +52,13 @@ const InventoryPanel: React.FC<InventoryPanelProps> = ({
   gold,
   width = 440,
 }) => {
-  const { describeItem, busy } = useSaveEditor();
+  const { t } = useTranslation();
+  const { describeItem, busy, setCharGold, activeChar } = useSaveEditor();
   const [swap, setSwap] = useState(false);
+
+  // Inventory gold cap is level × 10000 (vanilla rule).
+  const charLevel = activeChar?.result.profile.level ?? 1;
+  const goldCap = Math.max(10000, charLevel * 10000);
 
   const W = width;
   const H = (width * NATIVE_H) / NATIVE_W;
@@ -80,6 +88,7 @@ const InventoryPanel: React.FC<InventoryPanelProps> = ({
         const id = bodyItems?.[realKey];
         const item = id != null ? items[id as number] : undefined;
         if (!item) return null;
+        const dto = describeItem(item, items);
         return (
           <div
             key={key}
@@ -94,15 +103,29 @@ const InventoryPanel: React.FC<InventoryPanelProps> = ({
           >
             <ItemTile
               item={item}
-              dto={describeItem(item, items)}
+              dto={dto}
               actions={actionsFor(item)}
               busy={busy}
               isDarkTheme={isDarkTheme}
               fill
+              dragId={`char-${item.itemId}`}
+              dragData={{ src: "char", itemId: item.itemId, w: dto?.width ?? 1, h: dto?.height ?? 1 }}
             />
           </div>
         );
       })}
+
+      {/* Backpack drop cells (behind items) */}
+      <CellGrid
+        left={BAG.x * W}
+        top={BAG.y * H}
+        cellW={cellW}
+        cellH={cellH}
+        cols={BAG.cols}
+        rows={BAG.rows}
+        dst="inventory"
+        idPrefix="inv"
+      />
 
       {/* Backpack items */}
       {inventorySlots.map((id, slot) => {
@@ -133,6 +156,8 @@ const InventoryPanel: React.FC<InventoryPanelProps> = ({
               busy={busy}
               isDarkTheme={isDarkTheme}
               fill
+              dragId={`char-${item.itemId}`}
+              dragData={{ src: "char", itemId: item.itemId, w, h }}
             />
           </div>
         );
@@ -157,25 +182,68 @@ const InventoryPanel: React.FC<InventoryPanelProps> = ({
         {(gold ?? 0).toLocaleString()}
       </div>
 
-      {/* Weapon-set toggle (I / II) */}
-      <button
-        type="button"
-        onClick={() => setSwap((s) => !s)}
-        title="Weapon set I / II"
-        className="absolute flex items-center justify-center font-bold text-yellow-200/90 hover:text-yellow-100"
+      {/* Gold edit button (coin) */}
+      <div className="absolute" style={{ left: 0.69 * W, top: 0.879 * H }}>
+        <GoldEditControl
+          value={gold ?? 0}
+          max={goldCap}
+          disabled={!activeChar || busy}
+          onChange={(v) => setCharGold("gold", v)}
+          size={Math.max(20, 0.05 * H)}
+        />
+      </div>
+
+      {/* Panel title */}
+      <div
+        className="absolute flex items-center justify-center"
         style={{
-          left: 0.088 * W,
-          top: 0.428 * H,
-          width: 0.07 * W,
-          height: 0.035 * H,
-          fontSize: Math.max(10, 0.02 * H),
-          background: "rgba(0,0,0,0.55)",
-          border: "1px solid rgba(180,150,80,0.6)",
-          borderRadius: 3,
+          left: 0,
+          top: 0.028 * H,
+          width: W,
+          height: 0.04 * H,
+          fontFamily: '"Diablo", serif',
+          color: "#cdba88",
+          fontSize: Math.max(12, 0.027 * H),
+          letterSpacing: 3,
+          textShadow: "0 1px 2px #000",
         }}
       >
-        {swap ? "II" : "I"}
-      </button>
+        {t("saveEditor.tabs.inventory").toUpperCase()}
+      </div>
+
+      {/* Weapon-set tabs (I / II) above each weapon column */}
+      {[0.088, 0.758].map((wx) => (
+        <div
+          key={wx}
+          className="absolute flex"
+          style={{ left: wx * W, top: 0.062 * H, width: 0.152 * W, height: 0.03 * H }}
+        >
+          {[0, 1].map((set) => {
+            const on = (set === 1) === swap;
+            return (
+              <button
+                key={set}
+                type="button"
+                onClick={() => setSwap(set === 1)}
+                title={`Weapon set ${set === 0 ? "I" : "II"}`}
+                className="flex-1 flex items-center justify-center transition-[filter] hover:brightness-125"
+                style={{
+                  fontFamily: '"Diablo", serif',
+                  fontSize: Math.max(9, 0.016 * H),
+                  color: on ? "#f5d77a" : "#7a6c4e",
+                  background: on
+                    ? "linear-gradient(180deg, rgba(60,50,28,0.95), rgba(30,24,12,0.95))"
+                    : "rgba(18,16,12,0.85)",
+                  border: "1px solid rgba(150,120,60,0.5)",
+                  textShadow: "0 1px 1px #000",
+                }}
+              >
+                {set === 0 ? "I" : "II"}
+              </button>
+            );
+          })}
+        </div>
+      ))}
     </div>
   );
 };

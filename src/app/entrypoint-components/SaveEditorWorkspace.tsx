@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ConfigProvider, theme } from "antd";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { LogicalSize } from "@tauri-apps/api/dpi";
 import { SettingsProvider, useSettings } from "../providers/SettingsContext";
 import { MessageProvider } from "../../shared/components/Message/MessageProvider";
 import { SaveEditorProvider } from "../../shared/saveeditor/SaveEditorContext";
@@ -33,17 +32,16 @@ const SaveEditorWorkspaceContent: React.FC<SaveEditorWorkspaceProps> = ({
     else root.classList.remove("dark");
   }, [isDarkTheme]);
 
-  // The Save Editor needs room for two item columns — use the wide, resizable
-  // layout regardless of how the previous screen sized the window.
+  // The Save Editor only makes the window resizable so the user can size it for
+  // the multi-column layout. It deliberately does NOT force a size — forcing a
+  // resolution on entry is jarring (the previous screen's size is kept).
   useEffect(() => {
     if (!isTauri()) return;
     const timer = window.setTimeout(async () => {
       try {
-        const w = getCurrentWindow();
-        await w.setResizable(true);
-        await w.setSize(new LogicalSize(1200, 850));
+        await getCurrentWindow().setResizable(true);
       } catch (e) {
-        console.error("SaveEditor window resize failed", e);
+        console.error("SaveEditor setResizable failed", e);
       }
     }, 100);
     return () => window.clearTimeout(timer);

@@ -12,6 +12,8 @@ import type {
   BinaryParsedItem,
   TradeItemDTO,
   InsertD2STarget,
+  D2SCharacterProfile,
+  GameData,
 } from "d2r-saver";
 import { MOD_NAME } from "../constants";
 import { getGameData, type IconInfo } from "./gameData";
@@ -23,7 +25,7 @@ import {
   listSaves,
   baseName,
 } from "./fileIO";
-import type { LoadedCharacter, LoadedStash } from "./types";
+import type { LoadedCharacter, LoadedStash, MoveSource } from "./types";
 
 /** Shared-stash normal pages use a 16-column grid (matches the lib's writer). */
 const STASH_COLUMNS = 16;
@@ -68,7 +70,30 @@ interface SaveEditorContextValue {
     target: InsertD2STarget
   ) => Promise<void>;
 
+  /** Move one of the character's own items to another character container. */
+  moveCharItemTo: (itemId: number, target: InsertD2STarget) => Promise<void>;
+  /** Drag-drop: move a source item into a specific cell of a character container. */
+  moveToCharCell: (
+    src: MoveSource,
+    target: InsertD2STarget,
+    x: number,
+    y: number
+  ) => Promise<void>;
+  /** Drag-drop: move a source item into a specific cell of a shared-stash page. */
+  moveToSharedCell: (
+    src: MoveSource,
+    pageIndex: number,
+    x: number,
+    y: number
+  ) => Promise<void>;
+  /** Set the active character's inventory gold (`gold`) or personal-stash gold (`goldbank`). */
+  setCharGold: (field: "gold" | "goldbank", value: number) => Promise<void>;
+  /** Set the gold of one shared-stash page (identified by its byte offset). */
+  setSharedGold: (pageOffset: number, value: number) => Promise<void>;
+
   describeItem: (item: BinaryParsedItem, allItems: AnyItems) => TradeItemDTO | null;
+  /** Parsed game data (hireling table, strings, …); null until first load. */
+  gd: GameData | null;
   /** Public URL of an item's HD sprite, or null if not available. */
   iconUrl: (item: BinaryParsedItem) => string | null;
   isDirty: (path: string | null | undefined) => boolean;
@@ -88,6 +113,7 @@ export const SaveEditorProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const saverRef = useRef<D2RSaver | null>(null);
   const iconIndexRef = useRef<Record<string, IconInfo>>({});
+  const [gd, setGd] = useState<GameData | null>(null);
   const [scanned, setScanned] = useState(false);
   const [scanDir, setScanDir] = useState<string | null>(null);
   const [scanExists, setScanExists] = useState(false);
@@ -110,6 +136,7 @@ export const SaveEditorProvider: React.FC<{ children: React.ReactNode }> = ({
       const bundle = await getGameData();
       saverRef.current = bundle.saver;
       iconIndexRef.current = bundle.iconIndex;
+      setGd(bundle.saver.gd);
     }
     return saverRef.current;
   }, []);
@@ -434,6 +461,156 @@ export const SaveEditorProvider: React.FC<{ children: React.ReactNode }> = ({
     [activeStash, activeChar, ensureSaver, replaceStash, replaceChar]
   );
 
+  // Move one of the character's items to another of its own containers
+  // (inventory / cube / personal stash). Auto-positioned by the lib.
+  const moveCharItemTo = useCallback(
+    async (itemId: number, target: InsertD2STarget) => {
+      if (!activeChar) return;
+      setBusy(true);
+      setError(null);
+      try {
+        const saver = await ensureSaver();
+        const extracted = saver.extractItemD2S(activeChar.bytes, itemId);
+        const inserted = saver.insertItemD2S(
+          extracted.newBuffer,
+          extracted.extractedItem,
+          extracted.extractedAllItems,
+          target
+        );
+        replaceChar(activeChar.path, inserted.newBuffer, saver);
+      } catch (e) {
+        setError(`Move failed: ${errMsg(e)}`);
+      } finally {
+        setBusy(false);
+      }
+    },
+    [activeChar, ensureSaver, replaceChar]
+  );
+
+  // Drag-drop into a specific character-container cell. Extracts the source
+  // (from the character or the shared stash) and inserts at the target position.
+  const moveToCharCell = useCallback(
+    async (src: MoveSource, target: InsertD2STarget, x: number, y: number) => {
+      if (!activeChar) return;
+      setBusy(true);
+      setError(null);
+      try {
+        const saver = await ensureSaver();
+        let item: BinaryParsedItem;
+        let allForItem: AnyItems;
+        let charBuf = activeChar.bytes;
+        if (src.src === "char") {
+          const ex = saver.extractItemD2S(activeChar.bytes, src.itemId);
+          item = ex.extractedItem;
+          allForItem = ex.extractedAllItems;
+          charBuf = ex.newBuffer;
+        } else {
+          if (!activeStash) return;
+          const sx = src.slot % STASH_COLUMNS;
+          const sy = Math.floor(src.slot / STASH_COLUMNS);
+          const ex = saver.extractItemD2I(activeStash.bytes, src.pageIndex, sx, sy);
+          item = ex.extractedItem;
+          allForItem = ex.extractedAllItems;
+          replaceStash(activeStash.path, ex.newBuffer, saver);
+        }
+        const ins = saver.insertItemD2S(charBuf, item, allForItem, target, { x, y });
+        replaceChar(activeChar.path, ins.newBuffer, saver);
+      } catch (e) {
+        setError(`Move failed: ${errMsg(e)}`);
+      } finally {
+        setBusy(false);
+      }
+    },
+    [activeChar, activeStash, ensureSaver, replaceChar, replaceStash]
+  );
+
+  // Drag-drop into a specific shared-stash cell.
+  const moveToSharedCell = useCallback(
+    async (src: MoveSource, pageIndex: number, x: number, y: number) => {
+      if (!activeStash) return;
+      setBusy(true);
+      setError(null);
+      try {
+        const saver = await ensureSaver();
+        let item: BinaryParsedItem;
+        let allForItem: AnyItems;
+        let stashBuf = activeStash.bytes;
+        if (src.src === "shared") {
+          const sx = src.slot % STASH_COLUMNS;
+          const sy = Math.floor(src.slot / STASH_COLUMNS);
+          const ex = saver.extractItemD2I(activeStash.bytes, src.pageIndex, sx, sy);
+          item = ex.extractedItem;
+          allForItem = ex.extractedAllItems;
+          stashBuf = ex.newBuffer;
+        } else {
+          if (!activeChar) return;
+          const ex = saver.extractItemD2S(activeChar.bytes, src.itemId);
+          item = ex.extractedItem;
+          allForItem = ex.extractedAllItems;
+          replaceChar(activeChar.path, ex.newBuffer, saver);
+        }
+        const ins = saver.insertItemD2I(stashBuf, item, allForItem, { pageIndex, x, y });
+        replaceStash(activeStash.path, ins.newBuffer, saver);
+      } catch (e) {
+        setError(`Move failed: ${errMsg(e)}`);
+      } finally {
+        setBusy(false);
+      }
+    },
+    [activeStash, activeChar, ensureSaver, replaceChar, replaceStash]
+  );
+
+  // ── Gold editing ──────────────────────────────────────────────
+  // Character gold lives in the bit-packed stats section, so it goes through the
+  // (now lossless) writeD2S: clone the profile, mutate the raw attribute, rewrite.
+  const setCharGold = useCallback(
+    async (field: "gold" | "goldbank", value: number) => {
+      if (!activeChar) return;
+      setBusy(true);
+      setError(null);
+      try {
+        const saver = await ensureSaver();
+        const prof = activeChar.result.profile;
+        const v = Math.max(0, Math.floor(value));
+        const newProfile: D2SCharacterProfile = {
+          ...prof,
+          attributes: { ...(prof.attributes ?? {}), [field]: v },
+        };
+        if (field === "gold") newProfile.gold = v;
+        else newProfile.goldStash = v;
+        const newBuffer = saver.writeD2S(newProfile, activeChar.result.items);
+        replaceChar(activeChar.path, newBuffer, saver);
+      } catch (e) {
+        setError(`Failed to set gold: ${errMsg(e)}`);
+      } finally {
+        setBusy(false);
+      }
+    },
+    [activeChar, ensureSaver, replaceChar]
+  );
+
+  // Shared-stash gold is a plain uint32 at offset 0x0C of the page sector — patch
+  // it in place (lossless, no item re-serialisation).
+  const setSharedGold = useCallback(
+    async (pageOffset: number, value: number) => {
+      if (!activeStash) return;
+      setBusy(true);
+      setError(null);
+      try {
+        const saver = await ensureSaver();
+        const bytes = activeStash.bytes.slice();
+        const v = Math.max(0, Math.floor(value)) >>> 0;
+        new DataView(bytes.buffer).setUint32(pageOffset + 12, v, true);
+        replaceStash(activeStash.path, bytes, saver);
+      } catch (e) {
+        setError(`Failed to set stash gold: ${errMsg(e)}`);
+      } finally {
+        setBusy(false);
+      }
+    },
+    [activeStash, ensureSaver, replaceStash]
+  );
+
   const describeItem = useCallback(
     (item: BinaryParsedItem, allItems: AnyItems): TradeItemDTO | null => {
       const saver = saverRef.current;
@@ -490,7 +667,13 @@ export const SaveEditorProvider: React.FC<{ children: React.ReactNode }> = ({
       deleteStashItem,
       moveCharItemToStash,
       moveStashItemToChar,
+      moveCharItemTo,
+      moveToCharCell,
+      moveToSharedCell,
+      setCharGold,
+      setSharedGold,
       describeItem,
+      gd,
       iconUrl,
       isDirty,
       clearError,
@@ -519,7 +702,13 @@ export const SaveEditorProvider: React.FC<{ children: React.ReactNode }> = ({
       deleteStashItem,
       moveCharItemToStash,
       moveStashItemToChar,
+      moveCharItemTo,
+      moveToCharCell,
+      moveToSharedCell,
+      setCharGold,
+      setSharedGold,
       describeItem,
+      gd,
       iconUrl,
       isDirty,
       clearError,

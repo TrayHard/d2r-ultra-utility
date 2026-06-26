@@ -2032,7 +2032,12 @@
       "vitality": "Vitality",
       "energy": "Energy",
       "gold": "Gold",
-      "goldStash": "Gold (stash)"
+      "goldStash": "Gold (stash)",
+      "defense": "Захист",
+      "damage": "Шкода",
+      "attackRating": "Атака",
+      "experience": "Досвід",
+      "statPointsRemaining": "очок характеристик залишилось"
     },
     "containers": {
       "inventory": "Inventory",
@@ -2106,7 +2111,33 @@
     "merc": {
       "title": "Mercenary",
       "none": "No mercenary hired",
-      "hired": "Hired"
+      "hired": "Hired",
+      "computed": "Розрахункове",
+      "types": {
+        "rogue": "Розвідниця",
+        "desert": "Найманець пустелі",
+        "eastern": "Східний маг",
+        "barbarian": "Варвар",
+        "unknown": "Найманець"
+      }
+    },
+    "gold": {
+      "edit": "Змінити золото",
+      "apply": "Застосувати",
+      "cancel": "Скасувати",
+      "max": "Макс"
+    },
+    "resist": {
+      "fire": "Опір вогню",
+      "cold": "Опір холоду",
+      "lightning": "Опір блискавці",
+      "poison": "Опір отруті"
+    },
+    "difficulty": {
+      "label": "Складність",
+      "normal": "Нормальний",
+      "nightmare": "Жах",
+      "hell": "Пекло"
     }
   }
 }

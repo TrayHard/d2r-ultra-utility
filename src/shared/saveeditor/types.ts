@@ -25,3 +25,8 @@ export type ItemRef =
   | { kind: "char"; container: CharContainer; slot: number; itemId: number }
   | { kind: "charBody"; slot: string; itemId: number }
   | { kind: "stash"; pageIndex: number; slot: number; itemId: number };
+
+/** The source of a drag-and-drop move (a character item, or a shared-stash slot). */
+export type MoveSource =
+  | { src: "char"; itemId: number }
+  | { src: "shared"; pageIndex: number; slot: number };
