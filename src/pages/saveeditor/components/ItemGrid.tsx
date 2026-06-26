@@ -49,6 +49,7 @@ const ItemGrid: React.FC<ItemGridProps> = ({
     dto: TradeItemDTO | null;
     x: number;
     y: number;
+    draggable: boolean;
   }> = [];
 
   let maxRow = rows - 1;
@@ -60,7 +61,7 @@ const ItemGrid: React.FC<ItemGridProps> = ({
     const dto = describe(item, items);
     const x = slot % cols;
     const y = Math.floor(slot / cols);
-    placed.push({ slot, item, dto, x, y });
+    placed.push({ slot, item, dto, x, y, draggable: typeof id === "number" });
     const h = dto?.height ?? 1;
     maxRow = Math.max(maxRow, y + h - 1);
   }
@@ -96,7 +97,7 @@ const ItemGrid: React.FC<ItemGridProps> = ({
           idPrefix={dropDst}
         />
       )}
-      {placed.map(({ slot, item, dto, x, y }) => (
+      {placed.map(({ slot, item, dto, x, y, draggable }) => (
         <div
           key={slot}
           className="absolute"
@@ -109,8 +110,12 @@ const ItemGrid: React.FC<ItemGridProps> = ({
             busy={busy}
             isDarkTheme={isDarkTheme}
             cell={cell}
-            dragId={`char-${item.itemId}`}
-            dragData={{ src: "char", itemId: item.itemId, w: dto?.width ?? 1, h: dto?.height ?? 1 }}
+            dragId={draggable ? `char-${item.itemId}` : undefined}
+            dragData={
+              draggable
+                ? { src: "char", itemId: item.itemId, w: dto?.width ?? 1, h: dto?.height ?? 1 }
+                : undefined
+            }
           />
         </div>
       ))}

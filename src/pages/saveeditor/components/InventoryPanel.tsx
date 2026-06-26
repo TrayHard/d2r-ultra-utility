@@ -11,6 +11,8 @@ type AnyItems = Record<number | string, BinaryParsedItem>;
 const NATIVE_W = 1162;
 const NATIVE_H = 1507;
 const BG = "/saveeditor-assets/panel/inventory_bg.png";
+const WTAB_OFF = "/saveeditor-assets/panel/tabnew_off.png";
+const WTAB_ON = "/saveeditor-assets/panel/tabnew_on.png";
 
 type Rect = { x: number; y: number; w: number; h: number };
 
@@ -89,6 +91,10 @@ const InventoryPanel: React.FC<InventoryPanelProps> = ({
         const item = id != null ? items[id as number] : undefined;
         if (!item) return null;
         const dto = describeItem(item, items);
+        // Preset/stackable items (potions, gems, runes) are keyed by base code
+        // with a shared itemId — the lib can't address them individually, so they
+        // are not draggable (avoids moving the whole "stack"). Gear has a real id.
+        const draggable = typeof id === "number";
         return (
           <div
             key={key}
@@ -108,8 +114,12 @@ const InventoryPanel: React.FC<InventoryPanelProps> = ({
               busy={busy}
               isDarkTheme={isDarkTheme}
               fill
-              dragId={`char-${item.itemId}`}
-              dragData={{ src: "char", itemId: item.itemId, w: dto?.width ?? 1, h: dto?.height ?? 1 }}
+              dragId={draggable ? `char-${item.itemId}` : undefined}
+              dragData={
+                draggable
+                  ? { src: "char", itemId: item.itemId, w: dto?.width ?? 1, h: dto?.height ?? 1 }
+                  : undefined
+              }
             />
           </div>
         );
@@ -137,6 +147,7 @@ const InventoryPanel: React.FC<InventoryPanelProps> = ({
         const h = dto?.height ?? 1;
         const col = slot % BAG.cols;
         const row = Math.floor(slot / BAG.cols);
+        const draggable = typeof id === "number";
         return (
           <div
             key={slot}
@@ -156,41 +167,44 @@ const InventoryPanel: React.FC<InventoryPanelProps> = ({
               busy={busy}
               isDarkTheme={isDarkTheme}
               fill
-              dragId={`char-${item.itemId}`}
-              dragData={{ src: "char", itemId: item.itemId, w, h }}
+              dragId={draggable ? `char-${item.itemId}` : undefined}
+              dragData={draggable ? { src: "char", itemId: item.itemId, w, h } : undefined}
             />
           </div>
         );
       })}
 
-      {/* Gold (bottom-centre box) */}
+      {/* Gold box: coin (edit) on the left + amount, like the in-game panel. */}
       <div
-        className="absolute flex items-center justify-center"
+        className="absolute flex items-center"
         style={{
-          left: 0.33 * W,
-          top: 0.886 * H,
-          width: 0.34 * W,
-          height: 0.04 * H,
-          fontFamily: '"Diablo", serif',
-          color: "#d9c27a",
-          fontSize: Math.max(11, 0.022 * H),
-          textShadow: "0 1px 2px #000",
-          letterSpacing: 1,
+          left: 0.30 * W,
+          top: 0.884 * H,
+          width: 0.40 * W,
+          height: 0.045 * H,
+          paddingLeft: 0.012 * W,
+          gap: 0.012 * W,
         }}
-        title="Gold"
       >
-        {(gold ?? 0).toLocaleString()}
-      </div>
-
-      {/* Gold edit button (coin) */}
-      <div className="absolute" style={{ left: 0.69 * W, top: 0.879 * H }}>
         <GoldEditControl
           value={gold ?? 0}
           max={goldCap}
           disabled={!activeChar || busy}
           onChange={(v) => setCharGold("gold", v)}
-          size={Math.max(20, 0.05 * H)}
+          size={Math.max(14, 0.03 * H)}
         />
+        <span
+          className="flex-1 text-center"
+          style={{
+            fontFamily: '"Diablo", serif',
+            color: "#d9c27a",
+            fontSize: Math.max(11, 0.024 * H),
+            textShadow: "0 1px 2px #000",
+            letterSpacing: 1,
+          }}
+        >
+          {(gold ?? 0).toLocaleString()}
+        </span>
       </div>
 
       {/* Panel title */}
@@ -211,12 +225,12 @@ const InventoryPanel: React.FC<InventoryPanelProps> = ({
         {t("saveEditor.tabs.inventory").toUpperCase()}
       </div>
 
-      {/* Weapon-set tabs (I / II) above each weapon column */}
+      {/* Weapon-set tabs (I / II) above each weapon column — real tab art. */}
       {[0.088, 0.758].map((wx) => (
         <div
           key={wx}
           className="absolute flex"
-          style={{ left: wx * W, top: 0.062 * H, width: 0.152 * W, height: 0.03 * H }}
+          style={{ left: wx * W, top: 0.058 * H, width: 0.152 * W, height: 0.036 * H }}
         >
           {[0, 1].map((set) => {
             const on = (set === 1) === swap;
@@ -228,14 +242,14 @@ const InventoryPanel: React.FC<InventoryPanelProps> = ({
                 title={`Weapon set ${set === 0 ? "I" : "II"}`}
                 className="flex-1 flex items-center justify-center transition-[filter] hover:brightness-125"
                 style={{
+                  backgroundImage: `url(${on ? WTAB_ON : WTAB_OFF})`,
+                  backgroundSize: "100% 100%",
+                  backgroundRepeat: "no-repeat",
                   fontFamily: '"Diablo", serif',
                   fontSize: Math.max(9, 0.016 * H),
-                  color: on ? "#f5d77a" : "#7a6c4e",
-                  background: on
-                    ? "linear-gradient(180deg, rgba(60,50,28,0.95), rgba(30,24,12,0.95))"
-                    : "rgba(18,16,12,0.85)",
-                  border: "1px solid rgba(150,120,60,0.5)",
+                  color: on ? "#f5d77a" : "#9a8a66",
                   textShadow: "0 1px 1px #000",
+                  paddingBottom: "0.18em",
                 }}
               >
                 {set === 0 ? "I" : "II"}

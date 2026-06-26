@@ -87,6 +87,12 @@ function copyPanels() {
     ["panel/stash/stash_tabs_02.png", "stash_tab_02.png"],
     ["panel/stash/stash_tabs_03.png", "stash_tab_03.png"],
     ["panel/stash/stash_tabs_04.png", "stash_tab_04.png"],
+    // New-style tab art (inactive / active-with-gem) for the weapon-swap + stash tabs.
+    ["panel/stash/stash_tabs_new_01.png", "tabnew_off.png"],
+    ["panel/stash/stash_tabs_new_02.png", "tabnew_on.png"],
+    // Materials sub-stash category backgrounds + cube cover.
+    ["panel/stash/additionalstash/PANEL_Expanded_Materials.png", "materials_bg.png"],
+    ["panel/stash/additionalstash/additionalstash_tabs.png", "additional_tabs.png"],
     // Resistance element icons (letter preserved: f/i/l/p — map to element at use-site).
     ["panel/character_sheet/f_elementicon.png", "elementicon_f.png"],
     ["panel/character_sheet/i_elementicon.png", "elementicon_i.png"],
