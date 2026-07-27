@@ -1,7 +1,7 @@
 {
   "id": "profile-1781609088814",
   "name": "Minimalistic Colored",
-  "version": "1.1",
+  "version": "1.2",
   "settings": {
     "runes": {
       "el": {
@@ -2776,8 +2776,8 @@
           {
             "enabled": true,
             "locales": {
-              "enUS": "      ÿc9Essence      ",
-              "ruRU": "      ÿc9Эссенция      ",
+              "enUS": "      ÿcUEssence      ",
+              "ruRU": "      ÿcUЭссенция      ",
               "zhTW": "充盈的憎恨精華",
               "deDE": "Geladene Essenz des Hasses",
               "esES": "Esencia del odio cargada",
@@ -2812,8 +2812,8 @@
           {
             "enabled": true,
             "locales": {
-              "enUS": "      ÿcUEssence      ",
-              "ruRU": "      ÿcUЭссенция      ",
+              "enUS": "      ÿc1Essence      ",
+              "ruRU": "      ÿc1Эссенция      ",
               "zhTW": "燃燒的恐懼精華",
               "deDE": "Brennende Essenz des Schreckens",
               "esES": "Esencia del terror ardiente",
